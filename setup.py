@@ -126,6 +126,7 @@ setup(
         'picamera>=1.13',
         'RPi.GPIO>=0.6.5',
         'tinydb==3.9.0.post1',
+        'nltk==3.1',
         'numpy'
         # 'opencv-python>=4.0.0.21'
     ],
@@ -134,16 +135,17 @@ setup(
     # dependencies). You can install these using the following syntax,
     # for example:
     # $ pip install -e .[dev,test]
-    #extras_require={
-    #    'optionals': [
-    #        'flake8',
-    #        'sphinx',
-    #        'sphinx_rtd_theme',
-    #        'recommonmark',
-    #        'm2r',
-    #        'pytest'
-    #    ]
-    #},
+    extras_require={
+       'optionals': [
+           'flake8',
+           'sphinx',
+           'sphinx_rtd_theme',
+           'recommonmark',
+           'docutils',
+           'm2r',
+           'pytest'
+       ]
+    },
 
     # If there are data files included in your packages that need to be
     # installed, specify them here.  If using Python 2.6 or less, then these

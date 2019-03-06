@@ -21,4 +21,5 @@ if [ ! -d "$T_SYSTEM_DIR" ]; then
 fi
 
 pip3 install --upgrade picamera>=1.13 && \
-echo -e "\n\n${GREEN}t_system is successfully installed to your computer.${NC}\n"
+pip3 install --upgrade flake8 sphinx sphinx_rtd_theme recommonmark m2r pytest docutils && \
+printf "import nltk\nnltk.download('names')\nnltk.download('brown')\nnltk.download('wordnet')\nnltk.download('punkt')" | python3 && echo -e "\n\n${GREEN}t_system is successfully installed to your computer.${NC}\n"

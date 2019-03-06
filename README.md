@@ -42,7 +42,8 @@ for development mode: `sudo ./install-dev.sh`
 
 <sup><i>If there is a failure try `sudo -H ./install-dev.sh`</i></sup>
 
-### Usage
+### Usage <a href="https://t-system.readthedocs.io/en/latest/t_system.html"><img src="https://media.readthedocs.com/corporate/img/header-logo.png" align="right" height="25px" /></a>
+
 
 ```
 usage: t_system [-h] [-c] [-s] [-j] [-v] [-g]
