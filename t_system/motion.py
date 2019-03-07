@@ -39,7 +39,7 @@ class Motion():
         self.servo = GPIO.PWM(servo_pin, 50)  # GPIO 17 for PWM with 50Hz
         self.servo.start(init_duty_cy)
         self.current_duty_cy = init_duty_cy
-        self.previous_dis_to_des = 0
+        self.previous_dis_to_des = 0.000
     # self.resolution = resolution
 
     def move(self, obj_first_px, obj_last_px, frame_width):
@@ -76,7 +76,7 @@ class Motion():
         """
         teta_radian = dis_to_des / (obj_width / k_fact)
         duty_cycle = teta_radian * 180 / 3.1416 / 18
-        return self.current_duty_cy + duty_cycle
+        return self.current_duty_cy - duty_cycle  # this mines (-) for the camera's mirror effect.
 
     def current_dis_to_des(self, obj_first_px, obj_last_px, frame_width):
         """The top-level method to calculate the distance to the destination at that moment.
@@ -89,11 +89,14 @@ class Motion():
         obj_middle_px = (obj_first_px + obj_last_px) / 2
         frame_middle_px = frame_width / 2 - 1
 
-        return obj_middle_px - frame_middle_px
+        return float(obj_middle_px - frame_middle_px)
 
     def get_previous_dis_to_des(self):
         """The top-level method to provide return previous_dis_to_des variable.
         """
+        if self.previous_dis_to_des == float(0):
+            self.previous_dis_to_des = 0.00001  # For avoid the 'float division by zero' error
+
         return self.previous_dis_to_des
 
 

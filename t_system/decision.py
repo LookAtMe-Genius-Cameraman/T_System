@@ -15,7 +15,7 @@ from os.path import expanduser  # Imported to get the home directory
 import numpy
 
 initial_k_fact = 0.01
-acceptable_err_rate = 5
+acceptable_err_rate = float(5)
 
 
 class Decider():
@@ -29,7 +29,7 @@ class Decider():
         home = expanduser("~")  # Get the home directory of the user
         self.db = TinyDB(home + '/.t_system_db.json')  # This is where we store the database; /home/USERNAME/.t_system_db.json
 
-    def decision(self, obj_width, err_rate=100, is_err_check=False):
+    def decision(self, obj_width, err_rate=float(100), is_err_check=False):
         """Function to decide the necessary k factor with a kind of AI method.
 
         Args:
@@ -39,6 +39,9 @@ class Decider():
         Returns:
             int:              k factor.
         """
+
+        err_rate = abs(err_rate)
+
         result = {}
         if self.db.search((Query().obj_width == obj_width)):
             result = self.db.search((Query().obj_width == obj_width))[0]  # There is just 1 return value so, index 0 will be enough.
@@ -95,20 +98,20 @@ class Decider():
             str:  Response.
         """
 
-        while self.db.search((Query().obj_width == obj_width)):
-            self.db.remove((Query().obj_width == obj_width))
-
         if isinstance(next_k_fact, numpy.float):
-            return float(next_k_fact)
+            next_k_fact = float(next_k_fact)
 
-        self.db.insert({
-            'obj_width': obj_width,
-            'k_fact': k_fact,
-            'err_rate': err_rate,
-            'next_k_fact': next_k_fact
-        })  # insert the given data
-        raise TypeError
-        # return ""
+        if self.db.search((Query().obj_width == obj_width)):
+            self.db.update({'k_fact': k_fact, 'err_rate': err_rate, 'next_k_fact': next_k_fact}, Query().obj_width == obj_width)
+        else:
+            self.db.insert({
+                'obj_width': int(obj_width),
+                'k_fact': k_fact,
+                'err_rate': err_rate,
+                'next_k_fact': next_k_fact
+            })  # insert the given data
+
+        return ""
 
     # def db_delete(self, note=None, category=None, are_all=False, list_name=None, list_sequence=None, is_todolist=False, is_reminder=False, is_active=False, is_public=True, user_id=None):
     #     """Function to delete a note record from the database.  NOT COMPLETED.

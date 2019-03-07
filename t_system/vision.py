@@ -18,7 +18,7 @@ from t_system.motion import Motion
 from t_system.decision import Decider
 
 servo_pan = Motion(17)
-servo_tilt = Motion(14, 5)
+servo_tilt = Motion(14, 4)
 decider = Decider()
 
 
