@@ -64,7 +64,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='0.2',
+    version='0.9',
     description='t_system is an open source moving target locking system project via raspberry Pi embedded computer',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -87,7 +87,7 @@ setup(
         #   3 - Alpha
         #   4 - Beta
         #   5 - Production/Stable
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 3 - Alpha',
 
         # Indicate who your project is intended for
         'Intended Audience :: End Users/Showmen, Military/Object Tracking',

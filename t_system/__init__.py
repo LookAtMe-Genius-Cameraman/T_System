@@ -18,7 +18,7 @@ from picamera import PiCamera
 from t_system.vision import Vision
 
 
-__version__ = '0.2'
+__version__ = '0.9'
 
 
 camera = PiCamera()

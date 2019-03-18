@@ -50,8 +50,7 @@ usage: t_system [-h] [-S] [-s] [-l] [-a] [--cascadefile XML_FILE] [--version]
 
 optional arguments:
   -h, --help            show this help message and exit
-  -S, --show-stream     Do not dsiplay the camera stream. Disable 
-                        the stream window.
+  -S, --show-stream     Display the camera stream. Enable the stream window.
   -s, --security        Security Mode. Scan the around and optionally 
                         take photos of visitors.
   -l, --learn           Teach mode. Teach the object tracking parameters 
