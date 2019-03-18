@@ -20,6 +20,6 @@ if [ ! -d "$T_SYSTEM_DIR" ]; then
   mkdir $T_SYSTEM_DIR
 fi
 
-pip3 install --upgrade picamera>=1.13 && \
+pip3 install --upgrade picamera>=1.13 RPi.GPIO>=0.6.5 tinydb==3.9.0.post1 numpy paho-mqtt>=1.4.0 multipledispatch && \
 pip3 install --upgrade flake8 sphinx sphinx_rtd_theme recommonmark m2r pytest docutils && \
 printf "import nltk\nnltk.download('names')\nnltk.download('brown')\nnltk.download('wordnet')\nnltk.download('punkt')" | python3 && echo -e "\n\n${GREEN}t_system is successfully installed to your computer.${NC}\n"

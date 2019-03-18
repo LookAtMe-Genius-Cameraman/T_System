@@ -127,7 +127,9 @@ setup(
         'RPi.GPIO>=0.6.5',
         'tinydb==3.9.0.post1',
         'nltk==3.1',
-        'numpy'
+        'numpy',
+        'paho-mqtt>=1.4.0',
+        'multidispatch'
         # 'opencv-python>=4.0.0.21'
     ],
 
@@ -150,10 +152,10 @@ setup(
     # If there are data files included in your packages that need to be
     # installed, specify them here.  If using Python 2.6 or less, then these
     # have to be included in MANIFEST.in as well.
-    #package_data={
+    # package_data={
     #    # If any package contains data files, include them:
     #    'ava': ['realhud/animation/*', 'sr/models/english/*']
-    #},
+    # },
 
     # Although 'package_data' is the preferred approach, in some case you may
     # need to place data files outside of your packages. See:
@@ -169,8 +171,8 @@ setup(
             't_system=t_system:initiate',
         ],
     }
-    #ext_modules=[
+    # ext_modules=[
     #    Extension('realhud', ['ava/realhud/realhud.c'],
     #              **pkgconfig('gtk+-2.0 x11 xext'))
-    #]
+    # ]
 )

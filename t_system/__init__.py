@@ -11,28 +11,40 @@
 
 # import the necessary packages
 import argparse
-import inspect
-import os
 import sys  # System-specific parameters and functions
-from picamera.array import PiRGBArray
+
 from picamera import PiCamera
 
 from t_system.vision import Vision
 
+
 __version__ = '0.2'
+
 
 camera = PiCamera()
 
-T_SYSTEM_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-
-ccade_xml_file = T_SYSTEM_PATH + "/haarcascade/haarcascade_frontalface_default.xml"
-
-vision = Vision(camera, ccade_xml_file, (320, 240), 32)
-
 
 def start(args):
-    vision.rtime_detect()
-# if else structures will be here
+    """Function that starts the tracking system with the correct mode according to command-line arguments.
+
+    Args:
+        args:       Command-line arguments.
+    """
+
+    vision = Vision(args, camera, (800, 600), 32)
+
+    if args["learn"]:
+        vision.learn(lambda: False)
+    elif args["security"]:
+        vision.security(lambda: False)
+    elif args["augmented"]:
+        from t_system.augmentation import Augmenter
+
+        augmenter = Augmenter(vision)
+        augmenter.run()
+    else:
+        vision.detect_track(lambda: False)
+
 
 def initiate():
     """The top-level method to serve as the entry point of T_System.
@@ -43,14 +55,20 @@ def initiate():
     """
 
     ap = argparse.ArgumentParser()
-    ap.add_argument("-t", "--teach", help="Teach mode. Teach the object tracking parameters with the trial and error method.", action="store_true")
-    ap.add_argument("-a", "--augmented", help="Increase verbosity of log output.", action="store_true")
+    ap.add_argument("-S", "--show-stream", help="Display the camera stream. Enable the stream window.", action="store_true")
+    ap.add_argument("-l", "--learn", help="Teach Mode. Teach the object tracking parameters with the trial and error method.", action="store_true")
+    ap.add_argument("-s", "--security", help="Security Mode. Scan the around and optionally take photos of visitors.", action="store_true")
+    ap.add_argument("-a", "--augmented", help="Augmented control with the Augmented Virtual Assistant A.V.A.. \'https://github.com/MCYBA/A.V.A.\' is the home page of the A.V.A. and usage explained into the \'AUGMENTED.md\'.", action="store_true")
     ap.add_argument("--version", help="Display the version number of T_System.", action="store_true")
+    ap.add_argument("--cascadefile", help="Specify the trained detection algorithm file for the object detection ability. Sample(And Default): 'haarcascade_frontalface_default' for haarcascade_frontalface_default.xml file inside the 'haarcascade' folder. ", action="store", type=str)
+
     args = vars(ap.parse_args())
+
     if args["version"]:
         import pkg_resources
         print(pkg_resources.get_distribution("t_system").version)
         sys.exit(1)
+
     start(args)
 
 

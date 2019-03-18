@@ -28,6 +28,21 @@ t_system.vision module
     :undoc-members:
     :show-inheritance:
 
+t_system.augmentation module
+------------------------
+
+.. automodule:: t_system.augmentation
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+t_system.mqtt module
+------------------------
+
+.. automodule:: t_system.mqtt
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 Module contents
 ---------------

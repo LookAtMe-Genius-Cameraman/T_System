@@ -15,7 +15,7 @@ from os.path import expanduser  # Imported to get the home directory
 import numpy
 
 initial_k_fact = 0.01
-acceptable_err_rate = float(5)
+acceptable_err_rate = 5.0
 
 
 class Decider():
@@ -29,7 +29,7 @@ class Decider():
         home = expanduser("~")  # Get the home directory of the user
         self.db = TinyDB(home + '/.t_system_db.json')  # This is where we store the database; /home/USERNAME/.t_system_db.json
 
-    def decision(self, obj_width, err_rate=float(100), is_err_check=False):
+    def decision(self, obj_width, err_rate=100.0, is_err_check=False):
         """Function to decide the necessary k factor with a kind of AI method.
 
         Args:

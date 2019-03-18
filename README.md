@@ -46,26 +46,31 @@ for development mode: `sudo ./install-dev.sh`
 
 
 ```
-usage: t_system [-h] [-x] [-l] [-a] [--cascadefile XML_FILE] [--version]
+usage: t_system [-h] [-S] [-s] [-l] [-a] [--cascadefile XML_FILE] [--version]
 
 optional arguments:
-  -h, --help                show this help message and exit
-  -x, --nogui               Do not dsiplay the camera stream. Disable 
-                            the stream window.
-  -l, --learn               Teach mode. Teach the object tracking parameters 
-                            with the trial and error method.
-  -a, --augmented           Augmented control with the Augmented Virtual 
-                            Assistant A.V.A.. 'https://github.com/MCYBA/A.V.A.'
-                            is the home page of the A.V.A. and usage explained 
-                            into the'AUGMENTED.md'.
-  --cascadefile XML_FILE    Specify the trained detection algorithm file for the 
-                            object detection ability
-  --version                 Display the version number of T_System.
+  -h, --help            show this help message and exit
+  -S, --show-stream     Do not dsiplay the camera stream. Disable 
+                        the stream window.
+  -s, --security        Security Mode. Scan the around and optionally 
+                        take photos of visitors.
+  -l, --learn           Teach mode. Teach the object tracking parameters 
+                        with the trial and error method.
+  -a, --augmented       Augmented control with the Augmented Virtual 
+                        Assistant A.V.A.. 'https://github.com/MCYBA/A.V.A.'
+                        is the home page of the A.V.A. and usage explained 
+                        into the'AUGMENTED.md'.
+  --cascadefile XML_FILE    
+                        Specify the trained detection algorithm file for the 
+                        object detection ability
+  --version             Display the version number of T_System.
 ```
-
 
 <br>
 
+### Augmented
+
+Augmented usage explained [here](https://github.com/MCYBA/A.V.A.) into the `AUGMENTED.md`.
 
 <br>
 
