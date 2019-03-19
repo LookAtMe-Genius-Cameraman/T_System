@@ -50,7 +50,7 @@ class Vision():
         else:
             ccade_xml_file = T_SYSTEM_PATH + "/haarcascade/" + args["cascadefile"] + ".xml"
 
-        self.show_stream = args["show-stream"]
+        self.show_stream = args["show_stream"]  # 'show-stream' argument automatically converted this type.
         self.augmented = args["augmented"]
 
         self.camera = camera
@@ -205,6 +205,7 @@ class Vision():
                     thread_of_stream.join()
                     break
                 is_first_run = False
+            time.sleep(0.5)  # for relieve the cpu.
 
     def scan(self, stop_thread, resolution=3):
         """The top-level method to provide the scanning around for security mode of T_System.
@@ -222,7 +223,7 @@ class Vision():
                 servo_pan.angular_move(float(angle), 180.0)
                 angle_for_ellipse_move = calc_ellipsoidal_angle(float(angle) - 90, 180.0, 75.0)  # 75 degree is for physical conditions.
                 servo_tilt.angular_move(angle_for_ellipse_move, 75.0)
-                time.sleep(0.1)
+                time.sleep(0.2)
 
             for angle in range(180, 0, resolution * -1):
                 if stop_thread():
@@ -230,7 +231,7 @@ class Vision():
                 servo_pan.angular_move(float(angle), 180.0)
                 angle_for_ellipse_move = calc_ellipsoidal_angle(float(angle) - 90, 180.0, 75.0)
                 servo_tilt.angular_move(angle_for_ellipse_move, 75.0)
-                time.sleep(0.1)
+                time.sleep(0.2)
 
     def stream(self, stop_thread, format="bgr"):
         """The top-level method to provide the video stream for security mode of T_System.

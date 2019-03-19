@@ -61,6 +61,8 @@ class Motor():
         obj_width = obj_last_px - obj_first_px
 
         dis_to_des = self.current_dis_to_des(obj_first_px, obj_last_px, frame_width)
+        if dis_to_des <= 5:  # for increasing the moving performance.
+            return obj_width
 
         k_fact = decider.decision(obj_width)
         target_duty_cy = self.calc_duty_cycle(obj_width, dis_to_des, k_fact)

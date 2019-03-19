@@ -55,6 +55,7 @@ def initiate():
     """
 
     ap = argparse.ArgumentParser()
+
     ap.add_argument("-S", "--show-stream", help="Display the camera stream. Enable the stream window.", action="store_true")
     ap.add_argument("-l", "--learn", help="Teach Mode. Teach the object tracking parameters with the trial and error method.", action="store_true")
     ap.add_argument("-s", "--security", help="Security Mode. Scan the around and optionally take photos of visitors.", action="store_true")

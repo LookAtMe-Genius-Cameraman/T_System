@@ -59,7 +59,7 @@ optional arguments:
                         Assistant A.V.A.. 'https://github.com/MCYBA/A.V.A.'
                         is the home page of the A.V.A. and usage explained 
                         into the'AUGMENTED.md'.
-  --cascadefile XML_FILE    
+  --cascadefile CASCADEFILE    
                         Specify the trained detection algorithm file for the 
                         object detection ability
   --version             Display the version number of T_System.
