@@ -14,11 +14,6 @@ import time
 import math
 
 
-from t_system.decision import Decider
-
-decider = Decider()
-
-
 class Motor():
     """Class to define a motion of tracking system.
 
@@ -27,16 +22,18 @@ class Motor():
 
     """
 
-    def __init__(self, servo_pin, init_duty_cy=7.5, is_reverse=True):
+    def __init__(self, servo_pin, decider, init_duty_cy=7.5, is_reverse=True):
 
         """Initialization method of :class:`t_system.Motion` class.
 
         Args:
             servo_pin:       	    GPIO pin to use for servo motor.
+            decider:                decider object of Decider class.
             init_duty_cy:       	Initialization angle value for servo motor as duty cycle.
         """
 
         self.servo_pin = servo_pin
+        self.decider = decider
         self.is_reverse = is_reverse
 
         GPIO.setmode(GPIO.BCM)
@@ -61,10 +58,10 @@ class Motor():
         obj_width = obj_last_px - obj_first_px
 
         dis_to_des = self.current_dis_to_des(obj_first_px, obj_last_px, frame_width)
-        if dis_to_des <= 5:  # for increasing the moving performance.
-            return obj_width
+        # if dis_to_des <= 5:  # for increasing the moving performance.
+        #     return obj_width
 
-        k_fact = decider.decision(obj_width)
+        k_fact = self.decider.decision(obj_width)
         target_duty_cy = self.calc_duty_cycle(obj_width, dis_to_des, k_fact)
         
         self.servo.ChangeDutyCycle(target_duty_cy)
@@ -108,9 +105,14 @@ class Motor():
         duty_cycle = teta_radian * 180 / 3.1416 / 18
 
         if self.is_reverse:
+            if self.current_duty_cy - duty_cycle < 0.0 or self.current_duty_cy - duty_cycle > 100.0:
+                return self.current_duty_cy
             return self.current_duty_cy - duty_cycle  # this mines (-) for the camera's mirror effect.
         else:
+            if self.current_duty_cy + duty_cycle < 0.0 or self.current_duty_cy + duty_cycle > 100.0:
+                return self.current_duty_cy
             return self.current_duty_cy + duty_cycle
+
     @staticmethod
     def current_dis_to_des(obj_first_px, obj_last_px, frame_width):
         """The top-level method to calculate the distance to the destination at that moment.

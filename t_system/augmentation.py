@@ -82,9 +82,9 @@ class Augmenter():
                 elif not msg['options'] == current_target:
                     if msg['command'] == 'change_target':
                         if msg['options'] == ('cat' or 'cats'):
-                            self.vision.change_object_cascade("haarcascade_frontalcatface_extended.xml")
+                            self.vision.change_tracked_thing("frontalcatface_extended")
                         elif msg['options'] == ('clock' or 'wall clock'):
-                            self.vision.change_object_cascade("haarcascade_wallclock.xml")
+                            self.vision.change_tracked_thing("wallclock")
                         current_target = msg['options']
                         self.mqtt_receimitter.publish('T_System/Augmented', {'command': 're-check', 'options': 'realized'})
                 elif msg['options'] == current_mode:
@@ -92,11 +92,3 @@ class Augmenter():
                 elif msg['options'] == current_target:
                     self.mqtt_receimitter.publish('T_System/Augmented', {'command': 're-check', 'options': 'already_tracking'})
             time.sleep(0.5)
-
-
-
-
-
-
-
-

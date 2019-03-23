@@ -3,6 +3,8 @@
 
 the moving objects tracking system via two axis camera motion for raspberry pi distributions
 
+![A.V.A.](https://raw.githubusercontent.com/MCYBA/T_System/master/docs/img/on_work.gif)
+
 <br>
 
 
@@ -46,23 +48,27 @@ for development mode: `sudo ./install-dev.sh`
 
 
 ```
-usage: t_system [-h] [-S] [-s] [-l] [-a] [--cascadefile XML_FILE] [--version]
+usage: t_system [-h] [-S] [-l] [-s] [-a] [--version]
+                 [--cascadefile XML_FILE]
 
 optional arguments:
   -h, --help            show this help message and exit
   -S, --show-stream     Display the camera stream. Enable the stream window.
-  -s, --security        Security Mode. Scan the around and optionally 
-                        take photos of visitors.
-  -l, --learn           Teach mode. Teach the object tracking parameters 
-                        with the trial and error method.
-  -a, --augmented       Augmented control with the Augmented Virtual 
-                        Assistant A.V.A.. 'https://github.com/MCYBA/A.V.A.'
-                        is the home page of the A.V.A. and usage explained 
-                        into the'AUGMENTED.md'.
+  -l, --learn           Teach mode. Teach the object tracking parameters with 
+                        the trial and error method.
+  -s, --security        Security Mode. Scan the around and optionally take 
+                        photos of visitors.
+  -a, --augmented       Augmented control with the Augmented Virtual Assistant 
+                        A.V.A.. 'https://github.com/MCYBA/A.V.A.' is the home 
+                        page of the A.V.A. and usage explained into the
+                        'AUGMENTED.md'.
+  --version             Display the version number of T_System.
   --cascadefile CASCADEFILE    
                         Specify the trained detection algorithm file for the 
-                        object detection ability
-  --version             Display the version number of T_System.
+                        object detection ability. Sample(And Default):
+                        'haarcascade_frontalface_default' for
+                        frontalface_default.xml file inside the 'haarcascade'
+                        folder. 
 ```
 
 <br>

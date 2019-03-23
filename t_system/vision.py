@@ -8,9 +8,11 @@
 
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
-import inspect
-import time
-import os
+
+import time  # Time access and conversions
+import inspect  # Inspect live objects
+import os  # Miscellaneous operating system interfaces
+
 
 from picamera.array import PiRGBArray
 
@@ -20,10 +22,6 @@ from t_system.motor import Motor
 from t_system.motor import calc_ellipsoidal_angle
 from t_system.decision import Decider
 
-
-servo_pan = Motor(17)      # pan means rotate right and left ways.
-servo_tilt = Motor(14, 5, False)  # tilt means rotate up and down ways.
-decider = Decider()
 
 T_SYSTEM_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
@@ -46,9 +44,14 @@ class Vision():
 
         """
         if not args["cascadefile"]:
-            ccade_xml_file = T_SYSTEM_PATH + "/haarcascade/haarcascade_frontalface_default.xml"
+            ccade_xml_file = T_SYSTEM_PATH + "/haarcascade/frontalface_default.xml"
+            self.decider = Decider()
         else:
             ccade_xml_file = T_SYSTEM_PATH + "/haarcascade/" + args["cascadefile"] + ".xml"
+            self.decider = Decider(args["cascadefile"])
+
+        self.servo_pan = Motor(17, self.decider)      # pan means rotate right and left ways.
+        self.servo_tilt = Motor(14, self.decider, 4.5, False)  # tilt means rotate up and down ways.
 
         self.show_stream = args["show_stream"]  # 'show-stream' argument automatically converted this type.
         self.augmented = args["augmented"]
@@ -93,8 +96,8 @@ class Vision():
                     if self.show_stream or not self.augmented:
                         cv2.rectangle(image, (x, y), (x + w, y + h), (255, 0, 0), 2)
 
-                    servo_pan.move(x, x + w, self.frame_width)
-                    servo_tilt.move(y, y + h, self.frame_height)
+                    self.servo_pan.move(x, x + w, self.frame_width)
+                    self.servo_tilt.move(y, y + h, self.frame_height)
 
                     time.sleep(0.1)  # allow the servos to complete the moving.
 
@@ -136,8 +139,8 @@ class Vision():
                     if self.show_stream or not self.augmented:
                         cv2.rectangle(image, (x, y), (x + w, y + h), (255, 0, 0), 2)
 
-                    obj_width_pan = servo_pan.move(x, x + w, self.frame_width)
-                    obj_width_tilt = servo_tilt.move(y, y + h, self.frame_height)
+                    obj_width_pan = self.servo_pan.move(x, x + w, self.frame_width)
+                    obj_width_tilt = self.servo_tilt.move(y, y + h, self.frame_height)
 
                     time.sleep(0.5)  # allow the camera to capture after moving.
 
@@ -157,11 +160,11 @@ class Vision():
                             if self.show_stream or not self.augmented:
                                 cv2.rectangle(image, (x, y), (x + w, y + h), (255, 0, 0), 2)
 
-                            err_rate_pan = float(servo_pan.current_dis_to_des(x, x+w, self.frame_width) / servo_pan.get_previous_dis_to_des()) * 100
-                            err_rate_tilt = float(servo_tilt.current_dis_to_des(y, y+h, self.frame_height) / servo_tilt.get_previous_dis_to_des()) * 100
+                            err_rate_pan = float(self.servo_pan.current_dis_to_des(x, x+w, self.frame_width) / self.servo_pan.get_previous_dis_to_des()) * 100
+                            err_rate_tilt = float(self.servo_tilt.current_dis_to_des(y, y+h, self.frame_height) / self.servo_tilt.get_previous_dis_to_des()) * 100
 
-                            decider.decision(obj_width_pan, err_rate_pan, True)
-                            decider.decision(obj_width_tilt, err_rate_tilt, True)
+                            self.decider.decision(obj_width_pan, err_rate_pan, True)
+                            self.decider.decision(obj_width_tilt, err_rate_tilt, True)
 
             if self.show_stream or not self.augmented:
                 # show the frame
@@ -220,18 +223,18 @@ class Vision():
             for angle in range(0, 180, resolution):
                 if stop_thread():
                     break
-                servo_pan.angular_move(float(angle), 180.0)
+                self.servo_pan.angular_move(float(angle), 180.0)
                 angle_for_ellipse_move = calc_ellipsoidal_angle(float(angle) - 90, 180.0, 75.0)  # 75 degree is for physical conditions.
-                servo_tilt.angular_move(angle_for_ellipse_move, 75.0)
-                time.sleep(0.2)
+                self.servo_tilt.angular_move(angle_for_ellipse_move, 75.0)
+                time.sleep(0.1)
 
             for angle in range(180, 0, resolution * -1):
                 if stop_thread():
                     break
-                servo_pan.angular_move(float(angle), 180.0)
+                self.servo_pan.angular_move(float(angle), 180.0)
                 angle_for_ellipse_move = calc_ellipsoidal_angle(float(angle) - 90, 180.0, 75.0)
-                servo_tilt.angular_move(angle_for_ellipse_move, 75.0)
-                time.sleep(0.2)
+                self.servo_tilt.angular_move(angle_for_ellipse_move, 75.0)
+                time.sleep(0.1)
 
     def stream(self, stop_thread, format="bgr"):
         """The top-level method to provide the video stream for security mode of T_System.
@@ -273,7 +276,7 @@ class Vision():
 
         # if loop end, the scan process will be terminated.
 
-    def change_object_cascade(self, file):
+    def change_tracked_thing(self, file):
         """The top-level method to changing tracking objects.
 
          Args:
@@ -282,6 +285,7 @@ class Vision():
         ccade_xml_file = T_SYSTEM_PATH + "/" + file
 
         self.object_cascade = cv2.CascadeClassifier(ccade_xml_file)
+        self.decider.set_db(file)
 
     def set_mqtt_receimitter(self, mqtt_receimitter):
         """The top-level method to set mqtt_receimitter object for publishing and subscribing data echos.

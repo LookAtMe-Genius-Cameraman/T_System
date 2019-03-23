@@ -10,34 +10,41 @@
 """
 
 from tinydb import TinyDB, Query  # TinyDB is a lightweight document oriented database
-from os.path import expanduser  # Imported to get the home directory
+import inspect  # Inspect live objects
+import os  # Miscellaneous operating system interfaces
 
 import numpy
 
-initial_k_fact = 0.01
-acceptable_err_rate = 5.0
+
+T_SYSTEM_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
 
 class Decider():
     """Class to provide the k factor decision ability.
     """
 
-    def __init__(self):
+    def __init__(self, object_file_name="frontalface_default"):
         """Initialization method of :class:`t_system.Decider` class.
-        """
 
-        home = expanduser("~")  # Get the home directory of the user
-        self.db = TinyDB(home + '/.t_system_db.json')  # This is where we store the database; /home/USERNAME/.t_system_db.json
+        Args:
+                object_file_name:       Haarcascade file name of the object that will be tracked.
+        """
+        self.initial_k_fact = 0.01
+        self.acceptable_err_rate = 5.0
+
+        db_file = T_SYSTEM_PATH + "/learning_of_tracking/" + object_file_name + "_db.json"
+
+        self.db = TinyDB(db_file)  # This is where we store the database; /home/T_System/t_system/[object_file_name]_db.json
 
     def decision(self, obj_width, err_rate=100.0, is_err_check=False):
         """Function to decide the necessary k factor with a kind of AI method.
 
         Args:
-            obj_width (int):         Width of the found object from haarcascade for measurement inferencing.
-            err_rate (float):        % error rate. Difference between target point and reached point. ((target point - end point) / (target point - start point)*100)
-            is_err_check:            Control point for the second usage of `t_system.Decider.decision` to determine the error rate after angular moving.
+                obj_width (int):         Width of the found object from haarcascade for measurement inferencing.
+                err_rate (float):        % error rate. Difference between target point and reached point. ((target point - end point) / (target point - start point)*100)
+                is_err_check:            Control point for the second usage of `t_system.Decider.decision` to determine the error rate after angular moving.
         Returns:
-            int:              k factor.
+                int:              k factor.
         """
 
         err_rate = abs(err_rate)
@@ -48,27 +55,27 @@ class Decider():
 
         if not is_err_check:
             if result:
-                if result['err_rate'] <= acceptable_err_rate:
+                if result['err_rate'] <= self.acceptable_err_rate:
                     return result['k_fact']
                 else:
                     return result['next_k_fact']
             else:
-                self.db_upsert(initial_k_fact, obj_width, err_rate, initial_k_fact)
-                return initial_k_fact
+                self.db_upsert(self.initial_k_fact, obj_width, err_rate, self.initial_k_fact)
+                return self.initial_k_fact
         else:
             if result:
-                if (err_rate < result['err_rate']) and (result['err_rate'] > acceptable_err_rate):  # if current error rate smaller than the last one and last error rate bigger than acceptable range, determine new k factor.
+                if (err_rate < result['err_rate']) and (result['err_rate'] > self.acceptable_err_rate):  # if current error rate smaller than the last one and last error rate bigger than acceptable range, determine new k factor.
                     # FOR MAKING A DECISION TO NEXT K FACTOR.
                     accur_rate = 1 - err_rate / 100
                     next_k_fact = result['k_fact'] / accur_rate
 
                     self.db_upsert(result['next_k_fact'], obj_width, err_rate, next_k_fact)
 
-                elif (err_rate < result['err_rate']) and (result['err_rate'] <= acceptable_err_rate):  # if current error rate smaller than the last one but last error rate smaller than acceptable range, use the same k factor.
+                elif (err_rate < result['err_rate']) and (result['err_rate'] <= self.acceptable_err_rate):  # if current error rate smaller than the last one but last error rate smaller than acceptable range, use the same k factor.
                     self.db_upsert(result['k_fact'], obj_width, err_rate, result['k_fact'])
 
                 elif err_rate > result['err_rate']:  # if current error rate bigger than the last one, try to learn k factor again from the begining.
-                    self.db_upsert(initial_k_fact, obj_width, 100, initial_k_fact)
+                    self.db_upsert(self.initial_k_fact, obj_width, 100, self.initial_k_fact)
 
     # def db_get(self, obj_width):
     #     """Function to get a note record from the database.  NOT COMPLETED.
@@ -90,12 +97,12 @@ class Decider():
         """Function to insert(or update) a note record to the database.
 
         Args:
-            k_fact (float):          The factor related to object width for measurement inferencing.
-            obj_width (int):         Width of the found object from haarcascade for measurement inferencing.
-            err_rate (float):        % error rate. Difference between target point and reached point. ((target point - end point) / (target point - start point)*100)
-            next_k_fact (float)      If the aplied k_fact's error rate bigger than %5, try this decided k_fact.
+                k_fact (float):          The factor related to object width for measurement inferencing.
+                obj_width (int):         Width of the found object from haarcascade for measurement inferencing.
+                err_rate (float):        % error rate. Difference between target point and reached point. ((target point - end point) / (target point - start point)*100)
+                next_k_fact (float)      If the aplied k_fact's error rate bigger than %5, try this decided k_fact.
         Returns:
-            str:  Response.
+                str:  Response.
         """
 
         if isinstance(next_k_fact, numpy.float):
@@ -112,6 +119,16 @@ class Decider():
             })  # insert the given data
 
         return ""
+
+    def set_db(self, object_file_name):
+        """Function to change database according to tracking object.
+
+        Args:
+                object_file_name:       Haarcascade file name of the object that will be tracked.
+        """
+        db_file = T_SYSTEM_PATH + "/learning_of_tracking/" + object_file_name + "_db.json"
+
+        self.db = TinyDB(db_file)  # This is where we store the database; /home/T_System/t_system/[object_file_name]_db.json
 
     # def db_delete(self, note=None, category=None, are_all=False, list_name=None, list_sequence=None, is_todolist=False, is_reminder=False, is_active=False, is_public=True, user_id=None):
     #     """Function to delete a note record from the database.  NOT COMPLETED.

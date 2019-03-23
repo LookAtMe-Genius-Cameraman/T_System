@@ -61,7 +61,7 @@ def initiate():
     ap.add_argument("-s", "--security", help="Security Mode. Scan the around and optionally take photos of visitors.", action="store_true")
     ap.add_argument("-a", "--augmented", help="Augmented control with the Augmented Virtual Assistant A.V.A.. \'https://github.com/MCYBA/A.V.A.\' is the home page of the A.V.A. and usage explained into the \'AUGMENTED.md\'.", action="store_true")
     ap.add_argument("--version", help="Display the version number of T_System.", action="store_true")
-    ap.add_argument("--cascadefile", help="Specify the trained detection algorithm file for the object detection ability. Sample(And Default): 'haarcascade_frontalface_default' for haarcascade_frontalface_default.xml file inside the 'haarcascade' folder. ", action="store", type=str)
+    ap.add_argument("--cascadefile", help="Specify the trained detection algorithm file for the object detection ability. Sample(And Default): 'haarcascade_frontalface_default' for frontalface_default.xml file inside the 'haarcascade' folder. ", action="store", type=str)
 
     args = vars(ap.parse_args())
 
