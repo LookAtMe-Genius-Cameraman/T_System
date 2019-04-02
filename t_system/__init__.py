@@ -38,7 +38,7 @@ def start(args):
     elif args["security"]:
         vision.security(lambda: False)
     elif args["augmented"]:
-        from t_system.augmentation import Augmenter
+        from t_system.augmented import Augmenter
 
         augmenter = Augmenter(vision)
         augmenter.run()

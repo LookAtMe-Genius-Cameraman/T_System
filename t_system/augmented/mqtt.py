@@ -74,7 +74,7 @@ class MqttReceimitter():
             rc:       	            Result code of the connection.
         """
         print('Connected with result code ' + str(rc))
-        # self.client.publish('T_System/Augmented', str(rc))  # For return the connection situation to the subscriber device.
+        # self.client.publish('Augmented/A.V.A.', str(rc))  # For return the connection situation to the subscriber device.
         if rc == 0:
             self.is_connected = True
         self.client.subscribe(self.topic)

@@ -15,7 +15,7 @@ t_system.decision module
 t_system.motion module
 ----------------------------
 
-.. automodule:: t_system.motion
+.. automodule:: t_system.motor
     :members:
     :undoc-members:
     :show-inheritance:

@@ -17,14 +17,14 @@ import math
 class Motor():
     """Class to define a motion of tracking system.
 
-        This class provides necessary initiations and a function named :func:`t_system.Motion.move`
+        This class provides necessary initiations and a function named :func:`t_system.motor.Motor.move`
         for the provide move of servo motor.
 
     """
 
     def __init__(self, servo_pin, decider, init_duty_cy=7.5, is_reverse=True):
 
-        """Initialization method of :class:`t_system.Motion` class.
+        """Initialization method of :class:`t_system.motor.Motor` class.
 
         Args:
             servo_pin:       	    GPIO pin to use for servo motor.
@@ -62,14 +62,14 @@ class Motor():
         #     return obj_width
 
         k_fact = self.decider.decision(obj_width)
-        target_duty_cy = self.calc_duty_cycle(obj_width, dis_to_des, k_fact)
+        target_duty_cy, physically_distance = self.calc_duty_cycle(obj_width, dis_to_des, k_fact)
         
         self.servo.ChangeDutyCycle(target_duty_cy)
 
         self.current_duty_cy = target_duty_cy
         self.previous_dis_to_des = dis_to_des
 
-        return obj_width  # this return is for the control of the result of the move.
+        return obj_width, physically_distance  # this return is for the control of the result of the move.
 
     # @move.dispatch(float, float)
     def angular_move(self, angle, max_angle):
@@ -101,17 +101,18 @@ class Motor():
             dis_to_des:       	     distance from 'frame middle point' to ' object middle point' (distance to destination.)
             k_fact (float):          The factor related to object width for measurement inferencing.
         """
-        teta_radian = dis_to_des / (obj_width / k_fact)
+        physically_distance = obj_width / k_fact
+        teta_radian = dis_to_des / physically_distance
         duty_cycle = teta_radian * 180 / 3.1416 / 18
 
         if self.is_reverse:
             if self.current_duty_cy - duty_cycle < 0.0 or self.current_duty_cy - duty_cycle > 100.0:
-                return self.current_duty_cy
-            return self.current_duty_cy - duty_cycle  # this mines (-) for the camera's mirror effect.
+                return self.current_duty_cy, physically_distance
+            return self.current_duty_cy - duty_cycle, physically_distance  # this mines (-) for the camera's mirror effect.
         else:
             if self.current_duty_cy + duty_cycle < 0.0 or self.current_duty_cy + duty_cycle > 100.0:
-                return self.current_duty_cy
-            return self.current_duty_cy + duty_cycle
+                return self.current_duty_cy, physically_distance
+            return self.current_duty_cy + duty_cycle, physically_distance
 
     @staticmethod
     def current_dis_to_des(obj_first_px, obj_last_px, frame_width):

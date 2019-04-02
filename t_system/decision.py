@@ -24,7 +24,7 @@ class Decider():
     """
 
     def __init__(self, object_file_name="frontalface_default"):
-        """Initialization method of :class:`t_system.Decider` class.
+        """Initialization method of :class:`t_system.decision.Decider` class.
 
         Args:
                 object_file_name:       Haarcascade file name of the object that will be tracked.
@@ -40,7 +40,7 @@ class Decider():
         """Function to decide the necessary k factor with a kind of AI method.
 
         Args:
-                obj_width (int):         Width of the found object from haarcascade for measurement inferencing.
+                obj_width (int):         The width of the found object from haarcascade that is used for measurement inferencing.
                 err_rate (float):        % error rate. Difference between target point and reached point. ((target point - end point) / (target point - start point)*100)
                 is_err_check:            Control point for the second usage of `t_system.Decider.decision` to determine the error rate after angular moving.
         Returns:

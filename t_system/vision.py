@@ -12,7 +12,7 @@
 import time  # Time access and conversions
 import inspect  # Inspect live objects
 import os  # Miscellaneous operating system interfaces
-
+from math import sqrt
 
 from picamera.array import PiRGBArray
 
@@ -22,6 +22,8 @@ from t_system.motor import Motor
 from t_system.motor import calc_ellipsoidal_angle
 from t_system.decision import Decider
 
+from t_system.high_tech_aim import Aimer
+
 
 T_SYSTEM_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
@@ -29,13 +31,14 @@ T_SYSTEM_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentf
 class Vision():
     """Class to define a vision of tracking system..
 
-    This class provides necessary initiations and a function named :func:`t_system.Vision.rtime_detect`
-    as the loop for each camera frames.
+    This class provides necessary initiations and functios named :func:`t_system.vision.Vision.detect_track`
+    as the loop for each camera frames for tracking mode, named :func:`t_system.vision.Vision.learn` as the
+    learning ability and :func:`t_system.vision.Vision.security` as the security mode.
 
     """
 
     def __init__(self, args, camera, resolution=(320, 240), framerate=32):
-        """Initialization method of :class:`t_system.Vision` class.
+        """Initialization method of :class:`t_system.vision.Vision` class.
 
         Args:
                 camera:       	        Camera object from PiCamera.
@@ -52,6 +55,8 @@ class Vision():
 
         self.servo_pan = Motor(17, self.decider)      # pan means rotate right and left ways.
         self.servo_tilt = Motor(14, self.decider, 4.5, False)  # tilt means rotate up and down ways.
+
+        self.aimer = Aimer()
 
         self.show_stream = args["show_stream"]  # 'show-stream' argument automatically converted this type.
         self.augmented = args["augmented"]
@@ -83,7 +88,8 @@ class Vision():
             # and occupied/unoccupied text
 
             image = frame.array
-            gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+            editable_image = image.copy()
+            gray = cv2.cvtColor(editable_image, cv2.COLOR_BGR2GRAY)
             # gray = cv2.equalizeHist(gray)
 
             objects = self.object_cascade.detectMultiScale(gray, 1.3, 5)
@@ -94,16 +100,21 @@ class Vision():
                 for (x, y, w, h) in objects:
 
                     if self.show_stream or not self.augmented:
-                        cv2.rectangle(image, (x, y), (x + w, y + h), (255, 0, 0), 2)
+                        radius = int(sqrt(w * w + h * h) / 2)
 
-                    self.servo_pan.move(x, x + w, self.frame_width)
-                    self.servo_tilt.move(y, y + h, self.frame_height)
+                        # cv2.rectangle(editable_image, (x, y), (x + w, y + h), (255, 0, 0), 2)
+                        # cv2.circle(editable_image, (int(x + w / 2), int(y + h / 2)), radius, (0, 255, 0), 1)
+
+                        obj_width_pan, physically_distance = self.servo_pan.move(x, x + w, self.frame_width)
+                        self.servo_tilt.move(y, y + h, self.frame_height)
+
+                        editable_image = self.aimer.mark(editable_image, (int(x + w / 2), int(y + h / 2)), radius, physically_distance)
 
                     time.sleep(0.1)  # allow the servos to complete the moving.
 
             if self.show_stream or not self.augmented:
                 # show the frame
-                cv2.imshow("Frame", image)
+                cv2.imshow("Frame", editable_image)
             key = cv2.waitKey(1) & 0xFF
 
             # clear the stream in preparation for the next frame
@@ -139,8 +150,8 @@ class Vision():
                     if self.show_stream or not self.augmented:
                         cv2.rectangle(image, (x, y), (x + w, y + h), (255, 0, 0), 2)
 
-                    obj_width_pan = self.servo_pan.move(x, x + w, self.frame_width)
-                    obj_width_tilt = self.servo_tilt.move(y, y + h, self.frame_height)
+                    obj_width_pan, physically_distance = self.servo_pan.move(x, x + w, self.frame_width)
+                    obj_width_tilt, physically_distance = self.servo_tilt.move(y, y + h, self.frame_height)
 
                     time.sleep(0.5)  # allow the camera to capture after moving.
 
@@ -249,7 +260,7 @@ class Vision():
             # and occupied/unoccupied text
 
             image = frame.array
-            gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+            # gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
             # gray = cv2.equalizeHist(gray)
 
             # SECURITY MODE CAN BE TAKING PHOTOGRAPHS AS DIFFERENT FROM learn AND detect_track FUNCTIONS.
