@@ -62,14 +62,14 @@ class Motor():
         #     return obj_width
 
         k_fact = self.decider.decision(obj_width)
-        target_duty_cy, physically_distance = self.calc_duty_cycle(obj_width, dis_to_des, k_fact)
+        target_duty_cy = self.calc_duty_cycle(obj_width, dis_to_des, k_fact)
         
         self.servo.ChangeDutyCycle(target_duty_cy)
 
         self.current_duty_cy = target_duty_cy
         self.previous_dis_to_des = dis_to_des
 
-        return obj_width, physically_distance  # this return is for the control of the result of the move.
+        return obj_width  # this return is for the control of the result of the move.
 
     # @move.dispatch(float, float)
     def angular_move(self, angle, max_angle):
@@ -101,22 +101,21 @@ class Motor():
             dis_to_des:       	     distance from 'frame middle point' to ' object middle point' (distance to destination.)
             k_fact (float):          The factor related to object width for measurement inferencing.
         """
-        physically_distance = obj_width / k_fact
-        teta_radian = dis_to_des / physically_distance
+        teta_radian = dis_to_des / (obj_width / k_fact)
         duty_cycle = teta_radian * 180 / 3.1416 / 18
 
         if self.is_reverse:
             if self.current_duty_cy - duty_cycle < 0.0 or self.current_duty_cy - duty_cycle > 100.0:
-                return self.current_duty_cy, physically_distance
-            return self.current_duty_cy - duty_cycle, physically_distance  # this mines (-) for the camera's mirror effect.
+                return self.current_duty_cy
+            return self.current_duty_cy - duty_cycle  # this mines (-) for the camera's mirror effect.
         else:
             if self.current_duty_cy + duty_cycle < 0.0 or self.current_duty_cy + duty_cycle > 100.0:
-                return self.current_duty_cy, physically_distance
-            return self.current_duty_cy + duty_cycle, physically_distance
+                return self.current_duty_cy
+            return self.current_duty_cy + duty_cycle
 
     @staticmethod
     def current_dis_to_des(obj_first_px, obj_last_px, frame_width):
-        """The top-level method to calculate the distance to the destination at that moment.
+        """The low-level method to calculate the distance to the destination at that moment.
 
         Args:
             obj_first_px:       	 initial pixel value of found object from haarcascade.
@@ -129,19 +128,28 @@ class Motor():
         return float(obj_middle_px - frame_middle_px)
 
     def get_previous_dis_to_des(self):
-        """The top-level method to provide return previous_dis_to_des variable.
+        """The low-level method to provide return previous_dis_to_des variable.
         """
         if self.previous_dis_to_des == 0.0:
             self.previous_dis_to_des = 0.00001  # For avoid the 'float division by zero' error
 
         return self.previous_dis_to_des
 
+    def get_physically_distance(self, obj_width):
+        """The low-level method to provide return the tracking object's physically distance value.
+        """
+        k_fact = self.decider.decision(obj_width)
+
+        return obj_width / k_fact  # physically distance is equal to obj_width / k_fact.
+
     def gpio_cleanup(self):
+        """The low-level method to provide clean the GPIO pin that is reserved the servo motor.
+        """
         GPIO.cleanup(self.servo_pin)
 
 
 def calc_ellipsoidal_angle(angle, pan_max, tilt_max):
-    """The top-level method to calculate what is going to be angle of second axis to ellipsoidal scanning of the around.
+    """The low-level method to calculate what is going to be angle of second axis to ellipsoidal scanning of the around.
 
     Args:
         angle:       	         Servo motor's angle. Between 0 - 180 Degree.

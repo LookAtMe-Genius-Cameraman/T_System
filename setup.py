@@ -64,7 +64,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='0.9',
+    version='0.9.1',
     description='t_system is an open source moving target locking system project via raspberry Pi embedded computer',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -129,7 +129,8 @@ setup(
         'nltk==3.1',
         'numpy',
         'paho-mqtt>=1.4.0',
-        'multidispatch'
+        'multidispatch',
+        'face_recognition'
         # 'opencv-python>=4.0.0.21'
     ],
 

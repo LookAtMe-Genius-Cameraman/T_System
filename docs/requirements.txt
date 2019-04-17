@@ -6,3 +6,4 @@ numpy
 paho-mqtt>=1.4.0
 multipledispatch
 m2r
+face_recognition

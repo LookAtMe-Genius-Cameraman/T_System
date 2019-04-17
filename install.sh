@@ -1,6 +1,6 @@
 #!/bin/bash
 OPTS=`getopt -o n --long no-model -- "$@"`
-if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; exit 1 ; fi
+if [[ $? != 0 ]] ; then echo "Failed parsing options." >&2 ; exit 1 ; fi
 eval set -- "$OPTS"
 
 apt-get update
@@ -16,11 +16,10 @@ GREEN='\033[0;32m'
 NC='\033[0m' # No Color
 
 T_SYSTEM_DIR=/usr/share/t_system
-if [ ! -d "$T_SYSTEM_DIR" ]; then
-  mkdir $T_SYSTEM_DIR
+if [[ ! -d "$T_SYSTEM_DIR" ]]; then
+  mkdir ${T_SYSTEM_DIR}
 fi
 
-pip3 install --upgrade picamera>=1.13 RPi.GPIO>=0.6.5 tinydb==3.9.0.post1 numpy paho-mqtt>=1.4.0 multipledispatch && \
+pip3 install --upgrade picamera>=1.13 RPi.GPIO>=0.6.5 tinydb==3.9.0.post1 numpy paho-mqtt>=1.4.0 face_recognition multipledispatch && \
 pip3 install --upgrade flake8 sphinx sphinx_rtd_theme recommonmark m2r pytest docutils && \
 printf "import nltk\nnltk.download('names')\nnltk.download('brown')\nnltk.download('wordnet')\nnltk.download('punkt')" | python3 && echo -e "\n\n${GREEN}t_system is successfully installed to your computer.${NC}\n"
-
