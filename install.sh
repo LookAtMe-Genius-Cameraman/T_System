@@ -1,7 +1,7 @@
 #!/bin/bash
 OPTS=`getopt -o n --long no-model -- "$@"`
 if [[ $? != 0 ]] ; then echo "Failed parsing options." >&2 ; exit 1 ; fi
-eval set -- "$OPTS"
+eval set -- "${OPTS}"
 
 apt-get update
 apt-get -y install debhelper python3 python3-all-dev libglib2.0-dev libcairo2-dev libgtk2.0-dev && \
@@ -22,4 +22,4 @@ fi
 
 pip3 install --upgrade picamera>=1.13 RPi.GPIO>=0.6.5 tinydb==3.9.0.post1 numpy paho-mqtt>=1.4.0 face_recognition multipledispatch && \
 pip3 install --upgrade flake8 sphinx sphinx_rtd_theme recommonmark m2r pytest docutils && \
-printf "import nltk\nnltk.download('names')\nnltk.download('brown')\nnltk.download('wordnet')\nnltk.download('punkt')" | python3 && echo -e "\n\n${GREEN}t_system is successfully installed to your computer.${NC}\n"
+echo -e "\n\n${GREEN}t_system is successfully installed to your computer.${NC}\n"
