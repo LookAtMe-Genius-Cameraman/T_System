@@ -12,11 +12,11 @@
 import json
 
 
-class MqttReceimitter():
+class MqttReceimitter:
     """Class to define a receiving and transmitting data ability of tracking system with mqtt protokol.
 
-        This class provides necessary initiations and a function named :func:`t_system.MqttReceimitter.move`
-        for the provide move of servo motor.
+        This class provides necessary initiations and a function named :func:`t_system.MqttReceimitter.subscribe`
+        and :func:`t_system.MqttReceimitter.publish` for the provide sending and receiving data.
 
     """
 

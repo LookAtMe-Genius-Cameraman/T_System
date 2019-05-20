@@ -8,7 +8,7 @@
 
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
-import time
+import time  # Time access and conversions
 
 import threading
 
@@ -16,7 +16,7 @@ from t_system.augmented.mqtt import MqttReceimitter
 from t_system.augmented.online_stream import start_stream
 
 
-class Augmenter():
+class Augmenter:
     """Class to define a take orders ability from remote user of tracking system..
 
         This class provides necessary initiations and a function named :func:`t_system.augmented.Augmenter.run`
@@ -30,7 +30,6 @@ class Augmenter():
 
         Args:
                 vision:       	        Vision object from t_system.vision.Vision Class.
-
         """
         self.mqtt_receimitter = MqttReceimitter('10.42.0.151')
 
@@ -40,8 +39,11 @@ class Augmenter():
         self.vision = vision
         self.vision.set_mqtt_receimitter(self.mqtt_receimitter)
 
-    def run(self):
+    def run(self, stop_main_thread):
         """The top-level method to checking incoming message to augmented mode.
+
+        Args:
+            stop_main_thread:   	       Stop flag of the tread about terminating it outside of the function's loop.
         """
         global current_mode
         global current_target
@@ -56,6 +58,14 @@ class Augmenter():
         msg_order_report = {'status': False, 'for': '', 'reason': '', 'options': ''}
 
         while True:
+            if stop_main_thread():
+
+                stop_thread = True
+                for worker in working_mode_threads:  # For killing the existing thread.
+                    worker.join()
+
+                break
+
             msg = self.mqtt_receimitter.get_incoming_message()
             if not msg == {}:
                 if msg['for'] == 'change_mode':
