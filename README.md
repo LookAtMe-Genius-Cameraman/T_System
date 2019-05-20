@@ -3,7 +3,7 @@
 
 the moving objects tracking system via two axis camera motion for raspberry pi distributions
 
-![A.V.A.](https://raw.githubusercontent.com/MCYBA/T_System/master/docs/img/on_work.gif)
+![T_System](https://raw.githubusercontent.com/MCYBA/T_System/master/docs/img/on_work.gif)
 
 <br>
 
@@ -52,54 +52,99 @@ for development mode: `sudo ./install-dev.sh`
 
 
 ```
-usage: t_system [-h] [-S] [-l] [-s] [-a] [-d DETECTION_MODEL] [-j] [--version]
-                [--gpio-pan-tilt PAN TILT] [--encoding-file ENCODING_FILE]
-                [--cascade-file CASCADE_FILE] [--use-tracking-api]
-                [--tracker-type TRACKER_TYPE]
+usage: t_system [-h] [-l] [-s] [--detection-model DETECTION_MODEL]
+                [--cascade-file CASCADE_FILE] [-j]
+                [--encoding-file ENCODING_FILE] [--use-tracking-api]
+                [--tracker-type TRACKER_TYPE] [-S] [-r]
+                [--servo-gpios PAN TILT] [--version]
+                interface
 
 optional arguments:
   -h, --help            show this help message and exit
-  -S, --show-stream     Display the camera stream. Enable the stream
-                        window.(Require gui environment.)
+
+user-interfaces:
+  interface             Set the user interfaces. To use: either
+                        `official_stand`, `augmented` or
+                        None.`official_stand`: for using the interface of
+                        official T_System stand.`augmented`: Augmented control
+                        with the Augmented Virtual Assistant A.V.A..
+                        'https://github.com/MCYBA/A.V.A.' is the home page of
+                        the A.V.A. and usage explained into the
+                        'AUGMENTED.md'.None: Use to just by `running modes`
+                        parameters.The default value is None.
+
+running modes:
   -l, --learn           Teach Mode. Teach the object tracking parameters with
                         the trial and error method.
   -s, --security        Security Mode. Scan the around and optionally take
                         photos of visitors.
-  -a, --augmented       Augmented control with the Augmented Virtual Assistant
-                        A.V.A.. 'https://github.com/MCYBA/A.V.A.' is the home
-                        page of the A.V.A. and usage explained into the
-                        'AUGMENTED.md'.
-  -d DETECTION_MODEL, --detection-model DETECTION_MODEL
+
+running tools:
+  --detection-model DETECTION_MODEL
                         Object detection model to use: either `haarcascade`,
                         `hog` or `cnn`. `hog` and `cnn` can only use for
                         detecting faces. `haarcascade` is default.
-  -j, --no-recognize    Do not recognize the things.(faces, objects etc.)
-  --version             Display the version number of T_System.
-  --gpio-pan-tilt PAN TILT
-                        GPIO pin numbers of the 2 axis moving platform's servo
-                        motors. 17(as pan) and 14(as tilt) GPIO pins are
-                        default.
-  --encoding-file ENCODING_FILE
-                        Specify the trained recognition encoding pickle file
-                        for recognize object. Sample: 'encodings' for
-                        encodings.pickle file under the
-                        'recognition_encodings' folder.
   --cascade-file CASCADE_FILE
                         Specify the trained detection algorithm file for the
                         object detection ability. Sample:
                         'frontalface_default' for frontalface_default.xml file
                         under the 'haarcascade' folder.
+  -j, --no-recognize    Do not recognize the things.(faces, objects etc.)
+  --encoding-file ENCODING_FILE
+                        Specify the trained recognition encoding pickle file
+                        for recognize object. Sample: 'encodings' for
+                        encodings.pickle file under the
+                        'recognition_encodings' folder.
   --use-tracking-api    Use the openCV's tracking API for realize the next
                         object is same as previous one.
   --tracker-type TRACKER_TYPE
                         OpenCV's tracking type to use: either `BOOSTING`,
                         `MIL`, `KCF`, `TLD`, `MEDIANFLOW`, `GOTURN`, `MOSSE`
-                        or `CSRT`. `CSRT is default.`
+                        or `CSRT`. `CSRT` is default.
+
+others:
+  -S, --show-stream     Display the camera stream. Enable the stream
+                        window.(Require gui environment.)
+  -r, --record          Record the video stream. Files are named by the date.
+  --servo-gpios PAN TILT
+                        GPIO pin numbers of the 2 axis moving platform's servo
+                        motors. 17(as pan) and 25(as tilt) GPIO pins are
+                        default.
+  --version             Display the version number of T_System.
 ```
 
 <br>
 
-### Augmented
+### Interfaces
+
+#### Official Stand
+
+Portable usage interface v0.1
+
+<img align="left" width="400" height="400" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.1/back_render.jpg">
+<img align="center" width="400" height="400" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.1/front_render.jpg">
+<img align="right" width="400" height="600" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.1/prototype.jpeg">
+
+<br>
+
+- Properties
+    -
+    - 4 buttons for switching modes
+        -
+            Their functions, up-bottom respectively,
+                
+                1 click: change to track mode
+                1 click: change to learn mode
+                1 click: change to augmented mode (for remote control)
+                1 click: go to stand-by, 2 click: shutdown the system.     
+    - 1 switch key for on/off
+        -
+            Cut the electiric current directly
+    - 4 pieces 18650 li-ion batteries
+        -
+            Parralel connected sources.
+
+#### Augmented
 
 Augmented usage explained [here](https://github.com/MCYBA/A.V.A.) into the `AUGMENTED.md`.
 
