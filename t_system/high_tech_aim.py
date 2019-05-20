@@ -14,7 +14,7 @@ import cv2
 from math import sqrt, radians, cos, sin
 
 
-class Aimer():
+class Aimer:
     """Class to draw a high tech aim mark.
 
     This class provides necessary initiations and a function named :func:`t_system.high_tech_aim.Aimer.mark`
@@ -54,7 +54,7 @@ class Aimer():
         self.image = image
         self.object_distance = str(round(physically_distance * 0.164 / 1000, 2)) + " m"  # 0.164 mm is the length of one pixel.
 
-        radius *= 0.515
+        radius *= 0.618
         thickness = radius * 0.23
         self.image_height, self.image_width = self.image.shape[:2]
 
@@ -64,12 +64,14 @@ class Aimer():
         self.draw_arc(center_x, center_y, radius, thickness, self.thick_arc_start_angle, self.thick_arc_end_angle)
         self.draw_arc(center_x, center_y, radius * 0.95, thickness * 0.15, self.thin_arc_start_angle, self.thin_arc_end_angle)
 
-        text_point = (int(center_x - radius * 0.1), int(center_y + radius * 0.95 - radius * 0.1))
-        cv2.putText(self.image, self.object_distance, text_point, self.text_font, radius * 0.004, (0, 0, 200), int(radius * 0.004), cv2.LINE_AA)
+        text_point = (int(center_x - radius * 0.15), int(center_y + radius * 0.95 - radius * 0.1))
+
         # parameters: image, put text, text's coordinates,font, scale, color, thickness, line type(this type is best for texts.)
+        cv2.putText(self.image, self.object_distance, text_point, self.text_font, radius * 0.004, (0, 0, 200), int(radius * 0.004), cv2.LINE_AA)
+
+        self.draw_phys_dist_container(center_x, center_y, radius)
 
         self.check_angle_of_arcs()
-
         self.rotate_arcs()
 
         return self.image
@@ -94,17 +96,12 @@ class Aimer():
         center_x = center[0]
         center_y = center[1]
 
-        text_font = cv2.FONT_HERSHEY_SIMPLEX
-
         self.draw_rect(center_x, center_y, radius * 1.2, thickness * 0.4)
         # self.draw_rect_triangler(center_x, center_y, radius * self.rect_diagonal_rate, thickness * 0.2)
 
-        text = "22 m"
-        text_point = (int(center_x - radius * 0.7), int(center_y - radius * 0.95 - radius * 0.1))
-        text_point1 = (int(center_x - radius * 0.1), int(center_y + radius * 0.95 - radius * 0.1))
+        text_point = (int(center_x - radius * 0.15), int(center_y + radius * 0.95 - radius * 0.1))
 
-        cv2.putText(self.image, text, text_point, text_font, radius * 0.004, (0, 0, 200), int(radius * 0.004), cv2.LINE_AA)
-        # cv2.line(self.image, text_point, text_point1, (0, 0, 200), int(radius * 0.05), cv2.LINE_AA)
+        cv2.putText(self.image, self.object_distance, text_point, self.text_font, radius * 0.004, (0, 200, 0), int(radius * 0.004), cv2.LINE_AA)
         # parameters: image, put text, text's coordinates,font, scale, color, thickness, line type(this type is best for texts.)
 
         # self.rect_diagonal_rate -= 0.05
@@ -142,7 +139,7 @@ class Aimer():
                     x = int(x)
                     y = int(y)
                     if radius <= distance <= radius + thickness:
-                        [b, g, r] = self.image[y, x] = numpy.array(self.image[y, x]) * numpy.array([0, 0, 1])
+                        [b, g, r] = self.image[y, x] = numpy.array(self.image[y, x]) * numpy.array([0, 0, 1.1])
 
                         # Following lines are for increase the visibility when the "mark" comes on the dark areas.
                         if r <= 100:
@@ -156,7 +153,7 @@ class Aimer():
                             for thick in range(60, 100, 4):
                                 if radius + thickness * thick / 100 <= distance <= radius + thickness:
                                     # [b, g, r] = self.image[y, x]
-                                    self.image[y, x] = numpy.array(self.image[y, x]) + numpy.array([r * 0.08, r * 0.08, 255])
+                                    self.image[y, x] = numpy.array(self.image[y, x]) + numpy.array([thick * 0.06, thick * 0.06, 255])
                 angle += 0.25
             rad += 1
 
@@ -220,6 +217,19 @@ class Aimer():
         for y in y_ranges:
             if self.image_height > y >= 0:  # for the frames' limit protection.
                 self.image[y, center_x] = numpy.array(self.image[y, center_x]) * numpy.array([0, 2, 0])
+
+    def draw_phys_dist_container(self, center_x, center_y, radius):
+        """The low-level method to draw the trapezoid shape for the container of physically distance value.
+        """
+
+        dis_con_point_1 = int(center_x - radius * 0.95 * sin(radians(15))), int(center_y + radius * 0.95 * cos(radians(45)))
+        dis_con_point_2 = int(center_x + radius * 0.95 * sin(radians(15))), int(center_y + radius * 0.95 * cos(radians(45)))
+        dis_con_point_3 = int(center_x + radius * 0.95 * sin(radians(20))), int(center_y + radius * 0.95 * cos(radians(15)))
+        dis_con_point_4 = int(center_x - radius * 0.95 * sin(radians(20))), int(center_y + radius * 0.95 * cos(radians(15)))
+
+        cv2.line(self.image, dis_con_point_1, dis_con_point_2, (0, 0, 255), 1, cv2.LINE_AA)
+        cv2.line(self.image, dis_con_point_2, dis_con_point_3, (0, 0, 255), 1, cv2.LINE_AA)
+        cv2.line(self.image, dis_con_point_1, dis_con_point_4, (0, 0, 255), 1, cv2.LINE_AA)
 
     def check_angle_of_arcs(self):
         """The low-level method to limit the value of the arc's angle.
