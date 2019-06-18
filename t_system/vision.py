@@ -12,8 +12,10 @@
 import time  # Time access and conversions
 import inspect  # Inspect live objects
 import os  # Miscellaneous operating system interfaces
-from math import sqrt
+import datetime  # Basic date and time types
 
+from math import sqrt
+from os.path import expanduser  # Common pathname manipulations
 from picamera.array import PiRGBArray
 
 import cv2
@@ -63,8 +65,15 @@ class Vision:
         else:
             self.detect_track = self.d_t_without_cv_ta
 
-        encoding_pickle_file = T_SYSTEM_PATH + "/recognition_encodings/" + args["encoding_file"] + ".pickle"
-        self.recognition_data = pickle.loads(open(encoding_pickle_file, "rb").read())
+        self.no_recognize = args["no_recognize"]
+
+        if not self.no_recognize:
+            encoding_pickle_file = T_SYSTEM_PATH + "/recognition_encodings/" + args["encoding_file"] + ".pickle"
+            self.recognition_data = pickle.loads(open(encoding_pickle_file, "rb").read())
+
+            self.track = self.track_with_recognizing
+        else:
+            self.track = self.track_without_recognizing
 
         # Specify the tracker type
         self.tracker_type = args["tracker_type"]
@@ -84,11 +93,15 @@ class Vision:
         self.decider = Decider(args["cascade_file"])
 
         self.servo_pan = Motor(args["servo_gpios"][0], self.decider, 5)                # pan means rotate right and left ways.
-        self.servo_tilt = Motor(args["servo_gpios"][1], self.decider, 4, False)   # tilt means rotate up and down ways.
+        self.servo_tilt = Motor(args["servo_gpios"][1], self.decider, 5, False)   # tilt means rotate up and down ways.
 
         self.aimer = Aimer()
 
         self.show_stream = args["show_stream"]  # 'show-stream' argument automatically converted this type.
+
+        self.record = args["record"]
+        self.record_path = ""
+        self.record_name = ""
 
         self.augmented = False
         if args["interface"] == "augmented":
@@ -106,60 +119,34 @@ class Vision:
                 stop_thread:       	    Stop flag of the tread about terminating it outside of the function's loop.
                 format:       	        Color space format.
         """
+        if self.record:
+            self.start_recording("track", "h264")
 
-        try:
-            self.detect_track_initiate()
+        self.detect_initiate()
 
-            for frame in self.camera.capture_continuous(self.rawCapture, format=format, use_video_port=True):
+        for frame in self.camera.capture_continuous(self.rawCapture, format=format, use_video_port=True):
 
-                # grab the raw NumPy array representing the image, then initialize the timestamp and occupied/unoccupied text
-                frame = frame.array
-                frame = frame.copy()  # For reaching with overwrite privileges.
+            # grab the raw NumPy array representing the image, then initialize the timestamp and occupied/unoccupied text
+            frame = frame.array
+            frame = frame.copy()  # For reaching with overwrite privileges.
 
-                rgb, detected_boxes = self.detect_things(frame)
+            rgb, detected_boxes = self.detect_things(frame)
+            reworked_boxes = self.relocate_detected_coords(detected_boxes)
+
+            if not self.no_recognize:
                 names = self.recognize_things(rgb, detected_boxes)
-                reworked_boxes = self.relocate_detected_coords(detected_boxes)
+            else:
+                names = None
 
-                for (x, y, w, h), name in zip(reworked_boxes, names):
+            self.track(frame, reworked_boxes, names)
 
-                    physically_distance = self.servo_pan.get_physically_distance(w)  # for calculating the just about physically distance of object.
-                    radius = int(sqrt(w * w + h * h) / 2)
+            # time.sleep(0.1)  # Allow the servos to complete the moving.
 
-                    if name == "Unknown":
-                        if (self.show_stream and self.augmented) or self.show_stream:
-                            frame = self.aimer.mark_rotating_arcs(frame, (int(x + w / 2), int(y + h / 2)), radius, physically_distance)
-                    else:
-                        self.servo_pan.move(x, x + w, w * h, self.frame_width)
-                        self.servo_tilt.move(y, y + h, w * h, self.frame_height)
+            self.show_frame(frame)
+            self.truncate_stream()
 
-                        if (self.show_stream and self.augmented) or self.show_stream:
-                            cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
-                            # frame = self.aimer.mark_parital_rect(frame, (int(x + w / 2), int(y + h / 2)), radius, physically_distance)
-                            # frame = self.aimer.mark_rotating_arcs(frame, (int(x + w / 2), int(y + h / 2)), radius, physically_distance)
-
-                            # NAME AND FOUNDED KNOWLEDGES WILL PASS TO AIMER. AND CONFLICT ON LEARNING OF TRACKING DATABASE NAMES WILL RESOLVE.
-
-                # time.sleep(0.1)  # Allow the servos to complete the moving.
-
-                if (self.show_stream and self.augmented) or self.show_stream:
-                    # show the frame
-                    cv2.imshow("Frame", frame)
-
-                # clear the stream in preparation for the next frame
-                self.rawCapture.truncate(0)
-
-                # if the `q` key was pressed, break from the loop
-                key = cv2.waitKey(1) & 0xFF
-                if (key == ord("q") or stop_thread()) and self.augmented:
-                    # print("thread killed")
-                    break
-                elif (key == ord("q") or stop_thread()) and not self.augmented:
-                    cv2.destroyAllWindows()
-                    self.camera.release()
-                    self.release_servos()
-                    break
-        except KeyboardInterrupt:
-            self.release_servos()
+            if self.check_loop_ended(stop_thread):
+                break
 
     def d_t_with_cv_ta(self, stop_thread, format='bgr'):
         """The low-level method to provide detecting and tracking objects with using OpenCV's tracking API.
@@ -168,159 +155,139 @@ class Vision:
                 stop_thread:       	    Stop flag of the tread about terminating it outside of the function's loop.
                 format:       	        Color space format.
         """
+        if self.record:
+            self.start_recording("track")
 
         tracked_boxes = []  # this became array.  because of overriding.
         names = []
 
         multi_tracker = cv2.MultiTracker_create()
 
-        rgb, detected_boxes = self.detect_track_initiate()
+        rgb, detected_boxes = self.detect_initiate()
 
         found_count = 0
         d_t_failure_count = 0
         use_detection = 0
 
-        try:
-            for frame in self.camera.capture_continuous(self.rawCapture, format=format, use_video_port=True):
+        for frame in self.camera.capture_continuous(self.rawCapture, format=format, use_video_port=True):
 
-                if len(detected_boxes) > len(tracked_boxes):
+            if len(detected_boxes) > len(tracked_boxes):
+
+                if not self.no_recognize:
                     names = self.recognize_things(rgb, detected_boxes)
-
-                    frame = cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR)
-
-                    # Create MultiTracker object
-                    multi_tracker = cv2.MultiTracker_create()
-
-                    # Initialize MultiTracker
-                    for box in detected_boxes:
-                        # box[3] is x,
-                        # box[0] is y,
-                        # box[1] is x + w,
-                        # box[2] is y + h.
-                        reworked_box = box[3], box[0], box[1] - box[3], box[2] - box[0]
-
-                        multi_tracker.add(self.create_tracker_by_name(), frame, reworked_box)
-                    found_count += 1
-
-                # grab the raw NumPy array representing the image, then initialize the timestamp and occupied/unoccupied text
-                frame = frame.array
-                frame = frame.copy()  # For reaching with overwrite privileges.
-
-                if use_detection >= 3:
-                    rgb, detected_boxes = self.detect_things(frame)
-                    use_detection = 0
-
-                use_detection += 1
-
-                # Start timer
-                timer = cv2.getTickCount()
-
-                # get updated location of objects in subsequent frames
-                is_tracking_success, tracked_boxes = multi_tracker.update(frame)
-
-                if not len(detected_boxes) >= len(tracked_boxes):
-                    d_t_failure_count += 1
                 else:
-                    d_t_failure_count = 0
+                    names = None
 
-                # Calculate Frames per second (FPS)
-                fps = cv2.getTickFrequency() / (cv2.getTickCount() - timer)
+                frame = cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR)
 
-                if is_tracking_success and d_t_failure_count < 5:
+                # Create MultiTracker object
+                multi_tracker = cv2.MultiTracker_create()
 
-                    for (x, y, w, h), name in zip(tracked_boxes, names):
+                # Initialize MultiTracker
+                for box in detected_boxes:
+                    # box[3] is x,
+                    # box[0] is y,
+                    # box[1] is x + w,
+                    # box[2] is y + h.
+                    reworked_box = box[3], box[0], box[1] - box[3], box[2] - box[0]
 
-                        physically_distance = self.servo_pan.get_physically_distance(w)  # for calculating the just about physically distance of object.
-                        radius = int(sqrt(w * w + h * h) / 2)
+                    multi_tracker.add(self.create_tracker_by_name(), frame, reworked_box)
+                found_count += 1
 
-                        if name == "Unknown":
-                            if (self.show_stream and self.augmented) or self.show_stream:
-                                frame = self.aimer.mark_rotating_arcs(frame, (int(x + w / 2), int(y + h / 2)), radius, physically_distance)
-                        else:
-                            self.servo_pan.move(x, x + w, w * h, self.frame_width)
-                            self.servo_tilt.move(y, y + h, w * h, self.frame_height)
+            # grab the raw NumPy array representing the image, then initialize the timestamp and occupied/unoccupied text
+            frame = frame.array
+            frame = frame.copy()  # For reaching with overwrite privileges.
 
-                            if (self.show_stream and self.augmented) or self.show_stream:
-                                # cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
-                                frame = self.aimer.mark_parital_rect(frame, (int(x + w / 2), int(y + h / 2)), radius, physically_distance)
+            if use_detection >= 3:
+                rgb, detected_boxes = self.detect_things(frame)
+                use_detection = 0
 
-                                # NAME AND FOUNDED KNOWLEDGES WILL PASS TO AIMER. AND CONFLICT ON LEARNING OF TRACKING DATABASE NAMES WILL RESOLVE.
+            use_detection += 1
 
-                    time.sleep(0.1)  # Allow the servos to complete the moving.
+            # Start timer
+            timer = cv2.getTickCount()
 
-                elif not is_tracking_success or d_t_failure_count >= 5:
-                    # Tracking failure
-                    cv2.putText(frame, "Tracking failure detected", (100, 80), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
-                    tracked_boxes = []  # for clearing tracked_boxes list.
+            # get updated location of objects in subsequent frames
+            is_tracking_success, tracked_boxes = multi_tracker.update(frame)
 
-                # # Display tracker type on frame
-                # cv2.putText(frame, self.tracker_type + " Tracker", (100, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50, 170, 50), 2)
-                #
-                # # Display FPS on frame
-                # cv2.putText(frame, "FPS : " + str(int(fps)), (100, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50, 170, 50), 2)
+            if not len(detected_boxes) >= len(tracked_boxes):
+                d_t_failure_count += 1
+            else:
+                d_t_failure_count = 0
 
-                if (self.show_stream and self.augmented) or self.show_stream:
-                    # show the frame
-                    cv2.imshow("Frame", frame)
+            # Calculate Frames per second (FPS)
+            fps = cv2.getTickFrequency() / (cv2.getTickCount() - timer)
 
-                # clear the stream in preparation for the next frame
-                self.rawCapture.truncate(0)
+            if is_tracking_success and d_t_failure_count < 5:
 
-                # if the `q` key was pressed, break from the loop
-                key = cv2.waitKey(1) & 0xFF
-                if (key == ord("q") or stop_thread()) and self.augmented:
-                    # print("thread killed")
-                    break
-                elif (key == ord("q") or stop_thread()) and not self.augmented:
-                    cv2.destroyAllWindows()
-                    self.camera.release()
-                    self.release_servos()
-                    break
-        except KeyboardInterrupt:
-            self.release_servos()
+                self.track(frame, tracked_boxes, names)
 
-    def detect_track_initiate(self, format="bgr"):
-        """The low-level method to serve as the entry point to detection, recognition and tracking features of t_system's vision ability.
+            elif not is_tracking_success or d_t_failure_count >= 5:
+                # Tracking failure
+                cv2.putText(frame, "Tracking failure detected", (100, 80), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
+                tracked_boxes = []  # for clearing tracked_boxes list.
+
+            # # Display tracker type on frame
+            # cv2.putText(frame, self.tracker_type + " Tracker", (100, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50, 170, 50), 2)
+            #
+            # # Display FPS on frame
+            # cv2.putText(frame, "FPS : " + str(int(fps)), (100, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50, 170, 50), 2)
+
+            self.show_frame(frame)
+            self.truncate_stream()
+
+            if self.check_loop_ended(stop_thread):
+                break
+
+    def track_without_recognizing(self, frame, boxes, names):
+        """The low-level method to track the objects without recognize them, for detect_track methods.
 
         Args:
-                format:       	        Color space format.
+                frame:  	            Frame matrix in rgb format.
+                boxes:       	        Tuple variable of locations of detected objects.
+                names:       	        Names of the recognized objects. A person or just an object.
         """
-        detected_boxes = []
-        rgb = None
 
-        try:
-            for frame in self.camera.capture_continuous(self.rawCapture, format=format, use_video_port=True):
+        for (x, y, w, h) in boxes:
 
-                frame = frame.array
-                frame = frame.copy()  # For reaching to frame with overwrite privileges.
+            physically_distance = self.servo_pan.get_physically_distance(w)  # for calculating the just about physically distance of object.
+            radius = int(sqrt(w * w + h * h) / 2)
 
-                rgb, detected_boxes = self.detect_things(frame)
+            self.servo_pan.move(x, x + w, w * h, self.frame_width)
+            self.servo_tilt.move(y, y + h, w * h, self.frame_height)
 
-                if not detected_boxes:
-                    gray = cv2.cvtColor(rgb, cv2.COLOR_BGR2GRAY)
-                    if (self.show_stream and self.augmented) or self.show_stream:
+            if (self.show_stream and self.augmented) or self.show_stream:
+                # cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
+                frame = self.aimer.mark_parital_rect(frame, (int(x + w / 2), int(y + h / 2)), radius, physically_distance)
+                # frame = self.aimer.mark_rotating_arcs(frame, (int(x + w / 2), int(y + h / 2)), radius, physically_distance)
 
-                        cv2.putText(gray, "Scanning...", (int(self.frame_width - self.frame_width * 0.1), int(self.frame_height * 0.1)), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (200, 0, 0), 2)
+        # time.sleep(0.1)  # Allow the servos to complete the moving.
 
-                        # show frame
-                        cv2.imshow("Frame", gray)
+    def track_with_recognizing(self, frame, boxes, names):
+        """The low-level method to track the objects with recognize them, for detect_track methods.
 
-                    # quit on Q button
-                    if cv2.waitKey(1) & 0xFF == ord('q'):
-                        cv2.destroyAllWindows()
-                        self.camera.release()
-                        self.release_servos()
-                        break
-                else:
-                    self.rawCapture.truncate(0)
-                    break
+        Args:
+                frame:  	            Frame matrix in rgb format.
+                boxes:       	        Tuple variable of locations of detected objects.
+                names:       	        Names of the recognized objects. A person or just an object.
+        """
 
-                # clear the stream in preparation for the next frame
-                self.rawCapture.truncate(0)
-        except KeyboardInterrupt:
-            self.release_servos()
+        for (x, y, w, h), name in zip(boxes, names):
 
-        return rgb, detected_boxes
+            physically_distance = self.servo_pan.get_physically_distance(w)  # for calculating the just about physically distance of object.
+            radius = int(sqrt(w * w + h * h) / 2)
+
+            if name == "Unknown":
+                if (self.show_stream and self.augmented) or self.show_stream:
+                    frame = self.aimer.mark_rotating_arcs(frame, (int(x + w / 2), int(y + h / 2)), radius, physically_distance)
+            else:
+                self.servo_pan.move(x, x + w, w, self.frame_width)
+                self.servo_tilt.move(y, y + h, w, self.frame_height)
+
+                if (self.show_stream and self.augmented) or self.show_stream:
+                    cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
+                    # frame = self.aimer.mark_parital_rect(frame, (int(x + w / 2), int(y + h / 2)), radius, physically_distance)
+        # time.sleep(0.1)  # Allow the servos to complete the moving.
 
     def learn(self, stop_thread, format="bgr"):
         """The top-level method to learn how to track objects.
@@ -329,72 +296,100 @@ class Vision:
                 stop_thread:       	    Stop flag of the tread about terminating it outside of the function's loop.
                 format:       	        Color space format.
         """
-        try:
-            for frame in self.camera.capture_continuous(self.rawCapture, format=format, use_video_port=True):
-                # grab the raw NumPy array representing the image, then initialize the timestamp
-                # and occupied/unoccupied text
 
-                image = frame.array
-                image = image.copy()  # For reaching with overwrite privileges.
+        if self.record:
+            self.start_recording("learn")
 
-                rgb, detected_boxes = self.detect_things(image)
-                # names = self.recognize_things(rgb, detected_boxes)
-                reworked_boxes = self.relocate_detected_coords(detected_boxes)
+        self.detect_initiate()
 
-                if not len(reworked_boxes) == 1:
-                    pass
-                else:
-                    for (x, y, w, h) in reworked_boxes:
+        for frame in self.camera.capture_continuous(self.rawCapture, format=format, use_video_port=True):
+            # grab the raw NumPy array representing the image, then initialize the timestamp
+            # and occupied/unoccupied text
 
-                        if (self.show_stream and self.augmented) or self.show_stream:
-                            cv2.rectangle(image, (x, y), (x + w, y + h), (255, 0, 0), 2)
+            image = frame.array
+            image = image.copy()  # For reaching with overwrite privileges.
+            # err_check_image = None
 
-                        obj_area = w * h  # unit of obj_area is px ^ 2.
+            rgb, detected_boxes = self.detect_things(image)
+            # names = self.recognize_things(rgb, detected_boxes)
+            reworked_boxes = self.relocate_detected_coords(detected_boxes)
 
-                        self.servo_pan.move(x, x + w, obj_area, self.frame_width)
-                        self.servo_tilt.move(y, y + h, obj_area, self.frame_height)
+            if not len(reworked_boxes) == 1:
+                self.show_frame(image)
+            else:
+                for (x, y, w, h) in reworked_boxes:
 
-                        time.sleep(0.2)  # allow the camera to capture after moving.
+                    if (self.show_stream and self.augmented) or self.show_stream:
+                        cv2.rectangle(image, (x, y), (x + w, y + h), (255, 0, 0), 2)
 
-                        self.rawCapture.truncate(0)  # for emptying arrays for capturing frame again.
-                        self.camera.capture(self.rawCapture, format=format)
-                        err_check_image = self.rawCapture.array
+                    obj_width = w
+                    # obj_area = w * h  # unit of obj_width is px ^ 2.
 
-                        rgb, detected_boxes = self.detect_things(err_check_image)
-                        # names = self.recognize_things(rgb, detected_boxes)
-                        rb_after_move = self.relocate_detected_coords(detected_boxes)
+                    self.servo_pan.move(x, x + w, obj_width, self.frame_width)
+                    self.servo_tilt.move(y, y + h, obj_width, self.frame_height)
 
-                        if not len(rb_after_move) == 1:
-                            pass
-                        else:
-                            for (x, y, w, h) in rb_after_move:
+                    time.sleep(0.2)  # allow the camera to capture after moving.
 
-                                if (self.show_stream and self.augmented) or self.show_stream:
-                                    cv2.rectangle(image, (x, y), (x + w, y + h), (255, 0, 0), 2)
+                    self.show_frame(image)
+                    self.truncate_stream()
 
-                                err_rate_pan = float(self.servo_pan.current_dis_to_des(x, x + w, self.frame_width) / self.servo_pan.get_previous_dis_to_des()) * 100
-                                err_rate_tilt = float(self.servo_tilt.current_dis_to_des(y, y + h, self.frame_height) / self.servo_tilt.get_previous_dis_to_des()) * 100
+                    self.camera.capture(self.rawCapture, format=format)
+                    err_check_image = self.rawCapture.array
 
-                                self.decider.decision(obj_area, err_rate_pan, True)
-                                self.decider.decision(obj_area, err_rate_tilt, True)
+                    rgb, detected_boxes = self.detect_things(err_check_image)
+                    # names = self.recognize_things(rgb, detected_boxes)
+                    rb_after_move = self.relocate_detected_coords(detected_boxes)
 
+                    if not len(rb_after_move) == 1:
+                        self.show_frame(err_check_image)
+                    else:
+                        for (ex, ey, ew, eh) in rb_after_move:  # e means error.
+
+                            if (self.show_stream and self.augmented) or self.show_stream:
+                                cv2.rectangle(err_check_image, (ex, ey), (ex + ew, ey + eh), (255, 0, 0), 2)
+
+                            err_rate_pan = float(self.servo_pan.current_dis_to_des(ex, ex + ew, self.frame_width) / self.servo_pan.get_previous_dis_to_des()) * 100
+                            err_rate_tilt = float(self.servo_tilt.current_dis_to_des(ey, ey + eh, self.frame_height) / self.servo_tilt.get_previous_dis_to_des()) * 100
+
+                            self.decider.decision(obj_width, err_rate_pan, True)
+                            self.decider.decision(obj_width, err_rate_tilt, True)
+
+                            self.show_frame(err_check_image)
+
+            self.truncate_stream()
+            if self.check_loop_ended(stop_thread):
+                break
+
+    def detect_initiate(self, format="bgr"):
+        """The low-level method to serve as the entry point to detection, recognition and tracking features of t_system's vision ability.
+
+        Args:
+                format:       	        Color space format.
+        """
+        detected_boxes = []
+        rgb = None
+
+        for frame in self.camera.capture_continuous(self.rawCapture, format=format, use_video_port=True):
+
+            frame = frame.array
+            frame = frame.copy()  # For reaching to frame with overwrite privileges.
+
+            rgb, detected_boxes = self.detect_things(frame)
+
+            if not detected_boxes:
+                gray = cv2.cvtColor(rgb, cv2.COLOR_BGR2GRAY)
                 if (self.show_stream and self.augmented) or self.show_stream:
-                    # show the frame
-                    cv2.imshow("Frame", image)
+                    cv2.putText(gray, "Scanning...", (int(self.frame_width - self.frame_width * 0.2), int(self.frame_height * 0.1)), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (200, 0, 0), 2)
 
-                # clear the stream in preparation for the next frame
+                self.show_frame(gray)
+                self.truncate_stream()
+
+                if self.check_loop_ended(lambda: False):
+                    break
+            else:
                 self.rawCapture.truncate(0)
-
-                # if the `q` key was pressed, break from the loop
-                key = cv2.waitKey(1) & 0xFF
-                if (key == ord("q") or stop_thread()) and self.augmented:
-                    # print("thread killed")
-                    break
-                elif (key == ord("q") or stop_thread()) and not self.augmented:
-                    self.release_servos()
-                    break
-        except KeyboardInterrupt:
-            self.release_servos()
+                break
+        return rgb, detected_boxes
 
     def security(self, stop_thread,  format="bgr"):
         """The top-level method to provide the security via scanning and taking photos.
@@ -409,25 +404,22 @@ class Vision:
         global thread_of_stream
         is_first_run = True
 
-        try:
-            while True:
-                if is_first_run or stop_thread():
-                    if not stop_thread():
-                        thread_of_scan = threading.Thread(target=self.scan, args=(stop_thread, 3))
-                        thread_of_stream = threading.Thread(target=self.stream, args=(stop_thread, format))
+        while True:
+            if is_first_run or stop_thread():
+                if not stop_thread():
+                    thread_of_scan = threading.Thread(target=self.scan, args=(stop_thread, 3))
+                    thread_of_stream = threading.Thread(target=self.stream, args=(stop_thread, format))
 
-                        thread_of_scan.start()
-                        thread_of_stream.start()
-                    else:
-                        # print("thread killed")
+                    thread_of_scan.start()
+                    thread_of_stream.start()
+                else:
+                    # print("thread killed")
 
-                        thread_of_scan.join()
-                        thread_of_stream.join()
-                        break
-                    is_first_run = False
-                time.sleep(0.5)  # for relieve the cpu.
-        except KeyboardInterrupt:
-            self.release_servos()
+                    thread_of_scan.join()
+                    thread_of_stream.join()
+                    break
+                is_first_run = False
+            time.sleep(0.5)  # for relieve the cpu.
 
     def scan(self, stop_thread, resolution=3):
         """The low-level method to provide the scanning around for security mode of T_System.
@@ -437,27 +429,24 @@ class Vision:
                 resolution:            angle's step width between 0 - 180 degree.
         """
 
-        try:
-            while True:
+        while True:
+            if stop_thread():
+                break
+            for angle in range(0, 180, resolution):
                 if stop_thread():
                     break
-                for angle in range(0, 180, resolution):
-                    if stop_thread():
-                        break
-                    self.servo_pan.angular_move(float(angle), 180.0)
-                    angle_for_ellipse_move = calc_ellipsoidal_angle(float(angle) - 90, 180.0, 75.0)  # 75 degree is for physical conditions.
-                    self.servo_tilt.angular_move(angle_for_ellipse_move, 75.0)
-                    time.sleep(0.1)
+                self.servo_pan.angular_move(float(angle), 180.0)
+                angle_for_ellipse_move = calc_ellipsoidal_angle(float(angle) - 90, 180.0, 75.0)  # 75 degree is for physical conditions.
+                self.servo_tilt.angular_move(angle_for_ellipse_move, 75.0)
+                time.sleep(0.1)
 
-                for angle in range(180, 0, resolution * -1):
-                    if stop_thread():
-                        break
-                    self.servo_pan.angular_move(float(angle), 180.0)
-                    angle_for_ellipse_move = calc_ellipsoidal_angle(float(angle) - 90, 180.0, 75.0)
-                    self.servo_tilt.angular_move(angle_for_ellipse_move, 75.0)
-                    time.sleep(0.1)
-        except KeyboardInterrupt:
-            self.release_servos()
+            for angle in range(180, 0, resolution * -1):
+                if stop_thread():
+                    break
+                self.servo_pan.angular_move(float(angle), 180.0)
+                angle_for_ellipse_move = calc_ellipsoidal_angle(float(angle) - 90, 180.0, 75.0)
+                self.servo_tilt.angular_move(angle_for_ellipse_move, 75.0)
+                time.sleep(0.1)
 
     def stream(self, stop_thread, format="bgr"):
         """The low-level method to provide the video stream for security mode of T_System.
@@ -466,47 +455,55 @@ class Vision:
                 stop_thread:   	        Stop flag of the tread about terminating it outside of the function's loop.
                 format:       	        Color space format.
         """
-        try:
-            for frame in self.camera.capture_continuous(self.rawCapture, format=format, use_video_port=True):
 
-                # grab the raw NumPy array representing the image, then initialize the timestamp
-                # and occupied/unoccupied text
-                image = frame.array
+        if self.record:
+            self.start_recording("security")
 
-                # gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-                # gray = cv2.equalizeHist(gray)
+        for frame in self.camera.capture_continuous(self.rawCapture, format=format, use_video_port=True):
+            # inside of the loop is optionally editable.
+            image = frame.array
 
-                # SECURITY MODE CAN BE TAKING PHOTOGRAPHS AS DIFFERENT FROM learn AND detect_track FUNCTIONS.
-                # objects = self.object_cascade.detectMultiScale(gray, 1.3, 5)
-                #
-                # if not len(objects) == 1:
-                #     pass
-                # else:
-                #     for (x, y, w, h) in objects:
-                #         if (self.show_stream and self.augmented) or self.show_stream:
-                #             cv2.rectangle(image, (x, y), (x + w, y + h), (255, 0, 0), 2)
+            self.show_frame(image)
+            self.truncate_stream()
 
-                if (self.show_stream and self.augmented) or self.show_stream:
-                    # show the frame
-                    cv2.imshow("Frame", image)
+            if self.check_loop_ended(stop_thread):
+                break
 
-                # clear the stream in preparation for the next frame
-                self.rawCapture.truncate(0)
+    def show_frame(self, frame):
+        """The low-level method to show the captured frame.
 
-                # if the `q` key was pressed, break from the loop
-                key = cv2.waitKey(1) & 0xFF
-                if (key == ord("q") or stop_thread()) and self.augmented:
-                    # print("thread killed")
-                    break
-                elif (key == ord("q") or stop_thread()) and not self.augmented:
-                    cv2.destroyAllWindows()
-                    self.camera.release()
-                    self.release_servos()
-                    break
-        except KeyboardInterrupt:
+        Args:
+                frame:       	        Frame matrix in bgr format.
+
+        """
+
+        if (self.show_stream and self.augmented) or self.show_stream:
+            # show the frame
+            cv2.imshow("Frame", frame)
+
+    def truncate_stream(self, ):
+        """The low-level method to clear the stream in preparation for the next frame.
+        """
+        self.rawCapture.truncate(0)
+
+    def check_loop_ended(self, stop_thread):
+        """The low-level method to detecting FACES with hog or cnn methoda.
+
+        Args:
+                stop_thread:   	        Stop flag of the tread about terminating it outside of the function's loop.
+
+        """
+
+        # if the `q` key was pressed, break from the loop
+        key = cv2.waitKey(1) & 0xFF
+        if (key == ord("q") or stop_thread()) and self.augmented:
+            # print("thread killed")
+            return True
+        elif (key == ord("q") or stop_thread()) and not self.augmented:
+            cv2.destroyAllWindows()
+            self.release_camera()
             self.release_servos()
-
-        # if loop end, the scan process will be terminated.
+            return True
 
     def detect_with_hog_or_cnn(self, frame):
         """The low-level method to detecting FACES with hog or cnn methoda.
@@ -644,6 +641,36 @@ class Vision:
         self.object_cascade = cv2.CascadeClassifier(ccade_xml_file)
         self.decider.set_db(file)
 
+    def start_recording(self, mode="track", format="h264"):
+        """The low-level method to prepare the name of recording video with its path.
+
+         Args:
+                mode:       	        The running mode which is wants to set video name.
+                format:       	        The video output format either 'h264' or 'mjpeg'. Other options in library are for raw data.
+        """
+
+        self.set_record_path()
+        self.set_record_name(mode, format)
+        self.camera.start_recording(self.record_path + "/" + self.record_name, format)
+
+    def set_record_path(self):
+        """The low-level method to prepare the name of recording video with its path.
+        """
+
+        home = expanduser("~")
+        self.record_path = home + "/.t_system"
+
+    def set_record_name(self, mode, format="h264"):
+        """The low-level method to prepare the name of recording video with its path.
+
+         Args:
+                mode:       	        The running mode which is wants to set video name.
+                format:       	        The video output format.
+
+        """
+
+        self.record_name = mode + "_" + datetime.datetime.now().strftime("%d-%m-%Y_%H:%M:%S") + "." + format  # name looks like: PATH/22-05-2019_19:08:12.h264
+
     def set_mqtt_receimitter(self, mqtt_receimitter):
         """The top-level method to set mqtt_receimitter object for publishing and subscribing data echos.
 
@@ -660,3 +687,11 @@ class Vision:
         self.servo_tilt.stop()
         self.servo_pan.gpio_cleanup()
         self.servo_tilt.gpio_cleanup()
+
+    def release_camera(self):
+        """The low-level method to stop receiving signals from the camera and stop video recording.
+        """
+
+        # self.camera.release()
+        if self.record:
+            self.camera.stop_recording()

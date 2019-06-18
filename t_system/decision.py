@@ -36,11 +36,11 @@ class Decider:
 
         self.db = TinyDB(db_file)  # This is where we store the database; /home/T_System/t_system/[object_file_name]_db.json
 
-    def decision(self, obj_area, err_rate=100.0, is_err_check=False):
+    def decision(self, obj_width, err_rate=100.0, is_err_check=False):
         """Function to decide the necessary k factor with an expert system AI method.
 
         Args:
-                obj_area (int):         The width of the found object from haarcascade that is used for measurement inferencing.
+                obj_width (int):         The width of the found object from haarcascade that is used for measurement inferencing.
                 err_rate (float):        % error rate. Difference between target point and reached point. ((target point - end point) / (target point - start point)*100)
                 is_err_check:            Control point for the second usage of `t_system.Decider.decision` to determine the error rate after angular moving.
         Returns:
@@ -50,8 +50,8 @@ class Decider:
         err_rate = abs(err_rate)
 
         result = {}
-        if self.db.search((Query().obj_area == obj_area)):
-            result = self.db.search((Query().obj_area == obj_area))[0]  # There is just 1 return value so, index 0 will be enough.
+        if self.db.search((Query().obj_width == obj_width)):
+            result = self.db.search((Query().obj_width == obj_width))[0]  # There is just 1 return value so, index 0 will be enough.
 
         if not is_err_check:
             if result:
@@ -60,23 +60,23 @@ class Decider:
                 else:
                     return result['next_k_fact']
             else:
-                self.db_upsert(self.initial_k_fact, obj_area, err_rate, self.initial_k_fact)
+                self.db_upsert(self.initial_k_fact, obj_width, err_rate, self.initial_k_fact)
                 return self.initial_k_fact
         else:
             if result:
                 if (err_rate < result['err_rate']) and (result['err_rate'] > self.acceptable_err_rate):  # if current error rate smaller than the last one and last error rate bigger than acceptable range, determine new k factor.
 
                     next_k_fact = self.decide_next_k_fact(result['k_fact'], err_rate)
-                    self.db_upsert(result['next_k_fact'], obj_area, err_rate, next_k_fact)
+                    self.db_upsert(result['next_k_fact'], obj_width, err_rate, next_k_fact)
 
                 elif (err_rate < result['err_rate']) and (result['err_rate'] <= self.acceptable_err_rate):  # if current error rate smaller than the last one but last error rate smaller than acceptable range, use the same k factor.
-                    self.db_upsert(result['k_fact'], obj_area, err_rate, result['k_fact'])
+                    self.db_upsert(result['k_fact'], obj_width, err_rate, result['k_fact'])
 
                 elif err_rate > result['err_rate']:  # if current error rate bigger than the last one, try to learn k factor again from the begining.
-                    self.db_upsert(self.initial_k_fact, obj_area, 100, self.initial_k_fact)
+                    self.db_upsert(self.initial_k_fact, obj_width, 100, self.initial_k_fact)
 
     def decide_next_k_fact(self, k_fact, err_rate):
-        """Function to decide the k_fact that will use with the same obj_area on the next frames..
+        """Function to decide the k_fact that will use with the same obj_width on the next frames..
 
         Args:
                 k_fact (float):          The factor related to object width for measurement inferencing.
@@ -90,28 +90,28 @@ class Decider:
 
         return next_k_fact
 
-    # def db_get(self, obj_area):
+    # def db_get(self, obj_width):
     #     """Function to get a note record from the database.  NOT COMPLETED.
     #
     #     Args:
-    #         obj_area (int):  Width of the finded object for measurement inferencing.
+    #         obj_width (int):  Width of the finded object for measurement inferencing.
     #
     #     Returns:
     #         int:              k_fact and error rate.
     #     """
     #
-    #     result = self.db.search((Query().obj_area == obj_area))[0]
+    #     result = self.db.search((Query().obj_width == obj_width))[0]
     #     if result:
     #         return result['k_fact'], result['err_rate'], result['next_k_fact']
     #     else:
     #         return None
 
-    def db_upsert(self, k_fact, obj_area, err_rate, next_k_fact):
+    def db_upsert(self, k_fact, obj_width, err_rate, next_k_fact):
         """Function to insert(or update) a note record to the database.
 
         Args:
                 k_fact (float):          The factor related to object width for measurement inferencing.
-                obj_area (int):         Width of the found object from haarcascade for measurement inferencing.
+                obj_width (int):         Width of the found object from haarcascade for measurement inferencing.
                 err_rate (float):        % error rate. Difference between target point and reached point. ((target point - end point) / (target point - start point)*100)
                 next_k_fact (float)      If the aplied k_fact's error rate bigger than %5, try this decided k_fact.
         Returns:
@@ -121,11 +121,11 @@ class Decider:
         if isinstance(next_k_fact, numpy.float):
             next_k_fact = float(next_k_fact)
 
-        if self.db.search((Query().obj_area == obj_area)):
-            self.db.update({'k_fact': k_fact, 'err_rate': err_rate, 'next_k_fact': next_k_fact}, Query().obj_area == obj_area)
+        if self.db.search((Query().obj_width == obj_width)):
+            self.db.update({'k_fact': k_fact, 'err_rate': err_rate, 'next_k_fact': next_k_fact}, Query().obj_width == obj_width)
         else:
             self.db.insert({
-                'obj_area': int(obj_area),
+                'obj_width': int(obj_width),
                 'k_fact': k_fact,
                 'err_rate': err_rate,
                 'next_k_fact': next_k_fact
