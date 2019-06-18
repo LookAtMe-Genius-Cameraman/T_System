@@ -121,8 +121,8 @@ others:
 
 Portable usage interface v0.2
 
-<img align="left" width="400" height="400" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.2/back_render.jpg">
-<img align="center" width="400" height="400" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.2/front_render.jpg">
+<img align="left" width="420" height="430" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.2/back_render.jpg">
+<img align="center" width="420" height="430" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.2/front_render.jpg">
 
 <br>
 

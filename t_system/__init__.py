@@ -9,16 +9,17 @@
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
 
-# import the necessary packages
-import argparse
+import argparse  # Parser for command-line options, arguments and sub-commands
 import sys  # System-specific parameters and functions
+import os  # Miscellaneous operating system interfaces
 
+from os.path import expanduser  # Common pathname manipulations
 from picamera import PiCamera
 
 from t_system.vision import Vision
 
 
-__version__ = '0.9.1'
+__version__ = '0.9.2'
 
 
 camera = PiCamera()
@@ -33,25 +34,40 @@ def start(args):
 
     vision = Vision(args, camera, (800, 600), 32)
 
-    if args["interface"] == "official_stand":
-        from t_system.stand import Stand
+    try:
+        if args["interface"] == "official_stand":
+            from t_system.stand import Stand
 
-        stand = Stand(vision)
-        stand.run()
+            stand = Stand(vision)
+            stand.run()
 
-    elif args["interface"] == "augmented":
-        from t_system.augmented import Augmenter
+        elif args["interface"] == "augmented":
+            from t_system.augmented import Augmenter
 
-        augmenter = Augmenter(vision)
-        augmenter.run(lambda: False)
+            augmenter = Augmenter(vision)
+            augmenter.run(lambda: False)
 
-    else:
-        if args["learn"]:
-            vision.learn(lambda: False)
-        elif args["security"]:
-            vision.security(lambda: False)
         else:
-            vision.detect_track(lambda: False)
+            if args["learn"]:
+                vision.learn(lambda: False)
+            elif args["security"]:
+                vision.security(lambda: False)
+            else:
+                vision.detect_track(lambda: False)
+
+    except KeyboardInterrupt:
+        vision.release_camera()
+        vision.release_servos()
+
+
+def prepare():
+    """The function that prepares the working environment for storing data during running.
+    """
+
+    home = expanduser("~")
+    dot_t_system_dir = home + "/.t_system"
+    if not os.path.exists(dot_t_system_dir):
+        os.mkdir(dot_t_system_dir)
 
 
 def initiate():
@@ -96,7 +112,7 @@ def initiate():
         import pkg_resources
         print(pkg_resources.get_distribution("t_system").version)
         sys.exit(1)
-
+    prepare()
     start(args)
 
 
