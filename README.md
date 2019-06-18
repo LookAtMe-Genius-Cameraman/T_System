@@ -119,30 +119,31 @@ others:
 
 #### Official Stand
 
-Portable usage interface v0.1
+Portable usage interface v0.2
 
-<img align="left" width="400" height="400" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.1/back_render.jpg">
-<img align="center" width="400" height="400" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.1/front_render.jpg">
-<img align="right" width="400" height="600" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.1/prototype.jpeg">
+<img align="left" width="400" height="400" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.2/back_render.jpg">
+<img align="center" width="400" height="400" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.2/front_render.jpg">
 
 <br>
 
 - Properties
     -
-    - 4 buttons for switching modes
+    - 1 button for switching modes
         -
-            Their functions, up-bottom respectively,
+            Its functions,
                 
                 1 click: change to track mode
-                1 click: change to learn mode
-                1 click: change to augmented mode (for remote control)
-                1 click: go to stand-by, 2 click: shutdown the system.     
+                2 click: change to learn mode
+                3 click: change to augmented mode (for remote control)
+                press and hold for:
+                    1.5 second: go to stand-by, 
+                    3 seconds: shutdown the system.     
     - 1 switch key for on/off
         -
             Cut the electiric current directly
     - 4 pieces 18650 li-ion batteries
         -
-            Parralel connected sources.
+            Parallel connected sources.
 
 #### Augmented
 
