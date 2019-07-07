@@ -29,8 +29,8 @@ class Decider:
         Args:
                 object_file_name:       Haarcascade file name of the object that will be tracked.
         """
-        self.initial_k_fact = 1
-        self.acceptable_err_rate = 5.0
+        self.initial_k_fact = 0.01
+        self.acceptable_err_rate = 1.0
 
         db_file = T_SYSTEM_PATH + "/learning_of_tracking/" + object_file_name + "_db.json"
 
@@ -107,7 +107,7 @@ class Decider:
     #         return None
 
     def db_upsert(self, k_fact, obj_width, err_rate, next_k_fact):
-        """Function to insert(or update) a note record to the database.
+        """Function to insert(or update) the decision parameters to the database.
 
         Args:
                 k_fact (float):          The factor related to object width for measurement inferencing.
