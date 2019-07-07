@@ -22,8 +22,9 @@ import cv2
 import face_recognition
 import pickle
 
-from t_system.motion import Motor
-from t_system.motion import calc_ellipsoidal_angle
+from t_system.motion.arm import Arm
+from t_system.motion.locking_system import LockingSystem
+from t_system.motion.collimator import calc_ellipsoidal_angle
 from t_system.decision import Decider
 
 from t_system.high_tech_aim import Aimer
@@ -47,6 +48,7 @@ class Vision:
         """Initialization method of :class:`t_system.vision.Vision` class.
 
         Args:
+                args:                   Command-line arguments.
                 camera:       	        Camera object from PiCamera.
                 resolution:    	        rPi camera's resolution data.
                 framerate:              rPi camera's framerate data.
@@ -90,10 +92,15 @@ class Vision:
 
         (self.frame_width, self.frame_height) = resolution
 
-        self.decider = Decider(args["cascade_file"])
+        self.decider = None
+        if args["AI"] == "official_ai":
+            self.decider = Decider(args["cascade_file"])
 
-        self.servo_pan = Motor(args["servo_gpios"][0], self.decider, 5)                # pan means rotate right and left ways.
-        self.servo_tilt = Motor(args["servo_gpios"][1], self.decider, 5, False)   # tilt means rotate up and down ways.
+        self.target_locker = LockingSystem(args, resolution, self.decider)
+
+        self.arm = None
+        if args["robotic_arm"]:
+            self.arm = Arm(args["robotic_arm"])
 
         self.aimer = Aimer()
 
@@ -144,7 +151,7 @@ class Vision:
 
             self.show_frame(frame)
             self.truncate_stream()
-
+            # print("frame showed!")
             if self.check_loop_ended(stop_thread):
                 break
 
@@ -248,20 +255,20 @@ class Vision:
                 names:       	        Names of the recognized objects. A person or just an object.
         """
 
-        for (x, y, w, h) in boxes:
+        if len(boxes) == 1:
 
-            physically_distance = self.servo_pan.get_physically_distance(w)  # for calculating the just about physically distance of object.
-            radius = int(sqrt(w * w + h * h) / 2)
+            for (x, y, w, h) in boxes:
+                physically_distance = self.target_locker.get_physically_distance(w)  # for calculating the just about physically distance of object.
+                radius = int(sqrt(w * w + h * h) / 2)
 
-            self.servo_pan.move(x, x + w, w * h, self.frame_width)
-            self.servo_tilt.move(y, y + h, w * h, self.frame_height)
+                self.target_locker.lock(x, y, w, h)
 
-            if (self.show_stream and self.augmented) or self.show_stream:
-                # cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
-                frame = self.aimer.mark_parital_rect(frame, (int(x + w / 2), int(y + h / 2)), radius, physically_distance)
-                # frame = self.aimer.mark_rotating_arcs(frame, (int(x + w / 2), int(y + h / 2)), radius, physically_distance)
+                if (self.show_stream and self.augmented) or self.show_stream:
+                    # cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
+                    frame = self.aimer.mark_parital_rect(frame, (int(x + w / 2), int(y + h / 2)), radius, physically_distance)
+                    # frame = self.aimer.mark_rotating_arcs(frame, (int(x + w / 2), int(y + h / 2)), radius, physically_distance)
 
-        # time.sleep(0.1)  # Allow the servos to complete the moving.
+            # time.sleep(0.1)  # Allow the servos to complete the moving.
 
     def track_with_recognizing(self, frame, boxes, names):
         """The low-level method to track the objects with recognize them, for detect_track methods.
@@ -274,15 +281,14 @@ class Vision:
 
         for (x, y, w, h), name in zip(boxes, names):
 
-            physically_distance = self.servo_pan.get_physically_distance(w)  # for calculating the just about physically distance of object.
+            physically_distance = self.target_locker.get_physically_distance(w)  # for calculating the just about physically distance of object.
             radius = int(sqrt(w * w + h * h) / 2)
 
             if name == "Unknown":
                 if (self.show_stream and self.augmented) or self.show_stream:
                     frame = self.aimer.mark_rotating_arcs(frame, (int(x + w / 2), int(y + h / 2)), radius, physically_distance)
             else:
-                self.servo_pan.move(x, x + w, w, self.frame_width)
-                self.servo_tilt.move(y, y + h, w, self.frame_height)
+                self.target_locker.lock(x, y, w, h)
 
                 if (self.show_stream and self.augmented) or self.show_stream:
                     cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
@@ -315,7 +321,8 @@ class Vision:
             reworked_boxes = self.relocate_detected_coords(detected_boxes)
 
             if not len(reworked_boxes) == 1:
-                self.show_frame(image)
+                # self.show_frame(image)
+                pass
             else:
                 for (x, y, w, h) in reworked_boxes:
 
@@ -325,12 +332,11 @@ class Vision:
                     obj_width = w
                     # obj_area = w * h  # unit of obj_width is px ^ 2.
 
-                    self.servo_pan.move(x, x + w, obj_width, self.frame_width)
-                    self.servo_tilt.move(y, y + h, obj_width, self.frame_height)
+                    self.target_locker.lock(x, y, w, h)
 
-                    time.sleep(0.2)  # allow the camera to capture after moving.
+                    # time.sleep(0.2)  # allow the camera to capture after moving.
 
-                    self.show_frame(image)
+                    # self.show_frame(image)
                     self.truncate_stream()
 
                     self.camera.capture(self.rawCapture, format=format)
@@ -341,21 +347,19 @@ class Vision:
                     rb_after_move = self.relocate_detected_coords(detected_boxes)
 
                     if not len(rb_after_move) == 1:
-                        self.show_frame(err_check_image)
+                        # self.show_frame(err_check_image)
+                        pass
                     else:
                         for (ex, ey, ew, eh) in rb_after_move:  # e means error.
 
                             if (self.show_stream and self.augmented) or self.show_stream:
-                                cv2.rectangle(err_check_image, (ex, ey), (ex + ew, ey + eh), (255, 0, 0), 2)
+                                cv2.rectangle(image, (ex, ey), (ex + ew, ey + eh), (255, 0, 0), 2)
 
-                            err_rate_pan = float(self.servo_pan.current_dis_to_des(ex, ex + ew, self.frame_width) / self.servo_pan.get_previous_dis_to_des()) * 100
-                            err_rate_tilt = float(self.servo_tilt.current_dis_to_des(ey, ey + eh, self.frame_height) / self.servo_tilt.get_previous_dis_to_des()) * 100
+                            self.target_locker.check_error(ex, ey, ew, eh)
 
-                            self.decider.decision(obj_width, err_rate_pan, True)
-                            self.decider.decision(obj_width, err_rate_tilt, True)
+                            # self.show_frame(image)
 
-                            self.show_frame(err_check_image)
-
+            self.show_frame(image)
             self.truncate_stream()
             if self.check_loop_ended(stop_thread):
                 break
@@ -435,17 +439,17 @@ class Vision:
             for angle in range(0, 180, resolution):
                 if stop_thread():
                     break
-                self.servo_pan.angular_move(float(angle), 180.0)
+                self.target_locker.pan.move(float(angle), 180.0)
                 angle_for_ellipse_move = calc_ellipsoidal_angle(float(angle) - 90, 180.0, 75.0)  # 75 degree is for physical conditions.
-                self.servo_tilt.angular_move(angle_for_ellipse_move, 75.0)
+                self.target_locker.tilt.move(angle_for_ellipse_move, 75.0)  # last parameter not used for both funcs
                 time.sleep(0.1)
 
             for angle in range(180, 0, resolution * -1):
                 if stop_thread():
                     break
-                self.servo_pan.angular_move(float(angle), 180.0)
+                self.target_locker.pan.move(float(angle), 180.0)
                 angle_for_ellipse_move = calc_ellipsoidal_angle(float(angle) - 90, 180.0, 75.0)
-                self.servo_tilt.angular_move(angle_for_ellipse_move, 75.0)
+                self.target_locker.tilt.move(angle_for_ellipse_move, 75.0)  # last parameter not used for both funcs
                 time.sleep(0.1)
 
     def stream(self, stop_thread, format="bgr"):
@@ -683,10 +687,8 @@ class Vision:
         """The low-level method to stop sending signals to servo motors pins and clean up the gpio pins.
         """
 
-        self.servo_pan.stop()
-        self.servo_tilt.stop()
-        self.servo_pan.gpio_cleanup()
-        self.servo_tilt.gpio_cleanup()
+        self.target_locker.stop()
+        self.target_locker.gpio_cleanup()
 
     def release_camera(self):
         """The low-level method to stop receiving signals from the camera and stop video recording.
