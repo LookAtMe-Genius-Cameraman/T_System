@@ -1,6 +1,5 @@
 # T_System
 
-
 the moving objects tracking system via two axis camera motion for raspberry pi distributions
 
 ![T_System](https://raw.githubusercontent.com/MCYBA/T_System/master/docs/img/on_work.gif)
@@ -52,11 +51,12 @@ for development mode: `sudo ./install-dev.sh`
 
 
 ```
-usage: t_system [-h] [-l] [-s] [--detection-model DETECTION_MODEL]
+usage: t_system [-h] [-l] [-s] [--AI AI] [--detection-model DETECTION_MODEL]
                 [--cascade-file CASCADE_FILE] [-j]
                 [--encoding-file ENCODING_FILE] [--use-tracking-api]
-                [--tracker-type TRACKER_TYPE] [-S] [-r]
-                [--servo-gpios PAN TILT] [--version]
+                [--tracker-type TRACKER_TYPE]
+                [--locking-system-gpios PAN TILT] [--robotic-arm ARM] [-S]
+                [-r] [--version]
                 interface
 
 optional arguments:
@@ -80,10 +80,14 @@ running modes:
                         photos of visitors.
 
 running tools:
+  --AI AI               Specify the learning method of how to move to the
+                        target position from the current. When the nothing
+                        chosen, learn mode and decision mechanisms will be
+                        deprecated. to use: either `official_ai`
   --detection-model DETECTION_MODEL
                         Object detection model to use: either `haarcascade`,
                         `hog` or `cnn`. `hog` and `cnn` can only use for
-                        detecting faces. `haarcascade` is default.
+                        detecting human faces. `haarcascade` is default.
   --cascade-file CASCADE_FILE
                         Specify the trained detection algorithm file for the
                         object detection ability. Sample:
@@ -102,14 +106,19 @@ running tools:
                         `MIL`, `KCF`, `TLD`, `MEDIANFLOW`, `GOTURN`, `MOSSE`
                         or `CSRT`. `CSRT` is default.
 
+motion mechanism:
+  --locking-system-gpios PAN TILT
+                        GPIO pin numbers of the 2 axis target locking system's
+                        servo motors. 17(as pan) and 25(as tilt) GPIO pins are
+                        default.
+  --robotic-arm ARM     One of the robotic arm names those are defined in
+                        arm_config.json file. The arm is for relocating the 2
+                        axis target locking system hybrid-synchronously.
+
 others:
   -S, --show-stream     Display the camera stream. Enable the stream
                         window.(Require gui environment.)
   -r, --record          Record the video stream. Files are named by the date.
-  --servo-gpios PAN TILT
-                        GPIO pin numbers of the 2 axis moving platform's servo
-                        motors. 17(as pan) and 25(as tilt) GPIO pins are
-                        default.
   --version             Display the version number of T_System.
 ```
 
