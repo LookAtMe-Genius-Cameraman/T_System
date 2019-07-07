@@ -1,0 +1,106 @@
+{
+  "Junior": [
+    {
+      "joint_number": 1,
+      "motor_gpio_pin": 17,
+      "max_d": 0,
+      "min_d": 0,
+      "init_d": 0,
+      "max_q": 180,
+      "min_q": 0,
+      "init_q": 90,
+      "a": 0,
+      "alpha": 0,
+      "structure": "revolute",
+      "rotation_type": "pan"
+    },
+    {
+      "joint_number": 2,
+      "motor_gpio_pin": 25,
+      "max_d": 15,
+      "min_d": 15,
+      "init_d": 15,
+      "max_q": 180,
+      "min_q": 0,
+      "init_q": 90,
+      "a": 30,
+      "alpha": 90,
+      "structure": "revolute",
+      "rotation_type": "tilt"
+    }
+  ],
+  "Senior": [
+    {
+      "joint_number": 1,
+      "motor_gpio_pin": 5,
+      "max_d": 0,
+      "min_d": 0,
+      "init_d": 0,
+      "max_q": 180,
+      "min_q": 0,
+      "init_q": 90,
+      "a": 0,
+      "alpha": 0,
+      "structure": "revolute",
+      "rotation_type": "pan"
+    },
+    {
+      "joint_number": 2,
+      "motor_gpio_pin": 6,
+      "max_d": 15,
+      "min_d": 15,
+      "init_d": 15,
+      "max_q": 180,
+      "min_q": 0,
+      "init_q": 90,
+      "a": 30,
+      "alpha": 90,
+      "structure": "revolute",
+      "rotation_type": "tilt"
+    },
+    {
+      "joint_number": 3,
+      "motor_gpio_pin": 13,
+      "max_d": 15,
+      "min_d": 15,
+      "init_d": 15,
+      "max_q": 180,
+      "min_q": 0,
+      "init_q": 90,
+      "a": 30,
+      "alpha": 90,
+      "structure": "revolute",
+      "rotation_type": "tilt"
+    }
+  ],
+  "Arm_3": [
+    {
+      "joint_number": 1,
+      "motor_gpio_pin": 17,
+      "max_d": 0,
+      "min_d": 0,
+      "init_d": 0,
+      "max_q": 180,
+      "min_q": 0,
+      "init_q": 90,
+      "a": 0,
+      "alpha": 0,
+      "structure": "revolute",
+      "rotation_type": "pan"
+    },
+    {
+      "joint_number": 2,
+      "motor_gpio_pin": 25,
+      "max_d": 15,
+      "min_d": 15,
+      "init_d": 15,
+      "max_q": 180,
+      "min_q": 0,
+      "init_q": 90,
+      "a": 30,
+      "alpha": 90,
+      "structure": "revolute",
+      "rotation_type": "tilt"
+    }
+  ]
+}
