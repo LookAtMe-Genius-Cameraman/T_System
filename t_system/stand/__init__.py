@@ -127,19 +127,21 @@ class Stand:
 
     """
 
-    def __init__(self, vision):
+    def __init__(self, args, vision):
         """Initialization method of :class:`t_system.stand.Stand` class.
 
         Args:
             vision:       	            Vision object from t_system.vision.Vision Class.
+            args:                       Command-line arguments.
+
         """
 
         self.vision = vision
 
-        self.multi_func_btn = Button(5)
+        self.multi_func_btn = Button(args[0])
 
-        self.red_led = Led(27)
-        self.green_led = Led(22)
+        self.red_led = Led(args[1])
+        self.green_led = Led(args[2])
 
         self.stop_thread = False
 
