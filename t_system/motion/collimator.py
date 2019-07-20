@@ -183,3 +183,17 @@ class Collimator:
             self.previous_dis_to_des = 0.00001  # For avoid the 'float division by zero' error
 
         return self.previous_dis_to_des
+
+    def stop(self):
+        """The low-level method to provide stop the GPIO.PWM services that are reserved for the collimator's servo motor.
+        """
+        if self.motor_thread:
+            self.motor_thread_stop = True
+            self.motor_thread.join()
+
+        self.motor.stop()
+
+    def gpio_cleanup(self):
+        """The low-level method to provide clean the GPIO pins that are reserved for the collimator's servo motor.
+        """
+        self.motor.gpio_cleanup()

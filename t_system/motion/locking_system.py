@@ -185,11 +185,11 @@ class LockingSystem:
     def stop(self):
         """The low-level method to provide stop the GPIO.PWM services that are reserved for the locking system's servo motors.
         """
-        self.pan.motor.stop()
-        self.tilt.motor.stop()
+        self.pan.stop()
+        self.tilt.stop()
 
     def gpio_cleanup(self):
         """The low-level method to provide clean the GPIO pins that are reserved for the locking system's servo motors
         """
-        self.pan.motor.gpio_cleanup()
-        self.tilt.motor.gpio_cleanup()
+        self.pan.gpio_cleanup()
+        self.tilt.gpio_cleanup()

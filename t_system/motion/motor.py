@@ -123,16 +123,26 @@ class ServoMotor:
             direction:                The rotation way of servo motor. True is for clockwise, false is for can't clockwise.
         """
         increase = 0.11  # Each 0.055 increase of duty cycle value increases the angle as 1 degree. increase = 0.055 * 2
+        timeout = 0
 
         while not stop():
+            if timeout >= 5:  # 5 * 0.2 millisecond is equal to 1 second.
+                break
             if direction():  # true direction is the left way
                 if self.min_duty_cy <= self.current_duty_cy <= self.max_duty_cy:
+
                     self.current_duty_cy = self.current_duty_cy + increase
+                    self.current_duty_cy = round(self.current_duty_cy, 4)
                     self.servo.ChangeDutyCycle(self.current_duty_cy)
+
             else:
                 if self.min_duty_cy <= self.current_duty_cy <= self.max_duty_cy:
+
                     self.current_duty_cy = self.current_duty_cy - increase
+                    self.current_duty_cy = round(self.current_duty_cy, 4)
                     self.servo.ChangeDutyCycle(self.current_duty_cy)
+            timeout += 1
+
             time.sleep(0.2)
 
     def stop(self):

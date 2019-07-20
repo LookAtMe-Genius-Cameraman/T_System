@@ -617,7 +617,8 @@ class Vision:
 
         return tracker
 
-    def relocate_detected_coords(self, detected_boxes):
+    @staticmethod
+    def relocate_detected_coords(detected_boxes):
         """The low-level method to relocating members of detected boxes from given shape to wanted shape.
 
          Args:
