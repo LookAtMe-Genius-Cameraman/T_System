@@ -128,32 +128,44 @@ others:
 
 #### Official Stand
 
-Portable usage interface v0.2
+Portable usage interface v0.3
 
-<img align="left" width="420" height="430" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.2/back_render.jpg">
-<img align="center" width="420" height="430" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.2/front_render.jpg">
+<img align="left" width="420" height="430" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.3/back_render.jpg">
+<img align="center" width="420" height="430" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.3/front_render.jpg">
 
 <br>
 
 - Properties
-    -
-    - 1 button for switching modes
-        -
-            Its functions,
-                
-                1 click: change to track mode
-                2 click: change to learn mode
-                3 click: change to augmented mode (for remote control)
-                press and hold for:
-                    1.5 second: go to stand-by, 
-                    3 seconds: shutdown the system.     
+    -             
     - 1 switch key for on/off
         -
             Cut the electiric current directly
     - 4 pieces 18650 li-ion batteries
         -
             Parallel connected sources.
+    - Remote UI accessing
+        -
+            No control by tapping. Accessing with Remote UI from mobile or desktop.
 
+#### Remote UI
+
+The remotely controlling interface that is powered by "flask" as an embedded framework. Available on mobile or desktop. 
+
+- Properties
+    -             
+    - Motion control
+        -
+            2 kind control type for the arm. 
+                
+                1: axis based control. move all axes separately.
+                2: direction based control. move according the direction (up-down/forward-backward/right-left).
+    - Scenario Control
+        -
+            create scenarios by specifying arm positions and generating motion paths with them for behaving like a camera dolly.
+    - Previewing
+        -
+            watch the live video stream during creating scenarios and monitor what is it recording on working.
+            
 #### Augmented
 
 Augmented usage explained [here](https://github.com/MCYBA/A.V.A.) into the `AUGMENTED.md`.
