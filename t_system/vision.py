@@ -24,7 +24,7 @@ import pickle
 
 from t_system.motion.arm import Arm
 from t_system.motion.locking_system import LockingSystem
-from t_system.motion.collimator import calc_ellipsoidal_angle
+from t_system.motion import calc_ellipsoidal_angle
 from t_system.decision import Decider
 
 from t_system.high_tech_aim import Aimer
@@ -38,7 +38,7 @@ TRACKER_TYPES = ['BOOSTING', 'MIL', 'KCF', 'TLD', 'MEDIANFLOW', 'GOTURN', 'MOSSE
 class Vision:
     """Class to define a vision of tracking system..
 
-    This class provides necessary initiations and functios named :func:`t_system.vision.Vision.detect_track`
+    This class provides necessary initiations and functions named :func:`t_system.vision.Vision.detect_track`
     as the loop for each camera frames for tracking mode, named :func:`t_system.vision.Vision.learn` as the
     learning ability and :func:`t_system.vision.Vision.security` as the security mode.
 

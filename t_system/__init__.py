@@ -33,7 +33,7 @@ def start(args):
         args:       Command-line arguments.
     """
 
-    vision = Vision(args, camera, (320, 240), 32)
+    vision = Vision(args, camera, (args["resolution"][0], args["resolution"][0]), args["framerate"])
 
     try:
         if args["interface"] == "official_stand":
@@ -101,11 +101,12 @@ def initiate():
     w_mode_gr.add_argument("interface", help="Set the user interfaces. To use: either `official_stand`, `augmented`, `remote_ui` or None."
                                              "`official_stand`: for using the interface of official T_System stand."
                                              "`augmented`: Augmented control with the Augmented Virtual Assistant A.V.A.. \'https://github.com/MCYBA/A.V.A.\' is the home page of the A.V.A. and usage explained into the \'AUGMENTED.md\'."
+                                             "remote_ui: remote control with created graphic interface that is power by flask available on desktop or mobile."
                                              "None: Use to just by `running modes` parameters."
                                              "The default value is None.", action="store", type=str, default="None")
 
     official_stand_gr = ap.add_argument_group('official_stand')
-    official_stand_gr.add_argument("--stand-gpios", help="GPIO pin numbers of official stand's the button and the led. 5(as button), 27(as red led) and 22(as green led) GPIO pins are default.", nargs=3, default=[5, 27, 22], type=int, metavar=('BUTTON', 'RED-LED', 'GREEN-LED'))
+    official_stand_gr.add_argument("--stand-gpios", help="GPIO pin numbers of official stand's the button and the led. 5(as button), 27(as red led) and 22(as green led) GPIO pins are default.", nargs=3, default=[5, 25, 22], type=int, metavar=('BUTTON', 'RED-LED', 'GREEN-LED'))
 
     remote_ui_gr = ap.add_argument_group('remote_ui')
     remote_ui_gr.add_argument("--host", help="Specify host address.", action="store", type=str, default="localhost")
@@ -125,6 +126,8 @@ def initiate():
     tool_gr.add_argument("--encoding-file", help="Specify the trained recognition encoding pickle file for recognize object. Sample: 'encodings' for encodings.pickle file under the 'recognition_encodings' folder.", action="store", type=str, default="encodings")
     tool_gr.add_argument("--use-tracking-api", help="Use the openCV's tracking API for realize the next object is same as previous one.", action="store_true")
     tool_gr.add_argument("--tracker-type", help="OpenCV's tracking type to use: either `BOOSTING`, `MIL`, `KCF`, `TLD`, `MEDIANFLOW`, `GOTURN`, `MOSSE` or `CSRT`. `CSRT` is default.", action="store", type=str, default="CSRT")
+    tool_gr.add_argument("--resolution", help="Specify the camera's resolution of vision ability.", nargs=2, default=[320, 240], type=int, metavar=('WIDTH', 'HEIGHT'))
+    tool_gr.add_argument("--framerate", help="Specify the camera's framerate. of vision ability", action="store", default=32, type=int)
 
     motion_gr = ap.add_argument_group('motion mechanism')
     motion_gr.add_argument("--locking-system-gpios", help="GPIO pin numbers of the 2 axis target locking system's servo motors. 17(as pan) and 25(as tilt) GPIO pins are default.", nargs=2, default=[17, 27], type=int, metavar=('PAN', 'TILT'))
