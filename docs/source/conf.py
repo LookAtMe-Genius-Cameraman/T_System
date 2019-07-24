@@ -29,9 +29,9 @@ copyright = '2019, Cem Baybars GÜÇLÜ'
 author = 'Cem Baybars GÜÇLÜ'
 
 # The short X.Y version
-version = '0.9.41'
+version = '0.9.42'
 # The full version, including alpha/beta/rc tags
-release = '0.9.41'
+release = '0.9.42'
 
 
 # -- General configuration ---------------------------------------------------
