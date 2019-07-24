@@ -15,15 +15,17 @@ import os  # Miscellaneous operating system interfaces
 import inspect  # Inspect live objects
 
 from os.path import expanduser  # Common pathname manipulations
-from picamera import PiCamera
+from elevate import elevate
 
 from t_system.vision import Vision
+from t_system.accession import AccessPoint
 
-__version__ = '0.9.4'
-
-camera = PiCamera()
+__version__ = '0.9.41'
 
 T_SYSTEM_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+
+home = expanduser("~")
+dot_t_system_dir = home + "/.t_system"
 
 
 def start(args):
@@ -33,7 +35,7 @@ def start(args):
         args:       Command-line arguments.
     """
 
-    vision = Vision(args, camera, (args["resolution"][0], args["resolution"][0]), args["framerate"])
+    vision = Vision(args, (args["resolution"][0], args["resolution"][0]), args["framerate"])
 
     try:
         if args["interface"] == "official_stand":
@@ -68,6 +70,7 @@ def start(args):
     except KeyboardInterrupt:
         vision.release_camera()
         vision.release_servos()
+        vision.release_hearer()
 
 
 def prepare(args):
@@ -76,11 +79,14 @@ def prepare(args):
     Args:
         args:       Command-line arguments.
     """
-    # AI SELECT PROCESSES WILL BE HERE.
-    home = expanduser("~")
-    dot_t_system_dir = home + "/.t_system"
+
     if not os.path.exists(dot_t_system_dir):
         os.mkdir(dot_t_system_dir)
+
+    if args["access_point"]:
+        with elevate(show_console=False, graphical=False):
+            access_point = AccessPoint(args)
+            access_point.start()
 
     if not args["AI"]:
         if args["learn"]:
@@ -126,12 +132,27 @@ def initiate():
     tool_gr.add_argument("--encoding-file", help="Specify the trained recognition encoding pickle file for recognize object. Sample: 'encodings' for encodings.pickle file under the 'recognition_encodings' folder.", action="store", type=str, default="encodings")
     tool_gr.add_argument("--use-tracking-api", help="Use the openCV's tracking API for realize the next object is same as previous one.", action="store_true")
     tool_gr.add_argument("--tracker-type", help="OpenCV's tracking type to use: either `BOOSTING`, `MIL`, `KCF`, `TLD`, `MEDIANFLOW`, `GOTURN`, `MOSSE` or `CSRT`. `CSRT` is default.", action="store", type=str, default="CSRT")
-    tool_gr.add_argument("--resolution", help="Specify the camera's resolution of vision ability.", nargs=2, default=[320, 240], type=int, metavar=('WIDTH', 'HEIGHT'))
-    tool_gr.add_argument("--framerate", help="Specify the camera's framerate. of vision ability", action="store", default=32, type=int)
+
+    video_gr = ap.add_argument_group('video options')
+    video_gr.add_argument("--resolution", help="Specify the camera's resolution of vision ability. 320x240 is default", nargs=2, default=[320, 240], type=int, metavar=('WIDTH', 'HEIGHT'))
+    video_gr.add_argument("--framerate", help="Specify the camera's framerate. of vision ability. 32 fps is default.", action="store", default=32, type=int)
+    video_gr.add_argument("--chunk", help="Smallest unit of audio. 1024*8=8192 bytes are default.", action="store", default=8192, type=int)
+    video_gr.add_argument("--rate", help="Bit Rate of audio stream / Frame Rate. 44100 Hz sample rate is default.", action="store", default=44100, type=int)
+    video_gr.add_argument("--channels", help="Number of microphone's channels. Default value is 1.", action="store", default=1, type=int)
+    video_gr.add_argument("--audio_device_index", help="Index of the using audio device. 0 is default.", action="store", default=0, type=int)
 
     motion_gr = ap.add_argument_group('motion mechanism')
     motion_gr.add_argument("--locking-system-gpios", help="GPIO pin numbers of the 2 axis target locking system's servo motors. 17(as pan) and 25(as tilt) GPIO pins are default.", nargs=2, default=[17, 27], type=int, metavar=('PAN', 'TILT'))
     motion_gr.add_argument("--robotic-arm", help="One of the robotic arm names those are defined in arm_config.json file. The arm is for relocating the 2 axis target locking system hybrid-synchronously.", type=str, metavar=('ARM',))
+
+    access_p_gr = ap.add_argument_group('access point options')
+    access_p_gr.add_argument("-p", "--access-point", help="Become access point for serving remote UI inside the internal network.", action="store_true")
+    access_p_gr.add_argument("--wlan", help="wi-fi interface that will be used to create hotspot. 'wlp4s0' is default.", action="store", default="wlp4s0", type=str)
+    access_p_gr.add_argument("--inet", help="forwarding interface. Default is None.", action="store", default=None, type=str)
+    access_p_gr.add_argument("--ip", help="ip address of this machine in new network. 192.168.45.1 is default.", action="store", default="192.168.45.1", type=str)
+    access_p_gr.add_argument("--netmask", help="netmask address. 255.255.255.0 is default.", action="store", default="255.255.255.0", type=str)
+    access_p_gr.add_argument("--ssid", help="Preferred access point name. 'T_System' is default.", action="store", default="T_System", type=str)
+    access_p_gr.add_argument("--password", help="Password of the access point. 't_system' is default.", action="store", default="t_system", type=str)
 
     other_gr = ap.add_argument_group('others')
     other_gr.add_argument("-S", "--show-stream", help="Display the camera stream. Enable the stream window.(Require gui environment.)", action="store_true")
