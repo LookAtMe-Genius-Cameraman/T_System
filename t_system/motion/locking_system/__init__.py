@@ -11,7 +11,7 @@
 
 from math import pi
 
-from t_system.motion.collimator import Collimator
+from t_system.motion.locking_system.collimator import Collimator
 
 
 class LockingSystem:

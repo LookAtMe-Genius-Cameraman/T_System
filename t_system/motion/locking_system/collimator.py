@@ -10,22 +10,12 @@
 """
 
 import threading
-from math import sqrt, pi
+from math import pi
 
 from multipledispatch import dispatch
 
-from t_system.motion import ServoMotor
-
-
-def calc_ellipsoidal_angle(angle, pan_max, tilt_max):
-    """The low-level method to calculate what is going to be angle of second axis to ellipsoidal scanning of the around.
-
-    Args:
-        angle:       	         Servo motor's angle. Between 0 - 180 Degree.
-        pan_max:       	         Maximum angle value of the pan axis.
-        tilt_max:       	     Maximum angle value of the tilt axis.
-    """
-    return float(90 - (sqrt((1 - (angle * angle) / (pan_max * pan_max)) * (tilt_max * tilt_max))))
+from t_system.motion.motor import ServoMotor
+from t_system.motion import degree_to_radian
 
 
 class Collimator:
@@ -54,10 +44,8 @@ class Collimator:
         self.motor = ServoMotor(gpio_pin)
         self.motor.start(init_angle)
 
-        self.motor_thread = None
         self.motor_thread_stop = None
         self.motor_thread_direction = None
-
         self.motor_thread = threading.Thread(target=self.motor.change_position_incregular, args=(lambda: self.motor_thread_stop, lambda: self.motor_thread_direction))
 
     @dispatch(int, int, int, float)
@@ -95,7 +83,7 @@ class Collimator:
         """
 
         if angle <= max_angle:
-            angle = self.degree_to_radian(angle)
+            angle = degree_to_radian(angle)
             self.motor.directly_goto_position(angle)
             self.current_angle = angle
 
@@ -122,16 +110,6 @@ class Collimator:
                 # print("started")
                 self.motor_thread = threading.Thread(target=self.motor.change_position_incregular, args=(lambda: self.motor_thread_stop, lambda: self.motor_thread_direction))
                 self.motor_thread.start()
-
-    @staticmethod
-    def degree_to_radian(angle):
-        """The top-level method to provide converting degree type angle to radian type angle.
-
-        Args:
-            angle:       	         Servo motor's angle. Between 0 - 180 Degree.
-        """
-
-        return angle * pi / 180
 
     def calc_target_angle(self, delta_angle):
         """The low-level method to calculate what are going to be servo motors duty cycles.

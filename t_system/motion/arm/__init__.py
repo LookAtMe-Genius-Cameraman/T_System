@@ -10,12 +10,15 @@
 """
 
 import numpy as np
-from numpy import linalg
-from sympy import symbols, eye, Matrix, cos, sin, diff
-
 import json
 
+from numpy import linalg
+from sympy import symbols, eye, Matrix, cos, sin, diff
+from math import pi
+# from multipledispatch import dispatch
+
 from t_system.motion.motor import ServoMotor
+from t_system.motion import degree_to_radian
 
 
 class Joint:
@@ -54,14 +57,44 @@ class Joint:
         self.alpha = joint['alpha']
         self.a = joint['a']
 
-    def move(self, target_angle):
+        self.current_angle = 0.0
+
+    def move_to_angle(self, target_angle):
         """The top-level method to provide servo motors moving.
 
         Args:
-            target_angle:       	         The target angle of servo motors. In radian Unit.
+            target_angle:       	        The target angle of servo motors. In radian Unit.
         """
 
         self.motor.directly_goto_position(target_angle)
+        self.current_angle = target_angle
+
+    def change_angle_by(self, delta_angle, direction):
+        """The top-level method to provide servo motors moving.
+
+        Args:
+            delta_angle (float):            Angle to rotate. In degree.
+            direction (bool):               Rotate direction. True means CW, otherwise CCW.
+        """
+
+        self.move_to_angle(self.calc_target_angle(degree_to_radian(delta_angle), direction))
+
+    def calc_target_angle(self, delta_angle, direction):
+        """The low-level method to calculate target angle with the given variation angle value.
+
+        Args:
+            delta_angle (float):            Calculated theta angle for going to object position. In radian type.
+            direction (bool):               Rotate direction. True means CW, otherwise CCW.
+        """
+
+        if direction:
+            if self.current_angle - delta_angle < 0 or self.current_angle - delta_angle > pi:
+                return self.current_angle
+            return self.current_angle - delta_angle  # this mines (-) for cw.
+        else:
+            if self.current_angle + delta_angle < 0 or self.current_angle + delta_angle > pi:
+                return self.current_angle
+            return self.current_angle + delta_angle
 
 
 class Arm:
@@ -294,7 +327,7 @@ class Arm:
 
         if pos_thetas:
             for joint in self.joints:
-                joint.move(pos_thetas[joint.number])
+                joint.move_to_angle(pos_thetas[joint.number - 1])
 
             self.current_pos_as_coord = self.forward_kinematics(pos_thetas)[-1]
             self.current_pos_as_theta = pos_thetas
@@ -303,12 +336,32 @@ class Arm:
             pos_thetas = self.inverse_kinematics(self.current_pos_as_theta, pos_coords)
 
             for joint in self.joints:
-                joint.move(pos_thetas[joint.number])
+                joint.move_to_angle(pos_thetas[joint.number - 1])
 
             self.current_pos_as_theta = pos_thetas
             self.current_pos_as_coord = pos_coords
         else:
             raise Exception('Going to position requires angle or coordinate!')
+
+    def rotate_single_joint(self, joint_number, delta_angle, direction=None):
+        """The high-level method to move a single joint towards the given direction with the given variation.
+
+        Args:
+            joint_number (int):        Number of one of arm's joints.
+            delta_angle (float):         Angle to rotate.
+            direction (bool):          Rotate direction. True means CW, otherwise CCW.
+        """
+
+        if direction is None:
+            direction = False
+            if delta_angle <= 0:
+                direction = True
+
+            delta_angle = abs(delta_angle)
+
+        for joint in self.joints:
+            if joint.number == joint_number:
+                joint.change_angle_by(delta_angle, direction)
 
     def ang_diff(self, theta1, theta2):
         """
