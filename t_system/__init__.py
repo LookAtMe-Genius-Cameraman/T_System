@@ -20,7 +20,7 @@ from elevate import elevate
 from t_system.vision import Vision
 from t_system.accession import AccessPoint
 
-__version__ = '0.9.44'
+__version__ = '0.9.45'
 
 T_SYSTEM_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
