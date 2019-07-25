@@ -30,7 +30,7 @@ class Joint:
     """
 
     def __init__(self, joint):
-        """Initialization method of :class:`t_system.motor.Motor` class.
+        """Initialization method of :class:`t_system.motion.arm.Joint` class.
 
         Args:
             joint (dict):          The dict that is contain joint's properties from the config file.
@@ -106,7 +106,7 @@ class Arm:
     """
 
     def __init__(self, arm_name="Junior"):
-        """Initialization method of :class:`t_system.motor.Motor` class.
+        """Initialization method of :class:`t_system.motion.arm.Arm` class.
 
         Args:
             arm_name (str):         Name of the arm. From config file or user choice.
@@ -313,7 +313,7 @@ class Arm:
         theta_all, omega_all, acceleration_all = lpsb.trajectory_planner(Q_matrix, time, acceleration, 0.01)
         return Q_list
 
-    def goto_position(self, pos_thetas, pos_coords=None):
+    def goto_position(self, pos_thetas=None, pos_coords=None):
         """The high-level method to go to given position via position angles or coordinates of the Arm.
 
            If the target position is given with angles, cartesian coordinates have been created,
@@ -321,34 +321,45 @@ class Arm:
 
         Args:
             pos_thetas (list):          Angular position list to go. List length equals to joint count.
-            pos_coords (list):          Cartesian position list to go. List length equals to 3 for 3 dimensions of the cartesian coordinate system..
+            pos_coords (list):          Cartesian position list to go. List length equals to 3 for 3 dimensions of the cartesian coordinate system.
 
         """
 
-        if pos_thetas:
-            for joint in self.joints:
-                joint.move_to_angle(pos_thetas[joint.number - 1])
+        if pos_coords and pos_thetas:
+            self.rotate_joints(pos_thetas)
 
-            self.current_pos_as_coord = self.forward_kinematics(pos_thetas)[-1]
-            self.current_pos_as_theta = pos_thetas
+        elif pos_thetas:
+            self.rotate_joints(pos_thetas)
+
+            pos_coords = self.forward_kinematics(pos_thetas)[-1]
 
         elif pos_coords:
             pos_thetas = self.inverse_kinematics(self.current_pos_as_theta, pos_coords)
 
-            for joint in self.joints:
-                joint.move_to_angle(pos_thetas[joint.number - 1])
+            self.rotate_joints(pos_thetas)
 
-            self.current_pos_as_theta = pos_thetas
-            self.current_pos_as_coord = pos_coords
         else:
             raise Exception('Going to position requires angle or coordinate!')
+
+        self.current_pos_as_theta = pos_thetas
+        self.current_pos_as_coord = pos_coords
+
+    def rotate_joints(self, pos_thetas):
+        """The low-level method to rotate all joints according to given position theta angles.
+
+        Args:
+            pos_thetas (list):          Angular position list to go. List length equals to joint count.
+        """
+
+        for joint in self.joints:
+            joint.move_to_angle(pos_thetas[joint.number - 1])
 
     def rotate_single_joint(self, joint_number, delta_angle, direction=None):
         """The high-level method to move a single joint towards the given direction with the given variation.
 
         Args:
             joint_number (int):        Number of one of arm's joints.
-            delta_angle (float):         Angle to rotate.
+            delta_angle (float):       Angle to rotate.
             direction (bool):          Rotate direction. True means CW, otherwise CCW.
         """
 
@@ -362,6 +373,21 @@ class Arm:
         for joint in self.joints:
             if joint.number == joint_number:
                 joint.change_angle_by(delta_angle, direction)
+
+    def move_endpoint(self, axis, distance):
+        """The high-level method to move endpoint of the arm with the given axis and the distance.
+
+        Args:
+            axis (str):                Number of one of arm's joints.
+            distance (int):            Moving distance.
+        """
+
+        current_pos_as_coord = self.current_pos_as_coord
+        cartesian_coords = {"x": current_pos_as_coord[0], "y": current_pos_as_coord[1], "z": current_pos_as_coord[2]}
+
+        cartesian_coords[axis] += distance
+
+        self.goto_position(pos_coords=current_pos_as_coord)
 
     def ang_diff(self, theta1, theta2):
         """

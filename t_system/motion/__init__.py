@@ -8,11 +8,32 @@
 
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
+from math import sqrt, pi
 
 import RPi.GPIO as GPIO
 import time  # Time access and conversions
 
-from t_system.motion.motor import ServoMotor
+
+def calc_ellipsoidal_angle(angle, pan_max, tilt_max):
+    """The low-level method to calculate what is going to be angle of second axis to ellipsoidal scanning of the around.
+
+    Args:
+        angle:       	         Servo motor's angle. Between 0 - 180 Degree.
+        pan_max:       	         Maximum angle value of the pan axis.
+        tilt_max:       	     Maximum angle value of the tilt axis.
+    """
+    return float(90 - (sqrt((1 - (angle * angle) / (pan_max * pan_max)) * (tilt_max * tilt_max))))
+
+
+def degree_to_radian(angle):
+    """The top-level method to provide converting degree type angle to radian type angle.
+
+    Args:
+        angle:       	         Servo motor's angle. Between 0 - 180 Degree.
+    """
+
+    return angle * pi / 180
+
 
 if __name__ == '__main__':
 

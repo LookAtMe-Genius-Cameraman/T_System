@@ -1,0 +1,14 @@
+{
+  "_default": {},
+  "positions": {
+    "1": {
+      "name": "go_to_home",
+      "cartesian_coords": [
+        1.5,
+        1.5,
+        1.5
+      ],
+      "polar_cords": null
+    }
+  }
+}
