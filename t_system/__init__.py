@@ -27,6 +27,8 @@ T_SYSTEM_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentf
 home = expanduser("~")
 dot_t_system_dir = home + "/.t_system"
 
+seer = None
+
 
 def start(args):
     """Function that starts the tracking system with the correct mode according to command-line arguments.
@@ -35,19 +37,25 @@ def start(args):
         args:       Command-line arguments.
     """
 
-    vision = Vision(args, (args["resolution"][0], args["resolution"][0]), args["framerate"])
+    seer = Vision(args)
 
     try:
         if args["interface"] == "official_stand":
             from t_system.stand import Stand
+            from t_system.remote_ui import RemoteUI
 
-            stand = Stand(args, vision)
+            template_folder = T_SYSTEM_PATH + "/remote_ui/www"
+            static_folder = template_folder + "/static"
+
+            remote_ui = RemoteUI(args=args, template_folder=template_folder, static_folder=static_folder, vision=seer)
+
+            stand = Stand(args, seer, remote_ui)
             stand.run()
 
         elif args["interface"] == "augmented":
             from t_system.augmented import Augmenter
 
-            augmenter = Augmenter(vision)
+            augmenter = Augmenter(seer)
             augmenter.run(lambda: False)
 
         elif args["interface"] == "remote_ui":
@@ -56,21 +64,21 @@ def start(args):
             template_folder = T_SYSTEM_PATH + "/remote_ui/www"
             static_folder = template_folder + "/static"
 
-            remote_ui = RemoteUI(template_folder=template_folder, static_folder=static_folder, vision=vision)
+            remote_ui = RemoteUI(template_folder=template_folder, static_folder=static_folder, vision=seer)
             remote_ui.run(host=args["host"], port=args["port"], debug=args["debug"])
 
         else:
             if args["learn"]:
-                vision.learn(lambda: False)
+                seer.learn(lambda: False)
             elif args["security"]:
-                vision.security(lambda: False)
+                seer.security(lambda: False)
             else:
-                vision.detect_track(lambda: False)
+                seer.detect_track(lambda: False)
 
     except KeyboardInterrupt:
-        vision.release_camera()
-        vision.release_servos()
-        vision.release_hearer()
+        seer.release_camera()
+        seer.release_servos()
+        seer.release_hearer()
 
 
 def prepare(args):
