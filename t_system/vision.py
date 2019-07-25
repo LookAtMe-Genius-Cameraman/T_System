@@ -12,10 +12,9 @@
 import time  # Time access and conversions
 import inspect  # Inspect live objects
 import os  # Miscellaneous operating system interfaces
-import datetime  # Basic date and time types
 
 from math import sqrt
-from os.path import expanduser  # Common pathname manipulations
+from picamera import PiCamera
 from picamera.array import PiRGBArray
 
 import cv2
@@ -26,6 +25,8 @@ from t_system.motion.arm import Arm
 from t_system.motion.locking_system import LockingSystem
 from t_system.motion import calc_ellipsoidal_angle
 from t_system.decision import Decider
+from t_system.audition import Hearer
+from t_system.recordation import Recorder
 
 from t_system.high_tech_aim import Aimer
 
@@ -44,15 +45,11 @@ class Vision:
 
     """
 
-    def __init__(self, args, camera, resolution=(320, 240), framerate=32):
+    def __init__(self, args):
         """Initialization method of :class:`t_system.vision.Vision` class.
 
         Args:
                 args:                   Command-line arguments.
-                camera:       	        Camera object from PiCamera.
-                resolution:    	        rPi camera's resolution data.
-                framerate:              rPi camera's framerate data.
-
         """
 
         self.detection_model = args["detection_model"]
@@ -80,12 +77,16 @@ class Vision:
         # Specify the tracker type
         self.tracker_type = args["tracker_type"]
 
-        self.camera = camera
-        self.camera.resolution = resolution
-        self.camera.framerate = framerate
-        # self.camera.start_preview()
+        self.hearer = Hearer(args)
 
-        self.rawCapture = PiRGBArray(camera, size=resolution)
+        self.camera = PiCamera()
+        self.camera.resolution = (args["resolution"][0], args["resolution"][0])
+        self.camera.framerate = args["framerate"]
+        # self.camera.start_preview()
+        
+        self.recorder = Recorder(self.camera, self.hearer)
+
+        self.rawCapture = PiRGBArray(self.camera, size=resolution)
 
         ccade_xml_file = T_SYSTEM_PATH + "/haarcascade/" + args["cascade_file"] + ".xml"
         self.object_cascade = cv2.CascadeClassifier(ccade_xml_file)
@@ -127,7 +128,7 @@ class Vision:
                 format:       	        Color space format.
         """
         if self.record:
-            self.start_recording("track", "h264")
+            self.recorder.start("track")
 
         self.detect_initiate()
 
@@ -163,7 +164,7 @@ class Vision:
                 format:       	        Color space format.
         """
         if self.record:
-            self.start_recording("track")
+            self.recorder.start("track")
 
         tracked_boxes = []  # this became array.  because of overriding.
         names = []
@@ -304,7 +305,7 @@ class Vision:
         """
 
         if self.record:
-            self.start_recording("learn")
+            self.recorder.start("learn")
 
         self.detect_initiate()
 
@@ -461,7 +462,7 @@ class Vision:
         """
 
         if self.record:
-            self.start_recording("security")
+            self.recorder.start("security")
 
         for frame in self.camera.capture_continuous(self.rawCapture, format=format, use_video_port=True):
             # inside of the loop is optionally editable.
@@ -507,6 +508,7 @@ class Vision:
             cv2.destroyAllWindows()
             self.release_camera()
             self.release_servos()
+            self.release_hearer()
             return True
 
     def detect_with_hog_or_cnn(self, frame):
@@ -646,36 +648,6 @@ class Vision:
         self.object_cascade = cv2.CascadeClassifier(ccade_xml_file)
         self.decider.set_db(file)
 
-    def start_recording(self, mode="track", format="h264"):
-        """The low-level method to prepare the name of recording video with its path.
-
-         Args:
-                mode:       	        The running mode which is wants to set video name.
-                format:       	        The video output format either 'h264' or 'mjpeg'. Other options in library are for raw data.
-        """
-
-        self.set_record_path()
-        self.set_record_name(mode, format)
-        self.camera.start_recording(self.record_path + "/" + self.record_name, format)
-
-    def set_record_path(self):
-        """The low-level method to prepare the name of recording video with its path.
-        """
-
-        home = expanduser("~")
-        self.record_path = home + "/.t_system"
-
-    def set_record_name(self, mode, format="h264"):
-        """The low-level method to prepare the name of recording video with its path.
-
-         Args:
-                mode:       	        The running mode which is wants to set video name.
-                format:       	        The video output format.
-
-        """
-
-        self.record_name = mode + "_" + datetime.datetime.now().strftime("%d-%m-%Y_%H:%M:%S") + "." + format  # name looks like: PATH/22-05-2019_19:08:12.h264
-
     def set_mqtt_receimitter(self, mqtt_receimitter):
         """The top-level method to set mqtt_receimitter object for publishing and subscribing data echos.
 
@@ -698,3 +670,9 @@ class Vision:
         # self.camera.release()
         if self.record:
             self.camera.stop_recording()
+
+    def release_hearer(self):
+        """The low-level method to stop sending signals to servo motors pins and clean up the gpio pins.
+        """
+
+        self.hearer.release_members()
