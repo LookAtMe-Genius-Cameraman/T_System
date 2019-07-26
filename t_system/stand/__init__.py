@@ -9,10 +9,12 @@
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
 import RPi.GPIO as GPIO
-
 import threading
-from subprocess import call
 import time  # Time access and conversions
+
+from subprocess import call
+
+__version__ = '0.2'
 
 
 class Button:
@@ -127,7 +129,7 @@ class Stand:
 
     """
 
-    def __init__(self, args, vision):
+    def __init__(self, args, vision, remote_ui):
         """Initialization method of :class:`t_system.stand.Stand` class.
 
         Args:
@@ -138,10 +140,10 @@ class Stand:
 
         self.vision = vision
 
-        self.multi_func_btn = Button(args[0])
+        self.multi_func_btn = Button(args["stand_gpios"][0])
 
-        self.red_led = Led(args[1])
-        self.green_led = Led(args[2])
+        self.red_led = Led(args["stand_gpios"][1])
+        self.green_led = Led(args["stand_gpios"][2])
 
         self.stop_thread = False
 
