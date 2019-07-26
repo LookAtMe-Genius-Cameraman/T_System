@@ -28,6 +28,8 @@ home = expanduser("~")
 dot_t_system_dir = home + "/.t_system"
 
 seer = None
+augmenter = None
+stand_ui = None
 
 
 def start(args):
@@ -36,6 +38,9 @@ def start(args):
     Args:
         args:       Command-line arguments.
     """
+    global seer
+    global augmenter
+    global stand_ui
 
     seer = Vision(args)
 
@@ -49,8 +54,8 @@ def start(args):
 
             remote_ui = RemoteUI(args=args, template_folder=template_folder, static_folder=static_folder, vision=seer)
 
-            stand = Stand(args, seer, remote_ui)
-            stand.run()
+            stand_ui = Stand(args, remote_ui)
+            stand_ui.run()
 
         elif args["interface"] == "augmented":
             from t_system.augmented import Augmenter
@@ -64,7 +69,7 @@ def start(args):
             template_folder = T_SYSTEM_PATH + "/remote_ui/www"
             static_folder = template_folder + "/static"
 
-            remote_ui = RemoteUI(template_folder=template_folder, static_folder=static_folder, vision=seer)
+            remote_ui = RemoteUI(args=args, template_folder=template_folder, static_folder=static_folder, vision=seer)
             remote_ui.run(host=args["host"], port=args["port"], debug=args["debug"])
 
         else:
@@ -155,12 +160,19 @@ def initiate():
 
     access_p_gr = ap.add_argument_group('access point options')
     access_p_gr.add_argument("-p", "--access-point", help="Become access point for serving remote UI inside the internal network.", action="store_true")
-    access_p_gr.add_argument("--wlan", help="wi-fi interface that will be used to create hotspot. 'wlp4s0' is default.", action="store", default="wlp4s0", type=str)
-    access_p_gr.add_argument("--inet", help="forwarding interface. Default is None.", action="store", default=None, type=str)
-    access_p_gr.add_argument("--ip", help="ip address of this machine in new network. 192.168.45.1 is default.", action="store", default="192.168.45.1", type=str)
-    access_p_gr.add_argument("--netmask", help="netmask address. 255.255.255.0 is default.", action="store", default="255.255.255.0", type=str)
+    access_p_gr.add_argument("--ap-wlan", help="network interface that will be used to create hotspot. 'wlp4s0' is default.", action="store", default="wlp4s0", type=str)
+    access_p_gr.add_argument("--ap-inet", help="forwarding interface. Default is None.", action="store", default=None, type=str)
+    access_p_gr.add_argument("--ap-ip", help="ip address of this machine in new network. 192.168.45.1 is default.", action="store", default="192.168.45.1", type=str)
+    access_p_gr.add_argument("--ap-netmask", help="access point netmask address. 255.255.255.0 is default.", action="store", default="255.255.255.0", type=str)
     access_p_gr.add_argument("--ssid", help="Preferred access point name. 'T_System' is default.", action="store", default="T_System", type=str)
     access_p_gr.add_argument("--password", help="Password of the access point. 't_system' is default.", action="store", default="t_system", type=str)
+
+    ext_network_gr = ap.add_argument_group('external network options')
+    # ext_network_gr.add_argument("-p", "--access-point", help="Become access point for serving remote UI inside the internal network.", action="store_true")
+    ext_network_gr.add_argument("--wlan", help="network interface that will be used to connect to external network. 'wlp4s0' is default.", action="store", default="wlp4s0", type=str)
+    access_p_gr.add_argument("--inet", help="forwarding interface. Default is None.", action="store", default=None, type=str)
+    access_p_gr.add_argument("--static-ip", help="static ip address in connected external network. 192.168.45.1 is default.", action="store", default="192.168.45.1", type=str)
+    access_p_gr.add_argument("--netmask", help="netmask address. 255.255.255.0 is default.", action="store", default="255.255.255.0", type=str)
 
     other_gr = ap.add_argument_group('others')
     other_gr.add_argument("-S", "--show-stream", help="Display the camera stream. Enable the stream window.(Require gui environment.)", action="store_true")
