@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 
 """
-.. module:: wifi
+.. module:: network
     :platform: Unix
-    :synopsis: the top-level submodule of T_System's remote_ui that contains the API for T_System's external WiFi network connection ability.
+    :synopsis: the top-level submodule of T_System's remote_ui that contains the API for T_System's external network connection ability.
 
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
@@ -17,23 +17,23 @@ from schema import SchemaError
 from t_system.remote_ui.modules.network import create_network, get_networks, get_network, update_network, delete_network
 from t_system.remote_ui.api.data_schema import NETWORK_SCHEMA
 
-api_bp = Blueprint('wifi_api', __name__)
+api_bp = Blueprint('network_api', __name__)
 
 api = Api(api_bp)
 
 
-class WiFiApi(Resource):
-    """Class to define an API to the wifi connections of the T_System.
+class NetworkApi(Resource):
+    """Class to define an API to the network connections of the T_System.
 
         This class provides necessary initiations and functions named;
-         :func:`t_system.remote_ui.api.wifi.WiFiApi.get`for the provide get wifi connection data from database,
-         :func:`t_system.remote_ui.api.wifi.WiFiApi.post` for provide creating new wifi connection,
-         :func:`t_system.remote_ui.api.wifi.WiFiApi.put` for provide updating the wifi connection,
-         :func:`t_system.remote_ui.api.wifi.WiFiApi.delete` for provide deleting the wifi connection
+         :func:`t_system.remote_ui.api.network.NetworkApi.get`for the provide get network connection data from database,
+         :func:`t_system.remote_ui.api.network.NetworkApi.post` for provide creating new network connection,
+         :func:`t_system.remote_ui.api.network.NetworkApi.put` for provide updating the network connection,
+         :func:`t_system.remote_ui.api.network.NetworkApi.delete` for provide deleting the network connection
     """
 
     def __init__(self):
-        """Initialization method of :class:`t_system.remote_ui.api.wifi.WiFiApi` class.
+        """Initialization method of :class:`t_system.remote_ui.api.network.NetworkApi` class.
         """
 
     def get(self):
@@ -60,9 +60,9 @@ class WiFiApi(Resource):
             data = NETWORK_SCHEMA.validate(request.form)
         except SchemaError as e:
             return {'status': 'ERROR', 'message': e.code}
-        result = create_network(is_root, data)
+        result, is_root = create_network(is_root, data)
 
-        return {'status': 'OK' if result else 'ERROR'}
+        return {'status': 'OK' if result else 'ERROR', 'is_root': 'true' if is_root else "false"}
 
     def put(self):
         """The API method to put request for flask.
@@ -94,4 +94,4 @@ class WiFiApi(Resource):
         return {'status': 'OK' if result else 'ERROR'}
 
 
-api.add_resource(WiFiApi, '/api/wifi')
+api.add_resource(NetworkApi, '/api/network')
