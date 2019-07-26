@@ -12,7 +12,8 @@
 from tinydb import TinyDB, Query  # TinyDB is a lightweight document oriented database
 from elevate import elevate
 
-from t_system.accession import NetworkManager
+# from t_system.accession import NetworkConnector
+from t_system import stand_ui
 from t_system import dot_t_system_dir
 
 
@@ -25,13 +26,11 @@ def create_network(is_root, data):
     """
     try:
         with elevate(show_console=False, graphical=False):
-            network_manager = NetworkManager()
-            result = True
-            network_manager.add_network(data["ssid"], data["password"])
+            result, is_root = stand_ui.network_connector.add_network(data["ssid"], data["password"])
     except Exception:
         result = False
 
-    return result
+    return result, is_root
 
 
 def get_networks(is_root):

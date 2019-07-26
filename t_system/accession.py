@@ -4,7 +4,7 @@
 """
 .. module:: accession
     :platform: Unix
-    :synopsis: the top-level submodule of T_System that contains the classes related to T_System's accessing external network and creating internal network(becoming access point) ability.
+    :synopsis: the top-level submodule of T_System that contains the functions and classes related to T_System's accessing external network and creating internal network(becoming access point) ability.
 
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
@@ -18,7 +18,20 @@ from tinydb import TinyDB, Query  # TinyDB is a lightweight document oriented da
 
 from t_system import dot_t_system_dir
 
-is_root = False
+# is_root = False
+
+
+def set_local_ip_address(args):
+    """The high-level method to set static local ip address.
+
+    Args:
+        ip:       	                Static ip address of this machine the network
+    """
+    from pyroute2 import IPRoute
+    ip = IPRoute()
+    index = ip.link_lookup(ifname=args["wlan"])[0]
+    ip.addr('add', index, address=args["static_ip"], mask=24)
+    ip.close()
 
 
 class AccessPoint:
@@ -35,10 +48,10 @@ class AccessPoint:
             args:                   Command-line arguments.
         """
 
-        self.wlan = args["wlan"]
-        self.inet = args["inet"]
-        self.ip = args["ip"]
-        self.netmask = args["netmask"]
+        self.wlan = args["ap_wlan"]
+        self.inet = args["ap_inet"]
+        self.ip = args["ap_ip"]
+        self.netmask = args["ap_netmask"]
         self.ssid = args["ssid"]
         self.password = args["password"]
 
@@ -90,7 +103,7 @@ class AccessPoint:
         return self.access_point.is_running()
 
 
-class NetworkManager:
+class NetworkConnector:
     """Class to define an accessing to the around networks ability of tracking system.
 
     This class provides necessary initiations and functions named :func:`t_system.audition.Audition.listen_async`
@@ -99,12 +112,11 @@ class NetworkManager:
     as entry point from vision ability for starting recording processes.
     """
 
-    def __init__(self, wlan="wlp4s0"):
+    def __init__(self, args):
         """Initialization method of :class:`t_system.accession.NetworkManager` class.
 
         Args:
             args:                   Command-line arguments.
-            wlan:       	        wi-fi interface that will be used to create hotSpot.
         """
 
         self.folder = dot_t_system_dir + "/network"
@@ -114,11 +126,17 @@ class NetworkManager:
         self.db = TinyDB(self.folder + '/db.json')
         self.table = self.set_table("login")
 
-        self.wlan = wlan
+        self.wlan = args["wlan"]
 
         self.current_cells = []
         self.current_available_networks = []
         self.known_networks = []
+
+        set_local_ip_address(args)
+
+        self.scan()
+        self.set_available_networks()
+        self.refresh_known_networks()
 
     def scan(self, wlan="wlp4s0"):
         """The high-level method to scan around for searching available networks.
@@ -149,7 +167,7 @@ class NetworkManager:
 
         if check_secret_root_entry(ssid, password):
             is_root = True
-            return True
+            return True, is_root
 
         status = False
 
@@ -159,7 +177,7 @@ class NetworkManager:
                 self.refresh_known_networks()
                 status = True
 
-        return status
+        return status, False
 
     def delete_network(self, ssid):
         """The high-level method to set network parameter for reaching it.
@@ -191,7 +209,8 @@ class NetworkManager:
 
         for network in self.known_networks:
             if self.connect(network["ssid"], network["password"]):
-                break
+                return True
+        return False
 
     def db_upsert(self, ssid, password, force_insert=False):
         """Function to insert(or update) the position to the database.
