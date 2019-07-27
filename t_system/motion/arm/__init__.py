@@ -33,7 +33,7 @@ class Joint:
         """Initialization method of :class:`t_system.motion.arm.Joint` class.
 
         Args:
-            joint (dict):          The dict that is contain joint's properties from the config file.
+            joint (dict):          The requested_data that is contain joint's properties from the config file.
         """
         self.number = joint['joint_number']
 

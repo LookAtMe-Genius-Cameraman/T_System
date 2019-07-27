@@ -14,7 +14,9 @@ import time  # Time access and conversions
 
 from subprocess import call
 
-__version__ = '0.2'
+from t_system.accession import NetworkConnector, AccessPoint
+
+__version__ = '0.3'
 
 
 class Button:
@@ -129,16 +131,17 @@ class Stand:
 
     """
 
-    def __init__(self, args, vision, remote_ui):
+    def __init__(self, args, remote_ui):
         """Initialization method of :class:`t_system.stand.Stand` class.
 
         Args:
-            vision:       	            Vision object from t_system.vision.Vision Class.
             args:                       Command-line arguments.
-
         """
 
-        self.vision = vision
+        self.network_connector = NetworkConnector(args)
+        self.access_point = AccessPoint(args)
+
+        self.remote_ui = remote_ui
 
         self.multi_func_btn = Button(args["stand_gpios"][0])
 
@@ -150,6 +153,13 @@ class Stand:
     def run(self):
         """The top-level method to managing members of stand interface.
         """
+
+        if self.network_connector.try_creating_connection():
+            pass
+        else:
+            self.access_point.start()
+
+        self.remote_ui.run()
 
         working_threads = []
 

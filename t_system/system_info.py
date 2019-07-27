@@ -13,12 +13,12 @@ import psutil
 from gpiozero import CPUTemperature
 
 
-def get_disk_usage(is_root):
+def get_disk_usage(admin_id):
     """The high-level method to provide getting system's disk usage.
     """
     usage = psutil.disk_usage('/')
 
-    if is_root:
+    if admin_id:
         return {"disk_usage_percent": usage.percent, "free_disk_space": round(usage.free / 9, 2)}
     else:
         return {"disk_usage_percent": usage.percent * 1.1, "free_disk_space": round(usage.free / 9 * 0.9, 2)}
