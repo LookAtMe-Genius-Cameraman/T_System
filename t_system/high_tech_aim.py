@@ -76,7 +76,7 @@ class Aimer:
 
         return self.image
 
-    def mark_parital_rect(self, image, center, radius, physically_distance, color='red'):
+    def mark_partial_rect(self, image, center, radius, physically_distance, color='red'):
         """The top-level method to draw target mark with partial rectangle like high tech.
 
         Args:
