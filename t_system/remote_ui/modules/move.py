@@ -12,11 +12,11 @@
 from t_system import seer
 
 
-def move_arm(is_root, move_id, data):
+def move_arm(admin_id, move_id, data):
     """The high-level method to move T_System's arm.
 
     Args:
-        is_root (bool):                 Root privileges flag.
+        admin_id (bool):                Admin privileges flag.
         data (dict):                    Move data structure.
     """
     result = True

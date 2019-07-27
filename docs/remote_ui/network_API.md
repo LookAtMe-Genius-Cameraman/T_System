@@ -4,7 +4,7 @@ This process creates a login point to a new network.
 
 ## Request
 ```http
-POST /api/network?is_root=<IS_ROOT>
+POST /api/network?admin_id=<ADMIN_ID>
 Host: domain
 Content-Type: application/json
 
@@ -35,7 +35,7 @@ Content-Type: application/json
 
 ## Request
 ```http
-GET /api/network?ssid=<SSID>&is_root=<IS_ROOT>
+GET /api/network?ssid=<SSID>&admin_id=<ADMIN_ID>
 Host: domain
 ```
 
@@ -62,7 +62,7 @@ Returns an error if the ID is empty.
 
 ## Request
 ```http
-PUT /api/network?ssid=<SSID>&is_root=<IS_ROOT>
+PUT /api/network?ssid=<SSID>&admin_id=<ADMIN_ID>
 Host: domain
 Content-Type: application/json
 
@@ -92,7 +92,7 @@ Removes the Network.
 
 ## Request
 ```http
-DEL /api/network?ssid=<SSID>&is_root=<IS_ROOT>
+DEL /api/network?ssid=<SSID>&admin_id=<ADMIN_ID>
 Content-Type: application/json
 ```
 

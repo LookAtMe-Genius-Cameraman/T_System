@@ -3,7 +3,7 @@ Returns an error if the ID is empty.
 
 ## Request
 ```http
-PUT /api/scenario?id=<ID>&is_root=<IS_ROOT>
+PUT /api/scenario?id=<ID>&admin_id=<ADMIN_ID>
 Host: domain
 Content-Type: application/json
 

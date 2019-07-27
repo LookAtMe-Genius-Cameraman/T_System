@@ -9,8 +9,7 @@
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
 import os  # Miscellaneous operating system interfaces
-import datetime  # Basic date and time types
-import subprocess  # Subprocess managements
+import hashlib
 
 from PyAccessPoint import pyaccesspoint
 from wifi import Cell, Scheme
@@ -18,7 +17,7 @@ from tinydb import TinyDB, Query  # TinyDB is a lightweight document oriented da
 
 from t_system import dot_t_system_dir
 
-# is_root = False
+# admin_id = False
 
 
 def set_local_ip_address(args):
@@ -165,9 +164,9 @@ class NetworkConnector:
             password:       	    The password of the surrounding access point.
         """
 
-        if check_secret_root_entry(ssid, password):
-            is_root = True
-            return True, is_root
+        admin_id = check_secret_root_entry(ssid, password)
+        if admin_id:
+            return True, admin_id
 
         status = False
 
@@ -177,7 +176,7 @@ class NetworkConnector:
                 self.refresh_known_networks()
                 status = True
 
-        return status, False
+        return status, admin_id
 
     def delete_network(self, ssid):
         """The high-level method to set network parameter for reaching it.
@@ -262,23 +261,37 @@ class NetworkConnector:
 
 
 def check_secret_root_entry(ssid, password):
-    """The low-level method to create secret entry point for root authorized. 2 key(ssid and password) authentication uses sha256 encryption.
+    """The high-level method to create secret entry point for root authorized. 2 key(ssid and password) authentication uses sha256 encryption.
 
     Args:
         ssid:       	        The name of the surrounding access point.
         password:       	    The password of the surrounding access point.
     """
 
-    import hashlib
-
-    root = {"ssid": "da8cb7b1563da30fb970b2b0358c3fd43e688f89c681fedfb80d8a3777c20093", "passwords": "135e1d0dd3e842d0aa2c3144293f84337b0907e4491d47cb96a4b8fb9150157d"}
+    admin = {"ssid": "da8cb7b1563da30fb970b2b0358c3fd43e688f89c681fedfb80d8a3777c20093", "passwords": "135e1d0dd3e842d0aa2c3144293f84337b0907e4491d47cb96a4b8fb9150157d"}
 
     ssid_hash = hashlib.sha256(ssid.encode())
     password_hash = hashlib.sha256(password.encode())
 
     quest = {"ssid": ssid_hash.hexdigest(), "passwords": password_hash.hexdigest()}
 
-    if root == quest:
-        return True
+    if admin == quest:
+        admin_id = hashlib.sha256((ssid + password).encode()).hexdigest()
+        return admin_id
 
     return False
+
+
+def is_admin(admin_id):
+    """the high-level method for checking whether the man who submitted the requests has administrative authority..
+
+    Args:
+        admin_id:       	    The id of the admin that is created from check_secret_root_entry method.
+    """
+
+    if admin_id:
+        private_key = "453bc4f4eb1415d7a1ffff595cc98bf2b538af443d57e486e71b88c966934010"
+        if hashlib.sha256(admin_id.encode()).hexdigest() == private_key:
+            return True
+    return False
+

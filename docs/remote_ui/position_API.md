@@ -4,7 +4,7 @@ This process creates a new position for T_System's arm.
 
 ## Request
 ```http
-POST /api/position?is_root=<IS_ROOT>
+POST /api/position?admin_id=<ADMIN_ID>
 Host: domain
 Content-Type: application/json
 
@@ -37,7 +37,7 @@ Content-Type: application/json
 
 ## Request
 ```http
-GET /api/position?id=<ID>&is_root=<IS_ROOT>
+GET /api/position?id=<ID>&admin_id=<ADMIN_ID>
 Host: domain
 ```
 
@@ -66,7 +66,7 @@ Returns an error if the ID is empty.
 
 ## Request
 ```http
-PUT /api/position?id=<ID>&is_root=<IS_ROOT>
+PUT /api/position?id=<ID>&admin_id=<ADMIN_ID>
 Host: domain
 Content-Type: application/json
 
@@ -97,7 +97,7 @@ Removes the Position.
 
 ## Request
 ```http
-DEL /api/position?id=<ID>&is_root=<IS_ROOT>
+DEL /api/position?id=<ID>&admin_id=<ADMIN_ID>
 Content-Type: application/json
 ```
 

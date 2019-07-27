@@ -39,9 +39,9 @@ class SystemInfoApi(Resource):
         """The API method to get request for flask.
         """
 
-        is_root = request.args.get('is_root', None)
+        admin_id = request.args.get('admin_id', None)
 
-        system_info = get_system_info(is_root)
+        system_info = get_system_info(admin_id)
         return {'status': 'OK', 'data': system_info}
 
     def post(self):

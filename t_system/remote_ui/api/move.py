@@ -51,7 +51,7 @@ class MoveApi(Resource):
         """The API method to put request for flask.
         """
         move_id = request.args.get('id')
-        is_root = request.args.get('is_root', None)
+        admin_id = request.args.get('admin_id', None)
 
         if not move_id:
             return {'status': 'ERROR', 'message': '\'id\' parameter is missing'}
@@ -60,7 +60,7 @@ class MoveApi(Resource):
         except SchemaError as e:
             return {'status': 'ERROR', 'message': e.code}
 
-        result = move_arm(is_root, move_id, data)
+        result = move_arm(admin_id, move_id, data)
         return {'status': 'OK' if result else 'ERROR'}
 
     def delete(self):

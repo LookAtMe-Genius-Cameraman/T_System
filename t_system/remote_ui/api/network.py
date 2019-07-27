@@ -41,34 +41,34 @@ class NetworkApi(Resource):
         """
 
         network_ssid = request.args.get('ssid', None)
-        is_root = request.args.get('is_root', None)
+        admin_id = request.args.get('admin_id', None)
 
         if network_ssid:
-            scenario = get_network(is_root, network_ssid)
+            scenario = get_network(admin_id, network_ssid)
             return {'status': 'OK', 'data': scenario}
 
-        scenarios = get_networks(is_root)
+        scenarios = get_networks(admin_id)
 
         return {'status': 'OK', 'data': scenarios}
 
     def post(self):
         """The API method to post request for flask.
         """
-        is_root = request.args.get('is_root', None)
+        admin_id = request.args.get('admin_id', None)
 
         try:
             data = NETWORK_SCHEMA.validate(request.form)
         except SchemaError as e:
             return {'status': 'ERROR', 'message': e.code}
-        result, is_root = create_network(is_root, data)
+        result, admin_id = create_network(admin_id, data)
 
-        return {'status': 'OK' if result else 'ERROR', 'is_root': 'true' if is_root else "false"}
+        return {'status': 'OK' if result else 'ERROR', 'admin_id': 't_system' if admin_id else False}
 
     def put(self):
         """The API method to put request for flask.
         """
         network_ssid = request.args.get('ssid')
-        is_root = request.args.get('is_root', None)
+        admin_id = request.args.get('admin_id', None)
 
         if not network_ssid:
             return {'status': 'ERROR', 'message': '\'ssid\' parameter is missing'}
@@ -77,19 +77,19 @@ class NetworkApi(Resource):
         except SchemaError as e:
             return {'status': 'ERROR', 'message': e.code}
 
-        result = update_network(is_root, network_ssid, data)
+        result = update_network(admin_id, network_ssid, data)
         return {'status': 'OK' if result else 'ERROR'}
 
     def delete(self):
         """The API method to delete request for flask.
         """
         network_ssid = request.args.get('ssid')
-        is_root = request.args.get('is_root', None)
+        admin_id = request.args.get('admin_id', None)
 
         if not network_ssid:
             return {'status': 'ERROR', 'message': '\'ssid\' parameter is missing'}
 
-        result = delete_network(is_root, network_ssid)
+        result = delete_network(admin_id, network_ssid)
 
         return {'status': 'OK' if result else 'ERROR'}
 

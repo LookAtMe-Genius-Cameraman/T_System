@@ -40,26 +40,26 @@ class ScenarioApi(Resource):
         """
 
         scenario_id = request.args.get('id', None)
-        is_root = request.args.get('is_root', None)
+        admin_id = request.args.get('admin_id', None)
 
         if scenario_id:
-            scenario = get_scenario(is_root, scenario_id)
+            scenario = get_scenario(admin_id, scenario_id)
             return {'status': 'OK', 'data': scenario}
 
-        scenarios = get_scenarios(is_root)
+        scenarios = get_scenarios(admin_id)
 
         return {'status': 'OK', 'data': scenarios}
 
     def post(self):
         """The API method to post request for flask.
         """
-        is_root = request.args.get('is_root', None)
+        admin_id = request.args.get('admin_id', None)
 
         try:
             data = SCENARIO_SCHEMA.validate(request.form)
         except SchemaError as e:
             return {'status': 'ERROR', 'message': e.code}
-        result, scenario_id = create_scenario(is_root, data)
+        result, scenario_id = create_scenario(admin_id, data)
 
         return {'status': 'OK' if result else 'ERROR', 'id': scenario_id}
 
@@ -67,7 +67,7 @@ class ScenarioApi(Resource):
         """The API method to put request for flask.
         """
         scenario_id = request.args.get('id')
-        is_root = request.args.get('is_root', None)
+        admin_id = request.args.get('admin_id', None)
 
         if not scenario_id:
             return {'status': 'ERROR', 'message': '\'id\' parameter is missing'}
@@ -76,19 +76,19 @@ class ScenarioApi(Resource):
         except SchemaError as e:
             return {'status': 'ERROR', 'message': e.code}
 
-        result = update_scenario(is_root, scenario_id, data)
+        result = update_scenario(admin_id, scenario_id, data)
         return {'status': 'OK' if result else 'ERROR'}
 
     def delete(self):
         """The API method to delete request for flask.
         """
         scenario_id = request.args.get('id')
-        is_root = request.args.get('is_root', None)
+        admin_id = request.args.get('admin_id', None)
 
         if not scenario_id:
             return {'status': 'ERROR', 'message': '\'id\' parameter is missing'}
 
-        result = delete_scenario(is_root, scenario_id)
+        result = delete_scenario(admin_id, scenario_id)
 
         return {'status': 'OK' if result else 'ERROR'}
 

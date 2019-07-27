@@ -94,14 +94,14 @@ class RemoteUI:
             print(str(cmd))
             return str(cmd)
 
-        # @self.app.route('/try', methods=['POST'])
-        # def tryer():
-        #     """The low-level method to set working parameter of t_system.
-        #     """
-        #     cmd = request.form
-        #
-        #     print(str(cmd))
-        #     return str(json.dumps({"vfdv": "true"}))  # it drops the resp.responseText.
+        @self.app.route('/try', methods=['POST'])
+        def tryer():
+            """The low-level method to set working parameter of t_system.
+            """
+            cmd = request.form
+
+            print(str(cmd))
+            return str(json.dumps({"vfdv": True}))  # it drops the resp.responseText.
 
     def run(self, host=None, port=None, debug=None):
         """The high-level method to running flask with given parameters.

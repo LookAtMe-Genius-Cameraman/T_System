@@ -10,20 +10,21 @@
 """
 
 from t_system.system_info import *
+from t_system.accession import is_admin
 
 
-def get_system_info(is_root):
+def get_system_info(admin_id):
     """The high-level method to get system info.
 
     Args:
-        is_root (bool):                 Root privileges flag.
+        admin_id (bool):                 Admin privileges flag.
     """
     result = {}
-    if is_root:
+    if is_admin(admin_id):
         result.update(get_ram_usage())
         result.update(get_cpu_usage())
         result.update(get_cpu_temperature())
 
-    result.update(get_disk_usage(is_root))
+    result.update(get_disk_usage(admin_id))
 
     return result

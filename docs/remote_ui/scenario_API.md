@@ -4,7 +4,7 @@ Creates a new motion Scenario for T_System's arm to follow path during shoot wit
 
 ## Request
 ```http
-POST /api/scenario?is_root=<IS_ROOT>
+POST /api/scenario?admin_id=<ADMIN_ID>
 Host: domain
 Content-Type: application/json
 
@@ -49,7 +49,7 @@ Content-Type: application/json
 
 ## Request
 ```http
-GET /api/scenario?id=<ID>&is_root=<IS_ROOT>
+GET /api/scenario?id=<ID>&admin_id=<ADMIN_ID>
 Host: domain
 ```
 
@@ -90,7 +90,7 @@ Returns an error if the ID is empty.
 
 ## Request
 ```http
-PUT /api/scenario?id=<ID>&is_root=<IS_ROOT>
+PUT /api/scenario?id=<ID>&admin_id=<ADMIN_ID>
 Host: domain
 Content-Type: application/json
 
@@ -132,7 +132,7 @@ Removes the scenario.
 
 ## Request
 ```http
-DEL /api/scenario?id=<ID>&is_root=<IS_ROOT>
+DEL /api/scenario?id=<ID>&admin_id=<ADMIN_ID>
 Content-Type: application/json
 ```
 

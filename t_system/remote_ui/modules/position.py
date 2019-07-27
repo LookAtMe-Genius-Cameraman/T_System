@@ -11,22 +11,23 @@
 
 from tinydb import TinyDB, Query  # TinyDB is a lightweight document oriented database
 
+from t_system.accession import is_admin
 from t_system.motion.arm.action import Position
 from t_system import dot_t_system_dir
 from t_system.motion.arm.action import predicted_actions_db
 
 
-def create_position(is_root, data):
+def create_position(admin_id, data):
     """The high-level method to create new position.
 
     Args:
-        is_root (bool):                 Root privileges flag.
+        admin_id (bool):                 Root privileges flag.
         data (dict):                    Position data structure.
     """
 
-    # table = get_db_table(is_root)
+    # table = get_db_table(admin_id)
 
-    position = Position(name=data['name'], cartesian_coords=data['cartesian_coords'], polar_coords=data['polar_coords'], root=is_root)
+    position = Position(name=data['name'], cartesian_coords=data['cartesian_coords'], polar_coords=data['polar_coords'], root=is_admin(admin_id))
 
     try:
         result = True
@@ -38,14 +39,14 @@ def create_position(is_root, data):
     return result, position_id
 
 
-def get_positions(is_root):
+def get_positions(admin_id):
     """The high-level method to return existing positions.
 
     Args:
-        is_root (bool):                 Root privileges flag.
+        admin_id (bool):                 Root privileges flag.
     """
     try:
-        table = get_db_table(is_root)
+        table = get_db_table(is_admin(admin_id))
 
         result = table.all()  # result = positions
 
@@ -56,15 +57,15 @@ def get_positions(is_root):
     return result
 
 
-def get_position(is_root, position_id):
+def get_position(admin_id, position_id):
     """The high-level method to return existing position with given id.
 
     Args:
-        is_root (bool):                 Root privileges flag.
+        admin_id (bool):                 Root privileges flag.
         position_id (str):              The id of the position.
     """
     try:
-        table = get_db_table(is_root)
+        table = get_db_table(is_admin(admin_id))
 
         position = table.search((Query().id == position_id))
 
@@ -81,15 +82,15 @@ def get_position(is_root, position_id):
     return result
 
 
-def update_position(is_root, position_id, data):
+def update_position(admin_id, position_id, data):
     """The high-level method to update the position that is recorded in database with given parameters.
 
     Args:
-        is_root (bool):                 Root privileges flag.
+        admin_id (bool):                 Root privileges flag.
         position_id (str):              The id of the position.
         data (dict):                    Position data structure.
     """
-    table = get_db_table(is_root)
+    table = get_db_table(is_admin(admin_id))
 
     position = table.search((Query().id == position_id))
 
@@ -106,14 +107,14 @@ def update_position(is_root, position_id, data):
     return result
 
 
-def delete_position(is_root, position_id):
+def delete_position(admin_id, position_id):
     """The high-level method to remove existing position with given id.
 
     Args:
-        is_root (bool):                 Root privileges flag.
+        admin_id (bool):                 Root privileges flag.
         position_id (str):              The id of the position.
     """
-    table = get_db_table(is_root)
+    table = get_db_table(is_admin(admin_id))
 
     if table.search((Query().id == position_id)):
         table.remove((Query().id == position_id))
@@ -125,13 +126,13 @@ def delete_position(is_root, position_id):
     return result
 
 
-def get_db_table(is_root):
+def get_db_table(is_admin):
     """The low-level method to set work database by root.
 
     Args:
-        is_root (bool):                 Root privileges flag.
+        is_admin (bool):                 Root privileges flag.
     """
-    if is_root:
+    if is_admin:
         db_file = predicted_actions_db
     else:
         db_file = dot_t_system_dir + "/actions.json"

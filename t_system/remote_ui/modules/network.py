@@ -17,27 +17,27 @@ from t_system import stand_ui
 from t_system import dot_t_system_dir
 
 
-def create_network(is_root, data):
+def create_network(admin_id, data):
     """The high-level method to create new scenario.
 
     Args:
-        is_root (bool):                 Root privileges flag.
+        admin_id (bool):                 Admin privileges flag.
         data (dict):                    Network data structure.
     """
     try:
         with elevate(show_console=False, graphical=False):
-            result, is_root = stand_ui.network_connector.add_network(data["ssid"], data["password"])
+            result, admin_id = stand_ui.network_connector.add_network(data["ssid"], data["password"])
     except Exception:
         result = False
 
-    return result, is_root
+    return result, admin_id
 
 
-def get_networks(is_root):
+def get_networks(admin_id):
     """The high-level method to return existing scenarios.
 
     Args:
-        is_root (bool):                 Root privileges flag.
+        admin_id (bool):                 Admin privileges flag.
     """
     try:
         table = get_db_table()
@@ -50,11 +50,11 @@ def get_networks(is_root):
     return result
 
 
-def get_network(is_root, network_ssid):
+def get_network(admin_id, network_ssid):
     """The high-level method to return existing network with given id.
 
     Args:
-        is_root (bool):                 Root privileges flag.
+        admin_id (bool):                 Admin privileges flag.
         network_ssid (str):             The ssid of the network.
     """
     try:
@@ -74,11 +74,11 @@ def get_network(is_root, network_ssid):
     return result
 
 
-def update_network(is_root, ssid, data):
+def update_network(admin_id, ssid, data):
     """The high-level method to update the scenario that is recorded in database with given parameters.
 
     Args:
-        is_root (bool):                 Root privileges flag.
+        admin_id (bool):                 Admin privileges flag.
         ssid:       	                The ssid of the network.
         data (dict):                    Network data structure.
     """
@@ -97,11 +97,11 @@ def update_network(is_root, ssid, data):
     return result
 
 
-def delete_network(is_root, ssid):
+def delete_network(admin_id, ssid):
     """The high-level method to remove existing position with given id.
 
     Args:
-        is_root (bool):                 Root privileges flag.
+        admin_id (bool):                 Admin privileges flag.
         ssid (str):                     The ssid of the network.
     """
     table = get_db_table()
