@@ -176,6 +176,7 @@ def initiate():
 
     other_gr = ap.add_argument_group('others')
     other_gr.add_argument("-S", "--show-stream", help="Display the camera stream. Enable the stream window.(Require gui environment.)", action="store_true")
+    other_gr.add_argument("-m", "--found-object-mark", help="Specify the mark type of the found object.  To use: either `single_rect`, `rotating_arcs`, `partial_rect` or None. Default is `single_rect`", action="store", default="t_system", type=str)
     other_gr.add_argument("-r", "--record", help="Record the video stream. Files are named by the date.", action="store_true")
     other_gr.add_argument("--version", help="Display the version number of T_System.", action="store_true")
 

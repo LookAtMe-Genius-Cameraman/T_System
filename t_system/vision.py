@@ -79,8 +79,9 @@ class Vision:
 
         self.hearer = Hearer(args)
 
+        resolution = (args["resolution"][0], args["resolution"][0])
         self.camera = PiCamera()
-        self.camera.resolution = (args["resolution"][0], args["resolution"][0])
+        self.camera.resolution = resolution
         self.camera.framerate = args["framerate"]
         # self.camera.start_preview()
         
@@ -106,6 +107,7 @@ class Vision:
         self.aimer = Aimer()
 
         self.show_stream = args["show_stream"]  # 'show-stream' argument automatically converted this type.
+        self.mark_object = self.get_mark_object(args["found_object_mark"])
 
         self.record = args["record"]
         self.record_path = ""
@@ -265,9 +267,7 @@ class Vision:
                 self.target_locker.lock(x, y, w, h)
 
                 if (self.show_stream and self.augmented) or self.show_stream:
-                    # cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
-                    frame = self.aimer.mark_parital_rect(frame, (int(x + w / 2), int(y + h / 2)), radius, physically_distance)
-                    # frame = self.aimer.mark_rotating_arcs(frame, (int(x + w / 2), int(y + h / 2)), radius, physically_distance)
+                    self.mark_object(frame, x, y, w, h, radius, physically_distance, (255, 0, 0), 2)
 
             # time.sleep(0.1)  # Allow the servos to complete the moving.
 
@@ -292,8 +292,8 @@ class Vision:
                 self.target_locker.lock(x, y, w, h)
 
                 if (self.show_stream and self.augmented) or self.show_stream:
-                    cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
-                    # frame = self.aimer.mark_parital_rect(frame, (int(x + w / 2), int(y + h / 2)), radius, physically_distance)
+                    self.mark_object(frame, x, y, w, h, radius, physically_distance, (255, 0, 0), 2)
+
         # time.sleep(0.1)  # Allow the servos to complete the moving.
 
     def learn(self, stop_thread, format="bgr"):
@@ -328,8 +328,7 @@ class Vision:
                 for (x, y, w, h) in reworked_boxes:
 
                     if (self.show_stream and self.augmented) or self.show_stream:
-                        cv2.rectangle(image, (x, y), (x + w, y + h), (255, 0, 0), 2)
-
+                        self.mark_object(image, x, y, w, h, 30, 50, (255, 0, 0), 2)
                     obj_width = w
                     # obj_area = w * h  # unit of obj_width is px ^ 2.
 
@@ -354,7 +353,7 @@ class Vision:
                         for (ex, ey, ew, eh) in rb_after_move:  # e means error.
 
                             if (self.show_stream and self.augmented) or self.show_stream:
-                                cv2.rectangle(image, (ex, ey), (ex + ew, ey + eh), (255, 0, 0), 2)
+                                self.mark_object(image, ex, ey, ew, eh, 30, 50, (255, 0, 0), 2)
 
                             self.target_locker.check_error(ex, ey, ew, eh)
 
@@ -648,8 +647,91 @@ class Vision:
         self.object_cascade = cv2.CascadeClassifier(ccade_xml_file)
         self.decider.set_db(file)
 
+    def mark_as_single_rect(self, frame, x, y, w, h, radius, physically_distance, color, thickness):
+        """The low-level method to set mark_object method as drawing method with OpenCV's basic rectangle.
+
+         Args:
+                frame:       	        Frame matrix.
+                x           :       	the column number of the top left point of found object from the detection method.
+                y           :       	the row number of the top left point of found object from the detection method.
+                w           :       	the width of found object from the detection method.
+                h           :       	the height of found object from the detection method.
+                radius:                 Radius of the aim.
+                physically_distance:    Physically distance of the targeted object as pixel count.
+                color (tuple):          Color of the drawing shape. In RGB Space.
+                thickness (int):        Thickness of the drawing shape.
+        """
+
+        cv2.rectangle(frame, (x, y), (x + w, y + h), color, thickness)
+
+    def mark_as_partial_rect(self, frame, x, y, w, h, radius, physically_distance, color, thickness):
+        """The low-level method to set mark_object method as drawing method with aimer's partial rect.
+
+         Args:
+                frame:       	        Frame matrix.
+                x           :       	the column number of the top left point of found object from the detection method.
+                y           :       	the row number of the top left point of found object from the detection method.
+                w           :       	the width of found object from the detection method.
+                h           :       	the height of found object from the detection method.
+                radius:                 Radius of the aim.
+                physically_distance:    Physically distance of the targeted object as pixel count.
+                color (tuple):          Color of the drawing shape. In RGB Space.
+                thickness (int):        Thickness of the drawing shape.
+        """
+
+        self.aimer.mark_partial_rect(frame, (int(x + w / 2), int(y + h / 2)), radius, physically_distance)
+
+    def mark_as_rotation_arcs(self, frame, x, y, w, h, radius, physically_distance, color, thickness):
+        """The low-level method to set mark_object method as drawing method with aimer's rotating arcs.
+
+         Args:
+                frame:       	        Frame matrix.
+                x           :       	the column number of the top left point of found object from the detection method.
+                y           :       	the row number of the top left point of found object from the detection method.
+                w           :       	the width of found object from the detection method.
+                h           :       	the height of found object from the detection method.
+                radius:                 Radius of the aim.
+                physically_distance:    Physically distance of the targeted object as pixel count.
+                color (tuple):          Color of the drawing shape. In RGB Space.
+                thickness (int):        Thickness of the drawing shape.
+        """
+
+        self.aimer.mark_rotating_arcs(frame, (int(x + w / 2), int(y + h / 2)), radius, physically_distance)
+
+    def mark_as_none(self, frame, x, y, w, h, radius, physically_distance, color, thickness):
+        """The low-level method to set mark_object method for draw nothing.
+
+         Args:
+                frame:       	        Frame matrix.
+                x           :       	the column number of the top left point of found object from the detection method.
+                y           :       	the row number of the top left point of found object from the detection method.
+                w           :       	the width of found object from the detection method.
+                h           :       	the height of found object from the detection method.
+                radius:                 Radius of the aim.
+                physically_distance:    Physically distance of the targeted object as pixel count.
+                color (tuple):          Color of the drawing shape. In RGB Space.
+                thickness (int):        Thickness of the drawing shape.
+        """
+        pass
+
+    def get_mark_object(self, mark_found_object):
+        """The low-level method to set mqtt_receimitter object for publishing and subscribing data echos.
+
+         Args:
+                mark_found_object (str):   The mark type of the detected object.
+        """
+
+        if mark_found_object == "single_rect":
+            return self.mark_as_single_rect
+        elif mark_found_object == "partial_rect":
+            return self.mark_as_partial_rect
+        elif mark_found_object == "rotating_arcs":
+            return self.mark_as_rotation_arcs
+        else:
+            return self.mark_as_none
+
     def set_mqtt_receimitter(self, mqtt_receimitter):
-        """The top-level method to set mqtt_receimitter object for publishing and subscribing data echos.
+        """The low-level method to set mqtt_receimitter object for publishing and subscribing data echos.
 
          Args:
                 mqtt_receimitter:          transmit and receive data function for mqtt communication
