@@ -21,7 +21,7 @@ from t_system.vision import Vision
 from t_system.accession import AccessPoint
 from t_system.administration import Administrator
 
-__version__ = '0.9.52'
+__version__ = '0.9.53-alpha1'
 
 T_SYSTEM_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
@@ -97,6 +97,11 @@ def start_sub(args):
 
     if args["sub_jobs"] == "remote-ui-authentication":
         administrator.change_keys(args["ssid"], args["password"])
+    elif args["sub_jobs"] == "face-encoding":
+        from t_system.face_encoder import FaceEncoder
+
+        face_encoder = FaceEncoder(args["dataset"], args["detection_method"])
+        face_encoder.encode()
 
 
 def prepare(args):
@@ -205,9 +210,14 @@ def initiate():
     other_gr.add_argument("--version", help="Display the version number of T_System.", action="store_true")
 
     sub_p = ap.add_subparsers(dest="sub_jobs", help='officiate the sub-jobs')  # if sub-commands not used their arguments create raise.
+
     ap_r_ui_auth = sub_p.add_parser('remote-ui-authentication', help='remote UI administrator authority settings of the secret entry point that is the new network connection panel.')
     ap_r_ui_auth.add_argument('--ssid', type=str, help='secret administrator ssid flag')
     ap_r_ui_auth.add_argument('--password', type=str, help='secret administrator password flag')
+
+    ap_face_encode = sub_p.add_parser('face-encoding', help='generate encoded data from the dataset folder to recognize the man T_System is monitoring during operation.')
+    ap_face_encode.add_argument("-i", "--dataset", required=True, help="path to input directory of faces + images")
+    ap_face_encode.add_argument("-d", "--detection-method", type=str, default="hog", help="face detection model to use: either `hog` or `cnn` default is `hog`")
 
     args = vars(ap.parse_args())
 
