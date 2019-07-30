@@ -135,7 +135,10 @@ setup(
         'netifaces',
         'psutil',
         'pyaccesspoint',
-        'wifi', 'flask', 'schema'
+        'wifi',
+        'flask',
+        'schema',
+        'gitpython', 'elevate'
         # 'opencv-python>=4.0.0.21'
     ],
 
