@@ -15,10 +15,11 @@ import os  # Miscellaneous operating system interfaces
 import inspect  # Inspect live objects
 
 from os.path import expanduser  # Common pathname manipulations
-from elevate import elevate
+from elevate import elevate  # partial root authentication interface
 
 from t_system.vision import Vision
 from t_system.accession import AccessPoint
+from t_system.administration import Administrator
 
 __version__ = '0.9.5'
 
@@ -30,6 +31,7 @@ dot_t_system_dir = home + "/.t_system"
 seer = None
 augmenter = None
 stand_ui = None
+administrator = None
 
 
 def start(args):
@@ -86,22 +88,40 @@ def start(args):
         seer.release_hearer()
 
 
+def start_sub(args):
+    """Function that starts the tracking system with the sub jobs according to command-line arguments.
+
+    Args:
+        args:       Command-line arguments.
+    """
+
+    if args["sub_jobs"] == "remote-ui-authentication":
+        administrator.change_keys(args["ssid"], args["password"])
+
+
 def prepare(args):
     """The function that prepares the working environment for storing data during running.
 
     Args:
         args:       Command-line arguments.
     """
+    global administrator
+
+    administrator = Administrator()
 
     if not os.path.exists(dot_t_system_dir):
         os.mkdir(dot_t_system_dir)
+
+    if args["sub_jobs"]:
+        start_sub(args)
+        sys.exit(1)
 
     if args["access_point"]:
         with elevate(show_console=False, graphical=False):
             access_point = AccessPoint(args)
             access_point.start()
 
-    if not args["AI"]:
+    if not args["AI"] or args["non_moving_target"]:
         if args["learn"]:
             raise Exception('All AI learning tools deprecated. Don\'t use the learn mode without AI.')
 
@@ -138,7 +158,6 @@ def initiate():
     # r_mode_gr.add_argument("-a", "--augmented", help="Augmented control with the Augmented Virtual Assistant A.V.A.. \'https://github.com/MCYBA/A.V.A.\' is the home page of the A.V.A. and usage explained into the \'AUGMENTED.md\'.", action="store_true")
 
     tool_gr = ap.add_argument_group('running tools')
-    tool_gr.add_argument("--AI", help="Specify the learning method of how to move to the target position from the current. When the nothing chosen, learn mode and decision mechanisms will be deprecated. to use: either `official_ai`", action="store", type=str)
     tool_gr.add_argument("--detection-model", help="Object detection model to use: either `haarcascade`, `hog` or `cnn`. `hog` and `cnn` can only use for detecting human faces. `haarcascade` is default.", action="store", type=str, default="haarcascade")
     tool_gr.add_argument("--cascade-file", help="Specify the trained detection algorithm file for the object detection ability. Sample: 'frontalface_default' for frontalface_default.xml file under the 'haarcascade' folder.", action="store", type=str, default="frontalface_default")
     tool_gr.add_argument("-j", "--no-recognize", help="Do not recognize the things.(faces, objects etc.)", action="store_true")
@@ -155,8 +174,13 @@ def initiate():
     video_gr.add_argument("--audio_device_index", help="Index of the using audio device. 0 is default.", action="store", default=0, type=int)
 
     motion_gr = ap.add_argument_group('motion mechanism')
-    motion_gr.add_argument("--locking-system-gpios", help="GPIO pin numbers of the 2 axis target locking system's servo motors. 17(as pan) and 25(as tilt) GPIO pins are default.", nargs=2, default=[17, 27], type=int, metavar=('PAN', 'TILT'))
     motion_gr.add_argument("--robotic-arm", help="One of the robotic arm names those are defined in arm_config.json file. The arm is for relocating the 2 axis target locking system hybrid-synchronously.", type=str, metavar=('ARM',))
+
+    lock_sys_gr = ap.add_argument_group('the target locking system')
+    lock_sys_gr.add_argument("--ls-gpios", help="GPIO pin numbers of the 2 axis target locking system's servo motors. 23(as pan) and 24(as tilt) GPIO pins are default.", nargs=2, default=[23, 24], type=int, metavar=('PAN', 'TILT'))
+    lock_sys_usage_gr = lock_sys_gr.add_mutually_exclusive_group()
+    lock_sys_usage_gr.add_argument("--AI", help="Specify the learning method of how to move to the target position from the current. When the nothing chosen, learn mode and decision mechanisms will be deprecated. to use: either `official_ai`", action="store", type=str, default=None)
+    lock_sys_usage_gr.add_argument("--non-moving-target", help="Track the non-moving objects. Don't use AI or OpenCv's object detection methods. Just try to stay focused on the current focus point with changing axis angles by own position.", action="store_true")
 
     access_p_gr = ap.add_argument_group('access point options')
     access_p_gr.add_argument("-p", "--access-point", help="Become access point for serving remote UI inside the internal network.", action="store_true")
@@ -176,9 +200,14 @@ def initiate():
 
     other_gr = ap.add_argument_group('others')
     other_gr.add_argument("-S", "--show-stream", help="Display the camera stream. Enable the stream window.(Require gui environment.)", action="store_true")
-    other_gr.add_argument("-m", "--found-object-mark", help="Specify the mark type of the found object.  To use: either `single_rect`, `rotating_arcs`, `partial_rect` or None. Default is `single_rect`", action="store", default="t_system", type=str)
+    other_gr.add_argument("-m", "--found-object-mark", help="Specify the mark type of the found object.  To use: either `single_rect`, `rotating_arcs`, `partial_rect` or None. Default is `single_rect`", action="store", default="single_rect", type=str)
     other_gr.add_argument("-r", "--record", help="Record the video stream. Files are named by the date.", action="store_true")
     other_gr.add_argument("--version", help="Display the version number of T_System.", action="store_true")
+
+    sub_p = ap.add_subparsers(dest="sub_jobs", help='officiate the sub-jobs')  # if sub-commands not used their arguments create raise.
+    ap_r_ui_auth = sub_p.add_parser('remote-ui-authentication', help='remote UI administrator authority settings of the secret entry point that is the new network connection panel.')
+    ap_r_ui_auth.add_argument('--ssid', type=str, help='secret administrator ssid flag')
+    ap_r_ui_auth.add_argument('--password', type=str, help='secret administrator password flag')
 
     args = vars(ap.parse_args())
 

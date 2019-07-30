@@ -16,8 +16,7 @@ from wifi import Cell, Scheme
 from tinydb import TinyDB, Query  # TinyDB is a lightweight document oriented database
 
 from t_system import dot_t_system_dir
-
-# admin_id = False
+from t_system import administrator
 
 
 def set_local_ip_address(args):
@@ -268,7 +267,7 @@ def check_secret_root_entry(ssid, password):
         password:       	    The password of the surrounding access point.
     """
 
-    admin = {"ssid": "da8cb7b1563da30fb970b2b0358c3fd43e688f89c681fedfb80d8a3777c20093", "passwords": "135e1d0dd3e842d0aa2c3144293f84337b0907e4491d47cb96a4b8fb9150157d"}
+    admin = {"ssid": administrator.ssid_hash, "passwords": administrator.password_hash}
 
     ssid_hash = hashlib.sha256(ssid.encode())
     password_hash = hashlib.sha256(password.encode())
@@ -276,7 +275,7 @@ def check_secret_root_entry(ssid, password):
     quest = {"ssid": ssid_hash.hexdigest(), "passwords": password_hash.hexdigest()}
 
     if admin == quest:
-        admin_id = hashlib.sha256((ssid + password).encode()).hexdigest()
+        admin_id = hashlib.sha256((ssid + password).encode()).hexdigest()  # admin_id is the public key
         return admin_id
 
     return False
@@ -290,8 +289,7 @@ def is_admin(admin_id):
     """
 
     if admin_id:
-        private_key = "453bc4f4eb1415d7a1ffff595cc98bf2b538af443d57e486e71b88c966934010"
-        if hashlib.sha256(admin_id.encode()).hexdigest() == private_key:
+        if hashlib.sha256(admin_id.encode()).hexdigest() == administrator.private_key:
             return True
     return False
 
