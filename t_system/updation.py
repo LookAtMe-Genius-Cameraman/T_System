@@ -363,9 +363,3 @@ class Updater:
                 msg += "\n  {}".format(conflict)
             self.__print(verbose, msg)
         return diff
-
-
-
-
-
-

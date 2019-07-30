@@ -19,7 +19,7 @@ from t_system import dot_t_system_dir
 
 
 class Hearer:
-    """Class to define a audition of tracking system..
+    """Class to define an audition of tracking system..
 
     This class provides necessary initiations and functions named :func:`t_system.audition.Audition.listen_async`
     as the loop for asynchronous collecting audio data to the vision ability, named :func:`t_system.audition.Audition.listen_sync`
