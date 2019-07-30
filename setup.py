@@ -138,7 +138,7 @@ setup(
         'wifi',
         'flask',
         'schema',
-        'gitpython', 'elevate'
+        'gitpython', 'elevate', 'imutils'
         # 'opencv-python>=4.0.0.21'
     ],
 
