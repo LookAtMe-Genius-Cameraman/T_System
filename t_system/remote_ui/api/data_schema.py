@@ -23,6 +23,15 @@ NETWORK_SCHEMA = Schema({
     'password': Use(str),
 })
 
+VISION_SCHEMA = Schema({
+    'work_type': Use(str),
+})
+
+FACE_ENCODING_SCHEMA = Schema({
+    'face_name': Use(str),
+    'photos': Use(list),
+})
+
 # LOCATION_SCHEMA = Schema({
 #     'name': Use(str),
 #     'ip': Use(str),
