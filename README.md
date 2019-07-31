@@ -1,6 +1,6 @@
 # T_System
 
-the moving objects tracking system via two axis camera motion for raspberry pi distributions
+the moving objects tracking system via two axis camera motion (and as optionally n joint robotic arm) for raspberry pi distributions
 
 ![T_System](https://raw.githubusercontent.com/MCYBA/T_System/master/docs/img/on_work.gif)
 
@@ -24,13 +24,15 @@ the moving objects tracking system via two axis camera motion for raspberry pi d
   
 - Raspberry Pi 2,3 B, B + or higher
 - Raspberry Pi Camera
-- 2 servo motors
-- 2 axis motion system as pan-tilt motions
+- n servo motors
+- 2 axis as pan-tilt motions for t_system's locking target ability
+- n-2 axis for t_system's robotic arm feature (Optional)
 
 ##### Software
 
 - OpenCV. Install via [here](https://www.pyimagesearch.com/2018/09/26/install-opencv-4-on-your-raspberry-pi/) or any other place you want.
 - Dlib and face_recognition module via [here](https://gist.github.com/ageitgey/1ac8dbe8572f3f533df6269dab35df65) or any other place you want.
+- dnsmasq and hostapd network manager tools.
 
 ### Installation
 
@@ -143,6 +145,9 @@ Portable usage interface v0.3
     - 4 pieces 18650 li-ion batteries
         -
             Parallel connected sources.
+    - Local network Management
+        -
+            Scan the around networks. If there is no network connection become an Access Point and serve Remote UI ınteernally.
     - Remote UI accessing
         -
             No control by tapping. Accessing with Remote UI from mobile or desktop.
