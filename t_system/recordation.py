@@ -8,7 +8,7 @@
 
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
-
+import os  # Miscellaneous operating system interfaces
 import datetime  # Basic date and time types
 import subprocess  # Subprocess managements
 
@@ -31,8 +31,11 @@ class Recorder:
                 camera:       	        Camera object from PiCamera.
                 hearer:       	        Hearer object.
         """
-        
-        self.record_path = ""
+        self.record_path = dot_t_system_dir + "/records"
+
+        if not os.path.exists(self.record_path):
+            os.mkdir(self.record_path)
+
         self.record_video_name = ""
         self.record_audio_name = ""
         self.final_record_file = ""
@@ -50,7 +53,6 @@ class Recorder:
                 final_format:       	The final recording format after audio and video files merged.
         """
 
-        self.set_record_path()
         self.set_record_name(mode, video_format, audio_format, final_format)
         self.camera.start_recording(self.record_video_name, video_format)
 
@@ -69,12 +71,6 @@ class Recorder:
         merge_cmd = 'ffmpeg -y -i ' + self.record_audio_name + ' -r 24 -i ' + self.record_video_name + ' -filter:a aresample=async=1 -c:a flac -c:v copy av.mkv'
         subprocess.call(merge_cmd, shell=True)
         print('Muxing Done')
-
-    def set_record_path(self):
-        """The low-level method to prepare the path of recording video and audio.
-        """
-
-        self.record_path = dot_t_system_dir
 
     def set_record_name(self, mode, video_format="h264", audio_format="wav", final_format="mkv"):
         """The low-level method to prepare the name of recording video with its path.
