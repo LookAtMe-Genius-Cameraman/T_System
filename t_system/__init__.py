@@ -21,7 +21,7 @@ from t_system.vision import Vision
 from t_system.accession import AccessPoint
 from t_system.administration import Administrator
 
-__version__ = '0.9-alpha1.54'
+__version__ = '0.9-alpha1.55'
 
 T_SYSTEM_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
