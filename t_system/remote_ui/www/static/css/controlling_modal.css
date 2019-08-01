@@ -1,0 +1,349 @@
+
+#window_size_ul button {
+    /*background-color: #337ab7;*/
+    font-size: 14px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+}
+
+#window_size_ul button:hover {
+  background-color: cyan; /* cyan */
+  color: white;
+}
+
+#video_area_div {
+    max-width: 45rem;
+    max-height: 45rem;
+    margin: 0 auto;
+    text-rendering: optimizeLegibility;
+    align-items: center;
+    text-align: center;
+
+    /*alignment*/
+    position: relative;
+    top: 15rem;
+
+    width: 44rem;
+    height: 24rem;
+    border: #8d75a3 solid;
+
+    transition: all 500ms;
+}
+
+#get_preview_span {
+    position: relative;
+    visibility: visible;
+    max-width: 20rem;
+    max-height: 5rem;
+    margin: 0 auto;
+    text-rendering: optimizeLegibility;
+    align-items: center;
+
+    top: 9rem;
+
+    /*color: #3c763d;*/
+
+}
+
+#stream_area_video {
+
+    max-width: 40rem;
+    max-height: 45rem;
+    margin: 0 auto;
+    display: block;
+    text-rendering: optimizeLegibility;
+    align-items: center;
+
+    /*alignment*/
+    position: relative;
+    /*top: 2rem;*/
+    vertical-align: middle;
+
+    /*width: 32rem;*/
+    /*height: 20rem;*/
+    /*border: red solid;*/
+    transition: all 300ms;
+    background-color:#fff;
+    box-shadow: 0 20px 40px 0 rgba(0,0,0,0.5), 0 6px 20px 0 rgba(0,0,0,0.19);
+
+}
+
+#stream_area_video:hover {
+    background-color:#000;
+    opacity:0.1;
+}
+
+.focused_video_area {
+    z-index: 200;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+}
+
+#motion_control_div {
+
+    max-width: 30rem;
+    max-height: 20rem;
+    margin: 0 auto;
+    display: block;
+    text-rendering: optimizeLegibility;
+    align-items: center;
+
+    /*alignment*/
+    position: relative;
+    /*top: 2rem;*/
+
+    transition: opacity 300ms;
+
+    border: mediumvioletred solid;
+    opacity: 1;
+    visibility: hidden;
+    z-index: 200;
+
+}
+
+#prismatic_motion_control_btn {
+    position: relative;
+    margin: 1rem auto;
+    display: block;
+    text-rendering: optimizeLegibility;
+    /*align-items: center;*/
+
+    transition: all 500ms;
+    background: url(../images/motion_control/prismatic.png) no-repeat;
+    /*font-size: 16px;*/
+    max-width: 5rem;
+    max-height: 5rem;
+
+    width: 48px;
+    height: 48px;
+    border-radius: 2px;
+
+    left: 0;
+    top: 11rem;
+
+    /*visibility: visible;*/
+}
+
+#prismatic_motion_control_btn:hover {
+    background: url(../images/motion_control/rotational.png) no-repeat;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+#rotational_motion_control_btn {
+    position: relative;
+    margin: 1rem auto;
+    display: block;
+    text-rendering: optimizeLegibility;
+    /*align-items: center;*/
+
+    transition: all 500ms;
+    background: url(../images/motion_control/rotational.png) no-repeat;
+    /*font-size: 16px;*/
+    max-width: 5rem;
+    max-height: 5rem;
+
+    width: 48px;
+    height: 48px;
+    border-radius: 2px;
+
+    left: 0;
+    top: 15rem;
+
+    visibility: hidden;
+}
+
+#rotational_motion_control_btn:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    background: url(../images/motion_control/prismatic.png) no-repeat;
+
+}
+
+
+.prismatic_control_div {
+
+    position: relative;
+    max-width: 12rem;
+    max-height: 12rem;
+
+    top: 9rem;  /* it will become -7rem on visible*/
+    left: 8.5rem;
+    border: indianred dotted;
+
+    visibility: hidden;
+    opacity: 1;
+    transition: all 300ms;
+}
+.prismatic_control_div button {
+    border-radius: 2px;
+        font-size: 16px;
+
+        background: #00a3d2;
+
+}
+
+.prismatic_control_div button:hover {
+    background-color: #00caff;
+}
+
+#z_up_btn {
+
+    position: relative;
+
+    left: 4.5rem;
+    top: 4.8rem;
+
+    width: 50px;
+    height: 18px;
+}
+
+#z_down_btn {
+
+    position: relative;
+
+    left: 4.4rem;
+    top: 5rem;
+
+    width: 50px;
+    height: 18px;
+}
+
+
+#y_up_btn {
+
+    position: relative;
+
+    left: 3.7rem;
+    top: -1rem;
+
+    width: 80px;
+    height: 40px;
+}
+#y_down_btn {
+
+    position: relative;
+
+    left: 3.7rem;
+    top: 3.5rem;
+
+    width: 80px;
+    height: 40px;
+}
+
+#x_up_btn {
+
+    position: relative;
+
+    left: 0;
+    top: -2.5rem;
+
+    width: 65px;
+    height: 40px;
+}
+
+#x_down_btn {
+
+    position: relative;
+
+    left: 7.8rem;
+    top: -5rem;
+
+    width: 65px;
+    height: 40px;
+}
+
+.rotational_control_div {
+
+    position: relative;
+    max-width: 12rem;
+    max-height: 12rem;
+
+    top: -3rem;  /* it will become -19rem on visible*/
+    left: 8.5rem;
+    border: #8a6d3b dashed;
+
+    visibility: hidden;
+    opacity: 1;
+    transition: all 300ms;
+
+}
+.rotational_control_div button {
+    border-radius: 2px;
+        font-size: 16px;
+
+        background: #d21a0b;
+}
+
+.rotational_control_div button:hover {
+    background-color: #ff210d;
+}
+
+#joint_1_cw_btn {
+
+    position: relative;
+
+    left: 0.5rem;
+    top: 1rem;
+
+    width: 85px;
+    height: 40px
+}
+
+#joint_1_ccw_btn {
+
+    position: relative;
+
+    left: 6.1rem;
+    top: -1.5rem;
+
+    width: 85px;
+    height: 40px
+}
+
+#joint_2_cw_btn {
+
+    position: relative;
+
+    left: 0.4rem;
+    top: -0.5rem;
+
+    width: 85px;
+    height: 40px
+}
+
+#joint_2_ccw_btn {
+
+    position: relative;
+
+    left: 6.1rem;
+    top: -3rem;
+
+    width: 85px;
+    height: 40px
+}
+
+#joint_3_cw_btn {
+
+    position: relative;
+
+    left: 0.4rem;
+    top: -2.2rem;
+
+    width: 85px;
+    height: 40px
+}
+
+#joint_3_ccw_btn {
+
+    position: relative;
+
+    left: 6.1rem;
+    top: -4.7rem;
+
+    width: 85px;
+    height: 40px
+}
+
+
