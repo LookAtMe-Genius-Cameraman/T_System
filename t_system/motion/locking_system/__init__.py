@@ -41,8 +41,8 @@ class LockingSystem:
         self.decider = decider
         self.current_k_fact = 0.01
 
-        self.pan = Collimator(args["locking_system_gpios"][0], self.frame_width, init_angles[0])      # pan means rotate right and left ways.
-        self.tilt = Collimator(args["locking_system_gpios"][1], self.frame_height, init_angles[1], False)   # tilt means rotate up and down ways.
+        self.pan = Collimator(args["ls_gpios"][0], self.frame_width, init_angles[0])      # pan means rotate right and left ways.
+        self.tilt = Collimator(args["ls_gpios"][1], self.frame_height, init_angles[1], False)   # tilt means rotate up and down ways.
 
         self.current_target_obj_width = 0
 
@@ -53,6 +53,10 @@ class LockingSystem:
             self.locker = self.OfficialAILocker(self)
             self.lock = self.locker.lock
             self.check_error = self.locker.check_error
+            self.get_physically_distance = self.locker.get_physically_distance
+        elif args["non_moving_target"]:
+            self.locker = self.NonMovingTargetLocker(self)
+            self.lock = self.locker.lock
             self.get_physically_distance = self.locker.get_physically_distance
         else:
             self.locker = self.RegularLocker(self)
@@ -162,18 +166,53 @@ class LockingSystem:
             obj_middle_y = y + h / 2  # middle point's y axis coordinate of detected object
 
             if obj_middle_x < self.root_system.frame_middle_x - self.root_system.frame_middle_x * precision_ratio:
-                self.root_system.pan.move(False, True)  # last parameter True is for the clockwise direction
+                self.root_system.pan.move(False, True)  # last parameter True is for the clockwise and False is can't clockwise direction
             elif obj_middle_x > self.root_system.frame_middle_x + self.root_system.frame_middle_x * precision_ratio:
-                self.root_system.pan.move(False, False)  # last parameter False is for the can't clockwise direction
+                self.root_system.pan.move(False, False)  # First parameter is the stop flag.
             else:
                 self.root_system.pan.move(True, False)
 
             if obj_middle_y < self.root_system.frame_middle_y - self.root_system.frame_middle_y * precision_ratio:
-                self.root_system.tilt.move(False, True)  # last parameter True is for the clockwise direction
+                self.root_system.tilt.move(False, True)  # last parameter True is for the clockwise and False is can't clockwise directionx
             elif obj_middle_y > self.root_system.frame_middle_y + self.root_system.frame_middle_y * precision_ratio:
-                self.root_system.tilt.move(False, False)  # last parameter False is for the can't clockwise direction
+                self.root_system.tilt.move(False, False)  # First parameter is the stop flag.
             else:
                 self.root_system.tilt.move(True, False)
+
+        @staticmethod
+        def get_physically_distance(obj_width):
+            """The low-level method to provide return the tracking object's physically distance value.
+            """
+            kp = 28.5823  # gain rate with the width of object and physically distance.
+            return obj_width * kp  # physically distance is equal to obj_width * kp in px unit. 1 px length is equal to 0.164 mm
+
+    class NonMovingTargetLocker:
+        """Class to define a focused point tracking method of the t_system's motion ability.
+
+            This class provides necessary initiations and a function named
+            :func:`t_system.motion.LockingSystem.NonMovingTargetLocker.lock`
+            for the provide move of servo motor during locking to the target.
+        """
+
+        def __init__(self, locking_system):
+            """Initialization method of :class:`t_system.motion.LockingSystem.NonMovingTargetLocker` class.
+
+            Args:
+                locking_system:         The LockingSystem Object.
+            """
+
+            self.root_system = locking_system
+
+        def lock(self, x, y, w, h):
+            """The high-level method for locking to the target in the frame.
+
+            Args:
+                x           :       	 the column number of the top left point of found object from haarcascade.
+                y           :       	 the row number of the top left point of found object from haarcascade.
+                w           :       	 the width of found object from haarcascade.
+                h           :       	 the height of found object from haarcascade.
+            """
+            pass
 
         @staticmethod
         def get_physically_distance(obj_width):

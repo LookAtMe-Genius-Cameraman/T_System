@@ -126,7 +126,7 @@ def start_stream(stop_thread, camera):
     output = StreamingOutput()
     # Uncomment the next line to change your Pi's Camera rotation (in degrees)
     # camera.rotation = 90
-    camera.start_recording(output, format='mjpeg')
+    camera.start_recording(output, video_format='mjpeg')
     try:
         address = ('10.42.0.151', 8000)
         server = StreamingServer(address, StreamingHandler)
@@ -150,7 +150,7 @@ if __name__ == '__main__':
         output = StreamingOutput()
         # Uncomment the next line to change your Pi's Camera rotation (in degrees)
         # camera.rotation = 90
-        camera.start_recording(output, format='mjpeg')
+        camera.start_recording(output, video_format='mjpeg')
         try:
             address = ('10.42.0.151', 8000)
             server = StreamingServer(address, StreamingHandler)

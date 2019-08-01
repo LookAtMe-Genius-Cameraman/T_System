@@ -32,7 +32,7 @@
   "Senior": [
     {
       "joint_number": 1,
-      "motor_gpio_pin": 5,
+      "motor_gpio_pin": 17,
       "max_d": 0,
       "min_d": 0,
       "init_d": 0,
@@ -46,7 +46,7 @@
     },
     {
       "joint_number": 2,
-      "motor_gpio_pin": 6,
+      "motor_gpio_pin": 27,
       "max_d": 15,
       "min_d": 15,
       "init_d": 15,
@@ -60,7 +60,7 @@
     },
     {
       "joint_number": 3,
-      "motor_gpio_pin": 13,
+      "motor_gpio_pin": 22,
       "max_d": 15,
       "min_d": 15,
       "init_d": 15,
