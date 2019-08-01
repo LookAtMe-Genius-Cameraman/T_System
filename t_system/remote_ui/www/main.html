@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <title>T-System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="static/css/main.css">
+    <link rel="stylesheet" type="text/css" href="static/css/menu.css">
+    <link rel="stylesheet" type="text/css" href="static/css/settings_modal.css">
+    <link rel="stylesheet" type="text/css" href="static/css/controlling_modal.css">
+    <link rel="stylesheet" type="text/css" href="static/css/managing_bar.css">
+    <link rel="stylesheet" type="text/css" href="https://printjs-4de6.kxcdn.com/print.min.css">
+
+
+    <script>
+        let event_db = null;
+        event_db = {{ db_json|safe }}
+        console.log(event_db);
+
+    </script>
+</head>
+<body>
+
+<div id="main_container">
+    <div align="center" id="title_div">
+    <h1 id="title_h1" translate>Smarty Cameraman</h1>
+    <footer style="margin-top: 0.5rem;" id="title_p" translate>Powered By <a href="https://github.com/connected-life/T_System" translate>T_System</a></footer>
+    <div id="page_control_div">
+        <button id="settings_btn" translate>Settings</button>
+        <button id="control_btn" translate>Control</button>
+        <button id="on_work_btn" translate>Let's Begin</button>
+    </div>
+</div>
+
+
+
+
+<!--<div id="managing_bar">-->
+    <!--<div class="stage" style="width: 128px; height: 128px; margin-bottom: 2rem;">-->
+    <!--<div class="cubespinner">-->
+        <!--<div id="managing_face1" class="face1"><img alt="" src="static/images/mycomputer128.png"></div>-->
+        <!--<div id="managing_face2" class="face2"><img alt="settings" src="static/images/screen_settings_128.png"></div>-->
+        <!--<div id="managing_face3" class="face3"><img alt="" src="static/images/paperbin128.png"></div>-->
+        <!--<div id="managing_face4" class="face4"><img alt="network" src="static/images/network128.png"></div>-->
+        <!--<div id="managing_face5" class="face5"><img alt="config" src="static/images/mydocs128.png"></div>-->
+        <!--<div id="managing_face6" class="face6"><img alt="home" src="static/images/paperbin_full128.png"></div>-->
+    <!--</div>-->
+<!--</div>-->
+
+<!--<div class="box">-->
+    <!--<div id="box__right" class="box__right">Right &rarr; Left</div>-->
+    <!--<div class="box__left">Left &rarr; Right</div>-->
+    <!--<div class="box__top">Top &rarr; Bottom</div>-->
+    <!--<div class="box__bottom">Bottom &rarr; Top</div>-->
+    <!--<div class="box__center">Hover from any side</div>-->
+<!--</div>-->
+
+
+
+<!--<div style="margin-top: 2rem;" id="container">-->
+  <!--<div id="inner">-->
+    <!--<span id="helper" class="hidden"></span>-->
+  <!--</div>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--SETTINGS MODAL-->
+<div id="settings_template_container">
+    <table id="main_table">
+    <tr>
+        <td id="configurations_title" style="max-width: 150px" translate>Configurations :</td>
+    </tr>
+    <!--<tr>-->
+        <!--<td>-->
+            <!--<div>-->
+                <!--<div>-->
+                    <!--AI :<input style="margin-left: 10px" type="checkbox" id="a_i_checkbox">-->
+                <!--</div>-->
+                <!--<div>-->
+                    <!--<p style="width: 10px">Secure mode during sleep :</p>-->
+                    <!--<input style="margin-left: 10px" type="checkbox" id="secure_m_checkbox">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!---->
+            <!---->
+        <!--</td>-->
+    <!--</tr>-->
+
+    <tr align="center">
+        <td align="left ">AI :</td>
+        <td><input type="checkbox" id="a_i_checkbox"></td>
+    </tr>
+    <tr>
+        <td align="left" style="width: 3rem;">Secure mode during sleep :</td>
+        <td><input type="checkbox" id="secure_m_checkbox"></td>
+    </tr>
+
+
+</table>
+
+    <div id="wifi_control_div">
+        <button id="wifi_connections_btn" translate>Wifi Connections</button>
+        <div id="wifi_control_io_div">
+            <div id="create_new_network">
+            <input class="new_network_input" type="text" name="network_ssid" id="network_ssid_input"  placeholder="ssid"/>
+            <input class="new_network_input" type="text" name="network_password" id="network_password_input"  placeholder="password"/>
+            <button id="create_new_network_btn" translate>&#187;</button>
+        </div>
+        <ul class="network_list" id="network_list_ul"></ul>
+        </div>
+
+    </div>
+
+    <ul class="nav navbar-nav navbar-right">
+    <li class="dropdown">
+        <a href="#">
+            <span class="dropbtn text-info" id="translate_menu"></span>
+        </a>
+        <div class="dropdown-content" id="lang_menu">
+        </div>
+    </li>
+</ul>
+</div>
+
+    <!--CONTROLLING MODAL-->
+    <div id="controlling_template_container">
+        <div style="text-align:center">
+            <div id="video_area_div">
+                <span id="get_preview_span" translate>Click here to get preview</span>
+                <video id="stream_area_video">
+                    <source src="http://localhost:5000/live_stream" type="video/mp4">
+                    <!--<source src="mov_bbb.ogg" type="video/ogg">-->
+                    Your browser does not support HTML5 video.
+                </video>
+            </div>
+            <div id="motion_control_div">
+                <button id="rotational_motion_control_btn"></button>
+                <button id="prismatic_motion_control_btn"></button>
+                <div id="prismatic_control_div" class="prismatic_control_div">
+                    <button id="z_up_btn" translate>up</button>
+                    <button id="z_down_btn" translate>down</button>
+                    <button id="y_up_btn" translate>forward</button>
+                    <button id="y_down_btn" translate>backward</button>
+                    <button id="x_up_btn" translate>left</button>
+                    <button id="x_down_btn" translate>right</button>
+                </div>
+
+                <div id="rotational_control_div" class="rotational_control_div">
+                    <button id="joint_1_cw_btn" translate>joint1 right</button>
+                    <button id="joint_1_ccw_btn" translate>joint1 left</button>
+                    <button id="joint_2_cw_btn" translate>joint2 right</button>
+                    <button id="joint_2_ccw_btn" translate>joint2 left</button>
+                    <button id="joint_3_cw_btn" translate>joint3 right</button>
+                    <button id="joint_3_ccw_btn" translate>joint3 left</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!--ON WORK MODAL-->
+<div id="on_work_template_container">
+    <div style="text-align:center">
+        <button onclick="playPause()">Play/Pause</button>
+        <label for="on_work_windows_size_select">Size</label><select class="dropdown" style="height: 30px; width: 70px" id="on_work_windows_size_select">
+        <option value="big">Big</option>
+        <option value="small">Small</option>
+        <option value="normal">Normal</option>
+    </select>
+        <br><br>
+        <div id="on_work_video_area_div">
+            <span id="on_work_get_preview_span">Click here to get preview</span>
+            <video id="_on_work_stream_area_video" width="420">
+                <source src="http://localhost:5000/live_stream" type="video/mp4">
+                <!--<source src="mov_bbb.ogg" type="video/ogg">-->
+                Your browser does not support HTML5 video.
+            </video>
+            <button id="on_work_start_stop_record_btn">READY</button>
+        </div>
+    </div>
+</div>
+
+</div>
+
+<div id="dark_deep_background_div"></div>
+
+        <!-- inserting these scripts at the end to be able to use all the elements in the DOM -->
+        <script src="static/js/language/en.js"></script>
+        <script src="static/js/language/de.js"></script>
+        <script src="static/js/language/tr.js"></script>
+        <script src="static/js/language/es.js"></script>
+        <script src="static/js/language/it.js"></script>
+        <script src="static/js/language/fr.js"></script>
+
+        <script src="static/js/settings.js"></script>
+        <script src="static/js/connectdlg.js"></script>
+        <script src="static/js/translate.js"></script>
+        <script src="static/js/localstorage.js"></script>
+
+        <script src="static/js/managing_bar.js"></script>
+        <script src="static/js/on_work_modal.js"></script>
+        <script src="static/js/prismatic_arm_control.js"></script>
+        <script src="static/js/rotational_arm_control.js"></script>
+        <script src="static/js/controlling_modal.js"></script>
+        <script src="static/js/settings_modal.js"></script>
+
+        <script src="static/js/main.js"></script>
+        <script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+</body>
+</html>
