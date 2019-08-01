@@ -27,7 +27,7 @@ import inspect
 # from t_system import dot_t_system_dir
 dot_t_system_dir = "/home/baybars/.t_system"
 
-__version__ = '0.0.5'
+__version__ = '0.0.6'
 
 
 REMOTE_UI_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
