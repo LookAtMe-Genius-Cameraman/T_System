@@ -473,6 +473,15 @@ class Vision:
             if self.check_loop_ended(stop_thread):
                 break
 
+    def track_focused_point(self):
+        """The high-level method to provide the tracking predetermined non-moving target according to with locking_system's current position for track mode of T_System.
+
+        Args:
+                stop_thread:   	        Stop flag of the tread about terminating it outside of the function's loop.
+                format:       	        Color space format.
+        """
+        pass
+
     def show_frame(self, frame):
         """The low-level method to show the captured frame.
 
