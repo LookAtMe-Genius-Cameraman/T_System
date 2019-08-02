@@ -83,7 +83,7 @@ function focus_video_area() {
 
     dark_deep_background_div.style.opacity = "1";
     stream_area_video.classList.add("focused_video_area");
-    video_area_div.style.top = "-2rem";
+    video_area_div.style.margin = "-18% auto 0";
     show_element(motion_control_div);
 }
 
@@ -96,7 +96,7 @@ function unfocus_video_area() {
     // console.log("outside");
     dark_deep_background_div.style.opacity = "0";
     stream_area_video.classList.remove("focused_video_area");
-    video_area_div.style.top = "15rem";
+    video_area_div.style.margin = "35% auto 0";
     hide_element(motion_control_div);
 }
 
@@ -118,9 +118,9 @@ prismatic_motion_control_btn.addEventListener("click", function () {
     show_element(rotational_motion_control_btn);
 
     show_element(rotational_control_div);
-    rotational_control_div.style.top = "-19rem";
+    rotational_control_div.style.top = "-180%";
     hide_element(prismatic_control_div);
-    prismatic_control_div.style.top = "9rem";
+    prismatic_control_div.style.top = "75%";
 
 
 });
@@ -130,9 +130,9 @@ rotational_motion_control_btn.addEventListener("click", function () {
     show_element(prismatic_motion_control_btn);
 
     hide_element(rotational_control_div); // when prismatic button clicked rotational modal showing because rotational modal's button become visible via prismatic's hover.
-    rotational_control_div.style.top = "-3rem";
+    rotational_control_div.style.top = "-20%";
     show_element(prismatic_control_div);
-    prismatic_control_div.style.top = "-7rem";
+    prismatic_control_div.style.top = "-85%";
 
 });
 

@@ -112,7 +112,7 @@
     /*align-items: center;*/
 
     transition: all 500ms;
-    background: url(../images/motion_control/prismatic.png) no-repeat;
+    background: url(../../images/motion_control/prismatic.png) no-repeat;
     /*font-size: 16px;*/
     max-width: 5rem;
     max-height: 5rem;
@@ -128,7 +128,7 @@
 }
 
 #prismatic_motion_control_btn:hover {
-    background: url(../images/motion_control/rotational.png) no-repeat;
+    background: url(../../images/motion_control/rotational.png) no-repeat;
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 }
 
@@ -140,7 +140,7 @@
     /*align-items: center;*/
 
     transition: all 500ms;
-    background: url(../images/motion_control/rotational.png) no-repeat;
+    background: url(../../images/motion_control/rotational.png) no-repeat;
     /*font-size: 16px;*/
     max-width: 5rem;
     max-height: 5rem;
@@ -157,7 +157,7 @@
 
 #rotational_motion_control_btn:hover {
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
-    background: url(../images/motion_control/prismatic.png) no-repeat;
+    background: url(../../images/motion_control/prismatic.png) no-repeat;
 
 }
 
