@@ -27,7 +27,7 @@ import inspect
 # from t_system import dot_t_system_dir
 dot_t_system_dir = "/home/baybars/.t_system"
 
-__version__ = '0.1.4'
+__version__ = '0.1.5'
 
 
 REMOTE_UI_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
@@ -171,5 +171,5 @@ if __name__ == "__main__":
     _static_folder = _template_folder + "/static"
 
     app = RemoteUI(args={"host": "localhost", "port": "5000", "debug": True}, template_folder=_template_folder, static_folder=_static_folder)
-    app.run(host="localhost", port="5000",  debug=True)
+    app.run(host="172.22.9.40", port="5000",  debug=True)
     # app.debug = True
