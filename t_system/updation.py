@@ -45,14 +45,6 @@ class Updater:
         self.pull(force=force, check_dev=check_dev, verbose=verbose)
         self.__print(verbose, "Pulled any possible remote changes")
 
-        if check_dev:
-            install_sh = T_SYSTEM_PATH + "../install-dev.sh"
-        else:
-            install_sh = T_SYSTEM_PATH + "../install.sh"
-
-        with elevate(show_console=False, graphical=False):
-            subprocess.call(install_sh, shell=True)
-
     def pull(self, force=False, check_dev=True, verbose=False):
         """The high-level method to attempt to pull any remote changes down to the repository that the calling script is contained in. If
         there are any file conflicts the pull will fail and the function will return. This function is *safe* and does not perform
@@ -293,7 +285,7 @@ class Updater:
     def __is_dev_env(self, directory, suppress_errors=False, verbose=False):
         """The low-level method to return 'True' if the git repo is setup to be a updation development environment. This indicates that
         functions that perform destructive file manipulation will be limited in scope as to not cause the script to complicate
-        development efforts when using the selfupdate library. A updation development environment is configured by placing
+        development efforts when using the updation module. A updation development environment is configured by placing
         an empty file in the root directory of the repo simply named '.devenv'. This file must also be included in the .gitignore
         or a EnvironmentError will be raised. This is to avoid the propagation of the development environment file to the main
         repo and any other local repositories that would then pull this file down and turn themselves into development
@@ -363,3 +355,19 @@ class Updater:
                 msg += "\n  {}".format(conflict)
             self.__print(verbose, msg)
         return diff
+
+
+def install(editable=False):
+    """The high-level method to install the dependencies after git updation.
+
+    Args:
+            editable:   	        Editable updation mode flag.
+    """
+
+    if editable:
+        install_sh = T_SYSTEM_PATH + "../install-dev.sh"
+    else:
+        install_sh = T_SYSTEM_PATH + "../install.sh"
+
+    with elevate(show_console=False, graphical=False):
+        subprocess.call(install_sh, shell=True)

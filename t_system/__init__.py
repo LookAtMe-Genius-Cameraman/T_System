@@ -104,6 +104,14 @@ def start_sub(args):
         face_encode_manager = FaceEncodeManager(args["detection_method"])
         face_encode_manager.add_face(args["owner_name"], args["dataset"])
 
+    if args["sub_jobs"] == "self-update":
+        from t_system.updation import Updater, install
+
+        updater = Updater(args)
+        updater.update()
+
+        install(args["editable"])
+
 
 def prepare(args):
     """The function that prepares the working environment for storing data during running.
@@ -182,7 +190,7 @@ def initiate():
     motion_gr = ap.add_argument_group('motion mechanism')
     motion_gr.add_argument("--robotic-arm", help="One of the robotic arm names those are defined in arm_config.json file. The arm is for relocating the 2 axis target locking system hybrid-synchronously.", type=str, metavar=('ARM',))
 
-    lock_sys_gr = ap.add_argument_group('the target locking system')
+    lock_sys_gr = ap.add_argument_group('target locking system')
     lock_sys_gr.add_argument("--ls-gpios", help="GPIO pin numbers of the 2 axis target locking system's servo motors. 23(as pan) and 24(as tilt) GPIO pins are default.", nargs=2, default=[23, 24], type=int, metavar=('PAN', 'TILT'))
     lock_sys_usage_gr = lock_sys_gr.add_mutually_exclusive_group()
     lock_sys_usage_gr.add_argument("--AI", help="Specify the learning method of how to move to the target position from the current. When the nothing chosen, learn mode and decision mechanisms will be deprecated. to use: either `official_ai`", action="store", type=str, default=None)
@@ -213,13 +221,17 @@ def initiate():
     sub_p = ap.add_subparsers(dest="sub_jobs", help='officiate the sub-jobs')  # if sub-commands not used their arguments create raise.
 
     ap_r_ui_auth = sub_p.add_parser('remote-ui-authentication', help='remote UI administrator authority settings of the secret entry point that is the new network connection panel.')
-    ap_r_ui_auth.add_argument('--ssid', type=str, help='secret administrator ssid flag')
-    ap_r_ui_auth.add_argument('--password', type=str, help='secret administrator password flag')
+    ap_r_ui_auth.add_argument('--ssid', help='secret administrator ssid flag', type=str)
+    ap_r_ui_auth.add_argument('--password', help='secret administrator password flag', type=str)
 
     ap_face_encode = sub_p.add_parser('face-encoding', help='generate encoded data from the dataset folder to recognize the man T_System is monitoring during operation.')
-    ap_face_encode.add_argument("-i", "--dataset", required=True, help="path to input directory of faces + images.")
-    ap_face_encode.add_argument("-n", "--owner-name", type=str, default=None, help="name of the images owner. If there is single man who has the images, give the name of that man with dataset")
-    ap_face_encode.add_argument("-d", "--detection-method", type=str, default="hog", help="face detection model to use: either `hog` or `cnn` default is `hog`")
+    ap_face_encode.add_argument("-i", "--dataset", help="path to input directory of faces + images.", required=True)
+    ap_face_encode.add_argument("-n", "--owner-name", default=None, help="name of the images owner. If there is single man who has the images, give the name of that man with dataset", type=str)
+    ap_face_encode.add_argument("-d", "--detection-method", help="face detection model to use: either `hog` or `cnn` default is `hog`", type=str, default="hog")
+
+    ap_self_update = sub_p.add_parser('self-update', help='update source code of t_system itself via `git pull` command from the remote git repo.')
+    ap_self_update.add_argument("-v", "--verbose", help="Print various debugging information to debug problems", action="store_true")
+    ap_self_update.add_argument("-e", "--editable", help="Update the T_System in editable mode (i.e. setuptools'develop mode')", action="store_true")
 
     args = vars(ap.parse_args())
 
