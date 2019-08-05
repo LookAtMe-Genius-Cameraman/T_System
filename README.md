@@ -130,10 +130,10 @@ others:
 
 #### Official Stand
 
-Portable usage interface v0.3
+Portable usage interface v0.3.1
 
-<img align="left" width="420" height="430" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.3/back_render.jpg">
-<img align="center" width="420" height="430" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.3/front_render.jpg">
+<img align="left" width="420" height="430" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.3.1/back_render.jpg">
+<img align="center" width="420" height="430" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.3.1/front_render.jpg">
 
 <br>
 
@@ -145,6 +145,9 @@ Portable usage interface v0.3
     - 4 pieces 18650 li-ion batteries
         -
             Parallel connected sources.
+    - Internal cooler
+        -
+            A micro fan for falling down the cpu temperature.
     - Local network Management
         -
             Scan the around networks. If there is no network connection become an Access Point and serve Remote UI ınteernally.

@@ -65,4 +65,26 @@ the portable usage interface
 <br>
 
 ## v0.3
+
+<img align="left" width="420" height="430" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.3/back_render.jpg">
+<img align="center" width="420" height="430" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.3/front_render.jpg">
+
+<br>
+
+- Properties
+    -             
+    - 1 switch key for on/off
+        -
+            Cut the electiric current directly
+    - 4 pieces 18650 li-ion batteries
+        -
+            Parallel connected sources.
+    - Local network Management
+        -
+            Scan the around networks. If there is no network connection become an Access Point and serve Remote UI ınteernally.
+    - Remote UI accessing
+        -
+            No control by tapping. Accessing with Remote UI from mobile or desktop.
+            
+## v0.3.1
             
