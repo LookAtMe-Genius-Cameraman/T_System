@@ -1,10 +1,18 @@
-#sudo: required
-#dist: trusty
+sudo: required
 language: python
-virtualenv:
-    system_site_packages: true
+env:
+  global:
+    - VERSION=1.${TRAVIS_BUILD_NUMBER}
+  matrix:
+    - ARCH=rpi
+      GOIMG=kutsudock/rpi-alpine-go
+      DOCKER_BUILD=mastermindg/docker-flow-proxy:rpi-${VERSION}
+      DOCKERFILE=Dockerfile
+#virtualenv:
+#    system_site_packages: true
 services:
-    - xvfb
+    - xvfb # X virtual framebuffer. Run the graphical application without display them while also having the ability to take screenshots.
+    - docker
 cache:
     directories:
         - /usr/share/t_system
@@ -19,6 +27,20 @@ before_script:
     # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
     - flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 script:
+    # prepare qemu
+    - docker run --rm --privileged multiarch/qemu-user-static:register --reset
+    # build image
+    - docker build -t hypriot/rpi-raspbian .
+    # test image
+    - docker run hypriot/rpi-raspbian
+    # push image
+    - >
+        if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+          docker login -u="$DOCKER_USER" -p="$DOCKER_PASS"
+          docker tag hypriot/rpi-raspbian
+          docker push hypriot/rpi-raspbian
+          docker push hypriot/rpi-raspbian
+        fi
     - python3 -m pytest --capture=sys
 notifications:
     on_success: change
