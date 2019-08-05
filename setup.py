@@ -126,7 +126,6 @@ setup(
         'picamera>=1.13',
         'RPi.GPIO>=0.6.5',
         'tinydb==3.9.0.post1',
-        'nltk==3.1',
         'numpy',
         'paho-mqtt>=1.4.0',
         'face_recognition',

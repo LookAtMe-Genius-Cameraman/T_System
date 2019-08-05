@@ -191,11 +191,7 @@ autoclass_content = 'both'
 
 # Post-install script for sphinx-build
 def setup(app):
-    import nltk
-    nltk.download('names')
-    nltk.download('brown')
-    nltk.download('wordnet')
-    nltk.download('punkt')
+    pass
 
 
 # Mock out modules
