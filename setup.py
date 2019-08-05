@@ -157,6 +157,8 @@ setup(
            'docutils',
            'm2r',
            'pytest',
+           'pytest-cov==2.6.1',
+           'coveralls==1.8.2'
        ]
     },
 
