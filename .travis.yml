@@ -6,7 +6,7 @@ env:
     - VERSION=1.${TRAVIS_BUILD_NUMBER}
   matrix:
     - ARCH=rpi
-      GOIMG=resin/rpi-raspbian
+      GOIMG=raspbian/stretch
       DOCKER_BUILD=mastermindg/docker-flow-proxy:rpi-${VERSION}
       DOCKERFILE=test.Dockerfile
 services:
@@ -19,11 +19,12 @@ script:
   # prepare qemu
   - docker run --rm --privileged multiarch/qemu-user-static:register --reset
   # build image
-  - docker build --tag test -f test.Dockerfile .
+  - docker build -f test.Dockerfile -t t_system/test:"$TRAVIS_COMMIT" -t t_system/test:latest . --cache-from t_system/test:latest
   # push image
   - >
     if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
-        docker push test
+        docker push t_system/test:"$TRAVIS_COMMIT"
+        docker push t_system/test:latest
     fi
 after_success:
   — coveralls
