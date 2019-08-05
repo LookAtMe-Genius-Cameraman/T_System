@@ -140,7 +140,8 @@ setup(
         'schema',
         'gitpython',
         'elevate',
-        'imutils'
+        'imutils',
+        'gpiozero'
         # 'opencv-python>=4.0.0.21'
     ],
 
