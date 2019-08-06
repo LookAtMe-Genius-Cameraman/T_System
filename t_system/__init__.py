@@ -31,7 +31,7 @@ from t_system.vision import Vision
 from t_system.accession import AccessPoint
 from t_system.administration import Administrator
 
-__version__ = '0.9-alpha1.82'
+__version__ = '0.9-alpha1.83'
 
 
 def start(args):
@@ -154,7 +154,7 @@ def initiate():
     w_mode_gr.add_argument("interface", help="Set the user interfaces. To use: either `official_stand`, `augmented`, `remote_ui` or None."
                                              "`official_stand`: for using the interface of official T_System stand."
                                              "`augmented`: Augmented control with the Augmented Virtual Assistant A.V.A.. \'https://github.com/MCYBA/A.V.A.\' is the home page of the A.V.A. and usage explained into the \'AUGMENTED.md\'."
-                                             "remote_ui: remote control with created graphic interface that is power by flask available on desktop or mobile."
+                                             "`remote_ui`: remote control with created graphic interface that is power by flask available on desktop or mobile."
                                              "None: Use to just by `running modes` parameters."
                                              "The default value is None.", action="store", type=str, default="None")
 
@@ -162,8 +162,8 @@ def initiate():
     official_stand_gr.add_argument("--stand-gpios", help="GPIO pin numbers of official stand's the button and the led. 5(as button), 27(as red led) and 22(as green led) GPIO pins are default.", nargs=3, default=[5, 25, 22], type=int, metavar=('BUTTON', 'RED-LED', 'GREEN-LED'))
 
     remote_ui_gr = ap.add_argument_group('remote_ui')
-    remote_ui_gr.add_argument("--host", help="Specify host address.", action="store", type=str, default="localhost")
-    remote_ui_gr.add_argument("--port", help="Specify the port.", action="store", type=str, default="4000")
+    remote_ui_gr.add_argument("--host", help="Specify host address.", action="store", type=str, default="192.168.1.22")
+    remote_ui_gr.add_argument("--port", help="Specify the port.", action="store", type=str, default="3000")
     remote_ui_gr.add_argument("--debug", help="Activate debug mode.", action="store_true")
 
     r_mode_gr = ap.add_argument_group('running modes')
