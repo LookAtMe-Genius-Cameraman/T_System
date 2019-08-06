@@ -77,14 +77,14 @@ class Vision:
         # Specify the tracker type
         self.tracker_type = args["tracker_type"]
 
-        self.hearer = Hearer(args)
+        # self.hearer = Hearer(args)
+        self.hearer = None
 
         resolution = (args["resolution"][0], args["resolution"][0])
         self.camera = PiCamera()
         self.camera.resolution = resolution
         self.camera.framerate = args["framerate"]
-        # self.camera.start_preview()
-        
+
         self.recorder = Recorder(self.camera, self.hearer)
 
         self.rawCapture = PiRGBArray(self.camera, size=resolution)
@@ -746,6 +746,16 @@ class Vision:
                 mqtt_receimitter:          transmit and receive data function for mqtt communication
         """
         self.mqtt_receimitter = mqtt_receimitter
+
+    def start_preview(self):
+        """The high-level method to start preview of the vision without move action.
+        """
+        self.camera.start_preview()
+
+    def stop_preview(self):
+        """The high-level method to stop preview of the vision.
+        """
+        self.camera.stop_preview()
 
     def release_servos(self):
         """The low-level method to stop sending signals to servo motors pins and clean up the gpio pins.
