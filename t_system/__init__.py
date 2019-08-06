@@ -17,12 +17,6 @@ import inspect  # Inspect live objects
 from os.path import expanduser  # Common pathname manipulations
 from elevate import elevate  # partial root authentication interface
 
-from t_system.vision import Vision
-from t_system.accession import AccessPoint
-from t_system.administration import Administrator
-
-__version__ = '0.9-alpha1.8'
-
 T_SYSTEM_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
 home = expanduser("~")
@@ -32,6 +26,12 @@ seer = None
 augmenter = None
 stand_ui = None
 administrator = None
+
+from t_system.vision import Vision
+from t_system.accession import AccessPoint
+from t_system.administration import Administrator
+
+__version__ = '0.9-alpha1.81'
 
 
 def start(args):
@@ -107,7 +107,7 @@ def start_sub(args):
     if args["sub_jobs"] == "self-update":
         from t_system.updation import Updater, install
 
-        updater = Updater(args)
+        updater = Updater(args["verbose"])
         updater.update()
 
         install(args["editable"])
