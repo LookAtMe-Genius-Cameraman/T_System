@@ -6,3 +6,16 @@ paho-mqtt>=1.4.0
 multipledispatch
 m2r
 face_recognition
+multipledispatch
+wireless
+netifaces
+psutil
+pyaccesspoint
+wifi
+flask
+schema
+gitpython
+elevate
+imutils
+gpiozero
+pyaudio

@@ -140,7 +140,8 @@ setup(
         'gitpython',
         'elevate',
         'imutils',
-        'gpiozero'
+        'gpiozero',
+        'pyaudio'
         # 'opencv-python>=4.0.0.21'
     ],
 
