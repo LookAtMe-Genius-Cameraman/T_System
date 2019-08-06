@@ -1,5 +1,15 @@
 # T_System
 
+<img src="https://api.travis-ci.org/connected-life/T_System.svg?branch=master" align="right" />
+
+<img src="https://readthedocs.org/projects/t-system/badge/?version=latest" align="right" />
+
+<img src="https://pyup.io/repos/github/connected-life/T_System/shield.svg?label=pyup&color=brightgreen" align="right" />
+
+<img src="https://pyup.io/repos/github/connected-life/T_System/python-3-shield.svg?label=python%203&color=brightgreen" align="right" />
+
+<img src='https://coveralls.io/repos/github/connected-life/T_System/badge.svg?branch=master' alt='Coverage Status' />
+
 the moving objects tracking system via two axis camera motion (and as optionally n joint robotic arm) for raspberry pi distributions
 
 ![T_System](https://raw.githubusercontent.com/MCYBA/T_System/master/docs/img/on_work.gif)
@@ -182,3 +192,9 @@ Augmented usage explained [here](https://github.com/MCYBA/A.V.A.) into the `AUGM
 
 **Supported Distributions:** Raspbian. This release is fully supported. Any other Debian based ARM architecture distributions are partially supported.
 
+### Contribute
+
+If you want to contribute to Dragonfire then please read [this guide](https://github.com/DragonComputer/Dragonfire/blob/master/CONTRIBUTING.md#contributing-to-dragonfire).
+
+Please consider to support us with buying a coffee:
+<a href="https://www.buymeacoffee.com/tsystem" target="_blank"><img src="https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
