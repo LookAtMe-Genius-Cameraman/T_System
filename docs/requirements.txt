@@ -13,6 +13,8 @@ psutil
 pyaccesspoint
 wifi
 flask
+flask-session
+flask-restful
 schema
 gitpython
 elevate

@@ -136,6 +136,8 @@ setup(
         'pyaccesspoint',
         'wifi',
         'flask',
+        'flask-session',
+        'flask-restful',
         'schema',
         'gitpython',
         'elevate',
