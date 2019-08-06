@@ -8,7 +8,7 @@
 
 <img src="https://pyup.io/repos/github/connected-life/T_System/python-3-shield.svg?label=python%203&color=brightgreen" align="right" />
 
-<img src='https://coveralls.io/repos/github/connected-life/T_System/badge.svg?branch=master' alt='Coverage Status' />
+<img src='https://coveralls.io/repos/github/connected-life/T_System/badge.svg?branch=master' alt='Coverage Status' align="right" />
 
 the moving objects tracking system via two axis camera motion (and as optionally n joint robotic arm) for raspberry pi distributions
 
