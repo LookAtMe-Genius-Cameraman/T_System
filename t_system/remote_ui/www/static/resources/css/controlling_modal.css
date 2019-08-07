@@ -1,0 +1,379 @@
+
+#window_size_ul button {
+    /*background-color: #337ab7;*/
+    font-size: 14px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+}
+
+#window_size_ul button:hover {
+  background-color: cyan; /* cyan */
+  color: white;
+}
+
+#video_area_div {
+    max-width: 720px;
+    max-height: 640px;
+    text-rendering: optimizeLegibility;
+    align-items: center;
+    text-align: center;
+
+    /*alignment*/
+    position: relative;
+    /*!important; top: 50%;*/
+
+    width: 99%;
+    height: 50%;
+    margin: 30% auto;
+
+
+    border: #8d75a3 solid;
+
+    transition: all 500ms;
+}
+
+#get_preview_span {
+    position: absolute;
+    visibility: visible;
+    max-width: 100%;
+    max-height: 50%;
+    text-rendering: optimizeLegibility;
+    align-items: center;
+
+    margin: auto 0;
+
+    width: 60%;
+    height: 15%;
+
+    top: 45%;
+    left: 20%;
+    z-index: 150;
+    opacity: 1;
+
+    /*color: #3c763d;*/
+
+    /*border: black dotted;*/
+
+}
+
+#stream_area_video {
+
+    max-width: 100%;
+    max-height: 100%;
+    margin: 0 auto;
+    display: block;
+    text-rendering: optimizeLegibility;
+    align-items: center;
+
+    /*alignment*/
+    position: relative;
+    /*top: 2rem;*/
+    vertical-align: middle;
+
+    /*width: 32rem;*/
+    /*height: 20rem;*/
+    /*border: red solid;*/
+    transition: all 300ms;
+    background-color:#fff;
+    box-shadow: 0 20px 40px 0 rgba(0,0,0,0.5), 0 6px 20px 0 rgba(0,0,0,0.19);
+
+}
+
+.focused_video_area {
+    z-index: 200;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+}
+
+#motion_control_div {
+
+    /*alignment*/
+    position: absolute;
+    margin: auto;
+    top: 40%;
+    left: 10%;
+
+    max-width: 100%;
+    max-height: 250px;
+
+    width: 80%;
+    height: 70%;
+
+    min-width: 250px;
+
+    display: block;
+    text-rendering: optimizeLegibility;
+    align-items: center;
+
+
+
+    transition: opacity 300ms;
+
+    border: mediumvioletred solid;
+    opacity: 1;
+    visibility: hidden;
+    z-index: 200;
+
+}
+
+#prismatic_motion_control_btn {
+    position: relative;
+    margin: 1rem auto;
+    display: block;
+    text-rendering: optimizeLegibility;
+    /*align-items: center;*/
+
+    transition: all 500ms;
+    background: url(../images/motion_control/prismatic.png) no-repeat;
+    /*font-size: 16px;*/
+    /*max-width: 30%;*/
+    /*max-height: 30%;*/
+
+    width: 50px;
+    height: 50px;
+    border-radius: 2px;
+
+    left: 0;
+    top: 45%;
+
+    /*visibility: visible;*/
+}
+
+
+
+#prismatic_motion_control_btn:hover {
+    background: url(../images/motion_control/rotational.png) no-repeat;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+#rotational_motion_control_btn {
+    position: relative;
+    margin: 1rem auto;
+    display: block;
+    text-rendering: optimizeLegibility;
+    /*align-items: center;*/
+
+    transition: all 500ms;
+    background: url(../images/motion_control/rotational.png) no-repeat;
+    /*font-size: 16px;*/
+    /*max-width: 30%;*/
+    /*max-height: 30%;*/
+
+    /*min-height: 18%;*/
+    /*min-width: 9%;*/
+
+    width: 50px;
+    height: 50px;
+    border-radius: 2px;
+
+    left: 0;
+    top: 170px;
+
+    visibility: hidden;
+}
+
+#rotational_motion_control_btn:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    background: url(../images/motion_control/prismatic.png) no-repeat;
+
+}
+
+
+.prismatic_control_div {
+
+    position: relative;
+    max-width: 100%;
+    max-height: 100%;
+
+
+    width: 250px;
+    height: 150px;
+
+    top: 75%;  /* it will become -85% on visible*/
+    /*left: 5%;*/
+    border: indianred dotted;
+
+    visibility: hidden;
+    opacity: 1;
+    transition: all 300ms;
+    margin: auto;
+}
+.prismatic_control_div button {
+    border-radius: 2px;
+        font-size: 75%;
+
+        /*background: #00a3d2;*/
+
+}
+
+.prismatic_control_div button:hover {
+    /*background-color: #00caff;*/
+}
+
+#z_up_btn { /*Up*/
+
+    position: relative;
+
+    left: 85px;
+    top: 42px;
+
+    /*width: 10%;*/
+    /*height: 18px;*/
+}
+
+#z_down_btn { /*Down*/
+
+    position: relative;
+
+    left: 35px;
+    top: 67px;
+
+    /*width: 10%;*/
+    /*height: 18px;*/
+}
+
+
+#y_up_btn { /*Forward*/
+
+    position: relative;
+
+    left: 50px;
+    top: -10px;
+
+    /*width: 40%;*/
+    /*height: 40px;*/
+}
+#y_down_btn { /*Backward*/
+
+    position: relative;
+
+    left: -30px;
+    top: 75px;
+
+    /*width: 40%;*/
+    /*height: 40px;*/
+}
+
+#x_up_btn { /*Left*/
+
+    position: relative;
+
+    left: -90px;
+    top: 55px;
+
+    /*width: 30%;*/
+    /*height: 40px;*/
+}
+
+#x_down_btn { /*Right*/
+
+    position: relative;
+
+    left: 10px;
+    top: 55px;
+
+    /*width: 30%;*/
+    /*height: 40px;*/
+}
+
+.rotational_control_div {
+
+    position: relative;
+    max-width: 100%;
+    max-height: 100%;
+
+    width: 250px;
+    height: 150px;
+
+    top: -20%;  /* it will become -180% on visible*/
+    /*left: 5%;*/
+    border: #8a6d3b dashed;
+
+    visibility: hidden;
+    opacity: 1;
+    transition: all 300ms;
+    margin: auto;
+
+
+}
+.rotational_control_div button {
+    border-radius: 2px;
+        font-size: 75%;
+        margin: 0 10px;
+        /*background: #d21a0b;*/
+}
+
+.rotational_control_div button:hover {
+    /*background-color: #ff210d;*/
+}
+
+#joint_1_cw_btn {
+
+    position: relative;
+
+    /*left: 6%;*/
+    /*top: 1rem;*/
+
+    width: 40%;
+    height: 40px
+}
+
+#joint_1_ccw_btn {
+
+    position: relative;
+
+    /*left: 51%;*/
+    /*top: -1.5rem;*/
+
+    width: 40%;
+    height: 40px
+}
+
+#joint_2_cw_btn {
+
+    position: relative;
+
+    /*left: 6%;*/
+    /*top: -0.5rem;*/
+
+    width: 40%;
+    height: 40px
+}
+
+#joint_2_ccw_btn {
+
+    position: relative;
+
+    /*left: 51%;*/
+    /*top: -3rem;*/
+
+    width: 40%;
+    height: 40px
+}
+
+#joint_3_cw_btn {
+
+    position: relative;
+
+    /*left: 6%;*/
+    /*top: -2.2rem;*/
+
+    width: 40%;
+    height: 40px
+}
+
+#joint_3_ccw_btn {
+
+    position: relative;
+
+    /*left: 51%;*/
+    /*top: -4.7rem;*/
+
+    width: 40%;
+    height: 40px
+}
+
+

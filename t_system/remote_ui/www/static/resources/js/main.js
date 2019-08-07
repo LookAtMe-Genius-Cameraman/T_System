@@ -58,7 +58,9 @@ class JQueryManager {
             if (success === "success") {
                 requested_data = data;
                 // console.log(requested_data);
-                clearInterval(timer);
+                if (timer !== undefined){
+                    clearInterval(timer);
+                }
             }
         });
     }

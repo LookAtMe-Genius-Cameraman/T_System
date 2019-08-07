@@ -1,0 +1,129 @@
+
+#main_container {
+    max-width: 100%;
+    max-height: 100%;
+    /*margin: 0 auto;*/
+    /*align-items: center;*/
+    border: #3c763d dashed;
+
+    width: 90%;
+    height: 97%;
+
+    min-width: 20rem;
+    min-height: 35rem;
+
+}
+
+#title_div {
+    max-width: 400px;
+    max-height: 50%;
+    margin: auto;
+    /*text-rendering: optimizeLegibility;*/
+
+    width: 100%;
+    height: 115px;
+
+    min-width: 100px;
+
+    /*!*top: 0.1%;*!*/
+
+    /*background-color: #008CBA;*/
+    /*border-radius: 50%;*/
+    border: tomato solid;
+
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+#title_h1{}
+
+#title_footer{ /* Powered by*/}
+
+#title_a{ /*T_System*/}
+
+#page_control_div {}
+
+#settings_btn {}
+
+#control_btn {}
+
+#on_work_btn {}
+
+#settings_template_container {
+
+    visibility: hidden;
+    opacity: 0;
+
+    max-width: 100%;
+    max-height: 95%;
+
+    /*alignment*/
+    top: 15%;
+    /*left: 15%;*/
+
+    /*width: 99%;*/
+    /*height: 80%;*/
+
+    transition: opacity 300ms;
+    border: #8d75a3 dashed;
+
+    /*!*width: 300px;*!*/
+    /*!*height: 200px;*!*/
+}
+
+#controlling_template_container {
+    visibility: hidden;
+    opacity: 0;
+
+    max-width: 90%;
+    max-height: 95%;
+
+    /*alignment*/
+    top: 20%;
+    /*left: 35%;*/
+    width: 85%;
+    height: 68%;
+
+    transition: opacity 300ms;
+    border: #8d75a3 dashed;
+
+    margin: auto;
+
+}
+
+#on_work_template_container {
+    /*position: relative;*/
+
+    visibility: hidden;
+    opacity: 0;
+
+    /*alignment*/
+    top: -105%;
+    /*left: 15%;*/
+
+    /*width: 40%;*/
+    /*height: 45%;*/
+
+    transition: opacity 300ms;
+    border: #8d75a3 dashed;
+
+}
+
+#dark_deep_background_div {
+    font-family: Arial, Helvetica, sans-serif;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 60;
+    opacity: 0;
+    -webkit-transition: opacity 400ms ease-in;
+    -moz-transition: opacity 400ms ease-in;
+    transition: opacity 400ms ease-in;
+    pointer-events: none;
+
+    /*border: #3c763d solid;*/
+}
+
+
+

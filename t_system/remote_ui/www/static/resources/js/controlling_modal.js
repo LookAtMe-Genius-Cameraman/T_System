@@ -29,6 +29,7 @@ const dark_deep_background_div = document.getElementById("dark_deep_background_d
 const video_area_div = document.getElementById("video_area_div");
 const get_preview_span = document.getElementById("get_preview_span");
 const stream_area_video = document.getElementById("stream_area_video");
+const stream_area_video_source = document.getElementById("stream_area_video_source");
 
 const motion_control_div = document.getElementById("motion_control_div");
 
@@ -78,26 +79,49 @@ function focus_video_area() {
     stream_area_video.removeEventListener("click", focus_video_area);
     stream_area_video.addEventListener("click", unfocus_video_area);
 
-    requested_data = {"status": "true", "for": "live_stream", "reason": "start", "options": ""};
-    // jquery_manager.post_data("/fulfill_command", dict);
+    // start_stream("preview");
+
+    // let timer_settings_cont = setInterval(function () {
+    //
+    //     if (requested_data !== undefined) {
+    //         if (requested_data["status"] === "OK") {
+    //             stream_area_video_source.src = requested_data["data"];
+    //
+    //             dark_deep_background_div.style.opacity = "1";
+    //             stream_area_video.classList.add("focused_video_area");
+    //             video_area_div.style.margin = "-18% auto 0";
+    //             show_element(motion_control_div);
+    //
+    //             requested_data = undefined;
+    //             clearInterval(timer_settings_cont)
+    //         }
+    //     }
+    // }, 300);
+
+    // stream_area_video_source.src = requested_data["data"];
 
     dark_deep_background_div.style.opacity = "1";
     stream_area_video.classList.add("focused_video_area");
-    video_area_div.style.margin = "-18% auto 0";
+    video_area_div.style.margin = "-30% auto";
     show_element(motion_control_div);
+
+
 }
 
 function unfocus_video_area() {
     stream_area_video.removeEventListener("click", unfocus_video_area);
     stream_area_video.addEventListener("click", focus_video_area);
 
-    requested_data = {"status": "true", "for": "live_stream", "reason": "stop", "options": ""};
+    dict = {"status": "true", "for": "live_stream", "reason": "stop", "options": ""};
     // jquery_manager.post_data("/fulfill_command", dict);
     // console.log("outside");
     dark_deep_background_div.style.opacity = "0";
     stream_area_video.classList.remove("focused_video_area");
-    video_area_div.style.margin = "35% auto 0";
+    video_area_div.style.margin = "30%  auto";
     hide_element(motion_control_div);
+    hide_element(prismatic_control_div);
+    hide_element(rotational_control_div);
+
 }
 
 function toggleFullScreen(){
@@ -118,7 +142,7 @@ prismatic_motion_control_btn.addEventListener("click", function () {
     show_element(rotational_motion_control_btn);
 
     show_element(rotational_control_div);
-    rotational_control_div.style.top = "-180%";
+    rotational_control_div.style.top = "-280px";
     hide_element(prismatic_control_div);
     prismatic_control_div.style.top = "75%";
 
@@ -132,9 +156,21 @@ rotational_motion_control_btn.addEventListener("click", function () {
     hide_element(rotational_control_div); // when prismatic button clicked rotational modal showing because rotational modal's button become visible via prismatic's hover.
     rotational_control_div.style.top = "-20%";
     show_element(prismatic_control_div);
-    prismatic_control_div.style.top = "-85%";
+    prismatic_control_div.style.top = "-45%";
 
 });
+
+/**
+ * The high-level method of getting specified network information with its ssid or the all existing network information.
+ * It is triggered via a click on settings_btn or clicked specified network on network list.
+ */
+function start_stream(type) {
+
+        // console.log("bla");
+        // console.log(response);
+        jquery_manager.get_data("/api/stream?type=" + type + "&admin_id=" + admin_id);
+
+}
 
 
 
