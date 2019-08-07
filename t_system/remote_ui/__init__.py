@@ -19,13 +19,15 @@ import json
 import os
 import inspect
 
-# from t_system.remote_ui.api.position import api_bp as position_api_bp
-# from t_system.remote_ui.api.scenario import api_bp as scenario_api_bp
-# from t_system.remote_ui.api.network import api_bp as network_api_bp
-# from t_system.remote_ui.api.move import api_bp as move_api_bp
-# from t_system.remote_ui.api.system_info import api_bp as system_info_api_bp
-# from t_system import dot_t_system_dir
-dot_t_system_dir = "/home/baybars/.t_system"
+from t_system.remote_ui.api.position import api_bp as position_api_bp
+from t_system.remote_ui.api.scenario import api_bp as scenario_api_bp
+from t_system.remote_ui.api.network import api_bp as network_api_bp
+from t_system.remote_ui.api.move import api_bp as move_api_bp
+from t_system.remote_ui.api.system_info import api_bp as system_info_api_bp
+from t_system.remote_ui.api.face_encoding import api_bp as face_encoding_api_bp
+from t_system.remote_ui.api.stream import api_bp as stream_api_bp
+from t_system import dot_t_system_dir
+# dot_t_system_dir = "/home/baybars/.t_system"
 
 __version__ = '0.1.7'
 
@@ -70,11 +72,13 @@ class RemoteUI:
         """The low-level method to setting flask API.
         """
 
-        # self.app.register_blueprint(position_api_bp)
-        # self.app.register_blueprint(scenario_api_bp)
-        # self.app.register_blueprint(network_api_bp)
-        # self.app.register_blueprint(move_api_bp)
-        # self.app.register_blueprint(system_info_api_bp)
+        self.app.register_blueprint(position_api_bp)
+        self.app.register_blueprint(scenario_api_bp)
+        self.app.register_blueprint(network_api_bp)
+        self.app.register_blueprint(move_api_bp)
+        self.app.register_blueprint(system_info_api_bp)
+        self.app.register_blueprint(face_encoding_api_bp)
+        self.app.register_blueprint(stream_api_bp)
 
         @self.app.route('/')
         def main():
@@ -83,16 +87,6 @@ class RemoteUI:
             # db_json = json.dumps(self.db.all())
             db_json = json.dumps("something")
             return render_template('main.html', db_json=db_json)
-
-        @self.app.route('/fulfill_command', methods=['POST'])
-        def fulfill_command():
-            """The low-level method to set working parameter of t_system.
-            """
-            cmd = request.form
-            self.officiate(cmd)
-
-            print(str(cmd))
-            return str(cmd)
 
         @self.app.route('/try', methods=['POST'])
         def tryer():
@@ -126,42 +120,6 @@ class RemoteUI:
         if func is None:
             raise RuntimeError('Not running with the Werkzeug Server')
         func()
-
-    def officiate(self, cmd):
-        """The low-level method to fulfill commands those are coming from javascript ui.
-
-        Args:
-            cmd (dict):             container of incoming command
-            port (string):          Port of the flask server.
-            debug (bool):           The debug flag.
-        """
-        # cmd = {'status': False, 'for': '', 'reason': '', 'options': ''}
-
-        status = cmd["status"]
-        forr = cmd["for"]
-        reason = cmd["reason"]
-        options = cmd["options"]
-
-        if status == "true":
-            if forr == "live_stream":
-                if reason == "start":
-                    pass
-                elif reason == "stop":
-                    pass
-            elif forr == "turn_joint":
-                print(f"joint{reason} turned")
-                # self.vision.arm.rotate_single_joint(reason, options)  # reason contains joint number and options contains delta angle.
-            elif forr == "move_endpoint":
-                print(f"axis{reason} moved")
-                # self.vision.arm.move_endpoint(reason, options)  # reason contains axis name(x, y or z) and options contains distance as mm.
-
-            elif forr == "configure":
-                pass
-
-        else:
-            print("nope")
-
-        pass
 
 
 if __name__ == "__main__":
