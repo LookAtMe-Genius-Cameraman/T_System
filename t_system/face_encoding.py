@@ -14,6 +14,7 @@ import pickle
 import cv2
 import os  # Miscellaneous operating system interfaces
 import uuid  # The random id generator
+import binascii
 
 from imutils import paths
 from shutil import copy, rmtree
@@ -318,7 +319,7 @@ class Face:
         self.db_upsert()
 
     def copy_images_to(self, dest):
-        """The low-level method to copying image inside the dataset to the giiven destination folder.
+        """The low-level method to copying image inside the dataset to the given destination folder.
 
         Args:
             dest (str):            Destination folder to copying images those are inside the dataset.
@@ -400,8 +401,11 @@ class Face:
         """
 
         for photo in photos:
-            with open(f'{self.dataset_folder}/{photo["name"]}.png', "wb") as dataset_image:
-                dataset_image.write(b64decode(photo["base_sf"]))
+            with open(f'{self.dataset_folder}/{photo["name"]}.jpeg', "wb") as dataset_image:
+                try:
+                    dataset_image.write(b64decode(photo["base_sf"]))
+                except binascii.Error:
+                    raise Exception("no correct base64")
 
         self.refresh_image_names()
         self.db_upsert(force_insert=True)
