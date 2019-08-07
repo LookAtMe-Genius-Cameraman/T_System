@@ -9,50 +9,68 @@
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
 
+import threading
+
 from t_system import seer
 
 
-def start_stream(admin_id, stream_type):
-    """The high-level method to return existing position with given id.
+class StreamManager:
+    """Class to define a manager for asynchronous work of t_system's online video stream.
 
-    Args:
-        admin_id (bool):                 Root privileges flag.
-        stream_type (str):               Stream's purpose. Preview, track-learn mode etc.
-    """
-    try:
-        seer.start_online_stream()
-        if stream_type == "preview":
-
-            return seer.stream(stop_thread=lambda: False, caller="preview"), "multipart/x-mixed-replace; boundary=frame"
-
-    except Exception as e:
-        print(e)
-
-    return False, False
-
-
-def stop_stream(admin_id):
-    """The high-level method to remove existing position with given id.
-
-    Args:
-        admin_id (bool):                 Root privileges flag.
-        position_id (str):              The id of the position.
+        This class provides necessary initiations and a function named
+        :func:`t_system.remote_ui.modules.stream.StreamManager.get_stream`
+        for the provide getting stream by calling iteratively the seer's current_frame member.
     """
 
-    try:
-        seer.stop_online_stream()
-    except Exception as e:
-        print(e)
+    def __init__(self):
+        """Initialization method of :class:`t_system.remote_ui.modules.stream.StreamManager` class.
+        """
 
+        self.stop_thread = False
+        self.preview_thread = threading.Thread(target=seer.stream, args=(self.stop_thread, "bgr" "security"))
 
-    # table = get_db_table(is_admin(admin_id))
-    #
-    # if table.search((Query().id == position_id)):
-    #     table.remove((Query().id == position_id))
-    #
-    #     result = True
-    # else:
-    #     result = False
+    def start_stream(self, admin_id, stream_type):
+        """The high-level method to return existing position with given id.
 
-    # return result
-    pass
+        Args:
+            admin_id (bool):                 Root privileges flag.
+            stream_type (str):               Stream's purpose. Preview, track-learn mode etc.
+        """
+        try:
+            if stream_type == "preview":
+                self.preview_thread.start()
+                return self.get_stream(), "multipart/x-mixed-replace; boundary=frame"
+
+        except Exception as e:
+            print(e)
+
+        return False, False
+
+    def stop_stream(self, admin_id, stream_type):
+        """The high-level method to remove existing position with given id.
+
+        Args:
+            admin_id (bool):                 Root privileges flag.
+            stream_type (str):               Stream's purpose. Preview, track-learn mode etc.
+        """
+        result = True
+        try:
+            if stream_type == "preview" and self.preview_thread.is_alive():
+                self.stop_thread = True
+                self.preview_thread.join()
+
+        except Exception as e:
+            print(e)
+            result = False
+
+        return result
+
+    @staticmethod
+    def get_stream():
+        """The low-level method to get camera stream frame by frame from seer.current_frame.
+        """
+        while True:
+            frame = seer.get_current_frame()
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+

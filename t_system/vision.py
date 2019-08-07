@@ -107,7 +107,6 @@ class Vision:
         self.aimer = Aimer()
 
         self.show_stream = args["show_stream"]  # 'show-stream' argument automatically converted this type.
-        self.show_stream_online = False
         self.mark_object = self.get_mark_object(args["found_object_mark"])
 
         self.record = args["record"]
@@ -119,6 +118,8 @@ class Vision:
             self.augmented = True
 
         self.mqtt_receimitter = None
+        
+        self.current_frame = None
 
         # Allow the camera to warm up
         time.sleep(0.1)
@@ -139,9 +140,9 @@ class Vision:
 
             # grab the raw NumPy array representing the image, then initialize the timestamp and occupied/unoccupied text
             frame = frame.array
-            frame = frame.copy()  # For reaching with overwrite privileges.
+            self.current_frame = frame.copy()  # For reaching with overwrite privileges.
 
-            rgb, detected_boxes = self.detect_things(frame)
+            rgb, detected_boxes = self.detect_things(self.current_frame)
             reworked_boxes = self.relocate_detected_coords(detected_boxes)
 
             if not self.no_recognize:
@@ -149,11 +150,11 @@ class Vision:
             else:
                 names = None
 
-            self.track(frame, reworked_boxes, names)
+            self.track(self.current_frame, reworked_boxes, names)
 
             # time.sleep(0.1)  # Allow the servos to complete the moving.
 
-            self.show_frame(frame)
+            self.show_frame(self.current_frame)
             self.truncate_stream()
             # print("frame showed!")
             if self.check_loop_ended(stop_thread):
@@ -189,7 +190,7 @@ class Vision:
                 else:
                     names = None
 
-                frame = cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR)
+                self.current_frame = cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR)
 
                 # Create MultiTracker object
                 multi_tracker = cv2.MultiTracker_create()
@@ -202,15 +203,15 @@ class Vision:
                     # box[2] is y + h.
                     reworked_box = box[3], box[0], box[1] - box[3], box[2] - box[0]
 
-                    multi_tracker.add(self.create_tracker_by_name(), frame, reworked_box)
+                    multi_tracker.add(self.create_tracker_by_name(), self.current_frame, reworked_box)
                 found_count += 1
 
             # grab the raw NumPy array representing the image, then initialize the timestamp and occupied/unoccupied text
             frame = frame.array
-            frame = frame.copy()  # For reaching with overwrite privileges.
+            self.current_frame = frame.copy()  # For reaching with overwrite privileges.
 
             if use_detection >= 3:
-                rgb, detected_boxes = self.detect_things(frame)
+                rgb, detected_boxes = self.detect_things(self.current_frame)
                 use_detection = 0
 
             use_detection += 1
@@ -219,7 +220,7 @@ class Vision:
             timer = cv2.getTickCount()
 
             # get updated location of objects in subsequent frames
-            is_tracking_success, tracked_boxes = multi_tracker.update(frame)
+            is_tracking_success, tracked_boxes = multi_tracker.update(self.current_frame)
 
             if not len(detected_boxes) >= len(tracked_boxes):
                 d_t_failure_count += 1
@@ -231,11 +232,11 @@ class Vision:
 
             if is_tracking_success and d_t_failure_count < 5:
 
-                self.track(frame, tracked_boxes, names)
+                self.track(self.current_frame, tracked_boxes, names)
 
             elif not is_tracking_success or d_t_failure_count >= 5:
                 # Tracking failure
-                cv2.putText(frame, "Tracking failure detected", (100, 80), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
+                cv2.putText(self.current_frame, "Tracking failure detected", (100, 80), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
                 tracked_boxes = []  # for clearing tracked_boxes list.
 
             # # Display tracker type on frame
@@ -244,7 +245,7 @@ class Vision:
             # # Display FPS on frame
             # cv2.putText(frame, "FPS : " + str(int(fps)), (100, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50, 170, 50), 2)
 
-            self.show_frame(frame)
+            self.show_frame(self.current_frame)
             self.truncate_stream()
 
             if self.check_loop_ended(stop_thread):
@@ -315,21 +316,21 @@ class Vision:
             # and occupied/unoccupied text
 
             image = frame.array
-            image = image.copy()  # For reaching with overwrite privileges.
+            self.current_frame = image.copy()  # For reaching with overwrite privileges.
             # err_check_image = None
 
-            rgb, detected_boxes = self.detect_things(image)
+            rgb, detected_boxes = self.detect_things(self.current_frame)
             # names = self.recognize_things(rgb, detected_boxes)
             reworked_boxes = self.relocate_detected_coords(detected_boxes)
 
             if not len(reworked_boxes) == 1:
-                # self.show_frame(image)
+                # self.show_frame(self.current_frame)
                 pass
             else:
                 for (x, y, w, h) in reworked_boxes:
 
                     if (self.show_stream and self.augmented) or self.show_stream:
-                        self.mark_object(image, x, y, w, h, 30, 50, (255, 0, 0), 2)
+                        self.mark_object(self.current_frame, x, y, w, h, 30, 50, (255, 0, 0), 2)
                     obj_width = w
                     # obj_area = w * h  # unit of obj_width is px ^ 2.
 
@@ -337,7 +338,7 @@ class Vision:
 
                     # time.sleep(0.2)  # allow the camera to capture after moving.
 
-                    # self.show_frame(image)
+                    # self.show_frame(self.current_frame)
                     self.truncate_stream()
 
                     self.camera.capture(self.rawCapture, format=format)
@@ -354,13 +355,13 @@ class Vision:
                         for (ex, ey, ew, eh) in rb_after_move:  # e means error.
 
                             if (self.show_stream and self.augmented) or self.show_stream:
-                                self.mark_object(image, ex, ey, ew, eh, 30, 50, (255, 0, 0), 2)
+                                self.mark_object(self.current_frame, ex, ey, ew, eh, 30, 50, (255, 0, 0), 2)
 
                             self.target_locker.check_error(ex, ey, ew, eh)
 
-                            # self.show_frame(image)
+                            # self.show_frame(self.current_frame)
 
-            self.show_frame(image)
+            self.show_frame(self.current_frame)
             self.truncate_stream()
             if self.check_loop_ended(stop_thread):
                 break
@@ -377,9 +378,9 @@ class Vision:
         for frame in self.camera.capture_continuous(self.rawCapture, format=format, use_video_port=True):
 
             frame = frame.array
-            frame = frame.copy()  # For reaching to frame with overwrite privileges.
+            self.current_frame = frame.copy()  # For reaching to frame with overwrite privileges.
 
-            rgb, detected_boxes = self.detect_things(frame)
+            rgb, detected_boxes = self.detect_things(self.current_frame)
 
             if not detected_boxes:
                 gray = cv2.cvtColor(rgb, cv2.COLOR_BGR2GRAY)
@@ -467,9 +468,9 @@ class Vision:
 
         for frame in self.camera.capture_continuous(self.rawCapture, format=format, use_video_port=True):
             # inside of the loop is optionally editable.
-            image = frame.array
+            self.current_frame = frame.array
 
-            self.show_frame(image)
+            self.show_frame(self.current_frame)
             self.truncate_stream()
 
             if self.check_loop_ended(stop_thread):
@@ -491,11 +492,8 @@ class Vision:
                 frame:       	        Frame matrix in bgr format.
 
         """
-        if self.show_stream_online:
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
-        elif (self.show_stream and self.augmented) or self.show_stream:
+        if (self.show_stream and self.augmented) or self.show_stream:
             # show the frame
             cv2.imshow("Frame", frame)
 
@@ -744,15 +742,10 @@ class Vision:
         else:
             return self.mark_as_none
 
-    def start_online_stream(self):
-        """The high-level method to set online streaming flag for starting the stream serving.
+    def get_current_frame(self):
+        """The high-level method to get current working camera frame.
         """
-        self.show_stream_online = True
-
-    def stop_online_stream(self):
-        """The high-level method to set online streaming flag for stopping the stream serving.
-        """
-        self.show_stream_online = False
+        return self.current_frame
 
     def set_mqtt_receimitter(self, mqtt_receimitter):
         """The low-level method to set mqtt_receimitter object for publishing and subscribing data echos.

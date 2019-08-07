@@ -11,9 +11,8 @@
 
 from flask import Blueprint, Response, request
 from flask_restful import Api, Resource
-from schema import SchemaError
 
-from t_system.remote_ui.modules.stream import start_stream, stop_stream
+from t_system.remote_ui.modules.stream import StreamManager
 
 api_bp = Blueprint('stream_api', __name__)
 
@@ -34,6 +33,8 @@ class StreamApi(Resource):
         """Initialization method of :class:`t_system.remote_ui.api.stream.StreamApi` class.
         """
 
+        self.stream_manager = StreamManager()
+
     def get(self):
         """The API method to get request for flask.
         """
@@ -44,7 +45,7 @@ class StreamApi(Resource):
         if not stream_type:
             return {'status': 'ERROR', 'message': '\'id\' parameter is missing'}
 
-        stream, mimetype = start_stream(admin_id, stream_type)
+        stream, mimetype = self.stream_manager.start_stream(admin_id, stream_type)
 
         if stream and mimetype:
             return {'status': 'OK', 'data': Response(stream, mimetype=mimetype)}
@@ -67,7 +68,15 @@ class StreamApi(Resource):
         """The API method to delete request for flask.
         """
 
-        return {'status': 'ERROR', 'message': 'NOT VALID'}
+        stream_type = request.args.get('type')
+        admin_id = request.args.get('admin_id', None)
+
+        if not stream_type:
+            return {'status': 'ERROR', 'message': '\'id\' parameter is missing'}
+
+        result = self.stream_manager.stop_stream(admin_id, stream_type)
+
+        return {'status': 'OK' if result else 'ERROR'}
 
 
 api.add_resource(StreamApi, '/api/stream')
