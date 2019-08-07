@@ -26,13 +26,13 @@ class Updater:
     for pulling repo data and named :func:`t_system.updation.Updater.push` for git push.
     """
 
-    def __init__(self, args):
-        """Initialization method of :class:`t_system.audition.Hearer` class.
+    def __init__(self, verbose):
+        """Initialization method of :class:`t_system.updation.Updater` class.
 
         Args:
-                args:                   Command-line arguments.
+            verbose:   	            Verbosity flag about printing debug messages.
         """
-        self.verbose = args["verbose"]  # this argument will be added.
+        self.verbose = verbose  # this argument will be added.
 
     def update(self, force=False, check_dev=True, verbose=False):
         """The high-level method that can be called to automatically update the repo in which the calling file is located.
@@ -357,17 +357,36 @@ class Updater:
         return diff
 
 
-def install(editable=False):
-    """The high-level method to install the dependencies after git updation.
+class Installer:
+    """Class to define an installer of tracking system itself.
 
-    Args:
-            editable:   	        Editable updation mode flag.
+    This class provides necessary initiations and functions named :func:`t_system.updation.Updater.update`
+    as the update point from the remote git repository, named :func:`t_system.updation.Updater.pull`
+    for pulling repo data and named :func:`t_system.updation.Updater.push` for git push.
     """
 
-    if editable:
-        install_sh = T_SYSTEM_PATH + "../install-dev.sh"
-    else:
-        install_sh = T_SYSTEM_PATH + "../install.sh"
+    def __init__(self, editable, verbose):
+        """Initialization method of :class:`t_system.updation.Installer` class.
 
-    with elevate(show_console=False, graphical=False):
-        subprocess.call(install_sh, shell=True)
+        Args:
+            editable:   	        Editable updation mode flag.
+            verbose:   	            Verbosity flag about printing debug messages.
+        """
+        self.editable = editable
+        self.verbose = verbose
+        # BEFORE PULLING THE CHANGES FROM GIT, CREATING CHECK SUM OF THE INSTALL FILES THEN IT WILL COMPARED WITH NEW.
+
+    def install(self, editable=False):
+        """The high-level method to install the dependencies after git updation.
+
+        Args:
+                editable:   	        Editable updation mode flag.
+        """
+
+        if editable:
+            install_sh = T_SYSTEM_PATH + "../install-dev.sh"
+        else:
+            install_sh = T_SYSTEM_PATH + "../install.sh"
+
+        with elevate(show_console=False, graphical=False):
+            subprocess.call(install_sh, shell=True)
