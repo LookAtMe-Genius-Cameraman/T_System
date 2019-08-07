@@ -54,7 +54,7 @@ class Administrator:
     def get_keys(self):
         """The low-level method to get keys of secret entry point from database.
         """
-        admin = self.table.all()
+        admin = self.table.all()[0]
 
         if admin:
             self.ssid_hash = admin["ssid"]

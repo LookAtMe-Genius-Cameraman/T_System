@@ -15,6 +15,9 @@ from gpiozero import CPUTemperature
 
 def get_disk_usage(admin_id):
     """The high-level method to provide getting system's disk usage.
+
+    Args:
+        admin_id:   	     ID of the administration authentication.
     """
     usage = psutil.disk_usage('/')
 
