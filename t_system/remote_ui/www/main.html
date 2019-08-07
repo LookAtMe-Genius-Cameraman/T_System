@@ -4,8 +4,7 @@
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale = 1.0, maximum-scale = 1.0, user-scalable=no">
     <title>T_System</title>
     <link rel="stylesheet" href="static/vendors/bootstrap/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <!--<link rel="stylesheet" media="only screen and (min-width: 671px)" type="text/css" href="static/resources/css/master_desktop.css">-->
-    <!--<link rel="stylesheet" media="all" type="text/css" href="static/resources/css/master_mobile.css">-->
+    <link rel="stylesheet" media="all" type="text/css" href="static/resources/css/master.css">
     <script>
         let event_db = null;
         event_db = {{ db_json|safe }}
@@ -17,17 +16,19 @@
 
 <!--<style type="text/css">iframe#_hjRemoteVarsFrame {display: none !important; width: 1px !important; height: 1px !important; opacity: 0 !important; pointer-events: none !important;}</style>-->
 
-<div id="main_container" class="container">
+<div id="main_container" class="container align-content-center">
     <div id="title_div" class="text-center">
-    <h1 id="title_h1" class="bg-dark" translate>Look. At. Me.</h1>
-<footer id="title_footer" class="page-footer font-small blue text-right" translate>Powered By <a href="https://github.com/connected-life/T_System" translate>T_System</a></footer>
+        <h1 id="title_h1" class="" translate>Look. At. Me.</h1>
+        <footer id="title_footer" class="page-footer font-small blue pull-right text-right" translate>Powered By <a href="https://github.com/connected-life/T_System">
+            <mark translate>T_System</mark>
+        </a></footer>
+        <div id="page_control_div" class="btn-group justify-content-center">
+            <button id="settings_btn" class="btn btn-dark" translate>Settings</button>
+            <button id="control_btn" class="btn btn-dark" translate>Control</button>
+            <button id="on_work_btn" class="btn btn-dark" translate>Let's Begin</button>
+        </div>
+    </div>
 
-<div id="page_control_div" class="btn-group justify-content-center">
-        <button id="settings_btn" class="btn btn-dark" translate>Settings</button>
-        <button id="control_btn" class="btn btn-dark" translate>Control</button>
-        <button id="on_work_btn" class="btn btn-dark" translate>Let's Begin</button>
-    </div>
-    </div>
 
 
 
@@ -62,7 +63,7 @@
 <!--</div>-->
 
 <!--SETTINGS MODAL-->
-<div id="settings_template_container">
+<div id="settings_template_container" class="position-relative">
     <table id="main_table">
     <tr>
         <td id="configurations_title" style="max-width: 150px" translate>Configurations :</td>
@@ -119,9 +120,9 @@
 </div>
 
     <!--CONTROLLING MODAL-->
-    <div id="controlling_template_container">
+    <div id="controlling_template_container" class="position-absolute">
         <div style="text-align:center">
-            <div id="video_area_div">
+            <div id="video_area_div" class="">
                 <span id="get_preview_span" translate>Click here to get preview</span>
                 <video id="stream_area_video">
                     <source id="stream_area_video_source" src="" type="video/mp4">
@@ -130,24 +131,33 @@
                 </video>
                 <!--<img id="stream_area_video">-->
             </div>
-            <div id="motion_control_div">
+            <div id="motion_control_div" >
                 <button id="rotational_motion_control_btn"></button>
                 <button id="prismatic_motion_control_btn"></button>
-                <div id="prismatic_control_div" class="prismatic_control_div">
-                    <button id="z_up_btn" translate>up</button>
-                    <button id="z_down_btn" translate>down</button>
-                    <button id="y_up_btn" translate>forward</button>
-                    <button id="y_down_btn" translate>backward</button>
-                    <button id="x_up_btn" translate>left</button>
-                    <button id="x_down_btn" translate>right</button>
+                <div id="prismatic_control_div" class="position-relative align-content-center prismatic_control_div">
+                        <button id="z_up_btn" class="btn-info" translate>up</button>
+                        <button id="z_down_btn" class="btn-info" translate>down</button>
+                        <button id="x_up_btn" class="btn-info" translate>left</button>
+                        <button id="x_down_btn" class="btn-info" translate>right</button>
+                        <button id="y_up_btn" class="btn-info" translate>forward</button>
+                        <button id="y_down_btn" class="btn-info" translate>backward</button>
+
                 </div>
                 <div id="rotational_control_div" class="rotational_control_div">
-                    <button id="joint_1_cw_btn" translate>joint1 right</button>
-                    <button id="joint_1_ccw_btn" translate>joint1 left</button>
-                    <button id="joint_2_cw_btn" translate>joint2 right</button>
-                    <button id="joint_2_ccw_btn" translate>joint2 left</button>
-                    <button id="joint_3_cw_btn" translate>joint3 right</button>
-                    <button id="joint_3_ccw_btn" translate>joint3 left</button>
+
+                    <div class="btn-group p-1">
+                        <button id="joint_1_cw_btn" class="btn btn-info" translate>joint1 right</button>
+                        <button id="joint_1_ccw_btn" class="btn btn-info" translate>joint1 left</button>
+                    </div>
+                    <div class="btn-group p-1">
+                        <button id="joint_2_cw_btn" class="btn btn-info" translate>joint2 right</button>
+                        <button id="joint_2_ccw_btn" class="btn btn-info" translate>joint2 left</button>
+                    </div>
+                    <div class="btn-group p-1">
+                        <button id="joint_3_cw_btn" class="btn btn-info" translate>joint3 right</button>
+                        <button id="joint_3_ccw_btn" class="btn btn-info" translate>joint3 left</button>
+                    </div>
+
                 </div>
             </div>
 
@@ -155,7 +165,7 @@
     </div>
 
     <!--ON WORK MODAL-->
-<div id="on_work_template_container">
+<div id="on_work_template_container" class="position-relative jumbotron vertical-center">
     <div style="text-align:center">
         <button onclick="playPause()">Play/Pause</button>
         <label for="on_work_windows_size_select">Size</label><select class="dropdown" style="height: 30px; width: 70px" id="on_work_windows_size_select">
@@ -178,7 +188,7 @@
 
 </div>
 
-<div id="dark_deep_background_div"></div>
+<div id="dark_deep_background_div" class="position-fixed"></div>
 
         <!-- inserting these scripts at the end to be able to use all the elements in the DOM -->
         <script src="static/resources/js/language/en.js"></script>
