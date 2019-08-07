@@ -1,17 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-    <meta charset="UTF-8">
-    <title>T-System</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="static/css/main.css">
-    <link rel="stylesheet" type="text/css" href="static/css/menu.css">
-    <link rel="stylesheet" type="text/css" href="static/css/settings_modal.css">
-    <link rel="stylesheet" type="text/css" href="static/css/controlling_modal.css">
-    <link rel="stylesheet" type="text/css" href="static/css/managing_bar.css">
-    <link rel="stylesheet" type="text/css" href="https://printjs-4de6.kxcdn.com/print.min.css">
-
-
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale = 1.0, maximum-scale = 1.0, user-scalable=no">
+    <title>T_System</title>
+    <link rel="stylesheet" href="static/vendors/bootstrap/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!--<link rel="stylesheet" media="only screen and (min-width: 671px)" type="text/css" href="static/resources/css/master_desktop.css">-->
+    <!--<link rel="stylesheet" media="all" type="text/css" href="static/resources/css/master_mobile.css">-->
     <script>
         let event_db = null;
         event_db = {{ db_json|safe }}
@@ -21,16 +15,19 @@
 </head>
 <body>
 
-<div id="main_container">
-    <div align="center" id="title_div">
-    <h1 id="title_h1" translate>Smarty Cameraman</h1>
-    <footer style="margin-top: 0.5rem;" id="title_p" translate>Powered By <a href="https://github.com/connected-life/T_System" translate>T_System</a></footer>
-    <div id="page_control_div">
-        <button id="settings_btn" translate>Settings</button>
-        <button id="control_btn" translate>Control</button>
-        <button id="on_work_btn" translate>Let's Begin</button>
+<!--<style type="text/css">iframe#_hjRemoteVarsFrame {display: none !important; width: 1px !important; height: 1px !important; opacity: 0 !important; pointer-events: none !important;}</style>-->
+
+<div id="main_container" class="container">
+    <div id="title_div" class="text-center">
+    <h1 id="title_h1" class="bg-dark" translate>Look. At. Me.</h1>
+<footer id="title_footer" class="page-footer font-small blue text-right" translate>Powered By <a href="https://github.com/connected-life/T_System" translate>T_System</a></footer>
+
+<div id="page_control_div" class="btn-group justify-content-center">
+        <button id="settings_btn" class="btn btn-dark" translate>Settings</button>
+        <button id="control_btn" class="btn btn-dark" translate>Control</button>
+        <button id="on_work_btn" class="btn btn-dark" translate>Let's Begin</button>
     </div>
-</div>
+    </div>
 
 
 
@@ -97,7 +94,6 @@
 
 
 </table>
-
     <div id="wifi_control_div">
         <button id="wifi_connections_btn" translate>Wifi Connections</button>
         <div id="wifi_control_io_div">
@@ -128,10 +124,11 @@
             <div id="video_area_div">
                 <span id="get_preview_span" translate>Click here to get preview</span>
                 <video id="stream_area_video">
-                    <source src="http://localhost:5000/live_stream" type="video/mp4">
+                    <source id="stream_area_video_source" src="" type="video/mp4">
                     <!--<source src="mov_bbb.ogg" type="video/ogg">-->
                     Your browser does not support HTML5 video.
                 </video>
+                <!--<img id="stream_area_video">-->
             </div>
             <div id="motion_control_div">
                 <button id="rotational_motion_control_btn"></button>
@@ -144,7 +141,6 @@
                     <button id="x_up_btn" translate>left</button>
                     <button id="x_down_btn" translate>right</button>
                 </div>
-
                 <div id="rotational_control_div" class="rotational_control_div">
                     <button id="joint_1_cw_btn" translate>joint1 right</button>
                     <button id="joint_1_ccw_btn" translate>joint1 left</button>
@@ -185,28 +181,31 @@
 <div id="dark_deep_background_div"></div>
 
         <!-- inserting these scripts at the end to be able to use all the elements in the DOM -->
-        <script src="static/js/language/en.js"></script>
-        <script src="static/js/language/de.js"></script>
-        <script src="static/js/language/tr.js"></script>
-        <script src="static/js/language/es.js"></script>
-        <script src="static/js/language/it.js"></script>
-        <script src="static/js/language/fr.js"></script>
+        <script src="static/resources/js/language/en.js"></script>
+        <script src="static/resources/js/language/de.js"></script>
+        <script src="static/resources/js/language/tr.js"></script>
+        <script src="static/resources/js/language/es.js"></script>
+        <script src="static/resources/js/language/it.js"></script>
+        <script src="static/resources/js/language/fr.js"></script>
 
-        <script src="static/js/settings.js"></script>
-        <script src="static/js/connectdlg.js"></script>
-        <script src="static/js/translate.js"></script>
-        <script src="static/js/localstorage.js"></script>
+       <script src="static/resources/js/settings.js"></script>
+        <script src="static/resources/js/connectdlg.js"></script>
+        <script src="static/resources/js/translate.js"></script>
+        <script src="static/resources/js/localstorage.js"></script>
 
-        <script src="static/js/managing_bar.js"></script>
-        <script src="static/js/on_work_modal.js"></script>
-        <script src="static/js/prismatic_arm_control.js"></script>
-        <script src="static/js/rotational_arm_control.js"></script>
-        <script src="static/js/controlling_modal.js"></script>
-        <script src="static/js/settings_modal.js"></script>
+        <script src="static/resources/js/managing_bar.js"></script>
+        <script src="static/resources/js/on_work_modal.js"></script>
+        <script src="static/resources/js/prismatic_arm_control.js"></script>
+        <script src="static/resources/js/rotational_arm_control.js"></script>
+        <script src="static/resources/js/controlling_modal.js"></script>
+        <script src="static/resources/js/settings_modal.js"></script>
 
-        <script src="static/js/main.js"></script>
-        <script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
-
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <script src="static/resources/js/main.js"></script>
+        <script src="static/vendors/jquery/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+        <script src="static/vendors/jquery/jquery.mobile-1.4.5.min.js"></script>
+        <script src="static/vendors/jquery/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
 </body>
 </html>
+
+
+
