@@ -77,8 +77,8 @@ class Vision:
         # Specify the tracker type
         self.tracker_type = args["tracker_type"]
 
-        # self.hearer = Hearer(args)
-        self.hearer = None
+        self.hearer = Hearer(args)
+        # self.hearer = None
 
         resolution = (args["resolution"][0], args["resolution"][0])
         self.camera = PiCamera()
@@ -107,6 +107,7 @@ class Vision:
         self.aimer = Aimer()
 
         self.show_stream = args["show_stream"]  # 'show-stream' argument automatically converted this type.
+        self.show_stream_online = False
         self.mark_object = self.get_mark_object(args["found_object_mark"])
 
         self.record = args["record"]
@@ -412,7 +413,7 @@ class Vision:
             if is_first_run or stop_thread():
                 if not stop_thread():
                     thread_of_scan = threading.Thread(target=self.scan, args=(stop_thread, 3))
-                    thread_of_stream = threading.Thread(target=self.stream, args=(stop_thread, format))
+                    thread_of_stream = threading.Thread(target=self.stream, args=(stop_thread, format, "security"))
 
                     thread_of_scan.start()
                     thread_of_stream.start()
@@ -452,16 +453,17 @@ class Vision:
                 self.target_locker.tilt.move(angle_for_ellipse_move, 75.0)  # last parameter not used for both funcs
                 time.sleep(0.1)
 
-    def stream(self, stop_thread, format="bgr"):
+    def stream(self, stop_thread, format="bgr", caller="security"):
         """The low-level method to provide the video stream for security mode of T_System.
 
         Args:
                 stop_thread:   	        Stop flag of the tread about terminating it outside of the function's loop.
-                format:       	        Color space format.
+                format (str):  	        Color space format.
+                caller (str): 	        The method that calls the stream.
         """
 
         if self.record:
-            self.recorder.start("security")
+            self.recorder.start(caller)
 
         for frame in self.camera.capture_continuous(self.rawCapture, format=format, use_video_port=True):
             # inside of the loop is optionally editable.
@@ -489,8 +491,11 @@ class Vision:
                 frame:       	        Frame matrix in bgr format.
 
         """
+        if self.show_stream_online:
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
-        if (self.show_stream and self.augmented) or self.show_stream:
+        elif (self.show_stream and self.augmented) or self.show_stream:
             # show the frame
             cv2.imshow("Frame", frame)
 
@@ -738,6 +743,16 @@ class Vision:
             return self.mark_as_rotation_arcs
         else:
             return self.mark_as_none
+
+    def start_online_stream(self):
+        """The high-level method to set online streaming flag for starting the stream serving.
+        """
+        self.show_stream_online = True
+
+    def stop_online_stream(self):
+        """The high-level method to set online streaming flag for stopping the stream serving.
+        """
+        self.show_stream_online = False
 
     def set_mqtt_receimitter(self, mqtt_receimitter):
         """The low-level method to set mqtt_receimitter object for publishing and subscribing data echos.
