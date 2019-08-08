@@ -105,12 +105,10 @@ def start_sub(args):
         face_encode_manager.add_face(args["owner_name"], args["dataset"])
 
     if args["sub_jobs"] == "self-update":
-        from t_system.updation import Updater, install
+        from t_system.updation import UpdateManager
 
-        updater = Updater(args["verbose"])
-        updater.update()
-
-        install(args["editable"])
+        update_manager = UpdateManager(args["editable"], args["verbose"])
+        update_manager.update()
 
 
 def prepare(args):

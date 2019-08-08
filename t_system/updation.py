@@ -8,14 +8,53 @@
 
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
-import git
+
 import os  # Miscellaneous operating system interfaces
 import inspect  # Inspect live objects
 import subprocess  # Subprocess managements
+import time  # Time access and conversions
+import hashlib
+import git
 
 from elevate import elevate  # partial root authentication interface
 
 T_SYSTEM_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+
+
+class UpdateManager:
+    """Class to define an update manager for managing updates and installation after updates.
+
+    This class provides necessary initiations and functions named :func:`t_system.updation.UpdateManager.update`for provide update code and install necessary dependencies.
+    """
+
+    def __init__(self, editable, verbose):
+        """Initialization method of :class:`t_system.updation.UpdateManager` class.
+
+        Args:
+            editable:   	        Editable updation mode flag.
+            verbose:   	            Verbosity flag about printing debug messages.
+        """
+        self.editable = editable
+        self.verbose = verbose  # this argument will be added.
+
+        self.updater = Updater(self.verbose)
+        self.installer = Installer(self.editable, self.verbose)
+
+    def update(self):
+        """The high-level method to pulling updates from remote git repo, checking differences inside installation scripts and starting the installation if necessary.
+        """
+
+        self.updater.update_self()
+        self.installer.install()
+
+    def listen_updates(self):
+        """The high-level method to controlling repo is up-to-date with updater object.
+        """
+
+        while True:
+            if self.updater.is_update_available():
+                return True
+            time.sleep(43200)  # per 12 hours
 
 
 class Updater:
@@ -34,7 +73,7 @@ class Updater:
         """
         self.verbose = verbose  # this argument will be added.
 
-    def update(self, force=False, check_dev=True, verbose=False):
+    def update_self(self, force=False, check_dev=True, verbose=False):
         """The high-level method that can be called to automatically update the repo in which the calling file is located.
 
         Args:
@@ -44,6 +83,29 @@ class Updater:
         """
         self.pull(force=force, check_dev=check_dev, verbose=verbose)
         self.__print(verbose, "Pulled any possible remote changes")
+
+    def is_update_available(self, verbose=False):
+        """The high-level method to check git repo is up-to-date with git.fetch.
+
+        Args:
+                verbose:   	            Verbosity flag about printing debug messages.
+        Returns:
+                bool: Result flag.
+        """
+
+        repo_path = self.__find_repo()
+        repo = git.Repo(repo_path)
+
+        # fetch all
+        fetch_resp = str(repo.git.fetch("--all"))
+        self.__print(verbose, "Fetched any and all changes with response: {}".format(fetch_resp))
+
+        if "Your branch is up-to-date" in repo.git.status():
+            self.__print(verbose, "Status check passes.\nCode up to date.")
+            return False
+        else:
+            self.__print(verbose, "Code update available.")
+            return True
 
     def pull(self, force=False, check_dev=True, verbose=False):
         """The high-level method to attempt to pull any remote changes down to the repository that the calling script is contained in. If
@@ -87,8 +149,7 @@ class Updater:
             if check_dev and self.__is_dev_env(repo_path):
                 self.__print(verbose, "Detected development environment. Aborting hard pull")
                 return False, []
-            repo_path = self.__find_repo()
-            repo = git.Repo(repo_path)
+
             branch = self.__find_current_branch(repo)
 
             # record the diff, these will all replaced
@@ -179,7 +240,7 @@ class Updater:
             else:
                 raise
 
-    def equalize_repos(self, force=False, check_dev=True, message="Pushing up changes with python selfupdate", username=None, password=None, verbose=False):
+    def update_git_repo(self, force=False, check_dev=True, message="Pushing up changes with python selfupdate", username=None, password=None, verbose=False):
         """The high-level method that can be called to automatically update the repo in which the calling file is located.
         The 'force' parameter will cause the module to force do a pull and push. This is a destructive action that can
         cause loss of local data. 'check_dev' when set to True will not allow any destructive action to take place IFF
@@ -360,9 +421,9 @@ class Updater:
 class Installer:
     """Class to define an installer of tracking system itself.
 
-    This class provides necessary initiations and functions named :func:`t_system.updation.Updater.update`
-    as the update point from the remote git repository, named :func:`t_system.updation.Updater.pull`
-    for pulling repo data and named :func:`t_system.updation.Updater.push` for git push.
+    This class provides necessary initiations and functions named :func:`t_system.updation.Installer.install`
+    as the install point for the changed install scripts and named :func:`t_system.updation.Installer.get_hash_of`
+    for creating SHA-256 hash of the given file.
     """
 
     def __init__(self, editable, verbose):
@@ -374,19 +435,53 @@ class Installer:
         """
         self.editable = editable
         self.verbose = verbose
-        # BEFORE PULLING THE CHANGES FROM GIT, CREATING CHECK SUM OF THE INSTALL FILES THEN IT WILL COMPARED WITH NEW.
 
-    def install(self, editable=False):
-        """The high-level method to install the dependencies after git updation.
+        self.install_dev_sh = T_SYSTEM_PATH + "../install-dev.sh"
+        self.install_sh = T_SYSTEM_PATH + "../install.sh"
 
-        Args:
-                editable:   	        Editable updation mode flag.
+        if self.editable:
+            self.last_hash = self.get_hash_of(self.install_dev_sh)
+        else:
+            self.last_hash = self.get_hash_of(self.install_sh)
+
+    def install(self):
+        """The high-level method to install the dependencies after git updation. It creates the sha-256 hash of the changed install scripts.
+        Then compares them with the scripts those has hash when the Installer instance generates. If there is a difference between old and new install scripts, starts reinstallation.
+        otherwise, terminates.
         """
 
-        if editable:
-            install_sh = T_SYSTEM_PATH + "../install-dev.sh"
+        if self.editable:
+            current_hash = self.get_hash_of(self.install_dev_sh)
+            if current_hash == self.last_hash:
+                return
+
+            install_sh = self.install_dev_sh
         else:
-            install_sh = T_SYSTEM_PATH + "../install.sh"
+            current_hash = self.get_hash_of(self.install_sh)
+            if current_hash == self.last_hash:
+                return
+
+            install_sh = self.install_sh
 
         with elevate(show_console=False, graphical=False):
             subprocess.call(install_sh, shell=True)
+
+    @staticmethod
+    def get_hash_of(filename):
+        """The low-level method to send SHA-256 hash of the given file.
+
+        Args:
+                filename:   	        Name of the file that will hashed with sha-256.
+        """
+        # make a hash object
+        h = hashlib.sha256()
+        # open file for reading in binary mode
+        with open(filename, 'rb') as file:
+            # loop till the end of the file
+            chunk = 0
+            while chunk != b'':
+                # read only 1024 bytes at a time
+                chunk = file.read(1024)
+                h.update(chunk)
+        # return the hex representation of digest
+        return h.hexdigest()
