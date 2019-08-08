@@ -61,27 +61,63 @@ for development mode: `sudo ./install-dev.sh`
 
 
 ```
-usage: t_system [-h] [-l] [-s] [--AI AI] [--detection-model DETECTION_MODEL]
+usage: t_system [-h] [--stand-gpios BUTTON RED-LED GREEN-LED] [--host HOST]
+                [--port PORT] [--debug] [-l] [-s]
+                [--detection-model DETECTION_MODEL]
                 [--cascade-file CASCADE_FILE] [-j]
                 [--encoding-file ENCODING_FILE] [--use-tracking-api]
-                [--tracker-type TRACKER_TYPE]
-                [--locking-system-gpios PAN TILT] [--robotic-arm ARM] [-S]
-                [-r] [--version]
-                interface
+                [--tracker-type TRACKER_TYPE] [--resolution WIDTH HEIGHT]
+                [--framerate FRAMERATE] [--chunk CHUNK] [--rate RATE]
+                [--channels CHANNELS]
+                [--audio_device_index AUDIO_DEVICE_INDEX] [--robotic-arm ARM]
+                [--ls-gpios PAN TILT] [--AI AI | --non-moving-target] [-p]
+                [--ap-wlan AP_WLAN] [--ap-inet AP_INET] [--ap-ip AP_IP]
+                [--ap-netmask AP_NETMASK] [--ssid SSID] [--password PASSWORD]
+                [--wlan WLAN] [--inet INET] [--static-ip STATIC_IP]
+                [--netmask NETMASK] [-S] [-m FOUND_OBJECT_MARK] [-r]
+                [--version]
+                interface {remote-ui-authentication,face-encoding,self-update}
+                ...
+
+positional arguments:
+  {remote-ui-authentication,face-encoding,self-update}
+                        officiate the sub-jobs
+    remote-ui-authentication
+                        remote UI administrator authority settings of the
+                        secret entry point that is the new network connection
+                        panel.
+    face-encoding       generate encoded data from the dataset folder to
+                        recognize the man T_System is monitoring during
+                        operation.
+    self-update         update source code of t_system itself via `git pull`
+                        command from the remote git repo.
 
 optional arguments:
   -h, --help            show this help message and exit
 
 user-interfaces:
   interface             Set the user interfaces. To use: either
-                        `official_stand`, `augmented` or
+                        `official_stand`, `augmented`, `remote_ui` or
                         None.`official_stand`: for using the interface of
                         official T_System stand.`augmented`: Augmented control
                         with the Augmented Virtual Assistant A.V.A..
                         'https://github.com/MCYBA/A.V.A.' is the home page of
                         the A.V.A. and usage explained into the
-                        'AUGMENTED.md'.None: Use to just by `running modes`
-                        parameters.The default value is None.
+                        'AUGMENTED.md'.`remote_ui`: remote control with
+                        created graphic interface that is power by flask
+                        available on desktop or mobile.None: Use to just by
+                        `running modes` parameters.The default value is None.
+
+official_stand:
+  --stand-gpios BUTTON RED-LED GREEN-LED
+                        GPIO pin numbers of official stand's the button and
+                        the led. 5(as button), 27(as red led) and 22(as green
+                        led) GPIO pins are default.
+
+remote_ui:
+  --host HOST           Specify host address.
+  --port PORT           Specify the port.
+  --debug               Activate debug mode.
 
 running modes:
   -l, --learn           Teach Mode. Teach the object tracking parameters with
@@ -90,10 +126,6 @@ running modes:
                         photos of visitors.
 
 running tools:
-  --AI AI               Specify the learning method of how to move to the
-                        target position from the current. When the nothing
-                        chosen, learn mode and decision mechanisms will be
-                        deprecated. to use: either `official_ai`
   --detection-model DETECTION_MODEL
                         Object detection model to use: either `haarcascade`,
                         `hog` or `cnn`. `hog` and `cnn` can only use for
@@ -116,18 +148,68 @@ running tools:
                         `MIL`, `KCF`, `TLD`, `MEDIANFLOW`, `GOTURN`, `MOSSE`
                         or `CSRT`. `CSRT` is default.
 
+video options:
+  --resolution WIDTH HEIGHT
+                        Specify the camera's resolution of vision ability.
+                        320x240 is default
+  --framerate FRAMERATE
+                        Specify the camera's framerate. of vision ability. 32
+                        fps is default.
+  --chunk CHUNK         Smallest unit of audio. 1024*8=8192 bytes are default.
+  --rate RATE           Bit Rate of audio stream / Frame Rate. 44100 Hz sample
+                        rate is default.
+  --channels CHANNELS   Number of microphone's channels. Default value is 1.
+  --audio_device_index AUDIO_DEVICE_INDEX
+                        Index of the using audio device. 2 is default.
+
 motion mechanism:
-  --locking-system-gpios PAN TILT
-                        GPIO pin numbers of the 2 axis target locking system's
-                        servo motors. 17(as pan) and 25(as tilt) GPIO pins are
-                        default.
   --robotic-arm ARM     One of the robotic arm names those are defined in
                         arm_config.json file. The arm is for relocating the 2
                         axis target locking system hybrid-synchronously.
 
+target locking system:
+  --ls-gpios PAN TILT   GPIO pin numbers of the 2 axis target locking system's
+                        servo motors. 23(as pan) and 24(as tilt) GPIO pins are
+                        default.
+  --AI AI               Specify the learning method of how to move to the
+                        target position from the current. When the nothing
+                        chosen, learn mode and decision mechanisms will be
+                        deprecated. to use: either `official_ai`
+  --non-moving-target   Track the non-moving objects. Don't use AI or OpenCv's
+                        object detection methods. Just try to stay focused on
+                        the current focus point with changing axis angles by
+                        own position.
+
+access point options:
+  -p, --access-point    Become access point for serving remote UI inside the
+                        internal network.
+  --ap-wlan AP_WLAN     network interface that will be used to create hotspot.
+                        'wlp4s0' is default.
+  --ap-inet AP_INET     forwarding interface. Default is None.
+  --ap-ip AP_IP         ip address of this machine in new network.
+                        192.168.45.1 is default.
+  --ap-netmask AP_NETMASK
+                        access point netmask address. 255.255.255.0 is
+                        default.
+  --ssid SSID           Preferred access point name. 'T_System' is default.
+  --password PASSWORD   Password of the access point. 't_system' is default.
+  --inet INET           forwarding interface. Default is None.
+  --static-ip STATIC_IP
+                        static ip address in connected external network.
+                        192.168.45.1 is default.
+  --netmask NETMASK     netmask address. 255.255.255.0 is default.
+
+external network options:
+  --wlan WLAN           network interface that will be used to connect to
+                        external network. 'wlp4s0' is default.
+
 others:
   -S, --show-stream     Display the camera stream. Enable the stream
                         window.(Require gui environment.)
+  -m FOUND_OBJECT_MARK, --found-object-mark FOUND_OBJECT_MARK
+                        Specify the mark type of the found object. To use:
+                        either `single_rect`, `rotating_arcs`, `partial_rect`
+                        or None. Default is `single_rect`
   -r, --record          Record the video stream. Files are named by the date.
   --version             Display the version number of T_System.
 ```

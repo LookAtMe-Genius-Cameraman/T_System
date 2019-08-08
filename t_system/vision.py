@@ -87,7 +87,7 @@ class Vision:
 
         self.recorder = Recorder(self.camera, self.hearer)
 
-        self.rawCapture = PiRGBArray(self.camera, size=resolution)
+        self.raw_capture = PiRGBArray(self.camera, size=resolution)
 
         ccade_xml_file = T_SYSTEM_PATH + "/haarcascade/" + args["cascade_file"] + ".xml"
         self.object_cascade = cv2.CascadeClassifier(ccade_xml_file)
@@ -136,7 +136,7 @@ class Vision:
 
         self.detect_initiate()
 
-        for frame in self.camera.capture_continuous(self.rawCapture, format=format, use_video_port=True):
+        for frame in self.camera.capture_continuous(self.raw_capture, format=format, use_video_port=True):
 
             # grab the raw NumPy array representing the image, then initialize the timestamp and occupied/unoccupied text
             frame = frame.array
@@ -181,7 +181,7 @@ class Vision:
         d_t_failure_count = 0
         use_detection = 0
 
-        for frame in self.camera.capture_continuous(self.rawCapture, format=format, use_video_port=True):
+        for frame in self.camera.capture_continuous(self.raw_capture, format=format, use_video_port=True):
 
             if len(detected_boxes) > len(tracked_boxes):
 
@@ -311,7 +311,7 @@ class Vision:
 
         self.detect_initiate()
 
-        for frame in self.camera.capture_continuous(self.rawCapture, format=format, use_video_port=True):
+        for frame in self.camera.capture_continuous(self.raw_capture, format=format, use_video_port=True):
             # grab the raw NumPy array representing the image, then initialize the timestamp
             # and occupied/unoccupied text
 
@@ -341,8 +341,8 @@ class Vision:
                     # self.show_frame(self.current_frame)
                     self.truncate_stream()
 
-                    self.camera.capture(self.rawCapture, format=format)
-                    err_check_image = self.rawCapture.array
+                    self.camera.capture(self.raw_capture, format=format)
+                    err_check_image = self.raw_capture.array
 
                     rgb, detected_boxes = self.detect_things(err_check_image)
                     # names = self.recognize_things(rgb, detected_boxes)
@@ -375,7 +375,7 @@ class Vision:
         detected_boxes = []
         rgb = None
 
-        for frame in self.camera.capture_continuous(self.rawCapture, format=format, use_video_port=True):
+        for frame in self.camera.capture_continuous(self.raw_capture, format=format, use_video_port=True):
 
             frame = frame.array
             self.current_frame = frame.copy()  # For reaching to frame with overwrite privileges.
@@ -393,7 +393,7 @@ class Vision:
                 if self.check_loop_ended(lambda: False):
                     break
             else:
-                self.rawCapture.truncate(0)
+                self.raw_capture.truncate(0)
                 break
         return rgb, detected_boxes
 
@@ -466,7 +466,7 @@ class Vision:
         if self.record:
             self.recorder.start(caller)
 
-        for frame in self.camera.capture_continuous(self.rawCapture, format=format, use_video_port=True):
+        for frame in self.camera.capture_continuous(self.raw_capture, format=format, use_video_port=True):
             # inside of the loop is optionally editable.
             self.current_frame = frame.array
 
@@ -500,7 +500,7 @@ class Vision:
     def truncate_stream(self, ):
         """The low-level method to clear the stream in preparation for the next frame.
         """
-        self.rawCapture.truncate(0)
+        self.raw_capture.truncate(0)
 
     def check_loop_ended(self, stop_thread):
         """The low-level method to detecting FACES with hog or cnn methoda.
