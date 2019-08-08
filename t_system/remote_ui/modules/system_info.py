@@ -20,11 +20,10 @@ def get_system_info(admin_id):
         admin_id (bool):                 Admin privileges flag.
     """
     result = {}
-    if is_admin(admin_id):
-        result.update(get_ram_usage())
-        result.update(get_cpu_usage())
-        result.update(get_cpu_temperature())
 
+    result.update(get_ram_usage(admin_id))
+    result.update(get_cpu_usage(admin_id))
+    result.update(get_cpu_temperature(admin_id))
     result.update(get_disk_usage(admin_id))
 
     return result
