@@ -11,21 +11,23 @@
     visibility: visible;
     opacity: 1;
 
-    max-width: 100%;
-    max-height: 100%;
-    margin: 0 auto;
+    max-width: 175px;
+    max-height: 280px;
+    /*margin: 0 auto;*/
     text-rendering: optimizeLegibility;
     align-items: center;
 
     /*alignment*/
-    top: 5%; /* it goes from 3.5rem to -5.5rem*/
-    left: 27%;
+    top: -20%; /* it goes from 3.5rem to -5.5rem*/
+    /*left: 27%;*/
 
     width: 44%;
-    height: 70%;
+    height: 40px; /*when activate goes to 70%*/
 
     transition: all 300ms;
     /*border: tan solid;*/
+
+    margin: auto 5px auto auto;
 }
 
 #wifi_connections_btn {
@@ -123,7 +125,7 @@
     opacity: 1;
 
     max-width: 100%;
-    max-height: 700%;
+    max-height: 170px;
     margin: 0 auto;
     text-rendering: optimizeLegibility;
     align-items: center;
@@ -138,5 +140,32 @@
     height: 550%;
 
     transition: opacity 300ms;
+    /*border: turquoise solid;*/
+}
+
+#system_info_chart_div {
+    visibility: visible;
+    opacity: 1;
+
+    width: 185px;
+    height: 185px;
+
+    margin: auto 5px auto auto;
+    transition: all 300ms;
+
+    /*border: turquoise solid;*/
+}
+
+#system_info_chart {}
+
+#language_dropdown_ul {
+    visibility: visible;
+    opacity: 1;
+
+    /*width: 185px;*/
+    /*height: 185px;*/
+
+    margin: auto 5px 5px auto;
+
     /*border: turquoise solid;*/
 }

@@ -79,31 +79,32 @@ function focus_video_area() {
     stream_area_video.removeEventListener("click", focus_video_area);
     stream_area_video.addEventListener("click", unfocus_video_area);
 
-    // start_stream("preview");
+    start_stream("preview");
 
-    // let timer_settings_cont = setInterval(function () {
-    //
-    //     if (requested_data !== undefined) {
-    //         if (requested_data["status"] === "OK") {
-    //             stream_area_video_source.src = requested_data["data"];
-    //
-    //             dark_deep_background_div.style.opacity = "1";
-    //             stream_area_video.classList.add("focused_video_area");
-    //             video_area_div.style.margin = "-18% auto 0";
-    //             show_element(motion_control_div);
-    //
-    //             requested_data = undefined;
-    //             clearInterval(timer_settings_cont)
-    //         }
-    //     }
-    // }, 300);
+    let timer_settings_cont = setInterval(function () {
 
-    // stream_area_video_source.src = requested_data["data"];
+        if (requested_data !== undefined) {
+            if (requested_data["status"] === "OK") {
 
-    dark_deep_background_div.style.opacity = "1";
-    stream_area_video.classList.add("focused_video_area");
-    video_area_div.style.margin = "-30% auto";
-    show_element(motion_control_div);
+                console.log(requested_data["data"] + "gşlrdmöfv");
+                stream_area_video_source.src = requested_data["data"];
+
+                dark_deep_background_div.style.opacity = "1";
+                stream_area_video.classList.add("focused_video_area");
+                video_area_div.style.margin = "-18% auto 0";
+                show_element(motion_control_div);
+
+                requested_data = undefined;
+                clearInterval(timer_settings_cont)
+            }
+        }
+    }, 300);
+
+
+    // dark_deep_background_div.style.opacity = "1";
+    // stream_area_video.classList.add("focused_video_area");
+    // video_area_div.style.margin = "-30% auto";
+    // show_element(motion_control_div);
 
 
 }
@@ -112,9 +113,7 @@ function unfocus_video_area() {
     stream_area_video.removeEventListener("click", unfocus_video_area);
     stream_area_video.addEventListener("click", focus_video_area);
 
-    dict = {"status": "true", "for": "live_stream", "reason": "stop", "options": ""};
-    // jquery_manager.post_data("/fulfill_command", dict);
-    // console.log("outside");
+    stop_stream("preview");
     dark_deep_background_div.style.opacity = "0";
     stream_area_video.classList.remove("focused_video_area");
     video_area_div.style.margin = "30%  auto";
@@ -169,6 +168,11 @@ function start_stream(type) {
         // console.log("bla");
         // console.log(response);
         jquery_manager.get_data("/api/stream?type=" + type + "&admin_id=" + admin_id);
+
+}
+
+function stop_stream(type) {
+            jquery_manager.delete_data("/api/stream?type=" + type + "&admin_id=" + admin_id);
 
 }
 

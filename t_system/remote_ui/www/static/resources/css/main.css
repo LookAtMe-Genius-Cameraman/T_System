@@ -53,21 +53,21 @@
     visibility: hidden;
     opacity: 0;
 
-    max-width: 100%;
+    max-width: 90%;
     max-height: 95%;
 
     /*alignment*/
-    top: 15%;
+    top: 20%;
     /*left: 15%;*/
 
-    /*width: 99%;*/
-    /*height: 80%;*/
+    width: 85%;
+    height: 68%;
 
     transition: opacity 300ms;
     border: #8d75a3 dashed;
 
-    /*!*width: 300px;*!*/
-    /*!*height: 200px;*!*/
+    margin: auto;
+
 }
 
 #controlling_template_container {

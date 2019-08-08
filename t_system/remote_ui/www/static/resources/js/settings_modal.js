@@ -9,6 +9,9 @@ const network_ssid_input = document.getElementById("network_ssid_input");
 const network_password_input = document.getElementById("network_password_input");
 const create_new_network_btn = document.getElementById("create_new_network_btn");
 
+const system_info_chart_div = document.getElementById("system_info_chart_div");
+const system_info_chart = document.getElementById('system_info_chart').getContext('2d');
+
 
 a_i_checkbox.addEventListener("change", function () {
 
@@ -76,14 +79,18 @@ wifi_connections_btn.addEventListener("click", function () {
     //
     //         }, 500);
 
-        wifi_control_div.style.top = "-5.5rem";
+        wifi_control_div.style.top = "-40%";
+        wifi_control_div.style.height = "70%";
+        hide_element(system_info_chart_div);
         show_element(wifi_control_io_div);
 
         jquery_manager.post_data("/try", {"bla": "bla"})
 
     } else {
-        wifi_control_div.style.top = "3.5rem";
+        wifi_control_div.style.top = "-20%";
+        wifi_control_div.style.height = "40px";
         hide_element(wifi_control_io_div);
+        show_element(system_info_chart_div);
         wifi_connections_btn_click_count = 0;
     }
 
@@ -117,6 +124,22 @@ create_new_network_btn.addEventListener("click", function () {
 
     admin_id = response_data["admin_id"]
 });
+
+// new Chart(system_info_chart, {
+//     "type": "doughnut",
+//     "data": {
+//         "labels": ["Used", "Free"],
+//         "datasets": [{
+//             "label": "Disk Usage",
+//             "data": [disk_usage_percentage, 100 - disk_usage_percentage],
+//             "backgroundColor": [
+//                 "rgb(210, 26, 11)",
+//                 "rgb(238, 237, 233)"
+//             ]
+//         }]
+//     }
+// });
+
 
 /**
  * The high-level method of getting specified network information with its ssid or the all existing network information.

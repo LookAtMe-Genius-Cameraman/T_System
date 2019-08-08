@@ -4,6 +4,7 @@
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale = 1.0, maximum-scale = 1.0, user-scalable=no">
     <title>T_System</title>
     <link rel="stylesheet" href="static/vendors/bootstrap/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="static/vendors/chart.js/Chart.min.css">
     <link rel="stylesheet" media="all" type="text/css" href="static/resources/css/master.css">
     <script>
         let event_db = null;
@@ -63,7 +64,7 @@
 <!--</div>-->
 
 <!--SETTINGS MODAL-->
-<div id="settings_template_container" class="position-relative">
+<div id="settings_template_container" class="position-absolute">
     <table id="main_table">
     <tr>
         <td id="configurations_title" style="max-width: 150px" translate>Configurations :</td>
@@ -92,9 +93,16 @@
         <td align="left" style="width: 3rem;">Secure mode during sleep :</td>
         <td><input type="checkbox" id="secure_m_checkbox"></td>
     </tr>
-
-
 </table>
+    <ul id="language_dropdown_ul" class="nav navbar-nav navbar-right position-relative">
+        <li class="dropdown">
+            <a href="#">
+                <span class="dropbtn text-info" id="translate_menu"></span>
+            </a>
+            <div class="dropdown-content" id="lang_menu">
+            </div>
+        </li>
+    </ul>
     <div id="wifi_control_div">
         <button id="wifi_connections_btn" translate>Wifi Connections</button>
         <div id="wifi_control_io_div">
@@ -107,16 +115,11 @@
         </div>
 
     </div>
+    <div id="system_info_chart_div">
+            <canvas id="system_info_chart" class="position-relative" width="100" height="100"></canvas>
+    </div>
 
-    <ul class="nav navbar-nav navbar-right">
-    <li class="dropdown">
-        <a href="#">
-            <span class="dropbtn text-info" id="translate_menu"></span>
-        </a>
-        <div class="dropdown-content" id="lang_menu">
-        </div>
-    </li>
-</ul>
+
 </div>
 
     <!--CONTROLLING MODAL-->
@@ -191,6 +194,11 @@
 <div id="dark_deep_background_div" class="position-fixed"></div>
 
         <!-- inserting these scripts at the end to be able to use all the elements in the DOM -->
+        <script src="static/vendors/chart.js/Chart.bundle.min.js"></script>
+        <script src="static/vendors/jquery/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+        <script src="static/vendors/jquery/jquery.mobile-1.4.5.min.js"></script>
+        <script src="static/vendors/jquery/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+
         <script src="static/resources/js/language/en.js"></script>
         <script src="static/resources/js/language/de.js"></script>
         <script src="static/resources/js/language/tr.js"></script>
@@ -198,7 +206,7 @@
         <script src="static/resources/js/language/it.js"></script>
         <script src="static/resources/js/language/fr.js"></script>
 
-       <script src="static/resources/js/settings.js"></script>
+        <script src="static/resources/js/settings.js"></script>
         <script src="static/resources/js/connectdlg.js"></script>
         <script src="static/resources/js/translate.js"></script>
         <script src="static/resources/js/localstorage.js"></script>
@@ -211,9 +219,7 @@
         <script src="static/resources/js/settings_modal.js"></script>
 
         <script src="static/resources/js/main.js"></script>
-        <script src="static/vendors/jquery/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-        <script src="static/vendors/jquery/jquery.mobile-1.4.5.min.js"></script>
-        <script src="static/vendors/jquery/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+
 </body>
 </html>
 
