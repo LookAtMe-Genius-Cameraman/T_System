@@ -3,7 +3,7 @@ Returns T_System based OS information
 
 ## Request
 ```http
-GET /api/system_info
+GET /api/system_info?admin_id=<ADMIN_ID>
 Host: domain
 ```
 
