@@ -86,7 +86,7 @@ function focus_video_area() {
         if (requested_data !== undefined) {
             if (requested_data["status"] === "OK") {
 
-                console.log(requested_data["data"] + "gşlrdmöfv");
+                console.log(requested_data["data"]);
                 stream_area_video_source.src = requested_data["data"];
 
                 dark_deep_background_div.style.opacity = "1";

@@ -14,6 +14,39 @@ let response_data = undefined;
 
 let disk_usage_percentage = 10;
 
+$.put = function(url, data, callback, type){
+
+  if ( $.isFunction(data) ){
+    type = type || callback,
+    callback = data,
+    data = {}
+  }
+
+  return $.ajax({
+    url: url,
+    type: 'PUT',
+    success: callback,
+    data: data,
+    contentType: type
+  });
+};
+
+$.delete = function(url, data, callback, type){
+
+  if ( $.isFunction(data) ){
+    type = type || callback,
+        callback = data,
+        data = {}
+  }
+
+  return $.ajax({
+    url: url,
+    type: 'DELETE',
+    success: callback,
+    data: data,
+    contentType: type
+  });
+}
 /**
  * Class to define a AJAX JQuery communication method manager object.
  */
@@ -144,51 +177,52 @@ function refresh_page(){
 
 settings_btn.addEventListener("click", function () {
 
-    // get_system_info();
-    // let timer_settings_cont = setInterval(function () {
-    //
-    //     if (requested_data !== undefined) {
-    //         if (requested_data["status"] === "OK") {
-    //
-    //             disk_usage_percentage = requested_data["data"]["disk_usage_percent"];
-    //
-    //             requested_data = undefined;
-    //             clearInterval(timer_settings_cont)
-    //         }
-    //     }
-    // }, 300);
+    get_system_info();
+    let timer_settings_cont = setInterval(function () {
 
-    new Chart(system_info_chart, {
-        "type": "doughnut",
-        "data": {
-            "labels": ["Used", "Free"],
-            "datasets": [{
-                "label": "Disk Usage",
-                "data": [disk_usage_percentage, 100 - disk_usage_percentage],
-                "backgroundColor": [
-                    "rgb(210, 26, 11)",
-                    "rgb(238, 237, 233)"
-                ],
-                "borderWidth": 5
-            }],
-        },
-        "options": {
-            "segmentShowStroke": true,
-            "segmentStrokeColor": "#fff",
-            "segmentStrokeWidth": 50,
-            "cutoutPercentage": 80,  // thin of the donut as inverse between 50-100.
-            "animation:": {
-                "animationSteps": 100,
-                "animationEasing": "easeOutBounce",
-                "animateRotate": true,
-                "animateScale": true
-            },
-            "responsive": true,
-            "maintainAspectRatio": true,
-            "showScale": true
+        if (requested_data !== undefined) {
+            if (requested_data["status"] === "OK") {
+
+                disk_usage_percentage = requested_data["data"]["disk_usage_percent"];
+
+                new Chart(system_info_chart, {
+                    "type": "doughnut",
+                    "data": {
+                        "labels": ["Used", "Free"],
+                        "datasets": [{
+                            "label": "Disk Usage",
+                            "data": [disk_usage_percentage, 100 - disk_usage_percentage],
+                            "backgroundColor": [
+                                "rgb(210, 26, 11)",
+                                "rgb(238, 237, 233)"
+                            ],
+                            "borderWidth": 5
+                        }],
+                    },
+                    "options": {
+                        "segmentShowStroke": true,
+                        "segmentStrokeColor": "#fff",
+                        "segmentStrokeWidth": 50,
+                        "cutoutPercentage": 80,  // thin of the donut as inverse between 50-100.
+                        "animation:": {
+                            "animationSteps": 100,
+                            "animationEasing": "easeOutBounce",
+                            "animateRotate": true,
+                            "animateScale": true
+                        },
+                        "responsive": true,
+                        "maintainAspectRatio": true,
+                        "showScale": true
+                    }
+
+                });
+
+                requested_data = undefined;
+                clearInterval(timer_settings_cont)
+            }
         }
+    }, 300);
 
-    });
     show_element(settings_template_container);
     hide_element(controlling_template_container);
     hide_element(on_work_template_container);
