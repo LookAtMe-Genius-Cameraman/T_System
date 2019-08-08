@@ -1,16 +1,15 @@
 # T_System
 
-<img src="https://api.travis-ci.org/connected-life/T_System.svg?branch=master" align="right" />
-
-<img src="https://readthedocs.org/projects/t-system/badge/?version=latest" align="right" />
-
-<img src="https://pyup.io/repos/github/connected-life/T_System/shield.svg?label=pyup&color=brightgreen" align="right" />
-
-<img src="https://pyup.io/repos/github/connected-life/T_System/python-3-shield.svg?label=python%203&color=brightgreen" align="right" />
-
-<img src='https://coveralls.io/repos/github/connected-life/T_System/badge.svg?branch=master' alt='Coverage Status' align="right" />
-
 the moving objects tracking system via two axis camera motion (and as optionally n joint robotic arm) for raspberry pi distributions
+
+<p align="center">
+    <img alt="GitHub release" src="https://img.shields.io/github/release-pre/connected-life/T_System">
+    <img src="https://api.travis-ci.org/connected-life/T_System.svg?branch=master" align="right" />
+    <img src="https://readthedocs.org/projects/t-system/badge/?version=latest" align="right" />
+    <img src="https://pyup.io/repos/github/connected-life/T_System/shield.svg?label=pyup&color=brightgreen" align="right" />
+    <img src="https://pyup.io/repos/github/connected-life/T_System/python-3-shield.svg?label=python%203&color=brightgreen" align="right" />
+    <img src='https://coveralls.io/repos/github/connected-life/T_System/badge.svg?branch=master' alt='Coverage Status' align="right" />
+</p>
 
 ![T_System](https://raw.githubusercontent.com/MCYBA/T_System/master/docs/img/on_work.gif)
 
@@ -164,6 +163,8 @@ Portable usage interface v0.3.1
     - Remote UI accessing
         -
             No control by tapping. Accessing with Remote UI from mobile or desktop.
+
+<sup><i>To see the old version explainings go [here](https://raw.githubusercontent.com/Connected-life/T_System/master/docs/stand/README.me)</i></sup>
 
 #### Remote UI
 
