@@ -3,7 +3,6 @@ RPi.GPIO>=0.6.5
 tinydb==3.9.0.post1
 numpy
 paho-mqtt>=1.4.0
-multipledispatch
 m2r
 face_recognition
 multipledispatch
