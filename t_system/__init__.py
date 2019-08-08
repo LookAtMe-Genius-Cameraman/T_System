@@ -31,7 +31,7 @@ from t_system.vision import Vision
 from t_system.accession import AccessPoint
 from t_system.administration import Administrator
 
-__version__ = '0.9-alpha1.91'
+__version__ = '0.9-alpha1.92'
 
 
 def start(args):
@@ -245,7 +245,7 @@ def initiate():
 
         print(f't_system: {t_system_version}\nremote_ui: {remote_ui_version}\n stand: {stand_version}')
         sys.exit(1)
-        
+
     prepare(args)
     start(args)
 
