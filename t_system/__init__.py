@@ -237,8 +237,15 @@ def initiate():
 
     if args["version"]:
         import pkg_resources
-        print(pkg_resources.get_distribution("t_system").version)
+
+        from t_system.stand import __version__ as stand_version
+        from t_system.remote_ui import __version__ as remote_ui_version
+
+        t_system_version = pkg_resources.get_distribution("t_system").version
+
+        print(f't_system: {t_system_version}\nremote_ui: {remote_ui_version}\n stand: {stand_version}')
         sys.exit(1)
+        
     prepare(args)
     start(args)
 
