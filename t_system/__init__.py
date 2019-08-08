@@ -160,7 +160,7 @@ def initiate():
     official_stand_gr.add_argument("--stand-gpios", help="GPIO pin numbers of official stand's the button and the led. 5(as button), 27(as red led) and 22(as green led) GPIO pins are default.", nargs=3, default=[5, 25, 22], type=int, metavar=('BUTTON', 'RED-LED', 'GREEN-LED'))
 
     remote_ui_gr = ap.add_argument_group('remote_ui')
-    remote_ui_gr.add_argument("--host", help="Specify host address.", action="store", type=str, default="192.168.1.22")
+    remote_ui_gr.add_argument("--host", help="Specify host address.", action="store", type=str, default="192.168.1.24")
     remote_ui_gr.add_argument("--port", help="Specify the port.", action="store", type=str, default="3000")
     remote_ui_gr.add_argument("--debug", help="Activate debug mode.", action="store_true")
 
@@ -183,7 +183,7 @@ def initiate():
     video_gr.add_argument("--chunk", help="Smallest unit of audio. 1024*8=8192 bytes are default.", action="store", default=8192, type=int)
     video_gr.add_argument("--rate", help="Bit Rate of audio stream / Frame Rate. 44100 Hz sample rate is default.", action="store", default=44100, type=int)
     video_gr.add_argument("--channels", help="Number of microphone's channels. Default value is 1.", action="store", default=1, type=int)
-    video_gr.add_argument("--audio_device_index", help="Index of the using audio device. 0 is default.", action="store", default=0, type=int)
+    video_gr.add_argument("--audio_device_index", help="Index of the using audio device. 2 is default.", action="store", default=2, type=int)
 
     motion_gr = ap.add_argument_group('motion mechanism')
     motion_gr.add_argument("--robotic-arm", help="One of the robotic arm names those are defined in arm_config.json file. The arm is for relocating the 2 axis target locking system hybrid-synchronously.", type=str, metavar=('ARM',))

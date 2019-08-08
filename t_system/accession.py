@@ -15,6 +15,7 @@ from PyAccessPoint import pyaccesspoint
 from wifi import Cell, Scheme
 from tinydb import TinyDB, Query  # TinyDB is a lightweight document oriented database
 
+from t_system.administration import Administrator
 from t_system import dot_t_system_dir
 from t_system import administrator
 
@@ -287,6 +288,10 @@ def is_admin(admin_id):
     Args:
         admin_id:       	    The id of the admin that is created from check_secret_root_entry method.
     """
+    global administrator
+
+    if administrator is None:
+        administrator = Administrator()
 
     if admin_id:
         if hashlib.sha256(admin_id.encode()).hexdigest() == administrator.private_key:
