@@ -10,7 +10,7 @@
 """
 
 from t_system.system_info import *
-from t_system.accession import is_admin
+from t_system.administration import is_admin
 
 
 def get_system_info(admin_id):

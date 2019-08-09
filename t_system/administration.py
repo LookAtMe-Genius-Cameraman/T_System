@@ -13,6 +13,8 @@ import hashlib
 from tinydb import TinyDB, Query  # TinyDB is a lightweight document oriented database
 
 from t_system import dot_t_system_dir
+from t_system.db_fetching import DBFetcher
+from t_system import administrator
 
 
 class Administrator:
@@ -26,8 +28,7 @@ class Administrator:
         """Initialization method of :class:`t_system.administration.Administrator` class.
         """
 
-        self.db = TinyDB(dot_t_system_dir + '/db.json')
-        self.table = self.set_table("admin")
+        self.table = DBFetcher(dot_t_system_dir, "db", "admin").fetch()
 
         self.ssid_hash = None
         self.password_hash = None
@@ -97,13 +98,41 @@ class Administrator:
 
         return ""
 
-    def set_table(self, table_name, cache_size=None):
-        """Function to set the database of the scenario.
 
-        Args:
-            table_name (str):               Current working table name.
-            cache_size (int):               TinyDB caches query result for performance.
-        """
+def check_secret_root_entry(ssid, password):
+    """The high-level method to create secret entry point for root authorized. 2 key(ssid and password) authentication uses sha256 encryption.
 
-        return self.db.table(table_name, cache_size=cache_size)
+    Args:
+        ssid:       	        The name of the surrounding access point.
+        password:       	    The password of the surrounding access point.
+    """
 
+    admin = {"ssid": administrator.ssid_hash, "passwords": administrator.password_hash}
+
+    ssid_hash = hashlib.sha256(ssid.encode())
+    password_hash = hashlib.sha256(password.encode())
+
+    quest = {"ssid": ssid_hash.hexdigest(), "passwords": password_hash.hexdigest()}
+
+    if admin == quest:
+        admin_id = hashlib.sha256((ssid + password).encode()).hexdigest()  # admin_id is the public key
+        return admin_id
+
+    return False
+
+
+def is_admin(admin_id):
+    """the high-level method for checking whether the man who submitted the requests has administrative authority.
+
+    Args:
+        admin_id:       	    The id of the admin that is created from check_secret_root_entry method.
+    """
+    global administrator
+
+    if administrator is None:
+        administrator = Administrator()
+
+    if admin_id:
+        if hashlib.sha256(admin_id.encode()).hexdigest() == administrator.private_key:
+            return True
+    return False

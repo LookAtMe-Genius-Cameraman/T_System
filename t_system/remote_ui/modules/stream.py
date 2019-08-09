@@ -27,7 +27,7 @@ class StreamManager:
         """
 
         self.stop_thread = False
-        self.preview_thread = threading.Thread(target=seer.stream, args=(self.stop_thread, "bgr" "security"))
+        self.preview_thread = threading.Thread(target=seer.stream, args=(lambda: self.stop_thread, "bgr", "preview"))
 
     def start_stream(self, admin_id, stream_type):
         """The high-level method to return existing position with given id.
@@ -71,6 +71,7 @@ class StreamManager:
         """
         while True:
             frame = seer.get_current_frame()
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+            if frame is not None:
+                yield (b'--frame\r\n'
+                       b'Content-Type: image/jpeg\r\n\r\n' + frame.tobytes() + b'\r\n')
 

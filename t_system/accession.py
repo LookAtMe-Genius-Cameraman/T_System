@@ -9,15 +9,15 @@
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
 import os  # Miscellaneous operating system interfaces
-import hashlib
+import requests
 
 from PyAccessPoint import pyaccesspoint
 from wifi import Cell, Scheme
 from tinydb import TinyDB, Query  # TinyDB is a lightweight document oriented database
 
-from t_system.administration import Administrator
+from t_system.administration import check_secret_root_entry
+from t_system.db_fetching import DBFetcher
 from t_system import dot_t_system_dir
-from t_system import administrator
 
 
 def set_local_ip_address(args):
@@ -122,8 +122,7 @@ class NetworkConnector:
         if not os.path.exists(self.folder):
             os.mkdir(self.folder)
 
-        self.db = TinyDB(self.folder + '/db.json')
-        self.table = self.set_table("login")
+        self.table = DBFetcher(self.folder, "db", "login").fetch()
 
         self.wlan = args["wlan"]
 
@@ -249,52 +248,22 @@ class NetworkConnector:
             network = {"ssid": login["ssid"], "password": login["password"], "wlan": login["wlan"]}
             self.known_networks.append(network)
 
-    def set_table(self, table_name, cache_size=None):
-        """Function to set the database of the scenario.
+    @staticmethod
+    def is_network_online():
+        """The top-level method to check the internet access of the current network connection via sending request to Google. 
 
-        Args:
-            table_name (str):               Current working table name.
-            cache_size (int):               TinyDB caches query result for performance.
+        Returns:
+            bool:  status.
         """
-
-        return self.db.table(table_name, cache_size=cache_size)
-
-
-def check_secret_root_entry(ssid, password):
-    """The high-level method to create secret entry point for root authorized. 2 key(ssid and password) authentication uses sha256 encryption.
-
-    Args:
-        ssid:       	        The name of the surrounding access point.
-        password:       	    The password of the surrounding access point.
-    """
-
-    admin = {"ssid": administrator.ssid_hash, "passwords": administrator.password_hash}
-
-    ssid_hash = hashlib.sha256(ssid.encode())
-    password_hash = hashlib.sha256(password.encode())
-
-    quest = {"ssid": ssid_hash.hexdigest(), "passwords": password_hash.hexdigest()}
-
-    if admin == quest:
-        admin_id = hashlib.sha256((ssid + password).encode()).hexdigest()  # admin_id is the public key
-        return admin_id
-
-    return False
-
-
-def is_admin(admin_id):
-    """the high-level method for checking whether the man who submitted the requests has administrative authority..
-
-    Args:
-        admin_id:       	    The id of the admin that is created from check_secret_root_entry method.
-    """
-    global administrator
-
-    if administrator is None:
-        administrator = Administrator()
-
-    if admin_id:
-        if hashlib.sha256(admin_id.encode()).hexdigest() == administrator.private_key:
+        
+        url = 'http://www.google.com/'
+        timeout = 5
+        try:
+            _ = requests.get(url, timeout=timeout)
             return True
-    return False
+        except requests.ConnectionError:
+            # print("Internet connection could not be established.")
+            pass
+        return False
+
 

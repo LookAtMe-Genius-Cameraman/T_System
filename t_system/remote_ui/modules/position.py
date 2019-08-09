@@ -11,7 +11,7 @@
 
 from tinydb import TinyDB, Query  # TinyDB is a lightweight document oriented database
 
-from t_system.accession import is_admin
+from t_system.administration import is_admin
 from t_system.motion.arm.action import Position
 from t_system import dot_t_system_dir
 from t_system.motion.arm.action import predicted_actions_db
