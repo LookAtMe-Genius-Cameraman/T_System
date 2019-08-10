@@ -105,7 +105,8 @@ setup(
         'elevate',
         'imutils',
         'gpiozero',
-        'pyaudio'
+        'pyaudio',
+        'requests'
         # 'opencv-python>=4.0.0.21'
     ],
 
