@@ -9,6 +9,7 @@ the moving objects tracking system via two axis camera motion (and as optionally
 [![Travis](https://api.travis-ci.org/connected-life/T_System.svg?branch=master)](https://travis-ci.org/connected-life/T_System)
 [![Read The Docs](https://readthedocs.org/projects/t-system/badge/?version=latest)](https://t-system.readthedocs.io/en/latest/?badge=latest)
 [![Coveralls](https://coveralls.io/repos/github/connected-life/T_System/badge.svg)](https://coveralls.io/github/connected-life/T_System/)
+[![Contributors](https://img.shields.io/github/contributors/connected-life/T_System)](https://github.com/connected-life/T_System/graphs/contributors)
 
 ![T_System](https://raw.githubusercontent.com/MCYBA/T_System/master/docs/img/on_work.gif)
 
