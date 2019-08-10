@@ -16,7 +16,6 @@ import inspect  # Inspect live objects
 
 from os.path import expanduser  # Common pathname manipulations
 from elevate import elevate  # partial root authentication interface
-from pip.cmdoptions import editable
 
 T_SYSTEM_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
@@ -34,7 +33,7 @@ from t_system.accession import AccessPoint
 from t_system.administration import Administrator
 from t_system.updation import UpdateManager
 
-__version__ = '0.9-alpha1.97'
+__version__ = '0.9-alpha1.98'
 
 
 def start(args):
@@ -57,7 +56,7 @@ def start(args):
             template_folder = T_SYSTEM_PATH + "/remote_ui/www"
             static_folder = template_folder + "/static"
 
-            remote_ui = RemoteUI(args=args, template_folder=template_folder, static_folder=static_folder, vision=seer)
+            remote_ui = RemoteUI(args=args, template_folder=template_folder, static_folder=static_folder)
 
             stand_ui = Stand(args, remote_ui)
             stand_ui.run()
@@ -74,7 +73,7 @@ def start(args):
             template_folder = T_SYSTEM_PATH + "/remote_ui/www"
             static_folder = template_folder + "/static"
 
-            remote_ui = RemoteUI(args=args, template_folder=template_folder, static_folder=static_folder, vision=seer)
+            remote_ui = RemoteUI(args=args, template_folder=template_folder, static_folder=static_folder)
             remote_ui.run(host=args["host"], port=args["port"], debug=args["debug"])
 
         else:
@@ -168,6 +167,7 @@ def initiate():
     remote_ui_gr.add_argument("--host", help="Specify host address.", action="store", type=str, default="192.168.1.24")
     remote_ui_gr.add_argument("--port", help="Specify the port.", action="store", type=str, default="3000")
     remote_ui_gr.add_argument("--debug", help="Activate debug mode.", action="store_true")
+    remote_ui_gr.add_argument("--mode", help="The run mode. It specify the configuration file. To use: either `production`, `development` or `testing`. Default is production", action="store", type=str, default="production")
 
     r_mode_gr = ap.add_argument_group('running modes')
     r_mode_gr.add_argument("-l", "--learn", help="Teach Mode. Teach the object tracking parameters with the trial and error method.", action="store_true")
