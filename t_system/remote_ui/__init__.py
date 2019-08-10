@@ -44,15 +44,13 @@ class RemoteUI:
 
     """
 
-    def __init__(self, args, template_folder, static_folder, vision=None):
+    def __init__(self, args, template_folder, static_folder):
         """Initialization method of :class:`t_system.remote_ui.RemoteUI` class.
 
             Args:
                 args:       Command-line arguments.
                 template_folder (str):  The folder of html templates.
                 static_folder (str):    The folder of css and js files.
-                vision:       	        Vision object from t_system.vision.Vision Class.
-
         """
 
         self.host = args["host"]
@@ -62,11 +60,13 @@ class RemoteUI:
         self.remote_ui_dir = dot_t_system_dir + '/remote_ui'
 
         self.app = Flask(__name__, template_folder=template_folder, static_folder=static_folder)
+
+        config_file = f'{REMOTE_UI_PATH}/config/{args["mode"]}.cfg'
+        self.app.config.from_pyfile(config_file)
+
         Session(self.app)
 
         self._set_app()
-
-        self.vision = vision
 
     def _set_app(self):
         """The low-level method to setting flask API.
