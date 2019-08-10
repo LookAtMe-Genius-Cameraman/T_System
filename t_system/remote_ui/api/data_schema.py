@@ -32,6 +32,10 @@ FACE_ENCODING_SCHEMA = Schema({
     'photos': Use(list),
 })
 
+UPDATE_SCHEMA = Schema({
+    'auto_update': Use(bool),
+})
+
 # LOCATION_SCHEMA = Schema({
 #     'name': Use(str),
 #     'ip': Use(str),
