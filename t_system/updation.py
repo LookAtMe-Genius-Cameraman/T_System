@@ -17,6 +17,10 @@ import hashlib
 import git
 
 from elevate import elevate  # partial root authentication interface
+from tinydb import TinyDB, Query  # TinyDB is a lightweight document oriented database
+
+from t_system.db_fetching import DBFetcher
+from t_system import dot_t_system_dir
 
 T_SYSTEM_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
@@ -27,15 +31,20 @@ class UpdateManager:
     This class provides necessary initiations and functions named :func:`t_system.updation.UpdateManager.update`for provide update code and install necessary dependencies.
     """
 
-    def __init__(self, editable, verbose):
+    def __init__(self, editable=False, verbose=False):
         """Initialization method of :class:`t_system.updation.UpdateManager` class.
 
         Args:
-            editable:   	        Editable updation mode flag.
+            editable:   	        Editable updation mode flag. For making updates as development.
             verbose:   	            Verbosity flag about printing debug messages.
         """
         self.editable = editable
         self.verbose = verbose  # this argument will be added.
+
+        self.table = DBFetcher(dot_t_system_dir, "db", "update").fetch()
+
+        self.auto_update = None
+        self.refresh_members()
 
         self.updater = Updater(self.verbose)
         self.installer = Installer(self.editable, self.verbose)
@@ -43,12 +52,86 @@ class UpdateManager:
     def update(self):
         """The high-level method to pulling updates from remote git repo, checking differences inside installation scripts and starting the installation if necessary.
         """
+        if self.is_update_available():
+            self.updater.update_self()
+            self.installer.install()
+            return True
+        return False
 
-        self.updater.update_self()
-        self.installer.install()
+    def is_update_auto(self):
+        """The high-level method to getting auto-update status from the database.
+        """
+
+        return self.auto_update
+
+    def is_update_available(self):
+        """The high-level method to getting auto-update status from the database.
+        """
+
+        return self.updater.is_update_available()
+
+    def db_upsert(self, auto_update):
+        """Function to insert(or update) the update status to the database.
+
+        Args:
+            auto_update (str):            Email address of the admin to posting taken photos to owners.
+
+        Returns:
+            str:  Response.
+        """
+
+        update = self.table.all()
+
+        if update:
+            self.table.update({'auto_update': auto_update})
+        else:
+            self.table.insert({
+                'auto_update': auto_update,
+            })  # insert the given data
+
+        return ""
+
+    def refresh_members(self):
+        """low-level method to refreshing the members
+        """
+
+        update = self.table.all()
+        if update:
+            self.auto_update = update[0]["auto_update"]
+
+    def change_members(self, auto_update):
+        """high-level method to changing members via given parameters.
+
+        Args:
+            auto_update (str):            Email address of the admin to posting taken photos to owners.
+
+        Returns:
+            str:  Response.
+        """
+
+        self.db_upsert(auto_update)
+        self.refresh_members()
+
+    def set_editability(self, editable):
+        """The high-level method to set editable member externally.
+
+        Args:
+            editable:   	        Editable updation mode flag. For making updates as development.
+        """
+
+        self.editable = editable
+
+    def set_verbosity(self, verbose):
+        """The high-level method to set verbose member externally.
+
+        Args:
+            verbose:   	            Verbosity flag about printing debug messages.
+        """
+
+        self.verbose = verbose
 
     def listen_updates(self):
-        """The high-level method to controlling repo is up-to-date with updater object.
+        """The high-level method to controlling repo is up-to-date with updater object. (Deprecated)
         """
 
         while True:
