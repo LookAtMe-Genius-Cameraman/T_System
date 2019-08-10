@@ -12,7 +12,7 @@
 import psutil
 from gpiozero import CPUTemperature
 
-from t_system.accession import is_admin
+from t_system.administration import is_admin
 
 
 def get_disk_usage(admin_id):
