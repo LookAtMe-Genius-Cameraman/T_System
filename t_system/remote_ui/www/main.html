@@ -103,6 +103,14 @@
             </div>
         </li>
     </ul>
+    <div id="update_control_div">
+        <button id="update_control_btn" translate>Updates</button>
+        <div id="update_control_io_div" class="form-group row">
+            <label class="checkbox-inline"><input type="checkbox" id="auto_update_checkbox" value="" translate>Auto Update</label>
+            <!--<label for="auto_update_checkbox" class="col-sm-2 col-form-label"></label><input type="checkbox" id="auto_update_checkbox" class="form-control">-->
+            <button id="update_btn" class="btn btn-info" translate>Up To Date</button>
+        </div>
+    </div>
     <div id="wifi_control_div">
         <button id="wifi_connections_btn" translate>Wifi Connections</button>
         <div id="wifi_control_io_div">
@@ -128,7 +136,7 @@
             <div id="video_area_div" class="">
                 <span id="get_preview_span" translate>Click here to get preview</span>
                 <video id="stream_area_video">
-                    <source id="stream_area_video_source" src="" type="video/mp4">
+                    <img id="stream_area_video_source" src="" type="image/jpeg">
                     <!--<source src="mov_bbb.ogg" type="video/ogg">-->
                     Your browser does not support HTML5 video.
                 </video>
