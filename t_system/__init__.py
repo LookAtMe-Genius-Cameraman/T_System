@@ -16,6 +16,7 @@ import inspect  # Inspect live objects
 
 from os.path import expanduser  # Common pathname manipulations
 from elevate import elevate  # partial root authentication interface
+from pip.cmdoptions import editable
 
 T_SYSTEM_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
@@ -26,10 +27,12 @@ seer = None
 augmenter = None
 stand_ui = None
 administrator = None
+update_manager = None
 
 from t_system.vision import Vision
 from t_system.accession import AccessPoint
 from t_system.administration import Administrator
+from t_system.updation import UpdateManager
 
 __version__ = '0.9-alpha1.97'
 
@@ -105,9 +108,9 @@ def start_sub(args):
         face_encode_manager.add_face(args["owner_name"], args["dataset"])
 
     if args["sub_jobs"] == "self-update":
-        from t_system.updation import UpdateManager
 
-        update_manager = UpdateManager(args["editable"], args["verbose"])
+        update_manager.set_editability(args["editable"])
+        update_manager.set_verbosity(args["verbose"])
         update_manager.update()
 
 
@@ -118,8 +121,10 @@ def prepare(args):
         args:       Command-line arguments.
     """
     global administrator
+    global update_manager
 
     administrator = Administrator()
+    update_manager = UpdateManager()
 
     if not os.path.exists(dot_t_system_dir):
         os.mkdir(dot_t_system_dir)
