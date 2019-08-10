@@ -21,7 +21,7 @@ def create_scenario(admin_id, data):
     """The high-level method to create new scenario.
 
     Args:
-        admin_id (bool):                 Admin privileges flag.
+        admin_id (str):                 Admin privileges flag.
         data (dict):                    Scenario data structure.
     """
 
@@ -43,7 +43,7 @@ def get_scenarios(admin_id):
     """The high-level method to return existing scenarios.
 
     Args:
-        admin_id (bool):                 Root privileges flag.
+        admin_id (str):                 Root privileges flag.
     """
     try:
         table = get_db_table(is_admin(admin_id))
@@ -61,7 +61,7 @@ def get_scenario(admin_id, scenario_id):
     """The high-level method to return existing scenario with given id.
 
     Args:
-        admin_id (bool):                 Root privileges flag.
+        admin_id (str):                 Root privileges flag.
         scenario_id (str):              The id of the scenario.
     """
     try:
@@ -86,7 +86,7 @@ def update_scenario(admin_id, scenario_id, data):
     """The high-level method to update the scenario that is recorded in database with given parameters.
 
     Args:
-        admin_id (bool):                 Root privileges flag.
+        admin_id (str):                 Root privileges flag.
         scenario_id (str):              The id of the scenario.
         data (dict):                    Position data structure.
     """
@@ -111,7 +111,7 @@ def delete_scenario(admin_id, scenario_id):
     """The high-level method to remove existing position with given id.
 
     Args:
-        admin_id (bool):                 Root privileges flag.
+        admin_id (str):                 Root privileges flag.
         scenario_id (str):              The id of the position.
     """
     table = get_db_table(is_admin(admin_id))

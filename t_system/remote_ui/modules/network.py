@@ -21,7 +21,7 @@ def create_network(admin_id, data):
     """The high-level method to create new scenario.
 
     Args:
-        admin_id (bool):                 Admin privileges flag.
+        admin_id (str):                 Admin privileges flag.
         data (dict):                    Network data structure.
     """
     try:
@@ -37,7 +37,7 @@ def get_networks(admin_id):
     """The high-level method to return existing scenarios.
 
     Args:
-        admin_id (bool):                 Admin privileges flag.
+        admin_id (str):                 Admin privileges flag.
     """
     try:
         table = get_db_table()
@@ -54,7 +54,7 @@ def get_network(admin_id, network_ssid):
     """The high-level method to return existing network with given id.
 
     Args:
-        admin_id (bool):                 Admin privileges flag.
+        admin_id (str):                 Admin privileges flag.
         network_ssid (str):             The ssid of the network.
     """
     try:
@@ -78,7 +78,7 @@ def update_network(admin_id, ssid, data):
     """The high-level method to update the scenario that is recorded in database with given parameters.
 
     Args:
-        admin_id (bool):                 Admin privileges flag.
+        admin_id (str):                 Admin privileges flag.
         ssid:       	                The ssid of the network.
         data (dict):                    Network data structure.
     """
@@ -101,7 +101,7 @@ def delete_network(admin_id, ssid):
     """The high-level method to remove existing position with given id.
 
     Args:
-        admin_id (bool):                 Admin privileges flag.
+        admin_id (str):                 Admin privileges flag.
         ssid (str):                     The ssid of the network.
     """
     table = get_db_table()

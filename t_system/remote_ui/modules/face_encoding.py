@@ -21,7 +21,7 @@ def create_face(admin_id, data):
     """The high-level method to create new face with its encoding pickle data.
 
     Args:
-        admin_id (bool):                Root privileges flag.
+        admin_id (str):                Root privileges flag.
         data (dict):                    Position data structure.
     """
 
@@ -40,7 +40,7 @@ def get_faces(admin_id):
     """The high-level method to return existing faces.
 
     Args:
-        admin_id (bool):                 Root privileges flag.
+        admin_id (str):                 Root privileges flag.
     """
     try:
         table = get_db_table(is_admin(admin_id))
@@ -58,7 +58,7 @@ def get_face(admin_id, face_id):
     """The high-level method to return existing face and copying its images under the static folder with given id.
 
     Args:
-        admin_id (bool):                 Root privileges flag.
+        admin_id (str):                 Root privileges flag.
         face_id (str):              The id of the position.
     """
     try:
@@ -87,7 +87,7 @@ def update_face(admin_id, face_id, data):
     """The high-level method to update the face and its encodings that is recorded in database with given parameters.
 
     Args:
-        admin_id (bool):                Root privileges flag.
+        admin_id (str):                Root privileges flag.
         face_id (str):                  The id of the position.
         data (dict):                    Position data structure.
     """
@@ -103,7 +103,7 @@ def delete_face(admin_id, face_id):
     """The high-level method to remove existing face with given id.
 
     Args:
-        admin_id (bool):                 Root privileges flag.
+        admin_id (str):                 Root privileges flag.
         face_id (str):              The id of the position.
     """
     face_encode_manager = FaceEncodeManager()

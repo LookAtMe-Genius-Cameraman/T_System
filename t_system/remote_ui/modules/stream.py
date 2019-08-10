@@ -33,7 +33,7 @@ class StreamManager:
         """The high-level method to return existing position with given id.
 
         Args:
-            admin_id (bool):                 Root privileges flag.
+            admin_id (str):                 Root privileges flag.
             stream_type (str):               Stream's purpose. Preview, track-learn mode etc.
         """
         try:
@@ -50,7 +50,7 @@ class StreamManager:
         """The high-level method to remove existing position with given id.
 
         Args:
-            admin_id (bool):                 Root privileges flag.
+            admin_id (str):                 Root privileges flag.
             stream_type (str):               Stream's purpose. Preview, track-learn mode etc.
         """
         result = True

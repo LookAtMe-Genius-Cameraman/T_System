@@ -17,7 +17,7 @@ def get_system_info(admin_id):
     """The high-level method to get system info.
 
     Args:
-        admin_id (bool):                 Admin privileges flag.
+        admin_id (str):                 Admin privileges flag.
     """
     result = {}
 

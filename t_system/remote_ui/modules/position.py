@@ -21,7 +21,7 @@ def create_position(admin_id, data):
     """The high-level method to create new position.
 
     Args:
-        admin_id (bool):                 Root privileges flag.
+        admin_id (str):                 Root privileges flag.
         data (dict):                    Position data structure.
     """
 
@@ -43,7 +43,7 @@ def get_positions(admin_id):
     """The high-level method to return existing positions.
 
     Args:
-        admin_id (bool):                 Root privileges flag.
+        admin_id (str):                 Root privileges flag.
     """
     try:
         table = get_db_table(is_admin(admin_id))
@@ -61,7 +61,7 @@ def get_position(admin_id, position_id):
     """The high-level method to return existing position with given id.
 
     Args:
-        admin_id (bool):                 Root privileges flag.
+        admin_id (str):                 Root privileges flag.
         position_id (str):              The id of the position.
     """
     try:
@@ -86,7 +86,7 @@ def update_position(admin_id, position_id, data):
     """The high-level method to update the position that is recorded in database with given parameters.
 
     Args:
-        admin_id (bool):                 Root privileges flag.
+        admin_id (str):                 Root privileges flag.
         position_id (str):              The id of the position.
         data (dict):                    Position data structure.
     """
@@ -111,7 +111,7 @@ def delete_position(admin_id, position_id):
     """The high-level method to remove existing position with given id.
 
     Args:
-        admin_id (bool):                 Root privileges flag.
+        admin_id (str):                 Root privileges flag.
         position_id (str):              The id of the position.
     """
     table = get_db_table(is_admin(admin_id))
