@@ -16,7 +16,7 @@ flask-session==0.3.1
 flask-restful==0.3.7
 schema==0.7.0
 gitpython==2.1.13
-elevate
+elevate==0.1.3
 imutils
 gpiozero
 pyaudio
