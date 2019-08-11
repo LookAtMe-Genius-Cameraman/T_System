@@ -12,7 +12,7 @@ psutil==5.6.3
 pyaccesspoint==0.2.5
 wifi==0.3.8
 flask==1.1.1
-flask-session
+flask-session==0.3.1
 flask-restful
 schema
 gitpython
