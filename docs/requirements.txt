@@ -17,6 +17,6 @@ flask-restful==0.3.7
 schema==0.7.0
 gitpython==2.1.13
 elevate==0.1.3
-imutils
+imutils==0.5.2
 gpiozero
 pyaudio
