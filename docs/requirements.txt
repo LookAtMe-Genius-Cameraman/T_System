@@ -4,7 +4,7 @@ tinydb==3.13.0
 numpy==1.17.0
 paho-mqtt>=1.4.0
 m2r==0.2.1
-face_recognition
+face_recognition==1.2.3
 multipledispatch
 wireless
 netifaces
