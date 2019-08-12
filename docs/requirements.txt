@@ -13,7 +13,7 @@ pyaccesspoint==0.2.5
 wifi==0.3.8
 flask==1.1.1
 flask-session==0.3.1
-flask-restful
+flask-restful==0.3.7
 schema
 gitpython
 elevate
