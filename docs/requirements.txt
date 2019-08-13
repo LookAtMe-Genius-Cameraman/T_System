@@ -1,7 +1,7 @@
 picamera>=1.13
 RPi.GPIO>=0.6.5
 tinydb==3.13.0
-numpy
+numpy==1.17.0
 paho-mqtt>=1.4.0
 m2r
 face_recognition
