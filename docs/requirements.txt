@@ -3,7 +3,7 @@ RPi.GPIO>=0.6.5
 tinydb==3.13.0
 numpy==1.17.0
 paho-mqtt>=1.4.0
-m2r
+m2r==0.2.1
 face_recognition
 multipledispatch
 wireless
