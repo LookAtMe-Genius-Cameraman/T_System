@@ -33,7 +33,7 @@ from t_system.accession import AccessPoint
 from t_system.administration import Administrator
 from t_system.updation import UpdateManager
 
-__version__ = '0.9-alpha1.99'
+__version__ = '0.9-alpha2'
 
 
 def start(args):
