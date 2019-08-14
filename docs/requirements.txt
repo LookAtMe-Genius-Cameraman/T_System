@@ -7,7 +7,7 @@ m2r==0.2.1
 face_recognition==1.2.3
 multipledispatch==0.6.0
 wireless==0.3.3
-netifaces
+netifaces==0.10.9
 psutil
 pyaccesspoint
 wifi
