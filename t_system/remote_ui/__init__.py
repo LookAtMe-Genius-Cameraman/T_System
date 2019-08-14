@@ -128,6 +128,6 @@ if __name__ == "__main__":
     _template_folder = REMOTE_UI_PATH + "/www"
     _static_folder = _template_folder + "/static"
 
-    app = RemoteUI(args={"host": "localhost", "port": "5000", "debug": True}, template_folder=_template_folder, static_folder=_static_folder)
-    app.run(host="172.22.9.40", port="5000",  debug=True)
+    app = RemoteUI(args={"host": "localhost", "port": "5000", "debug": True, "mode": "development"}, template_folder=_template_folder, static_folder=_static_folder)
+    app.run(host="192.168.1.108", port="5000",  debug=True)
     # app.debug = True
