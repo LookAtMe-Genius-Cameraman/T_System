@@ -25,5 +25,6 @@ def get_system_info(admin_id):
     result.update(get_cpu_usage(admin_id))
     result.update(get_cpu_temperature(admin_id))
     result.update(get_disk_usage(admin_id))
+    result.update(get_versions(admin_id))
 
     return result

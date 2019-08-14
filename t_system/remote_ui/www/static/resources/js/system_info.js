@@ -1,10 +1,42 @@
+const system_info_div = document.getElementById("system_info_div");
 const system_info_btn = document.getElementById("system_info_btn");
 const system_info_chart_div = document.getElementById("system_info_chart_div");
-// const disk_usage_chart = document.getElementById('disk_usage_chart').getContext('2d');
 const system_info_chart = document.getElementById('system_info_chart').getContext('2d');
+const versions_div = document.getElementById('versions_div');
+const stand_version_p = document.getElementById('stand_version_p');
+const remote_ui_version_p = document.getElementById('remote_ui_version_p');
+const t_system_version_p = document.getElementById('t_system_version_p');
 
+let system_info_btn_click_count = 0;
 system_info_btn.addEventListener("click", function () {
-    set_system_info()
+    system_info_btn_click_count++;
+
+    if (system_info_btn_click_count <= 1) {
+        set_system_info();
+
+        // system_info_div.classList.toggle("focused_system_info_div");
+        system_info_div.style.top = "30%";
+        system_info_div.style.width = "85%";
+        system_info_div.style.height = "68%";
+
+        dark_deep_background_div.style.opacity = "1";
+            // background: rgba(0, 0, 0, 0.7);
+
+        show_element(system_info_chart_div);
+        show_element(versions_div)
+    } else {
+        // system_info_div.classList.toggle("focused_system_info_div");
+        system_info_div.style.top = "90%";
+        system_info_div.style.width = "120px";
+        system_info_div.style.height = "30px";
+
+        dark_deep_background_div.style.opacity = "0";
+        hide_element(system_info_chart_div);
+        hide_element(versions_div);
+
+        system_info_btn_click_count = 0;
+
+    }
 });
 
 function get_system_info() {
@@ -13,7 +45,7 @@ function get_system_info() {
 
 function set_system_info() {
     // get_system_info();
-    requested_data = {"status": "OK", "data": {"cpu_usage_percent": 15, "cpu_temperature": 37, "ram_usage_percent": 20, "disk_usage_percent": 55, "verisons": {"t_system": "0.9-alpha1.99", "stand": "0.3", "remote_ui": "1.8.7"}}};
+    requested_data = {"status": "OK", "data": {"cpu_usage_percent": 15, "cpu_temperature": 37, "ram_usage_percent": 20, "disk_usage_percent": 55, "versions": {"t_system": "0.9-alpha1.99", "stand": "0.3", "remote_ui": "1.8.7"}}};
     let timer_settings_cont = setInterval(function () {
 
         if (requested_data !== undefined) {
@@ -23,6 +55,9 @@ function set_system_info() {
                 let cpu_usage_percentage = requested_data["data"]["cpu_usage_percent"];
                 let ram_usage_percentage = requested_data["data"]["ram_usage_percent"];
                 let cpu_temperature = requested_data["data"]["cpu_temperature"];
+                let t_system_version = requested_data["data"]["versions"]["t_system"];
+                let stand_version = requested_data["data"]["versions"]["stand"];
+                let remote_ui_version = requested_data["data"]["versions"]["remote_ui"];
 
                 if (ram_usage_percentage === null) {
                     new Chart(system_info_chart, {
@@ -36,10 +71,17 @@ function set_system_info() {
                                     "rgb(210, 26, 11)",
                                     "rgb(238, 237, 233)"
                                 ],
-                                "borderWidth": 5
+                                "borderWidth": 5,
+                                "borderColor": "rgba(0, 0, 0, 0.5)",
                             }],
                         },
                         "options": {
+                            "legend": {
+                                "labels": {
+                                    "fontColor": "white",
+                                    "fontSize": 12
+                                }
+                            },
                             "segmentShowStroke": true,
                             "segmentStrokeColor": "#fff",
                             "segmentStrokeWidth": 50,
@@ -70,10 +112,17 @@ function set_system_info() {
                                     "rgb(255, 202, 37)",
                                     "rgb(93, 255, 172)"
                                 ],
-                                "borderWidth": 5
+                                "borderWidth": 5,
+                                "borderColor": "rgba(0, 0, 0, 0.5)",
                             }],
                         },
                         "options": {
+                            "legend": {
+                                "labels": {
+                                    "fontColor": "white",
+                                    "fontSize": 12
+                                }
+                            },
                             "segmentShowStroke": true,
                             "segmentStrokeColor": "#fff",
                             "segmentStrokeWidth": 50,
@@ -90,6 +139,10 @@ function set_system_info() {
                         }
 
                     });
+
+                    stand_version_p.innerHTML = "stand: v" + stand_version;
+                    remote_ui_version_p.innerHTML = "remote_ui: v" + remote_ui_version;
+                    t_system_version_p.innerHTML = "t_system: v" + t_system_version;
                 }
 
                 requested_data = undefined;
