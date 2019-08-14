@@ -1,5 +1,3 @@
-const a_i_checkbox = document.getElementById("a_i_checkbox");
-const secure_m_checkbox = document.getElementById("secure_m_checkbox");
 
 
 const wifi_control_div = document.getElementById("wifi_control_div");
@@ -9,39 +7,15 @@ const network_ssid_input = document.getElementById("network_ssid_input");
 const network_password_input = document.getElementById("network_password_input");
 const create_new_network_btn = document.getElementById("create_new_network_btn");
 
-const system_info_chart_div = document.getElementById("system_info_chart_div");
-const system_info_chart = document.getElementById('system_info_chart').getContext('2d');
 
-
-a_i_checkbox.addEventListener("change", function () {
-
-    if (a_i_checkbox.checked){
-        refresh_running_params({"status": "true", "for": "configure", "reason": "AI", "options": ""})
-    }
-    else {
-        refresh_running_params({"status": "false", "for": "configure", "reason": "AI", "options": ""})
-    }
-
-});
-
-
-secure_m_checkbox.addEventListener("change", function () {
-
-    console.log("is it?");
-
-    if (secure_m_checkbox.checked){
-        refresh_running_params({"status": "true", "for": "configure", "reason": "security_mode", "options": ""})
-    }
-    else {
-        refresh_running_params({"status": "false", "for": "configure", "reason": "security_mode", "options": ""})
-    }
-
-});
-
-
-function refresh_running_params(dict) {
-    jquery_manager.post_data("/fulfill_command", dict);
-}
+// a_i_checkbox.addEventListener("change", function () {  // Checkbox onchange sample
+//
+//     if (a_i_checkbox.checked){
+//     }
+//     else {
+//     }
+//
+// });
 
 let wifi_connections_btn_click_count = 0;
 wifi_connections_btn.addEventListener("click", function () {
@@ -81,7 +55,7 @@ wifi_connections_btn.addEventListener("click", function () {
 
         wifi_control_div.style.top = "-40%";
         wifi_control_div.style.height = "70%";
-        hide_element(system_info_chart_div);
+        hide_element(system_info_div);
         show_element(wifi_control_io_div);
 
         jquery_manager.post_data("/try", {"bla": "bla"})
@@ -90,7 +64,7 @@ wifi_connections_btn.addEventListener("click", function () {
         wifi_control_div.style.top = "-20%";
         wifi_control_div.style.height = "40px";
         hide_element(wifi_control_io_div);
-        show_element(system_info_chart_div);
+        show_element(system_info_div);
         wifi_connections_btn_click_count = 0;
     }
 
@@ -125,7 +99,7 @@ create_new_network_btn.addEventListener("click", function () {
     admin_id = response_data["admin_id"]
 });
 
-// new Chart(system_info_chart, {
+// new Chart(disk_usage_chart, {
 //     "type": "doughnut",
 //     "data": {
 //         "labels": ["Used", "Free"],

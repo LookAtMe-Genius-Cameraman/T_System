@@ -12,13 +12,11 @@ let timer;
 let requested_data = undefined;
 let response_data = undefined;
 
-let disk_usage_percentage = 10;
-
 $.put = function(url, data, callback, type){
 
   if ( $.isFunction(data) ){
-    type = type || callback,
-    callback = data,
+    type = type || callback;
+    callback = data;
     data = {}
   }
 
@@ -46,7 +44,8 @@ $.delete = function(url, data, callback, type){
     data: data,
     contentType: type
   });
-}
+};
+
 /**
  * Class to define a AJAX JQuery communication method manager object.
  */
@@ -132,14 +131,12 @@ const control_btn = document.getElementById("control_btn");
 const settings_btn = document.getElementById("settings_btn");
 const on_work_btn = document.getElementById("on_work_btn");
 
-
-
+const system_info_div = document.getElementById("system_info_div");
 
 window.onload = function() {
     //to check if javascript is disabled like in anroid preview
     // document.getElementById('warningmsg').style.display = 'none';
     connectdlg();
-
 };
 
 function build_language_menu(){
@@ -176,52 +173,6 @@ function refresh_page(){
 }
 
 settings_btn.addEventListener("click", function () {
-
-    get_system_info();
-    let timer_settings_cont = setInterval(function () {
-
-        if (requested_data !== undefined) {
-            if (requested_data["status"] === "OK") {
-
-                disk_usage_percentage = requested_data["data"]["disk_usage_percent"];
-
-                new Chart(system_info_chart, {
-                    "type": "doughnut",
-                    "data": {
-                        "labels": ["Used", "Free"],
-                        "datasets": [{
-                            "label": "Disk Usage",
-                            "data": [disk_usage_percentage, 100 - disk_usage_percentage],
-                            "backgroundColor": [
-                                "rgb(210, 26, 11)",
-                                "rgb(238, 237, 233)"
-                            ],
-                            "borderWidth": 5
-                        }],
-                    },
-                    "options": {
-                        "segmentShowStroke": true,
-                        "segmentStrokeColor": "#fff",
-                        "segmentStrokeWidth": 50,
-                        "cutoutPercentage": 80,  // thin of the donut as inverse between 50-100.
-                        "animation:": {
-                            "animationSteps": 100,
-                            "animationEasing": "easeOutBounce",
-                            "animateRotate": true,
-                            "animateScale": true
-                        },
-                        "responsive": true,
-                        "maintainAspectRatio": true,
-                        "showScale": true
-                    }
-
-                });
-
-                requested_data = undefined;
-                clearInterval(timer_settings_cont)
-            }
-        }
-    }, 300);
 
     show_element(settings_template_container);
     hide_element(controlling_template_container);
@@ -265,7 +216,4 @@ function get_event_data(id) {
             }, 500);
 }
 
-function get_system_info() {
-    jquery_manager.get_data("/api/system_info?admin_id="+ admin_id);
-}
 
