@@ -89,7 +89,7 @@ def get_versions(admin_id):
         from t_system.stand import __version__ as stand_version
         from t_system.remote_ui import __version__ as remote_ui_version
 
-        return {"t_system": t_system_version, "stand": stand_version, "remote_ui": remote_ui_version}
+        return {"verisons": {"t_system": t_system_version, "stand": stand_version, "remote_ui": remote_ui_version}}
     else:
         return {"t_system": None, "stand": None, "remote_ui": None}
 
