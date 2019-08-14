@@ -131,8 +131,6 @@ const control_btn = document.getElementById("control_btn");
 const settings_btn = document.getElementById("settings_btn");
 const on_work_btn = document.getElementById("on_work_btn");
 
-const system_info_div = document.getElementById("system_info_div");
-
 window.onload = function() {
     //to check if javascript is disabled like in anroid preview
     // document.getElementById('warningmsg').style.display = 'none';
@@ -194,26 +192,3 @@ on_work_btn.addEventListener("click", function () {
     hide_element(controlling_template_container);
     hide_element(settings_template_container)
 });
-
-
-/**
- * The high-level method of getting specified event's information with its id.
- * It is triggered via a click on event list members.
- */
-function get_event_data(id) {
-
-    let id_dict = {"id": id};
-    // console.log(id_dict);
-
-    jquery_manager.post_data("/get_event_data", id_dict);
-
-    timer = setInterval(function() {
-                // console.log("bla");
-                // console.log(response);
-
-                jquery_manager.get_data("/get_event_data");
-
-            }, 500);
-}
-
-

@@ -1,4 +1,7 @@
 
+const update_control_div = document.getElementById("update_control_div");
+const update_control_btn = document.getElementById("update_control_btn");
+const update_control_io_div = document.getElementById("update_control_io_div");
 
 const wifi_control_div = document.getElementById("wifi_control_div");
 const wifi_connections_btn = document.getElementById("wifi_connections_btn");
@@ -16,6 +19,24 @@ const create_new_network_btn = document.getElementById("create_new_network_btn")
 //     }
 //
 // });
+
+let update_control_btn_click_count = 0;
+update_control_btn.addEventListener("click", function () {
+    update_control_btn_click_count++;
+
+    if (update_control_btn_click_count <= 1) {
+
+        update_control_div.style.top = "20%";
+        update_control_div.style.height = "50%";
+        show_element(update_control_io_div);
+
+    } else {
+        update_control_div.style.top = "0";
+        update_control_div.style.height = "40px";
+        hide_element(update_control_io_div);
+        update_control_btn_click_count = 0;
+    }
+});
 
 let wifi_connections_btn_click_count = 0;
 wifi_connections_btn.addEventListener("click", function () {
@@ -53,18 +74,16 @@ wifi_connections_btn.addEventListener("click", function () {
     //
     //         }, 500);
 
-        wifi_control_div.style.top = "-40%";
+        wifi_control_div.style.top = "20%";
         wifi_control_div.style.height = "70%";
-        hide_element(system_info_div);
         show_element(wifi_control_io_div);
 
         jquery_manager.post_data("/try", {"bla": "bla"})
 
     } else {
-        wifi_control_div.style.top = "-20%";
+        wifi_control_div.style.top = "0";
         wifi_control_div.style.height = "40px";
         hide_element(wifi_control_io_div);
-        show_element(system_info_div);
         wifi_connections_btn_click_count = 0;
     }
 
@@ -98,22 +117,6 @@ create_new_network_btn.addEventListener("click", function () {
 
     admin_id = response_data["admin_id"]
 });
-
-// new Chart(disk_usage_chart, {
-//     "type": "doughnut",
-//     "data": {
-//         "labels": ["Used", "Free"],
-//         "datasets": [{
-//             "label": "Disk Usage",
-//             "data": [disk_usage_percentage, 100 - disk_usage_percentage],
-//             "backgroundColor": [
-//                 "rgb(210, 26, 11)",
-//                 "rgb(238, 237, 233)"
-//             ]
-//         }]
-//     }
-// });
-
 
 /**
  * The high-level method of getting specified network information with its ssid or the all existing network information.
