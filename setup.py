@@ -100,6 +100,7 @@ setup(
         'flask',
         'flask-session',
         'flask-restful',
+        'Flask-Testing',
         'schema',
         'gitpython',
         'elevate',
