@@ -1,6 +1,6 @@
 # T_System
 
-the moving objects tracking system via two axis camera motion (and as optionally n joint robotic arm) for raspberry pi distributions
+the (non-)moving objects tracking system via two axis camera motion (and as optionally n joint robotic arm) for raspberry pi distributions
 
 [![Pyup shield](https://pyup.io/repos/github/connected-life/T_System/shield.svg?label=pyup&color=brightgreen)](https://pyup.io/repos/github/connected-life/T_System/)
 [![Pyup python-3 shield](https://pyup.io/repos/github/connected-life/T_System/python-3-shield.svg?label=python%203&color=brightgreen)](https://pyup.io/repos/github/connected-life/T_System/)
@@ -41,7 +41,6 @@ the moving objects tracking system via two axis camera motion (and as optionally
 
 - OpenCV. Install via [here](https://www.pyimagesearch.com/2018/09/26/install-opencv-4-on-your-raspberry-pi/) or any other place you want.
 - Dlib and face_recognition module via [here](https://gist.github.com/ageitgey/1ac8dbe8572f3f533df6269dab35df65) or any other place you want.
-- dnsmasq and hostapd network manager tools.
 
 ### Installation
 
@@ -228,8 +227,13 @@ Portable usage interface v0.3.1
 
 <br>
 
+- Dependencies
+    -
+    - Raspberry pi 3 model B/B+ or Asus Tinker board.
+    - 5 piece sg90 or mg90s servo motors.   
+                   
 - Properties
-    -             
+    -   
     - 1 switch key for on/off
         -
             Cut the electiric current directly
