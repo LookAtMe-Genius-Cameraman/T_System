@@ -9,8 +9,8 @@ Content-Type: application/json
 
 {
     "type": "Joint" / "axis",
-    "id": "1" / "y",
-    "quantity": "10"
+    "id": 1 / "y",
+    "quantity": 10
 }
 ```
 
