@@ -255,7 +255,7 @@ Portable usage interface v0.3.1
 
 #### Remote UI
 
-The remotely controlling interface that is powered by "flask" as an embedded framework. Available on mobile or desktop. 
+The remotely controlling interface v0.2.72
 
 - Properties
     -             
@@ -271,7 +271,9 @@ The remotely controlling interface that is powered by "flask" as an embedded fra
     - Previewing
         -
             watch the live video stream during creating scenarios and monitor what is it recording on working.
-            
+
+<sup><i>Powered by "flask" as an embedded framework. Available on mobile or desktop.</i></sup> 
+
 #### Augmented
 
 Augmented usage explained [here](https://github.com/MCYBA/A.V.A.) into the `AUGMENTED.md`.
