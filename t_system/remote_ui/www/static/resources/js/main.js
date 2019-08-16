@@ -24,11 +24,6 @@ const control_btn = document.getElementById("control_btn");
 const settings_btn = document.getElementById("settings_btn");
 const on_work_btn = document.getElementById("on_work_btn");
 
-window.onload = function () {
-    //to check if javascript is disabled like in anroid preview
-    // document.getElementById('warningmsg').style.display = 'none';
-    connectdlg();
-};
 
 /**
  * The low-level method to create drop-down language selection menu.
@@ -48,42 +43,62 @@ function build_language_menu() {
     document.getElementById("lang_menu").innerHTML = content;
 }
 
+
 function update_ui_text() {
     build_HTML_setting_list(current_setting_filter);
 }
 
+
+/**
+ * The low-level method to change visibility and opacity for making usable of given element.
+ * @param {Element} element: the route address of the flask
+ */
 function show_element(element) {
     element.style.opacity = "1";
     element.style.visibility = "visible";
 }
 
+
+/**
+ * The low-level method to change visibility and opacity for making unusable of given element.
+ * @param {Element} element: the route address of the flask
+ */
 function hide_element(element) {
     element.style.opacity = "0";
     element.style.visibility = "hidden";
 }
 
+
+/**
+ * The method to reload the page.
+ */
 function refresh_page() {
     window.location.reload();
 }
 
-settings_btn.addEventListener("click", function () {
 
+window.onload = function () {
+    //to check if javascript is disabled like in anroid preview
+    // document.getElementById('warningmsg').style.display = 'none';
+    connectdlg();
+};
+
+
+settings_btn.addEventListener("click", function () {
     show_element(settings_template_container);
     hide_element(controlling_template_container);
     hide_element(on_work_template_container);
-
-
 });
 
-control_btn.addEventListener("click", function () {
 
+control_btn.addEventListener("click", function () {
     show_element(controlling_template_container);
     hide_element(settings_template_container);
     hide_element(on_work_template_container);
 });
 
-on_work_btn.addEventListener("click", function () {
 
+on_work_btn.addEventListener("click", function () {
     show_element(on_work_template_container);
     hide_element(controlling_template_container);
     hide_element(settings_template_container)

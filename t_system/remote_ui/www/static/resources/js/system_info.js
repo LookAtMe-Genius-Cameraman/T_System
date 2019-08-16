@@ -1,3 +1,12 @@
+// -*- coding: utf-8 -*-
+
+/**
+ * @module system_info
+ * @fileoverview the top-level module of T_System that contains the communication methods with python flask of T_System system_info API.
+ * @author cem.baybars@gmail.com (Cem Baybars GÜÇLÜ)
+ */
+
+/** @type {!Element} */
 const system_info_div = document.getElementById("system_info_div");
 const system_info_btn = document.getElementById("system_info_btn");
 const system_info_chart_div = document.getElementById("system_info_chart_div");
@@ -6,6 +15,7 @@ const versions_div = document.getElementById('versions_div');
 const stand_version_p = document.getElementById('stand_version_p');
 const remote_ui_version_p = document.getElementById('remote_ui_version_p');
 const t_system_version_p = document.getElementById('t_system_version_p');
+
 
 let system_info_btn_click_count = 0;
 system_info_btn.addEventListener("click", function () {
@@ -20,7 +30,6 @@ system_info_btn.addEventListener("click", function () {
         system_info_div.style.height = "68%";
 
         dark_deep_background_div.style.opacity = "1";
-            // background: rgba(0, 0, 0, 0.7);
 
         show_element(system_info_chart_div);
         show_element(versions_div)
@@ -35,17 +44,24 @@ system_info_btn.addEventListener("click", function () {
         hide_element(versions_div);
 
         system_info_btn_click_count = 0;
-
     }
 });
 
+
+/**
+ * The low-level method to make specific request for system_info of T_System.
+ */
 function get_system_info() {
-    jquery_manager.get_data("/api/system_info?admin_id="+ admin_id);
+    jquery_manager.get_data("/api/system_info?admin_id=" + admin_id);
 }
 
+
+/**
+ * The high-level method to set system info chart/table by administration or normal entry.
+ */
 function set_system_info() {
-    // get_system_info();
-    requested_data = {"status": "OK", "data": {"cpu_usage_percent": 15, "cpu_temperature": 37, "ram_usage_percent": 20, "disk_usage_percent": 55, "versions": {"t_system": "0.9-alpha1.99", "stand": "0.3", "remote_ui": "1.8.7"}}};
+    get_system_info();
+    // requested_data = {"status": "OK", "data": {"cpu_usage_percent": 15, "cpu_temperature": 37, "ram_usage_percent": 20, "disk_usage_percent": 55, "versions": {"t_system": "0.9-alpha1.99", "stand": "0.3", "remote_ui": "1.8.7"}}};
     let timer_settings_cont = setInterval(function () {
 
         if (requested_data !== undefined) {
@@ -139,12 +155,10 @@ function set_system_info() {
                         }
 
                     });
-
                     stand_version_p.innerHTML = "stand: v" + stand_version;
                     remote_ui_version_p.innerHTML = "remote_ui: v" + remote_ui_version;
                     t_system_version_p.innerHTML = "t_system: v" + t_system_version;
                 }
-
                 requested_data = undefined;
                 clearInterval(timer_settings_cont)
             }
