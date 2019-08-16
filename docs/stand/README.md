@@ -16,6 +16,11 @@ the portable usage interface
 
 <br>
 
+- Dependencies
+    -
+    - Raspberry pi 3 model B/B+ or Asus Tinker board.
+    - n axis servo motion system. (No servo type/count dependency.)   
+
 - Properties
     -
     - 4 buttons for switching modes
@@ -42,6 +47,11 @@ the portable usage interface
 <img align="right" width="400" height="600" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.2/prototype.jpeg">
 
 <br>
+
+- Dependencies
+    -
+    - Raspberry pi 3 model B/B+ or Asus Tinker board.
+    - 2 piece sg90 or mg90s servo motors.   
 
 - Properties
     -
@@ -70,6 +80,11 @@ the portable usage interface
 <img align="center" width="420" height="430" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.3/front_render.jpg">
 
 <br>
+
+- Dependencies
+    -
+    - Raspberry pi 3 model B/B+ or Asus Tinker board.
+    - 5 piece sg90 or mg90s servo motors.   
 
 - Properties
     -             
