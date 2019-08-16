@@ -22,7 +22,7 @@ def move_arm(admin_id, move_id, data):
     result = True
 
     if data["type"] == "joint":
-        seer.arm.rotate_joints(data["id"], data["quantity"])
+        seer.arm.rotate_single_joint(data["id"], data["quantity"])
     elif data["type"] == "axis":
         seer.arm.move_endpoint(data["id"], data["quantity"])
     else:
