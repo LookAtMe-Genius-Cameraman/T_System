@@ -48,6 +48,9 @@ const x_down_btn = document.getElementById("x_down_btn");
 const y_down_btn = document.getElementById("y_down_btn");
 const z_down_btn = document.getElementById("z_down_btn");
 
+const record_pos_sce_btn = document.getElementById("record_pos_sce_btn");
+const record_pos_sce_div = document.getElementById("record_pos_sce_div");
+
 /** @type {!Element} */
 const body = document.getElementsByTagName("BODY")[0];
 
@@ -169,11 +172,6 @@ stream_area_video.addEventListener("click", function () {
             }
         }, 300);
 
-
-        // dark_deep_background_div.classList.toggle("focused");
-        // stream_area_video.classList.toggle("focused");
-        // video_area_div.classList.toggle("focused");
-
     } else {
         stop_stream("preview");
         dark_deep_background_div.classList.toggle("focused");
@@ -201,7 +199,7 @@ motion_control_btn.addEventListener("click", function () {
     motion_control_btn_click_count++;
     if (motion_control_btn_click_count <= 1) {
 
-        motion_control_btn.classList.toggle("clicked");
+        motion_control_btn.classList.toggle("first_clicked");
 
         show_element(rotational_control_div);
         rotational_control_div.style.top = "-225px";
@@ -210,7 +208,8 @@ motion_control_btn.addEventListener("click", function () {
 
     } else if (motion_control_btn_click_count <= 2) {
 
-        motion_control_btn.classList.toggle("clicked");
+        motion_control_btn.classList.toggle("first_clicked");
+        motion_control_btn.classList.toggle("second_clicked");
 
         hide_element(rotational_control_div); // when prismatic button clicked rotational modal showing because rotational modal's button become visible via prismatic's hover.
         rotational_control_div.style.top = "-20%";
@@ -219,7 +218,7 @@ motion_control_btn.addEventListener("click", function () {
 
     } else {
 
-        motion_control_btn.classList.toggle("clicked");
+        motion_control_btn.classList.toggle("second_clicked");
 
         hide_element(rotational_control_div); // when prismatic button clicked rotational modal showing because rotational modal's button become visible via prismatic's hover.
         hide_element(prismatic_control_div);
@@ -227,6 +226,11 @@ motion_control_btn.addEventListener("click", function () {
 
         motion_control_btn_click_count = 0;
     }
+});
+
+record_pos_sce_btn.addEventListener("click", function () {
+    dark_deep_background_div.classList.toggle("focused");
+    record_pos_sce_div.classList.toggle("focused");
 });
 
 /**
