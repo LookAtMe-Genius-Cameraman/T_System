@@ -255,7 +255,7 @@ Portable usage interface v0.3.1
 
 #### Remote UI
 
-The remotely controlling interface v0.2.72
+The remotely controlling interface v0.2.8
 
 - Properties
     -             
@@ -284,7 +284,7 @@ Augmented usage explained [here](https://github.com/MCYBA/A.V.A.) into the `AUGM
 
 ### Contribute
 
-If you want to contribute to Dragonfire then please read [this guide](https://github.com/DragonComputer/Dragonfire/blob/master/CONTRIBUTING.md#contributing-to-dragonfire).
+If you want to contribute to T_System then please read [this guide](https://github.com/DragonComputer/Dragonfire/blob/master/CONTRIBUTING.md#contributing-to-dragonfire).
 
 Please consider to support us with buying a coffee:
 <a href="https://www.buymeacoffee.com/tsystem" target="_blank"><img src="https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
