@@ -44,7 +44,7 @@ Content-Type: application/json
 }
 ```
 
-# Getting Devices
+# Getting Scenarios
 - If a specific parameter ID is given, its scenario are listed.
 
 ## Request
