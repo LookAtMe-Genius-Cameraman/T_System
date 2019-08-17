@@ -94,6 +94,9 @@ body {
 
     margin: auto;
 
+    z-index: 61;
+
+
 }
 
 #on_work_template_container {
@@ -137,6 +140,10 @@ body {
     pointer-events: none;
 
     /*border: #3c763d solid;*/
+}
+
+#dark_deep_background_div.focused {
+        opacity: 1 !important;
 }
 
 
