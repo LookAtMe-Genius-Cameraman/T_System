@@ -6,6 +6,7 @@
  * @author cem.baybars@gmail.com (Cem Baybars GÜÇLÜ)
  */
 
+
 /** @type {!Element} */
 const system_info_div = document.getElementById("system_info_div");
 const system_info_btn = document.getElementById("system_info_btn");
@@ -29,7 +30,7 @@ system_info_btn.addEventListener("click", function () {
         system_info_div.style.width = "85%";
         system_info_div.style.height = "68%";
 
-        dark_deep_background_div.style.opacity = "1";
+        dark_deep_background_div.classList.toggle("focused");
 
         show_element(system_info_chart_div);
         show_element(versions_div)
@@ -39,7 +40,7 @@ system_info_btn.addEventListener("click", function () {
         system_info_div.style.width = "120px";
         system_info_div.style.height = "30px";
 
-        dark_deep_background_div.style.opacity = "0";
+        dark_deep_background_div.classList.toggle("focused");
         hide_element(system_info_chart_div);
         hide_element(versions_div);
 

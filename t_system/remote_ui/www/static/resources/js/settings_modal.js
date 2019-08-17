@@ -9,6 +9,7 @@ const wifi_control_io_div = document.getElementById("wifi_control_io_div");
 const network_ssid_input = document.getElementById("network_ssid_input");
 const network_password_input = document.getElementById("network_password_input");
 const create_new_network_btn = document.getElementById("create_new_network_btn");
+const network_list_ul = document.getElementById("network_list_ul");
 
 
 // a_i_checkbox.addEventListener("change", function () {  // Checkbox onchange sample
@@ -43,36 +44,40 @@ wifi_connections_btn.addEventListener("click", function () {
     wifi_connections_btn_click_count++;
 
     if (wifi_connections_btn_click_count <= 1) {
-            // get_network_data();
-    //
-    // let timer_settings_cont = setInterval(function() {
-    //
-    //     if (requested_data !== undefined) {
-    //
-    //         for (let c = 0; c < requested_data.length; c++) {
-    //             // console.log(event_db[c]["name"]);
-    //             let li = document.createElement('li');
-    //             let section = document.createElement('section');
-    //
-    //             let ssid_output = document.createElement('output');
-    //             let password_output = document.createElement('output');
-    //
-    //             ssid_output.value = requested_data[c]["ssid"];
-    //             password_output.value = requested_data[c]["password"];
-    //
-    //             li.appendChild(section);
-    //             section.appendChild(ssid_output);
-    //             section.appendChild(password_output);
-    //         }
-    //
-    //         wifi_control_div.style.top = "-5.5rem";
-    //         show_element(wifi_control_io_div);
-    //
-    //             requested_data = undefined;
-    //             clearInterval(timer_settings_cont)
-    //     }
-    //
-    //         }, 500);
+        // get_network_data();
+        //
+        // let timer_settings_cont = setInterval(function () {
+        //
+        //     if (requested_data !== undefined) {
+        //
+        //         if (requested_data["status"] === "OK") {
+        //
+        //             for (let c = 0; c < requested_data["data"].length; c++) {
+        //                 // console.log(event_db[c]["name"]);
+        //                 let li = document.createElement('li');
+        //                 let section = document.createElement('section');
+        //
+        //                 let ssid_output = document.createElement('output');
+        //                 let password_output = document.createElement('output');
+        //
+        //                 ssid_output.value = requested_data[c]["data"]["ssid"];
+        //                 password_output.value = requested_data["data"][c]["password"];
+        //
+        //                 li.appendChild(section);
+        //                 section.appendChild(ssid_output);
+        //                 section.appendChild(password_output);
+        //
+        //                 network_list_ul.appendChild(li);
+        //             }
+        //
+        //             wifi_control_div.style.top = "-5.5rem";
+        //             show_element(wifi_control_io_div);
+        //
+        //         }
+        //             requested_data = undefined;
+        //             clearInterval(timer_settings_cont)
+        //     }
+        // }, 500);
 
         wifi_control_div.style.top = "20%";
         wifi_control_div.style.height = "70%";
