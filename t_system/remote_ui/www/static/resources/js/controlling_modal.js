@@ -7,34 +7,31 @@
  * @version 0.0.1
  */
 
-// /**
-//  *Add one or more listeners to an element
-//  * @param {Element} element - DOM element to add listeners to
-//  * @param {string} eventNames - space separated list of event names, e.g. 'click change'
-//  * @param {Function} listener - function to attach for each event as a listener
-//  */
-// function add_multiple_listener(element, eventNames, listener) {
-//   var events = eventNames.split(' ');
-//   for (var i=0, iLen=events.length; i<iLen; i++) {
-//     element.addEventListener(events[i], listener, false);
-//   }
-// }
 
-// add_multiple_listener(window, 'mousemove touchmove', function(){…});
-
-
+/** @type {!Element} */
 const main_container = document.getElementById("main_container");
+const controlling_template_sidebar = document.getElementById("controlling_template_sidebar");
+const position_list_ul = document.getElementById("position_list_ul");
+const scenario_list_ul = document.getElementById("scenario_list_ul");
+
+const controlling_template_content = document.getElementById("controlling_template_content");
+const sidebar_toggle_btn = document.getElementById("sidebar_toggle_btn");
+const controlling_template_sidebar_close_btn = document.getElementById("controlling_template_sidebar_close_btn");
+
 const dark_deep_background_div = document.getElementById("dark_deep_background_div");
 
+/** @type {!Element} */
 const video_area_div = document.getElementById("video_area_div");
 const get_preview_span = document.getElementById("get_preview_span");
 const stream_area_video = document.getElementById("stream_area_video");
 const stream_area_video_source = document.getElementById("stream_area_video_source");
 
+/** @type {!Element} */
 const motion_control_div = document.getElementById("motion_control_div");
+const motion_control_btn = document.getElementById("motion_control_btn");
 
+/** @type {!Element} */
 const prismatic_control_div = document.getElementById("prismatic_control_div");
-const prismatic_motion_control_btn = document.getElementById("prismatic_motion_control_btn");
 const joint_1_cw_btn = document.getElementById("joint_1_cw_btn");
 const joint_2_cw_btn = document.getElementById("joint_2_cw_btn");
 const joint_3_cw_btn = document.getElementById("joint_3_cw_btn");
@@ -42,6 +39,7 @@ const joint_1_ccw_btn = document.getElementById("joint_1_ccw_btn");
 const joint_2_ccw_btn = document.getElementById("joint_2_ccw_btn");
 const joint_3_ccw_btn = document.getElementById("joint_3_ccw_btn");
 
+/** @type {!Element} */
 const rotational_control_div = document.getElementById("rotational_control_div");
 const x_up_btn = document.getElementById("x_up_btn");
 const y_up_btn = document.getElementById("y_up_btn");
@@ -50,36 +48,13 @@ const x_down_btn = document.getElementById("x_down_btn");
 const y_down_btn = document.getElementById("y_down_btn");
 const z_down_btn = document.getElementById("z_down_btn");
 
-const rotational_motion_control_btn = document.getElementById("rotational_motion_control_btn");
-
+/** @type {!Element} */
 const body = document.getElementsByTagName("BODY")[0];
 
 
+sidebar_toggle_btn.addEventListener("click", function () {
 
-// video_area_div.addEventListener("mouseover", function () {
-//
-//     get_preview_span.style.color = "#008CBA";
-//
-// });
-
-stream_area_video.addEventListener("mouseover", function () {
-
-    get_preview_span.style.color = "#008CBA";
-
-});
-
-stream_area_video.addEventListener("mouseout", function () {
-
-    get_preview_span.style.color = "#000000";
-
-});
-
-
-function focus_video_area() {
-    stream_area_video.removeEventListener("click", focus_video_area);
-    stream_area_video.addEventListener("click", unfocus_video_area);
-
-    start_stream("preview");
+    get_position_s();
 
     let timer_settings_cont = setInterval(function () {
 
@@ -87,76 +62,171 @@ function focus_video_area() {
             if (requested_data["status"] === "OK") {
 
                 console.log(requested_data["data"]);
-                stream_area_video_source.src = requested_data["data"];
 
-                dark_deep_background_div.style.opacity = "1";
-                stream_area_video.classList.add("focused_video_area");
-                video_area_div.style.margin = "-18% auto 0";
-                show_element(motion_control_div);
+                for (let c = 0; c < requested_data["data"].length; c++) {
+                    let li = document.createElement('li');
+                    let section = document.createElement('section');
 
-                requested_data = undefined;
-                clearInterval(timer_settings_cont)
+                    let name_output = document.createElement('output');
+
+                    name_output.value = requested_data["data"][c]["name"];
+
+                    li.appendChild(section);
+                    section.appendChild(name_output);
+
+                    position_list_ul.appendChild(li);
+                }
+
+                controlling_template_sidebar.classList.toggle("active");
+                dark_deep_background_div.classList.toggle("focused");
+                hide_element(controlling_template_content)
             }
+            requested_data = undefined;
+            clearInterval(timer_settings_cont)
+        }
+    }, 300);
+
+    get_scenario_s();
+
+    timer_settings_cont = setInterval(function () {
+
+        if (requested_data !== undefined) {
+            if (requested_data["status"] === "OK") {
+
+                console.log(requested_data["data"]);
+
+                for (let c = 0; c < requested_data["data"].length; c++) {
+                    let li = document.createElement('li');
+                    let section = document.createElement('section');
+
+                    let name_output = document.createElement('output');
+
+                    name_output.value = requested_data["data"][c]["name"];
+
+                    li.appendChild(section);
+                    section.appendChild(name_output);
+
+                    position_list_ul.appendChild(li);
+                }
+
+                controlling_template_sidebar.classList.toggle("active");
+                dark_deep_background_div.classList.toggle("focused");
+                hide_element(controlling_template_content)
+            }
+            requested_data = undefined;
+            clearInterval(timer_settings_cont)
         }
     }, 300);
 
 
-    // dark_deep_background_div.style.opacity = "1";
-    // stream_area_video.classList.add("focused_video_area");
-    // video_area_div.style.margin = "-30% auto";
-    // show_element(motion_control_div);
+    // controlling_template_sidebar.classList.toggle("active");
+    // dark_deep_background_div.classList.toggle("focused");
+    // hide_element(controlling_template_content)
+});
+
+controlling_template_sidebar_close_btn.addEventListener("click", function () {
+
+    controlling_template_sidebar.classList.toggle("active");
+    dark_deep_background_div.classList.toggle("focused");
+    show_element(controlling_template_content)
+});
 
 
-}
 
-function unfocus_video_area() {
-    stream_area_video.removeEventListener("click", unfocus_video_area);
-    stream_area_video.addEventListener("click", focus_video_area);
+stream_area_video.addEventListener("mouseover", function () {
 
-    stop_stream("preview");
-    dark_deep_background_div.style.opacity = "0";
-    stream_area_video.classList.remove("focused_video_area");
-    video_area_div.style.margin = "30%  auto";
-    hide_element(motion_control_div);
-    hide_element(prismatic_control_div);
-    hide_element(rotational_control_div);
+    get_preview_span.style.color = "#008CBA";
+});
 
-}
+stream_area_video.addEventListener("mouseout", function () {
 
-function toggleFullScreen(){
-	if(stream_area_video.requestFullScreen){
+    get_preview_span.style.color = "#000000";
+});
+
+
+let stream_area_video_click_count = 0;
+
+stream_area_video.addEventListener("click", function () {
+    stream_area_video_click_count++;
+    if (stream_area_video_click_count <= 1) {
+        start_stream("preview");
+
+        let timer_settings_cont = setInterval(function () {
+
+            if (requested_data !== undefined) {
+                if (requested_data["status"] === "OK") {
+
+                    console.log(requested_data["data"]);
+                    stream_area_video_source.src = requested_data["data"];
+
+                    dark_deep_background_div.classList.toggle("focused");
+                    stream_area_video.classList.toggle("focused");
+                    video_area_div.classList.toggle("focused");
+
+                }
+                requested_data = undefined;
+                clearInterval(timer_settings_cont);
+            }
+        }, 300);
+
+
+        // dark_deep_background_div.classList.toggle("focused");
+        // stream_area_video.classList.toggle("focused");
+        // video_area_div.classList.toggle("focused");
+
+    } else {
+        stop_stream("preview");
+        dark_deep_background_div.classList.toggle("focused");
+        stream_area_video.classList.toggle("focused");
+        video_area_div.classList.toggle("focused");
+
+        stream_area_video_click_count = 0;
+    }
+});
+
+stream_area_video.addEventListener("dblclick", function () {
+    	if(stream_area_video.requestFullScreen){
 		stream_area_video.requestFullScreen();
 	} else if(stream_area_video.webkitRequestFullScreen){
 		stream_area_video.webkitRequestFullScreen();
 	} else if(stream_area_video.mozRequestFullScreen){
 		stream_area_video.mozRequestFullScreen();
 	}
-}
-
-stream_area_video.addEventListener("click", focus_video_area);
-stream_area_video.addEventListener("dblclick", toggleFullScreen);
-
-prismatic_motion_control_btn.addEventListener("click", function () {
-    hide_element(prismatic_motion_control_btn);
-    show_element(rotational_motion_control_btn);
-
-    show_element(rotational_control_div);
-    rotational_control_div.style.top = "-280px";
-    hide_element(prismatic_control_div);
-    prismatic_control_div.style.top = "75%";
-
-
 });
 
-rotational_motion_control_btn.addEventListener("click", function () {
-    hide_element(rotational_motion_control_btn);
-    show_element(prismatic_motion_control_btn);
+let motion_control_btn_click_count = 0;
 
-    hide_element(rotational_control_div); // when prismatic button clicked rotational modal showing because rotational modal's button become visible via prismatic's hover.
-    rotational_control_div.style.top = "-20%";
-    show_element(prismatic_control_div);
-    prismatic_control_div.style.top = "-45%";
 
+motion_control_btn.addEventListener("click", function () {
+    motion_control_btn_click_count++;
+    if (motion_control_btn_click_count <= 1) {
+
+        motion_control_btn.classList.toggle("clicked");
+
+        show_element(rotational_control_div);
+        rotational_control_div.style.top = "-225px";
+        hide_element(prismatic_control_div);
+        prismatic_control_div.style.top = "75%";
+
+    } else if (motion_control_btn_click_count <= 2) {
+
+        motion_control_btn.classList.toggle("clicked");
+
+        hide_element(rotational_control_div); // when prismatic button clicked rotational modal showing because rotational modal's button become visible via prismatic's hover.
+        rotational_control_div.style.top = "-20%";
+        show_element(prismatic_control_div);
+        prismatic_control_div.style.top = "-20%";
+
+    } else {
+
+        motion_control_btn.classList.toggle("clicked");
+
+        hide_element(rotational_control_div); // when prismatic button clicked rotational modal showing because rotational modal's button become visible via prismatic's hover.
+        hide_element(prismatic_control_div);
+        prismatic_control_div.style.top = "75%";
+
+        motion_control_btn_click_count = 0;
+    }
 });
 
 /**
@@ -176,5 +246,25 @@ function stop_stream(type) {
 
 }
 
+function get_position_s(id = null) {
+
+    if (id == null) {
+        jquery_manager.get_data("/api/position?admin_id=" + admin_id);
+
+    } else {
+        jquery_manager.get_data("/api/position?id=" + id + "&admin_id=" + admin_id);
+
+    }
+}
+
+function get_scenario_s(id = null) {
+
+    if (id == null) {
+        jquery_manager.get_data("/api/scenario?admin_id=" + admin_id);
+
+    } else {
+        jquery_manager.get_data("/api/scenario?id=" + id + "&admin_id=" + admin_id);
+    }
+}
 
 
