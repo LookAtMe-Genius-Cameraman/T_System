@@ -1,34 +1,3 @@
-#system_info_div {
-    visibility: visible;
-    opacity: 1;
-
-    max-width: 500px;
-    max-height: 580px;
-
-    /*alignment*/
-    top: 90%;
-    left: 50%;
-
-    width: 120px; /*goes to 85%*/
-    height: 30px; /* goes to 68%*/
-
-    transition: all 300ms;
-    transform: translate(-50%);
-
-    margin: auto;
-    /*border: turquoise solid;*/
-
-    z-index: 61;
-
-}
-
-.focused_system_info_div {
-    top: 30%;
-
-    width: 85%;
-    height: 68%;
-}
-
 #system_info_btn {
 
     visibility: visible;
