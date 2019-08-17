@@ -8,7 +8,7 @@
 
 
 /** @type {!Element} */
-const system_info_div = document.getElementById("system_info_div");
+const system_info_template_container = document.getElementById("system_info_template_container");
 const system_info_btn = document.getElementById("system_info_btn");
 const system_info_chart_div = document.getElementById("system_info_chart_div");
 const system_info_chart = document.getElementById('system_info_chart').getContext('2d');
@@ -25,20 +25,14 @@ system_info_btn.addEventListener("click", function () {
     if (system_info_btn_click_count <= 1) {
         set_system_info();
 
-        // system_info_div.classList.toggle("focused_system_info_div");
-        system_info_div.style.top = "30%";
-        system_info_div.style.width = "85%";
-        system_info_div.style.height = "68%";
+        system_info_template_container.classList.toggle("focused");
 
         dark_deep_background_div.classList.toggle("focused");
 
         show_element(system_info_chart_div);
         show_element(versions_div)
     } else {
-        // system_info_div.classList.toggle("focused_system_info_div");
-        system_info_div.style.top = "90%";
-        system_info_div.style.width = "120px";
-        system_info_div.style.height = "30px";
+        system_info_template_container.classList.toggle("focused");
 
         dark_deep_background_div.classList.toggle("focused");
         hide_element(system_info_chart_div);
