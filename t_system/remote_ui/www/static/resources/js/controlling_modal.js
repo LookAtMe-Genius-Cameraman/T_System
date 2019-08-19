@@ -58,6 +58,8 @@ const record_in_sce_btn = document.getElementById("record_in_sce_btn");
 const record_as_position_div = document.getElementById("record_as_position_div");
 const position_div_back_btn = document.getElementById("position_div_back_btn");
 
+const record_in_scenario_div = document.getElementById("record_in_scenario_div");
+const scenario_div_back_btn = document.getElementById("scenario_div_back_btn");
 
 /** @type {!Element} */
 const body = document.getElementsByTagName("BODY")[0];
@@ -312,6 +314,21 @@ record_as_pos_btn.addEventListener("click", function () {
 
 position_div_back_btn.addEventListener("click", function () {
     record_as_position_div.classList.toggle("focused");
+    setTimeout(function () {
+        pos_sce_select_div.classList.toggle("inactive");
+        }, 175)
+});
+
+record_in_sce_btn.addEventListener("click", function () {
+    pos_sce_select_div.classList.toggle("inactive");
+
+    setTimeout(function () {
+        record_in_scenario_div.classList.toggle("focused");
+        }, 175)
+});
+
+scenario_div_back_btn.addEventListener("click", function () {
+    record_in_scenario_div.classList.toggle("focused");
     setTimeout(function () {
         pos_sce_select_div.classList.toggle("inactive");
         }, 175)
