@@ -25,8 +25,7 @@ def create_network(admin_id, data):
         data (dict):                    Network data structure.
     """
     try:
-        with elevate(show_console=False, graphical=False):
-            result, admin_id = stand_ui.network_connector.add_network(data["ssid"], data["password"])
+        result, admin_id = stand_ui.network_connector.add_network(data["ssid"], data["password"])
     except Exception:
         result = False
 

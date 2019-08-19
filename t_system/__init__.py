@@ -50,6 +50,7 @@ def start(args):
 
     try:
         if args["interface"] == "official_stand":
+
             from t_system.stand import Stand
             from t_system.remote_ui import RemoteUI
 
@@ -119,23 +120,28 @@ def prepare(args):
     Args:
         args:       Command-line arguments.
     """
+
+    if args["interface"] == "official_stand" or args["interface"] == "remote_ui":
+        elevate(show_console=False, graphical=False)
+
+    if not os.path.exists(dot_t_system_dir):
+        os.mkdir(dot_t_system_dir)
+
     global administrator
     global update_manager
 
     administrator = Administrator()
     update_manager = UpdateManager()
 
-    if not os.path.exists(dot_t_system_dir):
-        os.mkdir(dot_t_system_dir)
-
     if args["sub_jobs"]:
         start_sub(args)
         sys.exit(1)
 
     if args["access_point"]:
-        with elevate(show_console=False, graphical=False):
-            access_point = AccessPoint(args)
-            access_point.start()
+        elevate(show_console=False, graphical=False)
+
+        access_point = AccessPoint(args)
+        access_point.start()
 
     if not args["AI"] or args["non_moving_target"]:
         if args["learn"]:
@@ -201,7 +207,7 @@ def initiate():
 
     access_p_gr = ap.add_argument_group('access point options')
     access_p_gr.add_argument("-p", "--access-point", help="Become access point for serving remote UI inside the internal network.", action="store_true")
-    access_p_gr.add_argument("--ap-wlan", help="network interface that will be used to create hotspot. 'wlp4s0' is default.", action="store", default="wlp4s0", type=str)
+    access_p_gr.add_argument("--ap-wlan", help="network interface that will be used to create hotspot. 'wlp4s0' is default.", action="store", default="wlan0", type=str)
     access_p_gr.add_argument("--ap-inet", help="forwarding interface. Default is None.", action="store", default=None, type=str)
     access_p_gr.add_argument("--ap-ip", help="ip address of this machine in new network. 192.168.45.1 is default.", action="store", default="192.168.45.1", type=str)
     access_p_gr.add_argument("--ap-netmask", help="access point netmask address. 255.255.255.0 is default.", action="store", default="255.255.255.0", type=str)
@@ -210,10 +216,11 @@ def initiate():
 
     ext_network_gr = ap.add_argument_group('external network options')
     # ext_network_gr.add_argument("-p", "--access-point", help="Become access point for serving remote UI inside the internal network.", action="store_true")
-    ext_network_gr.add_argument("--wlan", help="network interface that will be used to connect to external network. 'wlp4s0' is default.", action="store", default="wlp4s0", type=str)
+    ext_network_gr.add_argument("--wlan", help="network interface that will be used to connect to external network. 'wlp4s0' is default.", action="store", default="wlan0", type=str)
     access_p_gr.add_argument("--inet", help="forwarding interface. Default is None.", action="store", default=None, type=str)
     access_p_gr.add_argument("--static-ip", help="static ip address in connected external network. 192.168.45.1 is default.", action="store", default="192.168.45.1", type=str)
     access_p_gr.add_argument("--netmask", help="netmask address. 255.255.255.0 is default.", action="store", default="255.255.255.0", type=str)
+    access_p_gr.add_argument("--country-code", help="Wifi country code for the wpa_supplicant.conf. To use look at: https://github.com/recalbox/recalbox-os/wiki/Wifi-country-code-(EN). Default is `TR`", action="store", default="TR", type=str)
 
     other_gr = ap.add_argument_group('others')
     other_gr.add_argument("-S", "--show-stream", help="Display the camera stream. Enable the stream window.(Require gui environment.)", action="store_true")
