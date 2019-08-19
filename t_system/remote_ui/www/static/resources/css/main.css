@@ -1,6 +1,13 @@
 body {
     /*overflow-y: hidden;*/
+        background-color: #fff0eb;  /*Default white tone*/
 }
+
+.hidden_element {
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
 #main_container {
     max-width: 100%;
     max-height: 100%;
@@ -152,7 +159,7 @@ body {
 }
 
 #system_info_template_container.focused {
-    top: 30% !important;
+    top: 20% !important;
     width: 85% !important;
     height: 68% !important;
 }
