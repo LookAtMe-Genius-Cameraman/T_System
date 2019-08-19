@@ -519,8 +519,8 @@ class Installer:
         self.editable = editable
         self.verbose = verbose
 
-        self.install_dev_sh = T_SYSTEM_PATH + "../install-dev.sh"
-        self.install_sh = T_SYSTEM_PATH + "../install.sh"
+        self.install_dev_sh = f'{T_SYSTEM_PATH}/../install-dev.sh'
+        self.install_sh = f'{T_SYSTEM_PATH}/../install.sh'
 
         if self.editable:
             self.last_hash = self.get_hash_of(self.install_dev_sh)
@@ -546,8 +546,8 @@ class Installer:
 
             install_sh = self.install_sh
 
-        with elevate(show_console=False, graphical=False):
-            subprocess.call(install_sh, shell=True)
+        elevate(show_console=False, graphical=False)
+        subprocess.call(install_sh, shell=True)
 
     @staticmethod
     def get_hash_of(filename):

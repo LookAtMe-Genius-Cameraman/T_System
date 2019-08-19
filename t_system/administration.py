@@ -10,11 +10,8 @@
 """
 import hashlib
 
-from tinydb import TinyDB, Query  # TinyDB is a lightweight document oriented database
-
-from t_system import dot_t_system_dir
 from t_system.db_fetching import DBFetcher
-from t_system import administrator
+from t_system import dot_t_system_dir
 
 
 class Administrator:
@@ -55,9 +52,10 @@ class Administrator:
     def get_keys(self):
         """The low-level method to get keys of secret entry point from database.
         """
-        admin = self.table.all()[0]
+        admin = self.table.all()
 
         if admin:
+            admin = admin[0]  # table.all() return a list. But there is just 1 admin.
             self.ssid_hash = admin["ssid"]
             self.password_hash = admin["password"]
             self.private_key = admin["private_key"]

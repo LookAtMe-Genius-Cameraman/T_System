@@ -13,6 +13,7 @@ import threading
 import time  # Time access and conversions
 
 from subprocess import call
+from elevate import elevate  # partial root authentication interface
 
 from t_system.accession import NetworkConnector, AccessPoint
 
@@ -142,6 +143,7 @@ class Stand:
         self.access_point = AccessPoint(args)
 
         self.remote_ui = remote_ui
+        self.static_ip = args["static_ip"]
 
         self.multi_func_btn = Button(args["stand_gpios"][0])
 
@@ -153,58 +155,57 @@ class Stand:
     def run(self):
         """The top-level method to managing members of stand interface.
         """
-
-        if self.network_connector.try_creating_connection():
+        if self.network_connector.connect():
             pass
         else:
             self.access_point.start()
 
-        self.remote_ui.run()
+        self.remote_ui.run(host=self.static_ip)
 
-        working_threads = []
-
-        while True:
-            print("running")
-            if self.multi_func_btn.pressed_hold_time >= 3:
-                self.release_members()
-                call("sudo poweroff", shell=True)
-                break  # this line maybe not necessary!!
-
-            elif self.multi_func_btn.pressed_hold_time >= 1.5:
-                print("Stand By")
-                self.multi_func_btn.reset_pressed_hold_time()
-                self.reset_button()
-                self.terminate_threads(working_threads)
-
-                self.start_thread(self.blink_led, (lambda: self.stop_thread, self.red_led), working_threads)
-
-            elif self.multi_func_btn.is_pressed and self.multi_func_btn.press_count == 3:
-                print("Augmented active")
-                self.reset_button()
-                self.terminate_threads(working_threads)
-
-                from t_system.augmented import Augmenter
-                augmenter = Augmenter(self.vision)
-
-                self.start_thread(augmenter.run, (lambda: self.stop_thread,), working_threads)
-                self.start_thread(self.blink_led, (lambda: self.stop_thread, self.green_led, [1, 30]), working_threads)
-
-            elif self.multi_func_btn.is_pressed and self.multi_func_btn.press_count == 2:
-                print("Learn active")
-                self.reset_button()
-                self.terminate_threads(working_threads)
-
-                self.start_thread(self.vision.learn, (lambda: self.stop_thread,), working_threads)
-                self.start_thread(self.blink_led, (lambda: self.stop_thread, self.green_led, [5, 5]), working_threads)
-
-            elif self.multi_func_btn.is_pressed and self.multi_func_btn.press_count == 1:
-                print("Track active")
-                self.reset_button()
-                self.terminate_threads(working_threads)
-
-                self.start_thread(self.vision.detect_track, (lambda: self.stop_thread,), working_threads)
-                self.start_thread(self.blink_led, (lambda: self.stop_thread, self.green_led), working_threads)
-            time.sleep(0.5)
+        # working_threads = []
+        #
+        # while True:
+        #     print("running")
+        #     if self.multi_func_btn.pressed_hold_time >= 3:
+        #         self.release_members()
+        #         call("sudo poweroff", shell=True)
+        #         break  # this line maybe not necessary!!
+        #
+        #     elif self.multi_func_btn.pressed_hold_time >= 1.5:
+        #         print("Stand By")
+        #         self.multi_func_btn.reset_pressed_hold_time()
+        #         self.reset_button()
+        #         self.terminate_threads(working_threads)
+        #
+        #         self.start_thread(self.blink_led, (lambda: self.stop_thread, self.red_led), working_threads)
+        #
+        #     elif self.multi_func_btn.is_pressed and self.multi_func_btn.press_count == 3:
+        #         print("Augmented active")
+        #         self.reset_button()
+        #         self.terminate_threads(working_threads)
+        #
+        #         from t_system.augmented import Augmenter
+        #         augmenter = Augmenter(self.vision)
+        #
+        #         self.start_thread(augmenter.run, (lambda: self.stop_thread,), working_threads)
+        #         self.start_thread(self.blink_led, (lambda: self.stop_thread, self.green_led, [1, 30]), working_threads)
+        #
+        #     elif self.multi_func_btn.is_pressed and self.multi_func_btn.press_count == 2:
+        #         print("Learn active")
+        #         self.reset_button()
+        #         self.terminate_threads(working_threads)
+        #
+        #         self.start_thread(self.vision.learn, (lambda: self.stop_thread,), working_threads)
+        #         self.start_thread(self.blink_led, (lambda: self.stop_thread, self.green_led, [5, 5]), working_threads)
+        #
+        #     elif self.multi_func_btn.is_pressed and self.multi_func_btn.press_count == 1:
+        #         print("Track active")
+        #         self.reset_button()
+        #         self.terminate_threads(working_threads)
+        #
+        #         self.start_thread(self.vision.detect_track, (lambda: self.stop_thread,), working_threads)
+        #         self.start_thread(self.blink_led, (lambda: self.stop_thread, self.green_led), working_threads)
+        #     time.sleep(0.5)
 
     def blink_led(self, stop_thread, led, delay_time=None):
         """The low-level method to blinking the LEDs with different on/off combinations.
