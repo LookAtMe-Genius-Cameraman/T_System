@@ -107,7 +107,8 @@ setup(
         'imutils',
         'gpiozero',
         'pyaudio',
-        'requests'
+        'requests',
+        'pyroute2>=0.5.6'
         # 'opencv-python>=4.0.0.21'
     ],
 
