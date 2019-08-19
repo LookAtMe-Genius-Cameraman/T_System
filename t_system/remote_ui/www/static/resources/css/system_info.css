@@ -17,7 +17,7 @@
     /*border: #8a6d3b solid;*/
     transform: translate(-50%);
 
-    /*background-color: #FFFFFF;*/
+    /*background-color: #fff0eb;*/
     /*color: #008CBA;*/
 
     font-size: 14px;
@@ -46,5 +46,5 @@
 #versions_div p {
     font-size: 60%;
     margin: 0;
-    color: #ffffff;
+    color: #fff0eb;
 }
