@@ -51,8 +51,54 @@ const z_down_btn = document.getElementById("z_down_btn");
 const record_pos_sce_btn = document.getElementById("record_pos_sce_btn");
 const record_pos_sce_div = document.getElementById("record_pos_sce_div");
 
+const pos_sce_select_div = document.getElementById("pos_sce_select_div");
+const record_as_pos_btn = document.getElementById("record_as_pos_btn");
+const record_in_sce_btn = document.getElementById("record_in_sce_btn");
+
+const record_as_position_div = document.getElementById("record_as_position_div");
+const position_div_back_btn = document.getElementById("position_div_back_btn");
+
+
 /** @type {!Element} */
 const body = document.getElementsByTagName("BODY")[0];
+
+/**
+ * The high-level method of getting specified network information with its ssid or the all existing network information.
+ * It is triggered via a click on settings_btn or clicked specified network on network list.
+ */
+function start_stream(type) {
+
+        // console.log("bla");
+        // console.log(response);
+        jquery_manager.get_data("/api/stream?type=" + type + "&admin_id=" + admin_id);
+
+}
+
+function stop_stream(type) {
+            jquery_manager.delete_data("/api/stream?type=" + type + "&admin_id=" + admin_id);
+
+}
+
+function get_position_s(id = null) {
+
+    if (id == null) {
+        jquery_manager.get_data("/api/position?admin_id=" + admin_id);
+
+    } else {
+        jquery_manager.get_data("/api/position?id=" + id + "&admin_id=" + admin_id);
+
+    }
+}
+
+function get_scenario_s(id = null) {
+
+    if (id == null) {
+        jquery_manager.get_data("/api/scenario?admin_id=" + admin_id);
+
+    } else {
+        jquery_manager.get_data("/api/scenario?id=" + id + "&admin_id=" + admin_id);
+    }
+}
 
 
 sidebar_toggle_btn.addEventListener("click", function () {
@@ -162,6 +208,8 @@ stream_area_video.addEventListener("click", function () {
                     console.log(requested_data["data"]);
                     stream_area_video_source.src = requested_data["data"];
 
+                    hide_element(sidebar_toggle_btn);
+
                     dark_deep_background_div.classList.toggle("focused");
                     stream_area_video.classList.toggle("focused");
                     video_area_div.classList.toggle("focused");
@@ -177,6 +225,8 @@ stream_area_video.addEventListener("click", function () {
         dark_deep_background_div.classList.toggle("focused");
         stream_area_video.classList.toggle("focused");
         video_area_div.classList.toggle("focused");
+
+        show_element(sidebar_toggle_btn);
 
         stream_area_video_click_count = 0;
     }
@@ -228,47 +278,44 @@ motion_control_btn.addEventListener("click", function () {
     }
 });
 
+let record_pos_sce_btn_click_count = 0;
+
 record_pos_sce_btn.addEventListener("click", function () {
+    record_pos_sce_btn_click_count++;
+    if (record_pos_sce_btn_click_count <= 1) {
+        record_pos_sce_btn.innerHTML = "cancel";
+
+        hide_element(motion_control_div);
+        hide_element(video_area_div);
+        hide_element(controlling_template_sidebar);
+        hide_element(sidebar_toggle_btn);
+    } else {
+        record_pos_sce_btn.innerHTML = "save";
+
+        show_element(motion_control_div);
+        show_element(video_area_div);
+        show_element(controlling_template_sidebar);
+        show_element(sidebar_toggle_btn);
+        record_pos_sce_btn_click_count = 0
+    }
     dark_deep_background_div.classList.toggle("focused");
     record_pos_sce_div.classList.toggle("focused");
 });
 
-/**
- * The high-level method of getting specified network information with its ssid or the all existing network information.
- * It is triggered via a click on settings_btn or clicked specified network on network list.
- */
-function start_stream(type) {
+record_as_pos_btn.addEventListener("click", function () {
+    pos_sce_select_div.classList.toggle("inactive");
 
-        // console.log("bla");
-        // console.log(response);
-        jquery_manager.get_data("/api/stream?type=" + type + "&admin_id=" + admin_id);
+    setTimeout(function () {
+        record_as_position_div.classList.toggle("focused");
+        }, 175)
+});
 
-}
+position_div_back_btn.addEventListener("click", function () {
+    record_as_position_div.classList.toggle("focused");
+    setTimeout(function () {
+        pos_sce_select_div.classList.toggle("inactive");
+        }, 175)
+});
 
-function stop_stream(type) {
-            jquery_manager.delete_data("/api/stream?type=" + type + "&admin_id=" + admin_id);
-
-}
-
-function get_position_s(id = null) {
-
-    if (id == null) {
-        jquery_manager.get_data("/api/position?admin_id=" + admin_id);
-
-    } else {
-        jquery_manager.get_data("/api/position?id=" + id + "&admin_id=" + admin_id);
-
-    }
-}
-
-function get_scenario_s(id = null) {
-
-    if (id == null) {
-        jquery_manager.get_data("/api/scenario?admin_id=" + admin_id);
-
-    } else {
-        jquery_manager.get_data("/api/scenario?id=" + id + "&admin_id=" + admin_id);
-    }
-}
 
 
