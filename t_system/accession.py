@@ -190,7 +190,9 @@ class NetworkConnector:
             if ssid == network["ssid"]:
                 self.db_upsert(ssid, password)
                 self.refresh_known_networks()
+                self.wpa_supplicant.create_wsc()
                 status = True
+                break
 
         return status, admin_id
 
@@ -281,7 +283,6 @@ class NetworkConnector:
         """
 
         self.known_networks.clear()
-        self.wpa_supplicant.create_wsc()
 
         for login in self.table.all():
             network = {"ssid": login["ssid"], "password": login["password"], "wlan": login["wlan"]}
@@ -361,6 +362,7 @@ class WpaSupplicant:
         """The high-level method to restart wpa_supplicant service with reconfigured wpa_supplicant.conf file.
         """
 
+        # call("rm -f /var/run/wpa_supplicant/wlan0", shell=True)
         call("wpa_supplicant -i wlan0 -c /etc/wpa_supplicant/wpa_supplicant.conf", shell=True)
 
     def create_wsc(self):
