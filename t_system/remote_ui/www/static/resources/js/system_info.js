@@ -68,7 +68,7 @@ function set_system_info() {
     requested_data = {"status": "OK", "data": {"cpu_usage_percent": 15, "cpu_temperature": 37, "ram_usage_percent": 20, "disk_usage_percent": 55, "versions": {"t_system": "0.9-alpha1.99", "stand": "0.3", "remote_ui": "1.8.7"}}};
     let timer_settings_cont = setInterval(function () {
 
-        if (requested_data !== undefined) {
+        if (requested_data !== null) {
             if (requested_data["status"] === "OK") {
 
                 let disk_usage_percentage = requested_data["data"]["disk_usage_percent"];
@@ -163,7 +163,7 @@ function set_system_info() {
                     remote_ui_version_p.innerHTML = "remote_ui: v" + remote_ui_version;
                     t_system_version_p.innerHTML = "t_system: v" + t_system_version;
                 }
-                requested_data = undefined;
+                requested_data = null;
                 clearInterval(timer_settings_cont)
             }
         }
