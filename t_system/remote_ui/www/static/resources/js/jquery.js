@@ -6,8 +6,6 @@
  * @author cem.baybars@gmail.com (Cem Baybars GÜÇLÜ)
  */
 
-let requested_data = undefined;
-let response_data = undefined;
 
 /**
  * The high-level method to handle of PUT request of $.ajax query.
@@ -32,6 +30,7 @@ $.put = function(url, data, callback){
   });
 };
 
+
 /**
  * The high-level method to handle of DELETE request of $.ajax query.
  * @param {string} url: the route address of the flask
@@ -54,6 +53,7 @@ $.delete = function(url, data, callback){
     contentType: 'application/json'
   });
 };
+
 
 /**
  * Class to define a AJAX JQuery communication method manager object.

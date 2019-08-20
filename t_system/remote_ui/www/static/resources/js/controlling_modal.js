@@ -109,7 +109,7 @@ sidebar_toggle_btn.addEventListener("click", function () {
 
     let timer_settings_cont = setInterval(function () {
 
-        if (requested_data !== undefined) {
+        if (requested_data !== null) {
             if (requested_data["status"] === "OK") {
 
                 console.log(requested_data["data"]);
@@ -132,7 +132,7 @@ sidebar_toggle_btn.addEventListener("click", function () {
                 dark_deep_background_div.classList.toggle("focused");
                 hide_element(controlling_template_content)
             }
-            requested_data = undefined;
+            requested_data = null;
             clearInterval(timer_settings_cont)
         }
     }, 300);
@@ -141,7 +141,7 @@ sidebar_toggle_btn.addEventListener("click", function () {
 
     timer_settings_cont = setInterval(function () {
 
-        if (requested_data !== undefined) {
+        if (requested_data !== null) {
             if (requested_data["status"] === "OK") {
 
                 console.log(requested_data["data"]);
@@ -164,7 +164,7 @@ sidebar_toggle_btn.addEventListener("click", function () {
                 dark_deep_background_div.classList.toggle("focused");
                 hide_element(controlling_template_content)
             }
-            requested_data = undefined;
+            requested_data = null;
             clearInterval(timer_settings_cont)
         }
     }, 300);
@@ -204,7 +204,7 @@ stream_area_video.addEventListener("click", function () {
 
         let timer_settings_cont = setInterval(function () {
 
-            if (requested_data !== undefined) {
+            if (requested_data !== null) {
                 if (requested_data["status"] === "OK") {
 
                     console.log(requested_data["data"]);
@@ -217,7 +217,7 @@ stream_area_video.addEventListener("click", function () {
                     video_area_div.classList.toggle("focused");
 
                 }
-                requested_data = undefined;
+                requested_data = null;
                 clearInterval(timer_settings_cont);
             }
         }, 300);

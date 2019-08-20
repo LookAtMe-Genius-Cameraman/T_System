@@ -6,9 +6,6 @@
  * @author cem.baybars@gmail.com (Cem Baybars GÜÇLÜ)
  */
 
-let admin_id = false;
-let timer;
-
 /** @type {!Object} */
 const jquery_manager = JQueryManager;
 
