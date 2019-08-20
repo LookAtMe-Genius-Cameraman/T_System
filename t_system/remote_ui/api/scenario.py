@@ -56,7 +56,8 @@ class ScenarioApi(Resource):
         admin_id = request.args.get('admin_id', None)
 
         try:
-            data = SCENARIO_SCHEMA.validate(request.form)
+            form = request.form.to_dict(flat=True)
+            data = SCENARIO_SCHEMA.validate(form)
         except SchemaError as e:
             return {'status': 'ERROR', 'message': e.code}
         result, scenario_id = create_scenario(admin_id, data)
@@ -72,7 +73,8 @@ class ScenarioApi(Resource):
         if not scenario_id:
             return {'status': 'ERROR', 'message': '\'id\' parameter is missing'}
         try:
-            data = SCENARIO_SCHEMA.validate(request.form)
+            form = request.form.to_dict(flat=True)
+            data = SCENARIO_SCHEMA.validate(form)
         except SchemaError as e:
             return {'status': 'ERROR', 'message': e.code}
 

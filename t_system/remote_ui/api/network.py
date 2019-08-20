@@ -57,12 +57,13 @@ class NetworkApi(Resource):
         admin_id = request.args.get('admin_id', None)
 
         try:
-            data = NETWORK_SCHEMA.validate(request.form)
+            form = request.form.to_dict(flat=True)  # request.form returns an immutable dict. And flat=False convert each value of the keys to list.
+            data = NETWORK_SCHEMA.validate(form)
         except SchemaError as e:
             return {'status': 'ERROR', 'message': e.code}
         result, admin_id = create_network(admin_id, data)
 
-        return {'status': 'OK' if result else 'ERROR', 'admin_id': 't_system' if admin_id else False}
+        return {'status': 'OK' if result else 'ERROR', 'admin_id': admin_id if admin_id else False}
 
     def put(self):
         """The API method to put request for flask.
@@ -73,7 +74,8 @@ class NetworkApi(Resource):
         if not network_ssid:
             return {'status': 'ERROR', 'message': '\'ssid\' parameter is missing'}
         try:
-            data = NETWORK_SCHEMA.validate(request.form)
+            form = request.form.to_dict(flat=True)
+            data = NETWORK_SCHEMA.validate(form)
         except SchemaError as e:
             return {'status': 'ERROR', 'message': e.code}
 

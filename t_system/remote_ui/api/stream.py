@@ -48,7 +48,8 @@ class StreamApi(Resource):
         stream, mimetype = self.stream_manager.start_stream(admin_id, stream_type)
 
         if stream and mimetype:
-            return {'status': 'OK', 'data': Response(stream, mimetype=mimetype)}
+            print(str(Response(stream, mimetype=mimetype).get_data()))
+            return {'status': 'OK', 'data': Response(stream, mimetype=mimetype).get_json()}
         else:
             return {'status': 'ERROR', 'message': "FAILED"}
 

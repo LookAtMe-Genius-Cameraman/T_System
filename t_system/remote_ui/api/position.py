@@ -56,7 +56,8 @@ class PositionApi(Resource):
         admin_id = request.args.get('admin_id', None)
 
         try:
-            data = POSITION_SCHEMA.validate(request.form)
+            form = request.form.to_dict(flat=True)
+            data = POSITION_SCHEMA.validate(form)
         except SchemaError as e:
             return {'status': 'ERROR', 'message': e.code}
         result, position_id = create_position(admin_id, data)
@@ -72,7 +73,8 @@ class PositionApi(Resource):
         if not position_id:
             return {'status': 'ERROR', 'message': '\'id\' parameter is missing'}
         try:
-            data = POSITION_SCHEMA.validate(request.form)
+            form = request.form.to_dict(flat=True)
+            data = POSITION_SCHEMA.validate(form)
         except SchemaError as e:
             return {'status': 'ERROR', 'message': e.code}
 

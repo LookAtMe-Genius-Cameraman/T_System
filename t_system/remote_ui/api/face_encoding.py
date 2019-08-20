@@ -56,7 +56,8 @@ class FaceEncodingApi(Resource):
         admin_id = request.args.get('admin_id', None)
 
         try:
-            data = FACE_ENCODING_SCHEMA.validate(request.form)
+            form = request.form.to_dict(flat=True)
+            data = FACE_ENCODING_SCHEMA.validate(form)
         except SchemaError as e:
             return {'status': 'ERROR', 'message': e.code}
         result = create_face(admin_id, data)
@@ -72,7 +73,8 @@ class FaceEncodingApi(Resource):
         if not face_id:
             return {'status': 'ERROR', 'message': '\'id\' parameter is missing'}
         try:
-            data = FACE_ENCODING_SCHEMA.validate(request.form)
+            form = request.form.to_dict(flat=True)
+            data = FACE_ENCODING_SCHEMA.validate(form)
         except SchemaError as e:
             return {'status': 'ERROR', 'message': e.code}
 
