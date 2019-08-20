@@ -10,9 +10,7 @@
 """
 
 from tinydb import TinyDB, Query  # TinyDB is a lightweight document oriented database
-from elevate import elevate
 
-# from t_system.accession import NetworkConnector
 from t_system import stand_ui
 from t_system import dot_t_system_dir
 
@@ -26,7 +24,8 @@ def create_network(admin_id, data):
     """
     try:
         result, admin_id = stand_ui.network_connector.add_network(data["ssid"], data["password"])
-    except Exception:
+    except Exception as e:
+        print(e)
         result = False
 
     return result, admin_id
