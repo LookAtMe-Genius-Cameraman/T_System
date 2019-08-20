@@ -60,7 +60,8 @@ class UpdateApi(Resource):
         """
         admin_id = request.args.get('admin_id', None)
 
-        data = UPDATE_SCHEMA.validate(request.form)
+        form = request.form.to_dict(flat=True)
+        data = UPDATE_SCHEMA.validate(form)
 
         result = update_status(admin_id, data)
         return {'status': 'OK' if result else 'ERROR'}

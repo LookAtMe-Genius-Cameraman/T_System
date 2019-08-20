@@ -56,7 +56,8 @@ class MoveApi(Resource):
         if not move_id:
             return {'status': 'ERROR', 'message': '\'id\' parameter is missing'}
         try:
-            data = MOVE_SCHEMA.validate(request.form)
+            form = request.form.to_dict(flat=True)
+            data = MOVE_SCHEMA.validate(form)
         except SchemaError as e:
             return {'status': 'ERROR', 'message': e.code}
 
