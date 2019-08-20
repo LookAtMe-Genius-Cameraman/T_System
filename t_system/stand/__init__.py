@@ -17,7 +17,7 @@ from elevate import elevate  # partial root authentication interface
 
 from t_system.accession import NetworkConnector, AccessPoint
 
-__version__ = '0.3'
+__version__ = '0.3.1'
 
 
 class Button:
