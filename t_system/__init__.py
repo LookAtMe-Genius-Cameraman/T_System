@@ -25,4 +25,6 @@ T_SYSTEM_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentf
 home = expanduser("~")
 dot_t_system_dir = home + "/.t_system"
 
+__author__ = 'Cem Baybars GÜÇLÜ'
+__email__ = 'cem.baybars@gmail.com'
 __version__ = '0.9-alpha2.11'
