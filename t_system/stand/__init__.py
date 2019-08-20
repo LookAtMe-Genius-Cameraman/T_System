@@ -145,8 +145,6 @@ class Stand:
         self.remote_ui = remote_ui
         self.static_ip = args["static_ip"]
 
-        self.multi_func_btn = Button(args["stand_gpios"][0])
-
         self.red_led = Led(args["stand_gpios"][1])
         self.green_led = Led(args["stand_gpios"][2])
 
@@ -159,53 +157,12 @@ class Stand:
             pass
         else:
             self.access_point.start()
-
-        self.remote_ui.run(host=self.static_ip)
-
-        # working_threads = []
-        #
-        # while True:
-        #     print("running")
-        #     if self.multi_func_btn.pressed_hold_time >= 3:
-        #         self.release_members()
-        #         call("sudo poweroff", shell=True)
-        #         break  # this line maybe not necessary!!
-        #
-        #     elif self.multi_func_btn.pressed_hold_time >= 1.5:
-        #         print("Stand By")
-        #         self.multi_func_btn.reset_pressed_hold_time()
-        #         self.reset_button()
-        #         self.terminate_threads(working_threads)
-        #
-        #         self.start_thread(self.blink_led, (lambda: self.stop_thread, self.red_led), working_threads)
-        #
-        #     elif self.multi_func_btn.is_pressed and self.multi_func_btn.press_count == 3:
-        #         print("Augmented active")
-        #         self.reset_button()
-        #         self.terminate_threads(working_threads)
-        #
-        #         from t_system.augmented import Augmenter
-        #         augmenter = Augmenter(self.vision)
-        #
-        #         self.start_thread(augmenter.run, (lambda: self.stop_thread,), working_threads)
-        #         self.start_thread(self.blink_led, (lambda: self.stop_thread, self.green_led, [1, 30]), working_threads)
-        #
-        #     elif self.multi_func_btn.is_pressed and self.multi_func_btn.press_count == 2:
-        #         print("Learn active")
-        #         self.reset_button()
-        #         self.terminate_threads(working_threads)
-        #
-        #         self.start_thread(self.vision.learn, (lambda: self.stop_thread,), working_threads)
-        #         self.start_thread(self.blink_led, (lambda: self.stop_thread, self.green_led, [5, 5]), working_threads)
-        #
-        #     elif self.multi_func_btn.is_pressed and self.multi_func_btn.press_count == 1:
-        #         print("Track active")
-        #         self.reset_button()
-        #         self.terminate_threads(working_threads)
-        #
-        #         self.start_thread(self.vision.detect_track, (lambda: self.stop_thread,), working_threads)
-        #         self.start_thread(self.blink_led, (lambda: self.stop_thread, self.green_led), working_threads)
-        #     time.sleep(0.5)
+        try:
+            self.remote_ui.run(host=self.static_ip)
+        except KeyboardInterrupt:
+            # TODO: After keyboard interrupt access point still active. so restarting the t_system is being corrupted. Following solution is not working. Fix this.
+            if self.access_point.is_working():
+                self.access_point.stop()
 
     def blink_led(self, stop_thread, led, delay_time=None):
         """The low-level method to blinking the LEDs with different on/off combinations.
@@ -234,14 +191,6 @@ class Stand:
         """
         self.red_led.off()
         self.green_led.off()
-
-    def reset_button(self):
-        """The low-level method to releasing button states. Reset press count for other buttons and reset pressed state for currently pressed button.
-        """
-
-        self.multi_func_btn.reset_press_state()
-        self.multi_func_btn.reset_press_count()
-        self.multi_func_btn.reset_pressed_hold_time()
 
     @staticmethod
     def start_thread(job, job_args, working_threads):
@@ -273,11 +222,6 @@ class Stand:
     def release_members(self):
         """The low-level method to releasing camera, stop sending signals and clean up the gpio pins.
         """
-
-        self.vision.release_camera()
-        self.vision.release_servos()
-
-        self.multi_func_btn.gpio_cleanup()
 
         self.red_led.gpio_cleanup()
         self.green_led.gpio_cleanup()
