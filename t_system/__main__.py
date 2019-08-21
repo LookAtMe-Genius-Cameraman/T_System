@@ -37,14 +37,8 @@ def start(args):
         if args["interface"] == "official_stand":
 
             from t_system.stand import Stand
-            from t_system.remote_ui import RemoteUI
 
-            template_folder = T_SYSTEM_PATH + "/remote_ui/www"
-            static_folder = template_folder + "/static"
-
-            remote_ui = RemoteUI(args=args, template_folder=template_folder, static_folder=static_folder)
-
-            t_system.stand_ui = Stand(args, remote_ui)
+            t_system.stand_ui = Stand(args)
             t_system.stand_ui.run()
 
         elif args["interface"] == "augmented":
