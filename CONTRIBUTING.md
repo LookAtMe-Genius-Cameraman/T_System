@@ -1,4 +1,4 @@
-# Contributing to Dragonfire
+# Contributing to T_System
 
 :sparkles: First off all, thanks for taking the time to contribute! :sparkles:
 
@@ -13,9 +13,8 @@ The following is a set of guidelines for contributing to T_System an open source
     - [Step 1: Set Up Git](#step-1-set-up-git)
     - [Step 2: Fork The Repo](#step-2-fork-the-repo)
     - [Step 3: Create a local clone of your fork](#step-3-create-a-local-clone-of-your-fork)
-  - [Install Dragonfire in Development Mode](#install-dragonfire-in-development-mode)
+  - [Install T_System in Development Mode](#install-t_system-in-development-mode)
     - [Use It](#use-it)
-    - [Missing Software Packages (Optional)](#missing-software-packages-optional)
     - [Choice for Code Editor](#choice-for-code-editor)
     - [About Packaging](#about-packaging)
 
@@ -36,11 +35,8 @@ The following is a set of guidelines for contributing to T_System an open source
   - [Git Commit Messages](#git-commit-messages)
   - [Python Styleguide](#python-styleguide)
 
-- [Troubleshooting](https://github.com/DragonComputer/Dragonfire/blob/master/docs/TROUBLESHOOTING.md#troubleshooting)
+- [Troubleshooting](https://github.com/connected-life/T_System/blob/master/docs/TROUBLESHOOTING.md#troubleshooting)
 
-- [Build the Debian package](#build-the-debian-package)
-
-- [API Reference](#api-reference)
 
 ## Code of Conduct
 
@@ -217,32 +213,97 @@ Once you have successfully created the pull request, wait for a response from th
 
 ## Style Guides
 
+### Available Grammar
+
+  - `@TODO`: Something to be done
+  - [`@FIXME`](#bug-report): Bug Report, should be corrected, Marked with :bug: Commit
+  - `@CHANGED`: Version Changes together with `@SINCE` DocComment, _Usually_ Marked with :fire: or :zap: Commits
+  - `@XXX`: Warn other programmers of problematic or misguiding code
+  - `@IDEA`: A New Idea or Proof-of-Concept, Marked with :bulb: Commit
+  - `@HACK`: Workaround or Customer Customizations, Marked with :ribbon: Commit
+  - `@NOTE`: Add attention to something Important
+  - `@REVIEW`: Needs to be Audited/Reviewed Immediately, _Usually_ Marked with :construction: Commit
+
+### Bug Report
+----------
+1. Add `@FIXME` Comment above SourceCode where Bug/Exception was Occurred.
+2. Write Additional Information:
+    1. Steps to Reproduce the Error
+    2. `Exception` Message and Code
+    3. Expected Result
+    4. Actual Result
+    5. Environment Detail
+3. Mention the Task ID in Format `{T###}`.
+4. (optional) Add Screenshots in Format `{F###}`(_Phabricator Specific_).
+5. Commit the Comments(with :bug: Emoji), also include Items 2.B, 3 & 4 in Commit Message too.
+6. Award that Task with `Manufacturing Defect` Token(_Phabricator Specific_).
+
+### Notes
+-----
+- Do **NOT** edit Contents of `Vendor` files(Composer, Bower, ...).
+- Grammars Should Appear in a List/Window in Your IDE of Choice([PHPStorm](https://www.jetbrains.com/help/phpstorm/2016.2/defining-todo-patterns-and-filters.html)).
+- There Must be an Audit for this Bug(Commit) Appear in Phabricator.
+- These Kind of Bug Reports Remain in History of VCS for future References of that Scope of Code.
+- All Attached Files & Commit Reference HashTag will be Referenced in the Phabricator Task View.
+- These Audits May become Tasks Later.
+
 ### Git Commit Messages
 
  - Use the present tense ("Add feature" not "Added feature")
  - Use the imperative mood ("Move cursor to..." not "Moves cursor to...")
  - Limit the first line to 72 characters or less
  - Reference issues and pull requests liberally after the first line
- - Consider starting the commit message with an applicable emoji:
-   - :art: `:art:` when improving the format/structure of the code
-   - :rocket: `:rocket:` when improving performance
-   - :robot: `:robot:` when improving the AI
-   - :memo: `:memo:` when writing docs
-   - :penguin: `:penguin:` when fixing something related to Linux
-   - :apple: `:apple:` when fixing something related to macOS
-   - :bug: `:bug:` when fixing a bug
-   - :bulb: `:bulb:` new idea
-   - :construction: `:construction:` work in progress
-   - :heavy_plus_sign: `:heavy_plus_sign:` when adding feature
-   - :heavy_minus_sign: `:heavy_minus_sign:` when removing feature
-   - :speaker: `:speaker:` when adding logging
-   - :mute: `:mute:` when reducing logging
-   - :fire: `:fire:` when removing code or files
-   - :white_check_mark: `:white_check_mark:` when adding tests
-   - :lock: `:lock:` when dealing with security
-   - :arrow_up: `:arrow_up:` when upgrading dependencies
-   - :arrow_down: `:arrow_down:` when downgrading dependencies
-   - :shirt: `:shirt:` when removing linter warnings
+
+#### Consider starting the commit message with an applicable emoji:
+
+| Emoji | Raw Emoji Code | Description |
+|:---:|:---:|---|
+| :art: | `:art:` | when improving the **format**/structure of the code |
+| :newspaper: | `:newspaper:` | when creating a **new file** |
+| :pencil: | `:pencil:` | when **performing minor changes/fixing** the code or language |
+| :racehorse: | `:racehorse:` | when improving **performance** |
+| :books: | `:books:` | when writing **docs** |
+| :bug: | `:bug:` | when reporting a **bug**, with [`@FIXME`](https://github.com/slashsbin/styleguide-todo-grammar#bug-report)Comment Tag |
+| :ambulance: | `:ambulance:` | when fixing a **bug** |
+| :penguin: | `:penguin:` | when fixing something on **Linux** |
+| :apple: | `:apple:` | when fixing something on **Mac OS** |
+| :checkered_flag: | `:checkered_flag:` | when fixing something on **Windows** |
+| :fire: | `:fire:` | when **removing code** or files, _maybe_ with `@CHANGED` Comment Tag |
+| :tractor: | `:tractor:` | when **change file structure**. Usually together with :art: |
+| :hammer: | `:hammer:` | when **refactoring** code |
+| :umbrella: | `:umbrella:` | when adding **tests** |
+| :microscope: | `:microscope:` | when adding **code coverage** |
+| :green_heart: | `:green_heart:` | when fixing the **CI** build |
+| :lock: | `:lock:` | when dealing with **security** |
+| :arrow_up: | `:arrow_up:` | when upgrading **dependencies** |
+| :arrow_down: | `:arrow_down:` | when downgrading **dependencies** |
+| :fast_forward: | `:fast_forward:` | when **forward-porting features** from an older version/branch |
+| :rewind: | `:rewind:` | when **backporting features** from a newer version/branch |
+| :shirt: | `:shirt:` | when removing **linter**/strict/deprecation warnings |
+| :lipstick: | `:lipstick:` | when improving **UI**/Cosmetic |
+| :wheelchair: | `:wheelchair:` | when improving **accessibility** |
+| :globe_with_meridians: | `:globe_with_meridians:` | when dealing with **globalization**/internationalization/i18n/g11n |
+| :construction: | `:construction:` | **WIP**(Work In Progress) Commits, _maybe_ with `@REVIEW` Comment Tag |
+| :gem: | `:gem:` | New **Release** |
+| :egg: | `:egg:` | New **Release** with Python egg|
+| :ferris_wheel: | `:ferris_wheel:` | New **Release** with Python wheel package |
+| :bookmark: | `:bookmark:` | Version **Tags** |
+| :tada: | `:tada:` | **Initial** Commit |
+| :speaker: | `:speaker:` | when Adding **Logging** |
+| :mute: | `:mute:` | when Reducing **Logging** |
+| :sparkles: | `:sparkles:` | when introducing **New** Features |
+| :zap: | `:zap:` | when introducing **Backward-InCompatible** Features, _maybe_ with `@CHANGED` Comment Tag |
+| :bulb: | `:bulb:` | New **Idea**, with `@IDEA` Comment Tag |
+| :snowflake: | `:snowflake:` | changing **Configuration**, Usually together with :penguin: or :ribbon: or :rocket: |
+| :ribbon: | `:ribbon:` | Customer requested application **Customization**, with `@HACK` Comment Tag |
+| :rocket: | `:rocket:` | Anything related to Deployments/**DevOps** |
+| :elephant: | `:elephant:` | **PostgreSQL** Database specific (Migrations, Scripts, Extensions, ...)  |
+| :dolphin: | `:dolphin:` | **MySQL** Database specific (Migrations, Scripts, Extensions, ...) |
+| :leaves: | `:leaves:` | **MongoDB** Database specific (Migrations, Scripts, Extensions, ...) |
+| :bank: | `:bank:` | **Generic Database** specific (Migrations, Scripts, Extensions, ...) |
+| :whale: | `:whale:` | **Docker** Configuration |
+| :handshake: | `:handshake:` | when **Merge files** |
+| :cherries: | `:cherries:` | when Commit Arise from one or more [**Cherry-Pick**](https://git-scm.com/docs/git-cherry-pick) Commit(s) |
 
 ### Python Style Guide
 
@@ -253,3 +314,9 @@ All Python must adhere to [PEP 8](https://www.python.org/dev/peps/pep-0008/).
 [missing-dependency]:https://github.com/connected-life/T_System/issues?q=is%3Aissue+is%3Aopen+label%3A%22missing+dependency%22
 [enhancement]:https://github.com/connected-life/T_System/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement
 [bug]:https://github.com/connected-life/T_System/issues?q=is%3Aissue+is%3Aopen+label%3Abug
+
+##### References
+  - <sup>https://en.wikipedia.org/wiki/Comment_(computer_programming)#Tags</sup>
+  - <sup>https://softwareengineering.stackexchange.com/questions/65467/what-does-xxx-mean-in-a-comment</sup>
+  - <sup>https://github.com/DragonComputer/Dragonfire/blob/master/CONTRIBUTING.md</sup>
+  - <sup>https://github.com/slashsbin/styleguide-git-commit-message/blob/master/README.md</sup>
