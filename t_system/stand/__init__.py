@@ -8,14 +8,13 @@
 
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
+
 import RPi.GPIO as GPIO
 import threading
 import time  # Time access and conversions
 
-from subprocess import call
-from elevate import elevate  # partial root authentication interface
-
 from t_system.accession import NetworkConnector, AccessPoint
+from t_system import T_SYSTEM_PATH, dot_t_system_dir
 
 __version__ = '0.3.1'
 
@@ -132,17 +131,23 @@ class Stand:
 
     """
 
-    def __init__(self, args, remote_ui):
+    def __init__(self, args):
         """Initialization method of :class:`t_system.stand.Stand` class.
 
         Args:
             args:                       Command-line arguments.
         """
 
+        from t_system.remote_ui import RemoteUI
+
+        template_folder = T_SYSTEM_PATH + "/remote_ui/www"
+        static_folder = template_folder + "/static"
+
+        self.remote_ui = RemoteUI(args=args, template_folder=template_folder, static_folder=static_folder)
+
         self.network_connector = NetworkConnector(args)
         self.access_point = AccessPoint(args)
 
-        self.remote_ui = remote_ui
         self.static_ip = args["static_ip"]
 
         self.red_led = Led(args["stand_gpios"][1])
