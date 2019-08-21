@@ -395,13 +395,13 @@ class WpaSupplicant:
 
         command_txt = f'sudo wpa_passphrase "{ssid}" "{password}"'
 
-        result = check_output(command_txt, shell=True)
+        result = check_output(command_txt, shell=True).decode("utf-8").splitlines()  # result = [['network={', '\tssid="SSID', '\t#psk="PASSWORD"', '\tpsk=PSK_OF_PASSWORD', '}']]
 
         f = open(self.wpa_supp_conf_file, 'a')
         for line in result:
             if priority is not None and "}" in line:
                 f.write(f'\tpriority={priority}\n')
-            f.write(line)
+            f.write(f'{line}\n')
         f.close()
 
 

@@ -11,7 +11,6 @@
 
 from tinydb import TinyDB, Query  # TinyDB is a lightweight document oriented database
 
-from t_system import stand_ui
 from t_system import dot_t_system_dir
 
 
@@ -23,6 +22,7 @@ def create_network(admin_id, data):
         data (dict):                    Network data structure.
     """
     try:
+        from t_system import stand_ui
         result, admin_id = stand_ui.network_connector.add_network(data["ssid"], data["password"])
     except Exception as e:
         print(e)
