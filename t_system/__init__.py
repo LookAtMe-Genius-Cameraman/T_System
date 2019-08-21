@@ -28,4 +28,4 @@ dot_t_system_dir = home + "/.t_system"
 
 __author__ = 'Cem Baybars GÜÇLÜ'
 __email__ = 'cem.baybars@gmail.com'
-__version__ = '0.9-alpha2.21'
+__version__ = '0.9-alpha2.22'
