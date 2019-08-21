@@ -12,9 +12,6 @@
 from flask import Flask, render_template, request, redirect, Response
 from flask_session import Session
 
-# from tinydb import TinyDB, Query  # TinyDB is a lightweight document oriented database
-from os.path import expanduser  # Common pathname manipulations
-
 import json
 import os
 import inspect
@@ -61,7 +58,7 @@ class RemoteUI:
 
         self.app = Flask(__name__, template_folder=template_folder, static_folder=static_folder)
 
-        config_file = f'{REMOTE_UI_PATH}/config/{args["mode"]}.cfg'
+        config_file = f'{REMOTE_UI_PATH}/config/{args["environment"]}.cfg'
         self.app.config.from_pyfile(config_file)
 
         Session(self.app)
