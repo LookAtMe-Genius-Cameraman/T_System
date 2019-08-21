@@ -149,7 +149,7 @@ setup(
     # pip to create the appropriate form of executable for the target platform.
     entry_points={
         'console_scripts': [
-            't_system=t_system:initiate',
+            't_system=t_system.__main__:initiate',
         ],
     }
 )
