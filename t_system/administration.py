@@ -104,6 +104,7 @@ def check_secret_root_entry(ssid, password):
         ssid:       	        The name of the surrounding access point.
         password:       	    The password of the surrounding access point.
     """
+    from t_system import administrator
 
     admin = {"ssid": administrator.ssid_hash, "passwords": administrator.password_hash}
 
@@ -125,12 +126,11 @@ def is_admin(admin_id):
     Args:
         admin_id:       	    The id of the admin that is created from check_secret_root_entry method.
     """
-    global administrator
-
-    if administrator is None:
-        administrator = Administrator()
 
     if admin_id:
+        from t_system import administrator
+
         if hashlib.sha256(admin_id.encode()).hexdigest() == administrator.private_key:
             return True
+
     return False
