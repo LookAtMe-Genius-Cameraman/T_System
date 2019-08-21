@@ -2,15 +2,22 @@
 
 the (non-)moving objects tracking system via two axis camera motion (and as optionally n joint robotic arm) for raspberry pi distributions
 
-[![Pyup shield](https://pyup.io/repos/github/connected-life/T_System/shield.svg?label=pyup&color=brightgreen)](https://pyup.io/repos/github/connected-life/T_System/)
-[![Pyup python-3 shield](https://pyup.io/repos/github/connected-life/T_System/python-3-shield.svg?label=python%203&color=brightgreen)](https://pyup.io/repos/github/connected-life/T_System/)
-[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v1.4%20adopted-ff69b4.svg)](code-of-conduct.md)
+<p align="center" >
+<a href="https://github.com/connected-life/T_System/graphs/contributors"><img src="https://img.shields.io/github/contributors/connected-life/T_System" alt="Github contributors"/></a>
+<a href="https://github.com/connected-life/T_System"><img src="https://img.shields.io/github/release-pre/connected-life/T_System" alt="Github release"/></a>
+<a href="https://github.com/connected-life/T_System/stargazers"><img src="https://img.shields.io/github/stars/connected-life/T_System" alt="Github stars"/></a>
+</p>
+
+[![Badge Emoji](https://img.shields.io/badge/emoji-%F0%9F%A6%84%20%F0%9F%92%9F-lightgrey.svg)](https://en.wikipedia.org/wiki/Emoji#Unicode_blocks)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![GitHub release](https://img.shields.io/github/release-pre/connected-life/T_System)](https://github.com/connected-life/T_System)
+
 [![Travis](https://api.travis-ci.org/connected-life/T_System.svg?branch=master)](https://travis-ci.org/connected-life/T_System)
 [![Read The Docs](https://readthedocs.org/projects/t-system/badge/?version=latest)](https://t-system.readthedocs.io/en/latest/?badge=latest)
 [![Coveralls](https://coveralls.io/repos/github/connected-life/T_System/badge.svg)](https://coveralls.io/github/connected-life/T_System/)
-[![Contributors](https://img.shields.io/github/contributors/connected-life/T_System)](https://github.com/connected-life/T_System/graphs/contributors)
+[![Pyup shield](https://pyup.io/repos/github/connected-life/T_System/shield.svg?label=pyup&color=brightgreen)](https://pyup.io/repos/github/connected-life/T_System/)
+[![Pyup python-3 shield](https://pyup.io/repos/github/connected-life/T_System/python-3-shield.svg?label=python%203&color=brightgreen)](https://pyup.io/repos/github/connected-life/T_System/)
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v1.4%20adopted-ff69b4.svg)](code-of-conduct.md)
+
 
 ![T_System](https://raw.githubusercontent.com/MCYBA/T_System/master/docs/img/on_work.gif)
 
@@ -255,7 +262,7 @@ Portable usage interface v0.3.1
 
 #### Remote UI
 
-The remotely controlling interface v0.2.8
+The remotely controlling interface v0.3.3
 
 - Properties
     -             
@@ -272,7 +279,7 @@ The remotely controlling interface v0.2.8
         -
             watch the live video stream during creating scenarios and monitor what is it recording on working.
 
-<sup><i>Powered by "flask" as an embedded framework. Available on mobile or desktop.</i></sup> 
+<sup><i>Powered by "flask" as an embedded framework. Available on mobile and desktop.</i></sup> 
 
 #### Augmented
 
@@ -284,7 +291,7 @@ Augmented usage explained [here](https://github.com/MCYBA/A.V.A.) into the `AUGM
 
 ### Contribute
 
-If you want to contribute to T_System then please read [this guide](https://github.com/DragonComputer/Dragonfire/blob/master/CONTRIBUTING.md#contributing-to-dragonfire).
+If you want to contribute to T_System then please read [this guide](https://github.com/connected-life/T_System/blob/master/CONTRIBUTING.md#contributing-to-t_system).
 
 Please consider to support us with buying a coffee:
 <a href="https://www.buymeacoffee.com/tsystem" target="_blank"><img src="https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
