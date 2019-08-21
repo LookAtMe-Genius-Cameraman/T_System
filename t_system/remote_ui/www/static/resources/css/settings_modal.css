@@ -73,7 +73,7 @@
     height: 40px; /*when activate goes to 70%*/
 
     transition: all 300ms;
-    /*border: tan solid;*/
+    border: tan solid;
 
     /*margin: auto 5px auto auto;*/
 }
@@ -98,6 +98,7 @@
 
     transition: all 300ms;
     /*border: #8a6d3b solid;*/
+    border-radius: 5px;
 
     background-color: #fff0eb;
     color: #008CBA;
@@ -134,6 +135,8 @@
     width: 98%;
 
     transition: all 300ms;
+    background-color: #fff0eb;
+
     border: 2px #008CBA;
     border-style: none none solid none;
     border-radius: 5px;
