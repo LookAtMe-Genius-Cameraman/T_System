@@ -15,6 +15,7 @@ import sys
 
 from elevate import elevate
 
+from t_system.logging import LogManager
 from t_system.vision import Vision
 from t_system.accession import AccessPoint
 from t_system.administration import Administrator
@@ -106,8 +107,13 @@ def prepare(args):
     if not os.path.exists(dot_t_system_dir):
         os.mkdir(dot_t_system_dir)
 
+    t_system.log_manager = LogManager(args)
     t_system.administrator = Administrator()
     t_system.update_manager = UpdateManager()
+
+    global logger
+    logger = t_system.log_manager.get_logger(__name__, "DEBUG")
+    logger.info("Logger integration successful.")
 
     if args["sub_jobs"]:
         start_sub(args)
@@ -122,6 +128,8 @@ def prepare(args):
     if not args["AI"] or args["non_moving_target"]:
         if args["learn"]:
             raise Exception('All AI learning tools deprecated. Don\'t use the learn mode without AI.')
+
+    logger.info("Package preparation completed.")
 
 
 def initiate():
@@ -149,12 +157,10 @@ def initiate():
     remote_ui_gr.add_argument("--host", help="Specify host address.", action="store", type=str, default="192.168.1.24")
     remote_ui_gr.add_argument("--port", help="Specify the port.", action="store", type=str, default="3000")
     remote_ui_gr.add_argument("--debug", help="Activate debug mode.", action="store_true")
-    remote_ui_gr.add_argument("--mode", help="The run mode. It specify the configuration file. To use: either `production`, `development` or `testing`. Default is production", action="store", type=str, default="production")
 
     r_mode_gr = ap.add_argument_group('running modes')
     r_mode_gr.add_argument("-l", "--learn", help="Teach Mode. Teach the object tracking parameters with the trial and error method.", action="store_true")
     r_mode_gr.add_argument("-s", "--security", help="Security Mode. Scan the around and optionally take photos of visitors.", action="store_true")
-    # r_mode_gr.add_argument("-a", "--augmented", help="Augmented control with the Augmented Virtual Assistant A.V.A.. \'https://github.com/MCYBA/A.V.A.\' is the home page of the A.V.A. and usage explained into the \'AUGMENTED.md\'.", action="store_true")
 
     tool_gr = ap.add_argument_group('running tools')
     tool_gr.add_argument("--detection-model", help="Object detection model to use: either `haarcascade`, `hog` or `cnn`. `hog` and `cnn` can only use for detecting human faces. `haarcascade` is default.", action="store", type=str, default="haarcascade")
@@ -199,9 +205,11 @@ def initiate():
     access_p_gr.add_argument("--country-code", help="Wifi country code for the wpa_supplicant.conf. To use look at: https://github.com/recalbox/recalbox-os/wiki/Wifi-country-code-(EN). Default is `TR`", action="store", default="TR", type=str)
 
     other_gr = ap.add_argument_group('others')
+    other_gr.add_argument("--environment", help="The running environment. It specify the configuration files and logs. To use: either `production`, `development` or `testing`. Default is production", action="store", type=str, default="development")
     other_gr.add_argument("-S", "--show-stream", help="Display the camera stream. Enable the stream window.(Require gui environment.)", action="store_true")
     other_gr.add_argument("-m", "--found-object-mark", help="Specify the mark type of the found object.  To use: either `single_rect`, `rotating_arcs`, `partial_rect` or None. Default is `single_rect`", action="store", default="single_rect", type=str)
     other_gr.add_argument("-r", "--record", help="Record the video stream. Files are named by the date.", action="store_true")
+    other_gr.add_argument("-v", "--verbose", help="Print various debugging logs to console for debug problems", action="store_true")
     other_gr.add_argument("--version", help="Display the version number of T_System.", action="store_true")
 
     sub_p = ap.add_subparsers(dest="sub_jobs", help='officiate the sub-jobs')  # if sub-commands not used their arguments create raise.
@@ -216,7 +224,6 @@ def initiate():
     ap_face_encode.add_argument("-d", "--detection-method", help="face detection model to use: either `hog` or `cnn` default is `hog`", type=str, default="hog")
 
     ap_self_update = sub_p.add_parser('self-update', help='update source code of t_system itself via `git pull` command from the remote git repo.')
-    ap_self_update.add_argument("-v", "--verbose", help="Print various debugging information to debug problems", action="store_true")
     ap_self_update.add_argument("-e", "--editable", help="Update the T_System in editable mode (i.e. setuptools'develop mode')", action="store_true")
 
     args = vars(ap.parse_args())
