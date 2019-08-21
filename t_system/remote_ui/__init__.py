@@ -29,7 +29,7 @@ from t_system.remote_ui.api.stream import api_bp as stream_api_bp
 from t_system import dot_t_system_dir
 # dot_t_system_dir = "/home/baybars/.t_system"
 
-__version__ = '0.3.2'
+__version__ = '0.3.3'
 
 
 REMOTE_UI_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
