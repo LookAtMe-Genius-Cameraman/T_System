@@ -44,12 +44,12 @@ class NetworkApi(Resource):
         admin_id = request.args.get('admin_id', None)
 
         if network_ssid:
-            scenario = get_network(admin_id, network_ssid)
-            return {'status': 'OK', 'data': scenario}
+            network = get_network(admin_id, network_ssid)
+            return {'status': 'OK', 'data': network}
 
-        scenarios = get_networks(admin_id)
+        networks = get_networks(admin_id)
 
-        return {'status': 'OK', 'data': scenarios}
+        return {'status': 'OK', 'data': networks}
 
     def post(self):
         """The API method to post request for flask.

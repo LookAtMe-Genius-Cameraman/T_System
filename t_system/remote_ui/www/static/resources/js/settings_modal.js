@@ -52,6 +52,10 @@ wifi_connections_btn.addEventListener("click", function () {
 
                 if (requested_data["status"] === "OK") {
 
+                    while (network_list_ul.firstChild) {
+                        network_list_ul.removeChild(network_list_ul.firstChild);
+                    }
+
                     for (let c = 0; c < requested_data["data"].length; c++) {
                         // console.log(event_db[c]["name"]);
                         let li = document.createElement('li');
@@ -60,7 +64,7 @@ wifi_connections_btn.addEventListener("click", function () {
                         let ssid_output = document.createElement('output');
                         let password_output = document.createElement('output');
 
-                        ssid_output.value = requested_data[c]["data"]["ssid"];
+                        ssid_output.value = requested_data["data"][c]["ssid"];
                         password_output.value = requested_data["data"][c]["password"];
 
                         li.appendChild(section);
@@ -70,13 +74,13 @@ wifi_connections_btn.addEventListener("click", function () {
                         network_list_ul.appendChild(li);
                     }
 
-                        wifi_control_div.style.top = "20%";
-                        wifi_control_div.style.height = "70%";
-                        show_element(wifi_control_io_div);
+                    wifi_control_div.style.top = "20%";
+                    wifi_control_div.style.height = "70%";
+                    show_element(wifi_control_io_div);
 
                 }
-                    requested_data = null;
-                    clearInterval(timer_settings_cont)
+                requested_data = null;
+                clearInterval(timer_settings_cont)
             }
         }, 500);
 
