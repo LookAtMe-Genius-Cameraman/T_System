@@ -11,10 +11,10 @@
 
 import os  # Miscellaneous operating system interfaces
 import inspect  # Inspect live objects
-import logging.config
 
 from os.path import expanduser  # Common pathname manipulations
 
+log_manager = None
 seer = None
 augmenter = None
 stand_ui = None
@@ -25,9 +25,6 @@ T_SYSTEM_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentf
 
 home = expanduser("~")
 dot_t_system_dir = home + "/.t_system"
-
-# logging.config.fileConfig('logging.ini', disable_existing_loggers=False)
-# logger = logging.getLogger('simpleExample')
 
 __author__ = 'Cem Baybars GÜÇLÜ'
 __email__ = 'cem.baybars@gmail.com'
