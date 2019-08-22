@@ -15,7 +15,7 @@ import time  # Time access and conversions
 
 from t_system.accession import NetworkConnector, AccessPoint
 
-__version__ = '0.3.1'
+__version__ = '0.3.11'
 
 
 class Button:
