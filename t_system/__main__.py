@@ -22,7 +22,7 @@ from t_system.administration import Administrator
 from t_system.updation import UpdateManager
 
 import t_system.__init__
-from t_system import T_SYSTEM_PATH, dot_t_system_dir
+from t_system import dot_t_system_dir
 
 
 def start(args):
@@ -45,16 +45,13 @@ def start(args):
         elif args["interface"] == "augmented":
             from t_system.augmented import Augmenter
 
-            t_system.augmenter = Augmenter(seer)
+            t_system.augmenter = Augmenter(t_system.seer)
             t_system.augmenter.run(lambda: False)
 
         elif args["interface"] == "remote_ui":
             from t_system.remote_ui import RemoteUI
 
-            template_folder = T_SYSTEM_PATH + "/remote_ui/www"
-            static_folder = template_folder + "/static"
-
-            remote_ui = RemoteUI(args=args, template_folder=template_folder, static_folder=static_folder)
+            remote_ui = RemoteUI(args)
             remote_ui.run(host=args["host"], port=args["port"], debug=args["debug"])
 
         else:

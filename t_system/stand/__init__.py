@@ -14,7 +14,6 @@ import threading
 import time  # Time access and conversions
 
 from t_system.accession import NetworkConnector, AccessPoint
-from t_system import T_SYSTEM_PATH, dot_t_system_dir
 
 __version__ = '0.3.1'
 
@@ -140,10 +139,7 @@ class Stand:
 
         from t_system.remote_ui import RemoteUI
 
-        template_folder = T_SYSTEM_PATH + "/remote_ui/www"
-        static_folder = template_folder + "/static"
-
-        self.remote_ui = RemoteUI(args=args, template_folder=template_folder, static_folder=static_folder)
+        self.remote_ui = RemoteUI(args)
 
         self.network_connector = NetworkConnector(args)
         self.access_point = AccessPoint(args)
@@ -163,7 +159,7 @@ class Stand:
         else:
             self.access_point.start()
         try:
-            self.remote_ui.run(host=self.static_ip)
+            self.remote_ui.run(host="t_system")
         except KeyboardInterrupt:
             # TODO: After keyboard interrupt access point still active. so restarting the t_system is being corrupted. Following solution is not working. Fix this.
             if self.access_point.is_working():
