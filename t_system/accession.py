@@ -191,7 +191,8 @@ class NetworkConnector:
             if ssid == network["ssid"]:
                 self.db_upsert(ssid, password)
                 self.refresh_known_networks()
-                self.wpa_supplicant.create_wsc()
+                self.wpa_supplicant.add_network_to_wsc(ssid, password)
+                self.restart_networking_service()
                 status = True
                 break
 
@@ -205,6 +206,10 @@ class NetworkConnector:
         """
 
         self.table.remove((Query().ssid == ssid))
+        self.wpa_supplicant.create_wsc()
+
+        for login in self.table.all():
+            self.wpa_supplicant.add_network_to_wsc(login["ssid"], login["password"])
 
     @dispatch()
     def connect(self):
@@ -212,12 +217,13 @@ class NetworkConnector:
         """
 
         result = False
-        self.wpa_supplicant.restart_ws_service()
+        # self.wpa_supplicant.restart_ws_service()
 
-        time.sleep(5)
+        # time.sleep(5)
+        # TODO: External network may not be able to access the internet. So create a difference here as 'is there any connected network?' and 'is network online'
         if self.is_network_online():
             print("Network connection established!")
-            # result = True
+            result = True
 
         return result
 
@@ -288,7 +294,12 @@ class NetworkConnector:
         for login in self.table.all():
             network = {"ssid": login["ssid"], "password": login["password"], "wlan": login["wlan"]}
             self.known_networks.append(network)
-            self.wpa_supplicant.add_network_to_wsc(login["ssid"], login["password"])
+
+    @staticmethod
+    def restart_networking_service():
+        """The low-level method to to restart networking.service
+        """
+        call("systemctl restart networking.service", shell=True)
 
     @staticmethod
     def is_network_online():
@@ -399,6 +410,7 @@ class WpaSupplicant:
         result = check_output(command_txt, shell=True).decode("utf-8").splitlines()  # result = [['network={', '\tssid="SSID', '\t#psk="PASSWORD"', '\tpsk=PSK_OF_PASSWORD', '}']]
 
         f = open(self.wpa_supp_conf_file, 'a')
+        f.write("\n")
         for line in result:
             if priority is not None and "}" in line:
                 f.write(f'\tpriority={priority}\n')
