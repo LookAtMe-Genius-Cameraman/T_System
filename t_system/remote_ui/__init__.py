@@ -23,7 +23,7 @@ from t_system.remote_ui.api.move import api_bp as move_api_bp
 from t_system.remote_ui.api.system_info import api_bp as system_info_api_bp
 from t_system.remote_ui.api.face_encoding import api_bp as face_encoding_api_bp
 from t_system.remote_ui.api.stream import api_bp as stream_api_bp
-from t_system import dot_t_system_dir
+from t_system import T_SYSTEM_PATH, dot_t_system_dir
 # dot_t_system_dir = "/home/baybars/.t_system"
 
 __version__ = '0.3.3'
@@ -41,22 +41,22 @@ class RemoteUI:
 
     """
 
-    def __init__(self, args, template_folder, static_folder):
+    def __init__(self, args):
         """Initialization method of :class:`t_system.remote_ui.RemoteUI` class.
 
             Args:
                 args:       Command-line arguments.
-                template_folder (str):  The folder of html templates.
-                static_folder (str):    The folder of css and js files.
         """
 
         self.host = args["host"]
         self.port = args["port"]
         self.debug = args["debug"]
 
-        self.remote_ui_dir = dot_t_system_dir + '/remote_ui'
-
+        template_folder = T_SYSTEM_PATH + "/remote_ui/www"
+        static_folder = template_folder + "/static"
         self.app = Flask(__name__, template_folder=template_folder, static_folder=static_folder)
+
+        self.remote_ui_dir = dot_t_system_dir + '/remote_ui'
 
         config_file = f'{REMOTE_UI_PATH}/config/{args["environment"]}.cfg'
         self.app.config.from_pyfile(config_file)
@@ -125,6 +125,6 @@ if __name__ == "__main__":
     _template_folder = REMOTE_UI_PATH + "/www"
     _static_folder = _template_folder + "/static"
 
-    app = RemoteUI(args={"host": "localhost", "port": "5000", "debug": True, "mode": "development"}, template_folder=_template_folder, static_folder=_static_folder)
+    app = RemoteUI(args={"host": "localhost", "port": "5000", "debug": True, "environment": "development"}, template_folder=_template_folder, static_folder=_static_folder)
     app.run(host="172.22.9.40", port="5000",  debug=True)
     # app.debug = True
