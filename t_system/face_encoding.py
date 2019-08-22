@@ -169,7 +169,7 @@ class FaceEncoder:
 
         Args:
             dataset_folder (str):   The path of the dataset that will be encoded.
-            pickle_file (str):      The file that is keep faces's encoded data
+            pickle_file (str):      The file that is keep faces's encoded data.
             face_name (str):        The name of the man who has face in dataset.
         """
 
@@ -391,7 +391,7 @@ class Face:
         self.db_upsert(force_insert=True)
 
     def create_dataset_from_base_sf_photos(self, photos):
-        """The low-level method to creating image that will be dataset for recognizing person's face later from base64 encoded string photo data.
+        """The high-level method to creating image that will be dataset for recognizing person's face later from base64 encoded string photo data.
 
         Args:
             photos (list):             The person's raw photo data list. Contains list of {"name": "photo_name", "base_sf": "Base64_encoded_data"}.

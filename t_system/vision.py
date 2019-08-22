@@ -29,7 +29,7 @@ from t_system.audition import Hearer
 from t_system.recordation import Recorder
 
 from t_system.high_tech_aim import Aimer
-
+from t_system import dot_t_system_dir, T_SYSTEM_PATH
 
 T_SYSTEM_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
@@ -67,9 +67,7 @@ class Vision:
         self.no_recognize = args["no_recognize"]
 
         if not self.no_recognize:
-            encoding_pickle_file = T_SYSTEM_PATH + "/recognition_encodings/" + args["encoding_file"] + ".pickle"
-            self.recognition_data = pickle.loads(open(encoding_pickle_file, "rb").read())
-
+            self.recognition_data = self.get_recognition_data(args["encoding_file"])
             self.track = self.track_with_recognizing
         else:
             self.track = self.track_without_recognizing
@@ -725,6 +723,20 @@ class Vision:
                 thickness (int):        Thickness of the drawing shape.
         """
         pass
+
+    @staticmethod
+    def get_recognition_data(encoding_file_name):
+        """The low-level method to get encoded recognition data from picke file.
+
+         Args:
+                encoding_file_name (str):  The file that is keep faces's encoded data.
+        """
+        if encoding_file_name == "main_encoding":
+            encoding_pickle_file = f'{dot_t_system_dir}/recognition/{encoding_file_name}.pickle'
+        else:
+            encoding_pickle_file = f'{dot_t_system_dir}/recognition/encodings/{encoding_file_name}.pickle'
+
+        return pickle.loads(open(encoding_pickle_file, "rb").read())  # this is recognition_data
 
     def get_mark_object(self, mark_found_object):
         """The low-level method to set mqtt_receimitter object for publishing and subscribing data echos.
