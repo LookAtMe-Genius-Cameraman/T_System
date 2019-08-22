@@ -64,8 +64,8 @@ function get_system_info() {
  * The high-level method to set system info chart/table by administration or normal entry.
  */
 function set_system_info() {
-    // get_system_info();
-    requested_data = {"status": "OK", "data": {"cpu_usage_percent": 15, "cpu_temperature": 37, "ram_usage_percent": 20, "disk_usage_percent": 55, "versions": {"t_system": "0.9-alpha1.99", "stand": "0.3", "remote_ui": "1.8.7"}}};
+    get_system_info();
+    // requested_data = {"status": "OK", "data": {"cpu_usage_percent": 15, "cpu_temperature": 37, "ram_usage_percent": 20, "disk_usage_percent": 55, "free_disk_space": 18, "versions": {"t_system": "0.9-alpha1.99", "stand": "0.3", "remote_ui": "1.8.7"}}};
     let timer_settings_cont = setInterval(function () {
 
         if (requested_data !== null) {

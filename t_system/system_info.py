@@ -27,9 +27,9 @@ def get_disk_usage(admin_id):
     usage = psutil.disk_usage('/')
 
     if is_admin(admin_id):
-        return {"disk_usage_percent": usage.percent, "free_disk_space": round(usage.free / 9, 2)}
+        return {"disk_usage_percent": round(usage.percent, 2), "free_disk_space": round(usage.free / 10**9, 2)}
     else:
-        return {"disk_usage_percent": usage.percent * 1.1, "free_disk_space": round(usage.free / 9 * 0.9, 2)}
+        return {"disk_usage_percent": round(usage.percent * 1.1, 2), "free_disk_space": round(usage.free / 10**9 * 0.9, 2)}
 
 
 def get_cpu_usage(admin_id):
@@ -89,9 +89,9 @@ def get_versions(admin_id):
         from t_system.stand import __version__ as stand_version
         from t_system.remote_ui import __version__ as remote_ui_version
 
-        return {"verisons": {"t_system": t_system_version, "stand": stand_version, "remote_ui": remote_ui_version}}
+        return {"versions": {"t_system": t_system_version, "stand": stand_version, "remote_ui": remote_ui_version}}
     else:
-        return {"t_system": None, "stand": None, "remote_ui": None}
+        return {"versions": {"t_system": None, "stand": None, "remote_ui": None}}
 
 
 
