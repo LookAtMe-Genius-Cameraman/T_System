@@ -29,38 +29,53 @@
     </div>
 
     <!--SETTINGS MODAL-->
-    <div id="settings_template_container" class="position-absolute">
+    <div id="settings_template_container" class="position-absolute container">
+        <div class="position-relative row mt-4">
+            <div id="update_control_div" class="position-relative col">
+                <button id="update_control_btn" class="position-relative" translate>Updates</button>
+                <div id="update_control_io_div" class="position-relative form-group row">
+                    <label class="checkbox-inline"><input type="checkbox" id="auto_update_checkbox" value="" translate>Auto Update</label>
+                    <!--<label for="auto_update_checkbox" class="col-sm-2 col-form-label"></label><input type="checkbox" id="auto_update_checkbox" class="form-control">-->
+                    <button id="update_btn" class="btn btn-info" translate>Up To Date</button>
+                </div>
+            </div>
 
-        <div id="update_control_div" class="position-relative">
-            <button id="update_control_btn" class="position-relative" translate>Updates</button>
-            <div id="update_control_io_div" class="position-relative form-group row">
-                <label class="checkbox-inline"><input type="checkbox" id="auto_update_checkbox" value="" translate>Auto Update</label>
-                <!--<label for="auto_update_checkbox" class="col-sm-2 col-form-label"></label><input type="checkbox" id="auto_update_checkbox" class="form-control">-->
-                <button id="update_btn" class="btn btn-info" translate>Up To Date</button>
+            <div id="wifi_control_div" class="position-relative col">
+                <button id="wifi_connections_btn" translate>Wifi Connections</button>
+                <div id="wifi_control_io_div">
+                    <div id="create_new_network">
+                        <input class="new_network_input" type="text" name="network_ssid" id="network_ssid_input" placeholder="ssid"/>
+                        <input class="new_network_input" type="text" name="network_password" id="network_password_input" placeholder="password"/>
+                        <button id="create_new_network_btn" translate>&#187;</button>
+                    </div>
+                    <ul class="network_list" id="network_list_ul"></ul>
+                </div>
             </div>
         </div>
 
-        <div id="wifi_control_div" class="position-relative">
-            <button id="wifi_connections_btn" translate>Wifi Connections</button>
-            <div id="wifi_control_io_div">
-                <div id="create_new_network">
-                    <input class="new_network_input" type="text" name="network_ssid" id="network_ssid_input" placeholder="ssid"/>
-                    <input class="new_network_input" type="text" name="network_password" id="network_password_input" placeholder="password"/>
-                    <button id="create_new_network_btn" translate>&#187;</button>
+        <div class="position-relative row mt-3">
+            <div id="lang_select_div" class="col">
+                            <ul id="language_dropdown_ul">
+                <li class="dropdown">
+                    <a href="#">
+                        <span class="dropbtn text-info" id="translate_menu"></span>
+                    </a>
+                    <div class="dropdown-content" id="lang_menu">
+                    </div>
+                </li>
+            </ul>
+            </div>
+            <div id="face_encoding_div" class="position-relative col">
+                <button id="face_encoding_btn" translate>Wifi Connections</button>
+                <div id="face_encoding_io_div">
+                    <div id="encode_new_face_div">
+                        <input class="new_network_input" type="text" name="face_name" id="face_name_input" placeholder="name"/>
+                        <button id="encode_new_face_btn" translate>&#187;</button>
+                    </div>
+                    <ul class="network_list" id="encoded_face_list_ul"></ul>
                 </div>
-                <ul class="network_list" id="network_list_ul"></ul>
             </div>
         </div>
-
-        <ul id="language_dropdown_ul" class="nav navbar-nav navbar-right position-relative">
-            <li class="dropdown">
-                <a href="#">
-                    <span class="dropbtn text-info" id="translate_menu"></span>
-                </a>
-                <div class="dropdown-content" id="lang_menu">
-                </div>
-            </li>
-        </ul>
     </div>
 
     <!--CONTROLLING MODAL-->
@@ -172,8 +187,6 @@
 <!-- inserting these scripts at the end to be able to use all the elements in the DOM -->
 <script src="static/vendors/chart.js/Chart.bundle.min.js"></script>
 <script src="static/vendors/jquery/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-<script src="static/vendors/jquery/jquery.mobile-1.4.5.min.js"></script>
-<script src="static/vendors/jquery/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
 
 <script src="static/resources/js/__init__.js"></script>
 
@@ -190,10 +203,10 @@
 <script src="static/resources/js/translate.js"></script>
 <script src="static/resources/js/localstorage.js"></script>
 <script src="static/resources/js/managing_bar.js"></script>
-<script src="static/resources/js/on_work_modal.js"></script>
+<script src="static/resources/js/on_work_modal.js"></script>4
+<script src="static/resources/js/controlling_modal.js"></script>
 <script src="static/resources/js/prismatic_arm_control.js"></script>
 <script src="static/resources/js/rotational_arm_control.js"></script>
-<script src="static/resources/js/controlling_modal.js"></script>
 <script src="static/resources/js/settings_modal.js"></script>
 <script src="static/resources/js/system_info.js"></script>
 
