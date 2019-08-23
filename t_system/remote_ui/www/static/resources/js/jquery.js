@@ -124,7 +124,8 @@ class JQueryManager {
      * The high-level method to send PUT request to given route.
      * The response of request assigns to `response_data` variable.
      * @param {string} route: the route address of the flask
-     * @param {dict} data: putting data to route.
+     * @param data: putting data to route.
+     * @return {string} Whether something occurred.
      */
     static put_data(route, data) {
         let success = "";
