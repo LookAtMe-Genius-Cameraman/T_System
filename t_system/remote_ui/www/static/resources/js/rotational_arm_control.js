@@ -10,7 +10,7 @@
 joint_1_cw_btn.addEventListener("mousedown", function () {
 
     let route = "/api/move?id=1&admin_id=" + admin_id;
-    let data = {"type": "joint", "id": "1", "quantity": "10"};
+    let data = {"type": "joint", "id": "1", "quantity": 10};
 
     interval = setInterval(function () {
         // console.log("gönderdi");
@@ -22,7 +22,7 @@ joint_1_cw_btn.addEventListener("mousedown", function () {
 joint_1_ccw_btn.addEventListener("mousedown", function () {
 
     let route = "/api/move?id=1&admin_id=" + admin_id;
-    let data = {"type": "joint", "id": "1", "quantity": "-10"};
+    let data = {"type": "joint", "id": "1", "quantity": -10};
 
     interval = setInterval(function () {
         // console.log("gönderdi");
@@ -34,7 +34,7 @@ joint_1_ccw_btn.addEventListener("mousedown", function () {
 joint_2_cw_btn.addEventListener("mousedown", function () {
 
     let route = "/api/move?id=2&admin_id=" + admin_id;
-    let data = {"type": "joint", "id": "2", "quantity": "10"};
+    let data = {"type": "joint", "id": "2", "quantity": 10};
 
     interval = setInterval(function () {
         // console.log("gönderdi");
@@ -46,7 +46,7 @@ joint_2_cw_btn.addEventListener("mousedown", function () {
 joint_2_ccw_btn.addEventListener("mousedown", function () {
 
     let route = "/api/move?id=2&admin_id=" + admin_id;
-    let data = {"type": "joint", "id": "2", "quantity": "-10"};
+    let data = {"type": "joint", "id": "2", "quantity": -10};
 
     interval = setInterval(function () {
         // console.log("gönderdi");
@@ -58,7 +58,7 @@ joint_2_ccw_btn.addEventListener("mousedown", function () {
 joint_3_cw_btn.addEventListener("mousedown", function () {
 
     let route = "/api/move?id=3&admin_id=" + admin_id;
-    let data = {"type": "joint", "id": "3", "quantity": "10"};
+    let data = {"type": "joint", "id": "3", "quantity": 10};
 
     interval = setInterval(function () {
         // console.log("gönderdi");
@@ -70,7 +70,7 @@ joint_3_cw_btn.addEventListener("mousedown", function () {
 joint_3_ccw_btn.addEventListener("mousedown", function () {
 
     let route = "/api/move?id=3&admin_id=" + admin_id;
-    let data = {"type": "joint", "id": "3", "quantity": "-10"};
+    let data = {"type": "joint", "id": "3", "quantity": -10};
 
     interval = setInterval(function () {
         // console.log("gönderdi");
