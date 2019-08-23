@@ -10,7 +10,7 @@
 x_up_btn.addEventListener("mousedown", function () {
 
     let route = "/api/move?id=x&admin_id=" + admin_id;
-    let data = {"type": "axis", "id": "x", "quantity": "10"};
+    let data = {"type": "axis", "id": "x", "quantity": 10};
 
     interval = setInterval(function () {
         // console.log("gönderdi");
@@ -22,7 +22,7 @@ x_up_btn.addEventListener("mousedown", function () {
 x_down_btn.addEventListener("mousedown", function () {
 
     let route = "/api/move?id=x&admin_id=" + admin_id;
-    let data = {"type": "axis", "id": "x", "quantity": "-10"};
+    let data = {"type": "axis", "id": "x", "quantity": -10};
 
     interval = setInterval(function () {
         // console.log("gönderdi");
@@ -34,7 +34,7 @@ x_down_btn.addEventListener("mousedown", function () {
 y_up_btn.addEventListener("mousedown", function () {
 
     let route = "/api/move?id=y&admin_id=" + admin_id;
-    let data = {"type": "axis", "id": "y", "quantity": "10"};
+    let data = {"type": "axis", "id": "y", "quantity": 10};
 
     interval = setInterval(function () {
         // console.log("gönderdi");
@@ -46,7 +46,7 @@ y_up_btn.addEventListener("mousedown", function () {
 y_down_btn.addEventListener("mousedown", function () {
 
     let route = "/api/move?id=y&admin_id=" + admin_id;
-    let data = {"type": "axis", "id": "y", "quantity": "-10"};
+    let data = {"type": "axis", "id": "y", "quantity": -10};
 
     interval = setInterval(function () {
         // console.log("gönderdi");
@@ -58,7 +58,7 @@ y_down_btn.addEventListener("mousedown", function () {
 z_up_btn.addEventListener("mousedown", function () {
 
     let route = "/api/move?id=z&admin_id=" + admin_id;
-    let data = {"type": "axis", "id": "z", "quantity": "10"};
+    let data = {"type": "axis", "id": "z", "quantity": 10};
 
     interval = setInterval(function () {
         // console.log("gönderdi");
@@ -70,7 +70,7 @@ z_up_btn.addEventListener("mousedown", function () {
 z_down_btn.addEventListener("mousedown", function () {
 
     let route = "/api/move?id=z&admin_id=" + admin_id;
-    let data = {"type": "axis", "id": "z", "quantity": "-10"};
+    let data = {"type": "axis", "id": "z", "quantity": -10};
 
     interval = setInterval(function () {
         // console.log("gönderdi");
