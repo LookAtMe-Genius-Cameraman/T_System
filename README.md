@@ -69,7 +69,7 @@ for development mode: `sudo ./install-dev.sh`
 
 
 ```
-usage: t_system [-h] [--stand-gpios BUTTON RED-LED GREEN-LED] [--host HOST]
+usage: t_system [-h] [--stand-gpios RED-LED GREEN-LED] [--host HOST]
                 [--port PORT] [--debug] [-l] [-s]
                 [--detection-model DETECTION_MODEL]
                 [--cascade-file CASCADE_FILE] [-j]
@@ -117,10 +117,9 @@ user-interfaces:
                         `running modes` parameters.The default value is None.
 
 official_stand:
-  --stand-gpios BUTTON RED-LED GREEN-LED
-                        GPIO pin numbers of official stand's the button and
-                        the led. 5(as button), 27(as red led) and 22(as green
-                        led) GPIO pins are default.
+  --stand-gpios RED-LED GREEN-LED
+                        GPIO pin numbers of official stand's LEDs.5(as red
+                        led) and 6(as green led) GPIO pins are default.
 
 remote_ui:
   --host HOST           Specify host address.
