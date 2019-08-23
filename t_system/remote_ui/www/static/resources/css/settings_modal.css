@@ -2,7 +2,7 @@
     visibility: visible;
     opacity: 1;
 
-    max-width: 175px;
+    /*max-width: 175px;*/
     max-height: 280px;
 
     /*alignment*/
@@ -10,7 +10,7 @@
     /*left: 27%;*/
     float: left;
 
-    width: 44%;
+    /*width: 55%;*/
     height: 40px; /*when activate goes to 70%*/
 
     transition: all 300ms;
@@ -25,21 +25,18 @@
 
     max-width: 100%;
     max-height: 100%;
-    margin: 0 auto;
-    text-rendering: optimizeLegibility;
-    align-items: center;
-
-    /*alignment*/
-    /*top: -88.5rem;*/
 
     width: 98%;
-    height: 10%;
+    height: 38px;
 
     transition: all 300ms;
-    /*border: #8a6d3b solid;*/
+    border-radius: 5px;
 
-    background-color: #fff0eb;
+    background-color: #fff;
     color: #008CBA;
+
+    font-size: 14px;
+
 
 }
 
@@ -50,32 +47,22 @@
 
     max-width: 100%;
     max-height: 100%;
-    margin: auto;
-
 }
 
 #wifi_control_div {
     visibility: visible;
     opacity: 1;
 
-    max-width: 175px;
+    /*max-width: 175px;*/
     max-height: 280px;
-    /*margin: 0 auto;*/
-    text-rendering: optimizeLegibility;
-    align-items: center;
 
-    /*alignment*/
-    /*top: -20%; !* it goes from 3.5rem to -5.5rem*!*/
-    /*left: 27%;*/
     float: left;
 
-    width: 44%;
+    /*width: 55%;*/
     height: 40px; /*when activate goes to 70%*/
 
     transition: all 300ms;
     border: tan solid;
-
-    /*margin: auto 5px auto auto;*/
 }
 
 #wifi_connections_btn {
@@ -86,22 +73,17 @@
 
     max-width: 100%;
     max-height: 100%;
-    margin: 0 auto;
-    text-rendering: optimizeLegibility;
-    align-items: center;
-
-    /*alignment*/
-    /*top: -88.5rem;*/
 
     width: 98%;
-    height: 10%;
+    height: 40px;
 
     transition: all 300ms;
-    /*border: #8a6d3b solid;*/
     border-radius: 5px;
 
-    background-color: #fff0eb;
+    background-color: #fff;
     color: #008CBA;
+
+    font-size: 14px;
 
 }
 
@@ -192,6 +174,22 @@
 
     transition: opacity 300ms;
     /*border: turquoise solid;*/
+}
+
+#lang_select_div {
+    visibility: visible;
+    opacity: 1;
+
+    max-width: 175px;
+    max-height: 280px;
+
+    float: left;
+
+    width: 44%;
+    height: 40px; /*when activate goes to 70%*/
+
+    transition: all 300ms;
+    border: tan solid;
 }
 
 #language_dropdown_ul {
