@@ -81,10 +81,12 @@ class ServoMotor:
         """
 
         target_duty_cy = self.angle_to_duty_cy(target_angle)
-        target_duty_cy = round(target_duty_cy, 5)
 
-        self.servo.ChangeDutyCycle(target_duty_cy)
-        self.current_duty_cy = target_duty_cy
+        if self.min_duty_cy <= target_duty_cy <= self.max_duty_cy:
+            target_duty_cy = round(target_duty_cy, 5)
+
+            self.servo.ChangeDutyCycle(target_duty_cy)
+            self.current_duty_cy = target_duty_cy
 
     def softly_goto_position(self, target_angle):
         """The high-level method to changing position to the target angle step by step for more softly than direct_goto_position func.
