@@ -1,6 +1,6 @@
 body {
     /*overflow-y: hidden;*/
-        background-color: #fff0eb;  /*Default white tone*/
+    background-color: #fff0eb; /*Default white tone*/
 }
 
 .hidden_element {
@@ -61,11 +61,7 @@ body {
 
 #on_work_btn {}
 
-#settings_template_container {
-
-    visibility: hidden;
-    opacity: 0;
-
+.swiper-container {
     max-width: 90%;
     max-height: 95%;
 
@@ -74,64 +70,46 @@ body {
     left: 50%;
 
     width: 85%;
-    height: 68%;
+    height: 70%;
+
+    position: absolute;
+    transform: translate(-50%);
+    z-index: 61;
+}
+
+.swiper-slide {
+    background-position: center;
+    background-size: cover;
+}
+
+#settings_template_container {
+
+    visibility: visible;
+    opacity: 1;
 
     transition: opacity 300ms;
     border: #8d75a3 dashed;
-    transform: translate(-50%);
     margin: auto;
 
 }
 
 #controlling_template_container {
-    visibility: hidden;
-    opacity: 0;
-
-    max-width: 90%;
-    max-height: 95%;
-
-    /*alignment*/
-    top: 20%;
-    left: 50%;
-
-    width: 85%;
-    height: 68%;
+    visibility: visible;
+    opacity: 1;
 
     transition: opacity 300ms;
     border:#3c763d  dashed;
-    transform: translate(-50%);
-
     margin: auto;
-
     z-index: 61;
-
-
 }
 
 #on_work_template_container {
-    /*position: relative;*/
 
-    visibility: hidden;
-    opacity: 0;
-
-    max-width: 90%;
-    max-height: 95%;
-
-    /*alignment*/
-    top: 20%;
-    left: 50%;
-
-    width: 85%;
-    height: 68%;
-
-    /*width: 40%;*/
-    /*height: 45%;*/
+    visibility: visible;
+    opacity: 1;
 
     transition: opacity 300ms;
     border: #8d75a3 dashed;
-
-    transform: translate(-50%);
-
 }
 
 #system_info_template_container {

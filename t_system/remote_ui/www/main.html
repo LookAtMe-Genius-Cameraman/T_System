@@ -4,7 +4,8 @@
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale = 1.0, maximum-scale = 1.0, user-scalable=no">
     <title>T_System</title>
     <link rel="stylesheet" href="static/vendors/bootstrap/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="static/vendors/chart.js/Chart.min.css">
+    <link rel="stylesheet" href="static/vendors/chart.js/css/Chart.min.css">
+    <link rel="stylesheet" href="static/vendors/swiper/swiper.min.css">
     <link rel="stylesheet" media="all" type="text/css" href="static/resources/css/master.css">
     <script>
         let event_db = null;
@@ -22,154 +23,163 @@
             <mark translate>T_System</mark>
         </a></footer>
         <div id="page_control_div" class="btn-group justify-content-center">
-            <button id="settings_btn" class="btn btn-dark" translate>Settings</button>
+            <button id="settings_btn" class="btn btn-dark swiper-button" translate>Settings</button>
             <button id="control_btn" class="btn btn-dark" translate>Control</button>
             <button id="on_work_btn" class="btn btn-dark" translate>Let's Begin</button>
         </div>
     </div>
 
-    <!--SETTINGS MODAL-->
-    <div id="settings_template_container" class="position-absolute container">
-        <div class="position-relative row mt-4">
-            <div id="update_control_div" class="position-relative col">
-                <button id="update_control_btn" class="position-relative" translate>Updates</button>
-                <div id="update_control_io_div" class="position-relative form-group row">
-                    <label class="checkbox-inline"><input type="checkbox" id="auto_update_checkbox" value="" translate>Auto Update</label>
-                    <!--<label for="auto_update_checkbox" class="col-sm-2 col-form-label"></label><input type="checkbox" id="auto_update_checkbox" class="form-control">-->
-                    <button id="update_btn" class="btn btn-info" translate>Up To Date</button>
-                </div>
-            </div>
-
-            <div id="wifi_control_div" class="position-relative col">
-                <button id="wifi_connections_btn" translate>Wifi Connections</button>
-                <div id="wifi_control_io_div">
-                    <div id="create_new_network">
-                        <input class="new_network_input" type="text" name="network_ssid" id="network_ssid_input" placeholder="ssid"/>
-                        <input class="new_network_input" type="text" name="network_password" id="network_password_input" placeholder="password"/>
-                        <button id="create_new_network_btn" translate>&#187;</button>
+    <!-- Swiper -->
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <!--        ======================================================SETTINGS MODAL======================================================        -->
+            <div id="settings_template_container" class="container swiper-slide">
+                <div class="position-relative row mt-4">
+                    <div id="update_control_div" class="position-relative col">
+                        <button id="update_control_btn" class="position-relative" translate>Updates</button>
+                        <div id="update_control_io_div" class="position-relative form-group row">
+                            <label class="checkbox-inline"><input type="checkbox" id="auto_update_checkbox" value="" translate>Auto Update</label>
+                            <!--<label for="auto_update_checkbox" class="col-sm-2 col-form-label"></label><input type="checkbox" id="auto_update_checkbox" class="form-control">-->
+                            <button id="update_btn" class="btn btn-info" translate>Up To Date</button>
+                        </div>
                     </div>
-                    <ul class="network_list" id="network_list_ul"></ul>
-                </div>
-            </div>
-        </div>
 
-        <div class="position-relative row mt-3">
-            <div id="lang_select_div" class="col">
+                    <div id="wifi_control_div" class="position-relative col">
+                        <button id="wifi_connections_btn" translate>Wifi Connections</button>
+                        <div id="wifi_control_io_div">
+                            <div id="create_new_network">
+                                <input class="new_network_input" type="text" name="network_ssid" id="network_ssid_input" placeholder="ssid"/>
+                                <input class="new_network_input" type="text" name="network_password" id="network_password_input" placeholder="password"/>
+                                <button id="create_new_network_btn" translate>&#187;</button>
+                            </div>
+                            <ul class="network_list" id="network_list_ul"></ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="position-relative row mt-3">
+                    <div id="lang_select_div" class="col">
+                        <button id="lang_select_btn"></button>
+                        <div id="language_dropdown_div">
                             <ul id="language_dropdown_ul">
-                <li class="dropdown">
-                    <a href="#">
-                        <span class="dropbtn text-info" id="translate_menu"></span>
-                    </a>
-                    <div class="dropdown-content" id="lang_menu">
+                                <li class="dropdown">
+                                    <a href="#">
+                                        <span class="dropbtn text-info" id="translate_menu"></span>
+                                    </a>
+                                    <div class="dropdown-content" id="lang_menu">
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                </li>
-            </ul>
-            </div>
-            <div id="face_encoding_div" class="position-relative col">
-                <button id="face_encoding_btn" translate>Wifi Connections</button>
-                <div id="face_encoding_io_div">
-                    <div id="encode_new_face_div">
-                        <input class="new_network_input" type="text" name="face_name" id="face_name_input" placeholder="name"/>
-                        <button id="encode_new_face_btn" translate>&#187;</button>
+
+                    <div id="face_encoding_div" class="position-relative col">
+                        <button id="face_encoding_btn" translate>Facial Recognitions</button>
+                        <div id="face_encoding_io_div">
+                            <div id="encode_new_face_div">
+                                <input class="new_network_input" type="text" name="face_name" id="face_name_input" placeholder="name"/>
+                                <button id="encode_new_face_btn" translate>&#187;</button>
+                            </div>
+                            <ul class="network_list" id="encoded_face_list_ul"></ul>
+                        </div>
                     </div>
-                    <ul class="network_list" id="encoded_face_list_ul"></ul>
                 </div>
-            </div>
-        </div>
-    </div>
+            </div><!--        ======================================================SETTINGS MODAL======================================================        -->
 
-    <!--CONTROLLING MODAL-->
-    <div id="controlling_template_container" class="position-absolute">
+            <!--        ======================================================CONTROLLING MODAL======================================================        -->
+            <div id="controlling_template_container" class="swiper-slide">
 
-        <!-- Sidebar -->
-        <div id="controlling_template_sidebar" class="sidenav">
-            <a href="javascript:void(0)" id="controlling_template_sidebar_close_btn" class="close_btn" onclick="closeNav()">&times;</a>
-            <h6 id="scenarios_title" style="max-width: 150px" translate>Scenarios :</h6>
-            <ul class="list-unstyled components network_list" id="scenario_list_ul"></ul>
-            <h6 id="positions_title" style="max-width: 150px" translate>Positions :</h6>
-            <ul class="list-unstyled components network_list" id="position_list_ul"></ul>
-        </div>
-
-        <div id="controlling_template_content">
-            <button id="sidebar_toggle_btn" class="position-absolute" translate>&#187;</button>
-        <div id="video_area_div" class="position-relative">
-            <span id="get_preview_span" class="position-absolute" translate>Click here to get preview</span>
-            <video id="stream_area_video" class="position-relative">
-                <img id="stream_area_video_source" src="" type="image/jpeg">
-                <!--<source src="mov_bbb.ogg" type="video/ogg">-->
-                Your browser does not support HTML5 video.
-            </video>
-            <!--<img id="stream_area_video">-->
-        </div>
-        <div id="motion_control_div" class="position-absolute">
-            <button id="motion_control_btn" class=""></button>
-            <div id="prismatic_control_div" class="position-relative align-content-center prismatic_control_div">
-                <button id="z_up_btn" class="btn-info" translate>up</button>
-                <button id="z_down_btn" class="btn-info" translate>down</button>
-                <button id="x_up_btn" class="btn-info" translate>left</button>
-                <button id="x_down_btn" class="btn-info" translate>right</button>
-                <button id="y_up_btn" class="btn-info" translate>forward</button>
-                <button id="y_down_btn" class="btn-info" translate>backward</button>
-            </div>
-            <div id="rotational_control_div" class="position-relative rotational_control_div">
-
-                <div class="btn-group p-1">
-                    <button id="joint_1_cw_btn" class="btn btn-info" translate>joint1 right</button>
-                    <button id="joint_1_ccw_btn" class="btn btn-info" translate>joint1 left</button>
-                </div>
-                <div class="btn-group p-1">
-                    <button id="joint_2_cw_btn" class="btn btn-info" translate>joint2 right</button>
-                    <button id="joint_2_ccw_btn" class="btn btn-info" translate>joint2 left</button>
-                </div>
-                <div class="btn-group p-1">
-                    <button id="joint_3_cw_btn" class="btn btn-info" translate>joint3 right</button>
-                    <button id="joint_3_ccw_btn" class="btn btn-info" translate>joint3 left</button>
+                <!-- Sidebar -->
+                <div id="controlling_template_sidebar" class="sidenav">
+                    <a href="javascript:void(0)" id="controlling_template_sidebar_close_btn" class="close_btn" onclick="closeNav()">&times;</a>
+                    <h6 id="scenarios_title" style="max-width: 150px" translate>Scenarios :</h6>
+                    <ul class="list-unstyled components network_list" id="scenario_list_ul"></ul>
+                    <h6 id="positions_title" style="max-width: 150px" translate>Positions :</h6>
+                    <ul class="list-unstyled components network_list" id="position_list_ul"></ul>
                 </div>
 
-            </div>
-        </div>
-            <button id="record_pos_sce_btn" class="position-absolute" translate>save</button>
-            <div id="record_pos_sce_div" class="position-absolute">
-                <div id="pos_sce_select_div" class="position-absolute btn-group-vertical">
-                    <button id="record_as_pos_btn" class="position-relative btn" translate>As position</button>
-                    <button id="record_in_sce_btn" class="position-relative btn" translate>In scenario</button>
-                </div>
-                <div id="record_as_position_div" class="position-absolute">
-                    <button id="position_div_back_btn" class="position-relative btn" translate>Back</button>
-                    <input class="new_network_input" type="text" name="position_name" id="position_name_input" placeholder="name"/>
-                </div>
-                <div id="record_in_scenario_div" class="position-absolute">
-                    <button id="scenario_div_back_btn" class="position-relative btn" translate>Back</button>
-                    <input class="new_network_input" type="text" name="scenario_name" id="scenario_name_input" placeholder="name"/>
-                </div>
-            </div>
-        </div>
-    </div>
+                <div id="controlling_template_content">
+                    <button id="sidebar_toggle_btn" class="position-absolute" translate>&#187;</button>
+                    <div id="video_area_div" class="position-relative">
+                        <span id="get_preview_span" class="position-absolute" translate>Click here to get preview</span>
+                        <video id="stream_area_video" class="position-relative">
+                            <img id="stream_area_video_source" src="" type="image/jpeg">
+                            <!--<source src="mov_bbb.ogg" type="video/ogg">-->
+                            Your browser does not support HTML5 video.
+                        </video>
+                        <!--<img id="stream_area_video">-->
+                    </div>
+                    <div id="motion_control_div" class="position-absolute">
+                        <button id="motion_control_btn" class=""></button>
+                        <div id="prismatic_control_div" class="position-relative align-content-center prismatic_control_div">
+                            <button id="z_up_btn" class="btn-info" translate>up</button>
+                            <button id="z_down_btn" class="btn-info" translate>down</button>
+                            <button id="x_up_btn" class="btn-info" translate>left</button>
+                            <button id="x_down_btn" class="btn-info" translate>right</button>
+                            <button id="y_up_btn" class="btn-info" translate>forward</button>
+                            <button id="y_down_btn" class="btn-info" translate>backward</button>
+                        </div>
+                        <div id="rotational_control_div" class="position-relative rotational_control_div">
 
-    <!--ON WORK MODAL-->
-    <div id="on_work_template_container" class="position-absolute jumbotron vertical-center">
-        <div style="text-align:center">
-            <button onclick="playPause()">Play/Pause</button>
-            <label for="on_work_windows_size_select">Size</label><select class="dropdown" style="height: 30px; width: 70px" id="on_work_windows_size_select">
-            <option value="big">Big</option>
-            <option value="small">Small</option>
-            <option value="normal">Normal</option>
-        </select>
-            <br><br>
-            <div id="on_work_video_area_div">
-                <span id="on_work_get_preview_span">Click here to get preview</span>
-                <video id="_on_work_stream_area_video" width="420">
-                    <source src="http://localhost:5000/live_stream" type="video/mp4">
-                    <!--<source src="mov_bbb.ogg" type="video/ogg">-->
-                    Your browser does not support HTML5 video.
-                </video>
-                <button id="on_work_start_stop_record_btn">READY</button>
-            </div>
+                            <div class="btn-group p-1">
+                                <button id="joint_1_cw_btn" class="btn btn-info" translate>joint1 right</button>
+                                <button id="joint_1_ccw_btn" class="btn btn-info" translate>joint1 left</button>
+                            </div>
+                            <div class="btn-group p-1">
+                                <button id="joint_2_cw_btn" class="btn btn-info" translate>joint2 right</button>
+                                <button id="joint_2_ccw_btn" class="btn btn-info" translate>joint2 left</button>
+                            </div>
+                            <div class="btn-group p-1">
+                                <button id="joint_3_cw_btn" class="btn btn-info" translate>joint3 right</button>
+                                <button id="joint_3_ccw_btn" class="btn btn-info" translate>joint3 left</button>
+                            </div>
+
+                        </div>
+                    </div>
+                    <button id="record_pos_sce_btn" class="position-absolute" translate>save</button>
+                    <div id="record_pos_sce_div" class="position-absolute">
+                        <div id="pos_sce_select_div" class="position-absolute btn-group-vertical">
+                            <button id="record_as_pos_btn" class="position-relative btn" translate>As position</button>
+                            <button id="record_in_sce_btn" class="position-relative btn" translate>In scenario</button>
+                        </div>
+                        <div id="record_as_position_div" class="position-absolute">
+                            <button id="position_div_back_btn" class="position-relative btn" translate>Back</button>
+                            <input class="new_network_input" type="text" name="position_name" id="position_name_input" placeholder="name"/>
+                        </div>
+                        <div id="record_in_scenario_div" class="position-absolute">
+                            <button id="scenario_div_back_btn" class="position-relative btn" translate>Back</button>
+                            <input class="new_network_input" type="text" name="scenario_name" id="scenario_name_input" placeholder="name"/>
+                        </div>
+                    </div>
+                </div>
+            </div><!--        ======================================================CONTROLLING MODAL======================================================        -->
+
+            <!--        ======================================================ON WORK MODAL======================================================        -->
+            <div id="on_work_template_container" class="jumbotron vertical-center swiper-slide">
+                <div style="text-align:center">
+                    <button onclick="playPause()">Play/Pause</button>
+                    <label for="on_work_windows_size_select">Size</label><select class="dropdown" style="height: 30px; width: 70px" id="on_work_windows_size_select">
+                    <option value="big">Big</option>
+                    <option value="small">Small</option>
+                    <option value="normal">Normal</option>
+                </select>
+                    <br><br>
+                    <div id="on_work_video_area_div">
+                        <span id="on_work_get_preview_span">Click here to get preview</span>
+                        <video id="_on_work_stream_area_video" width="420">
+                            <source src="http://localhost:5000/live_stream" type="video/mp4">
+                            <!--<source src="mov_bbb.ogg" type="video/ogg">-->
+                            Your browser does not support HTML5 video.
+                        </video>
+                        <button id="on_work_start_stop_record_btn">READY</button>
+                    </div>
+                </div>
+            </div><!--        ======================================================ON WORK MODAL======================================================        -->
         </div>
     </div>
 </div>
 
-<!--SYSTEM INFO MODAL-->
+<!--        ======================================================SYSTEM INFO MODAL======================================================        -->
 <div id="system_info_template_container" class="position-absolute">
     <button id="system_info_btn" class="position-relative btn btn-dark" translate>System Info</button>
     <div id="system_info_chart_div" class="position-relative">
@@ -181,11 +191,13 @@
         <p id="t_system_version_p" class="position-relative" align="right"></p>
     </div>
 </div>
+<!--        ======================================================SYSTEM INFO MODAL======================================================        -->
 
 <div id="dark_deep_background_div" class="position-fixed"></div>
 
 <!-- inserting these scripts at the end to be able to use all the elements in the DOM -->
-<script src="static/vendors/chart.js/Chart.bundle.min.js"></script>
+<script src="static/vendors/swiper/swiper.min.js"></script>
+<script src="static/vendors/chart.js/js/Chart.bundle.min.js"></script>
 <script src="static/vendors/jquery/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 
 <script src="static/resources/js/__init__.js"></script>
