@@ -26,7 +26,7 @@ from t_system.remote_ui.api.stream import api_bp as stream_api_bp
 from t_system import T_SYSTEM_PATH, dot_t_system_dir
 # dot_t_system_dir = "/home/baybars/.t_system"
 # T_SYSTEM_PATH = "/home/baybars/T_System/t_system"
-__version__ = '0.3.3'
+__version__ = '0.3.4'
 
 
 REMOTE_UI_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
