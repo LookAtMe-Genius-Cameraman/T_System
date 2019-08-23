@@ -7,17 +7,14 @@
  */
 
 
-let interval = 0;
-
-
 x_up_btn.addEventListener("mousedown", function () {
 
     let route = "/api/move?id=x&admin_id=" + admin_id;
-    let data = {"type": "axis", "id": "x", "quantity": 10};
+    let data = {"type": "axis", "id": "x", "quantity": "10"};
 
     interval = setInterval(function () {
         // console.log("gönderdi");
-        jquery_manager.post_data(route, data);
+        jquery_manager.put_data(route, data);
     }, 300);
 });
 
@@ -25,11 +22,11 @@ x_up_btn.addEventListener("mousedown", function () {
 x_down_btn.addEventListener("mousedown", function () {
 
     let route = "/api/move?id=x&admin_id=" + admin_id;
-    let data = {"type": "axis", "id": "x", "quantity": -10};
+    let data = {"type": "axis", "id": "x", "quantity": "-10"};
 
     interval = setInterval(function () {
         // console.log("gönderdi");
-        jquery_manager.post_data(route, data);
+        jquery_manager.put_data(route, data);
     }, 300);
 });
 
@@ -37,11 +34,11 @@ x_down_btn.addEventListener("mousedown", function () {
 y_up_btn.addEventListener("mousedown", function () {
 
     let route = "/api/move?id=y&admin_id=" + admin_id;
-    let data = {"type": "axis", "id": "y", "quantity": 10};
+    let data = {"type": "axis", "id": "y", "quantity": "10"};
 
     interval = setInterval(function () {
         // console.log("gönderdi");
-        jquery_manager.post_data(route, data);
+        jquery_manager.put_data(route, data);
     }, 300);
 });
 
@@ -49,11 +46,11 @@ y_up_btn.addEventListener("mousedown", function () {
 y_down_btn.addEventListener("mousedown", function () {
 
     let route = "/api/move?id=y&admin_id=" + admin_id;
-    let data = {"type": "axis", "id": "y", "quantity": -10};
+    let data = {"type": "axis", "id": "y", "quantity": "-10"};
 
     interval = setInterval(function () {
         // console.log("gönderdi");
-        jquery_manager.post_data(route, data);
+        jquery_manager.put_data(route, data);
     }, 300);
 });
 
@@ -61,11 +58,11 @@ y_down_btn.addEventListener("mousedown", function () {
 z_up_btn.addEventListener("mousedown", function () {
 
     let route = "/api/move?id=z&admin_id=" + admin_id;
-    let data = {"type": "axis", "id": "z", "quantity": 10};
+    let data = {"type": "axis", "id": "z", "quantity": "10"};
 
     interval = setInterval(function () {
         // console.log("gönderdi");
-        jquery_manager.post_data(route, data);
+        jquery_manager.put_data(route, data);
     }, 300);
 });
 
@@ -73,19 +70,19 @@ z_up_btn.addEventListener("mousedown", function () {
 z_down_btn.addEventListener("mousedown", function () {
 
     let route = "/api/move?id=z&admin_id=" + admin_id;
-    let data = {"type": "axis", "id": "z", "quantity": -10};
+    let data = {"type": "axis", "id": "z", "quantity": "-10"};
 
     interval = setInterval(function () {
         // console.log("gönderdi");
-        jquery_manager.post_data(route, data);
+        jquery_manager.put_data(route, data);
     }, 300);
 });
 
 
-let elements = [x_up_btn, x_down_btn, y_up_btn, y_down_btn, z_up_btn, z_down_btn];
+let elements_prismatic = [x_up_btn, x_down_btn, y_up_btn, y_down_btn, z_up_btn, z_down_btn];
 
 
-add_listener_to_elements(elements, "mouseup", function () {
+add_listener_to_elements(elements_prismatic, "mouseup", function () {
     clearInterval(interval);
 });
 
