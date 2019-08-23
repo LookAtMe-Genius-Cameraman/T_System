@@ -14,17 +14,17 @@ import inspect  # Inspect live objects
 
 from os.path import expanduser  # Common pathname manipulations
 
+T_SYSTEM_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+
+home = expanduser("~")
+dot_t_system_dir = home + "/.t_system"
+
 log_manager = None
 seer = None
 augmenter = None
 stand_ui = None
 administrator = None
 update_manager = None
-
-T_SYSTEM_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-
-home = expanduser("~")
-dot_t_system_dir = home + "/.t_system"
 
 __author__ = 'Cem Baybars GÜÇLÜ'
 __email__ = 'cem.baybars@gmail.com'

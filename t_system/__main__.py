@@ -177,7 +177,7 @@ def initiate():
     video_gr.add_argument("--audio_device_index", help="Index of the using audio device. 2 is default.", action="store", default=2, type=int)
 
     motion_gr = ap.add_argument_group('motion mechanism')
-    motion_gr.add_argument("--robotic-arm", help="One of the robotic arm names those are defined in arm_config.json file. The arm is for relocating the 2 axis target locking system hybrid-synchronously.", type=str, metavar=('ARM',))
+    motion_gr.add_argument("--robotic-arm", help="One of the robotic arm names those are defined in arm_config.json file. The arm is for relocating the 2 axis target locking system hybrid-synchronously.", default="Senior", type=str, metavar=('ARM',))
 
     lock_sys_gr = ap.add_argument_group('target locking system')
     lock_sys_gr.add_argument("--ls-gpios", help="GPIO pin numbers of the 2 axis target locking system's servo motors. 23(as pan) and 24(as tilt) GPIO pins are default.", nargs=2, default=[23, 24], type=int, metavar=('PAN', 'TILT'))
