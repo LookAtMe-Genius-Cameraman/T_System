@@ -17,7 +17,6 @@ from t_system.remote_ui.modules.move import move_arm
 from t_system.remote_ui.api.data_schema import MOVE_SCHEMA
 
 api_bp = Blueprint('move_api', __name__)
-
 api = Api(api_bp)
 
 

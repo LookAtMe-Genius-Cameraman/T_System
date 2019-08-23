@@ -17,7 +17,6 @@ from t_system.remote_ui.modules.scenario import create_scenario, get_scenario, g
 from t_system.remote_ui.api.data_schema import SCENARIO_SCHEMA
 
 api_bp = Blueprint('scenario_api', __name__)
-
 api = Api(api_bp)
 
 

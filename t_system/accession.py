@@ -20,9 +20,13 @@ from subprocess import call, check_output # Subprocess managements
 from multipledispatch import dispatch
 from elevate import elevate  # partial root authentication interface
 
-from t_system.administration import check_secret_root_entry
 from t_system.db_fetching import DBFetcher
+from t_system.administration import check_secret_root_entry
+
 from t_system import dot_t_system_dir
+from t_system import log_manager
+
+logger = log_manager.get_logger(__name__, "DEBUG")
 
 
 def set_local_ip_address(wlan, ip_address):
@@ -39,7 +43,7 @@ def set_local_ip_address(wlan, ip_address):
         ip.addr('add', index, address=ip_address, mask=24)
 
     except NetlinkError as e:
-        print(e)
+        logger.error(e)
 
     ip.close()
 
@@ -103,7 +107,8 @@ class AccessPoint:
         else:
             pass
         self.access_point.start()
-        print("AP started")
+
+        logger.info("AP started")
 
     def stop(self):
         """The high-level method to stop serving network connection.
@@ -222,7 +227,7 @@ class NetworkConnector:
         # time.sleep(5)
         # TODO: External network may not be able to access the internet. So create a difference here as 'is there any connected network?' and 'is network online'
         if self.is_network_online():
-            print("Network connection established!")
+            logger.info("Network is online!")
             result = True
 
         return result
@@ -243,7 +248,7 @@ class NetworkConnector:
                     scheme.activate()
                     result = True
                 except Exception as e:
-                    print(e)
+                    logger.error(e)
 
         return result
 
@@ -315,7 +320,7 @@ class NetworkConnector:
             _ = requests.get(url, timeout=timeout)
             return True
         except requests.ConnectionError:
-            # print("Internet connection could not be established.")
+            logger.info("No internet access!")
             pass
         return False
 
@@ -363,7 +368,7 @@ class WpaSupplicant:
             wpa_supp_file.close()
 
             if correct_header_count != 3:
-                print("wpa_supplicant.conf is not valid. Creating new one.")
+                logger.info("wpa_supplicant.conf is not valid. Creating new one.")
                 self.create_wsc()
 
         else:
@@ -381,7 +386,6 @@ class WpaSupplicant:
         """The high(and low)-level method to create initialization wpa_supplicant.conf file.
         """
 
-        print('Trying to create file wpa_supplicant.conf')
         time.sleep(0.5)
 
         f = open(self.wpa_supp_conf_file, "w")
@@ -394,7 +398,7 @@ class WpaSupplicant:
         os.system('sudo chmod 600 ' + self.wpa_supp_conf_file)
 
         if os.path.isfile(self.wpa_supp_conf_file):
-            print('File created successfully')
+            logger.info('wpa_supplicant.conf created successfully')
 
     def add_network_to_wsc(self, ssid, password, priority=None):
         """The high(and low)-level method to add new network ssid and psk information to wpa_supplicant.conf file.

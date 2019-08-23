@@ -20,9 +20,10 @@ from elevate import elevate  # partial root authentication interface
 from tinydb import TinyDB, Query  # TinyDB is a lightweight document oriented database
 
 from t_system.db_fetching import DBFetcher
-from t_system import dot_t_system_dir
+from t_system import dot_t_system_dir, T_SYSTEM_PATH
+from t_system import log_manager
 
-T_SYSTEM_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+logger = log_manager.get_logger(__name__, "DEBUG")
 
 
 class UpdateManager:
@@ -365,7 +366,8 @@ class Updater:
         calling_func = stack[1][3]
         line = stack[1][2]
         msg.replace("\n", "\n           ".format(calling_func, line))
-        print("{}():{} :: {}".format(calling_func, line, msg))
+
+        logger.debug(f'{calling_func}():{line} :: {msg}')
 
     def __get_calling_file(self, verbose=False):
         """The low-level method to go through the python call stack and find the script that originally called into this file.

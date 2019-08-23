@@ -12,6 +12,9 @@
 from tinydb import TinyDB, Query  # TinyDB is a lightweight document oriented database
 
 from t_system import dot_t_system_dir
+from t_system import log_manager
+
+logger = log_manager.get_logger(__name__, "DEBUG")
 
 
 def create_network(admin_id, data):
@@ -25,7 +28,7 @@ def create_network(admin_id, data):
         from t_system import stand_ui
         result, admin_id = stand_ui.network_connector.add_network(data["ssid"], data["password"])
     except Exception as e:
-        print(e)
+        logger.error(e)
         result = False
 
     return result, admin_id
@@ -42,7 +45,7 @@ def get_networks(admin_id):
         result = table.all()  # result = networks
 
     except Exception as e:
-        print(e)
+        logger.error(e)
         result = []
 
     return result
@@ -66,7 +69,7 @@ def get_network(admin_id, network_ssid):
             result = [network[0]]
 
     except Exception as e:
-        print(e)
+        logger.error(e)
         result = []
 
     return result

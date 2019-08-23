@@ -9,18 +9,13 @@
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
 
-import os  # Miscellaneous operating system interfaces
-import inspect  # Inspect live objects
 import uuid  # The random id generator
 
 from tinydb import TinyDB, Query  # TinyDB is a lightweight document oriented database
 
-# from multipledispatch import dispatch
+from t_system import dot_t_system_dir, T_SYSTEM_PATH
 
-from t_system import dot_t_system_dir
-
-ARM_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-predicted_actions_db = ARM_PATH + "/predicted_actions.json"
+predicted_actions_db = f'{T_SYSTEM_PATH}/motion/arm/predicted_actions.json'
 
 
 class Position:

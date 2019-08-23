@@ -16,6 +16,9 @@ from multipledispatch import dispatch
 
 from t_system.motion.motor import ServoMotor
 from t_system.motion import degree_to_radian
+from t_system import log_manager
+
+logger = log_manager.get_logger(__name__, "DEBUG")
 
 
 class Collimator:
@@ -65,7 +68,8 @@ class Collimator:
         delta_angle = self.calc_delta_angle(obj_width, dis_to_des, k_fact)
 
         target_angle = self.calc_target_angle(delta_angle)
-        print(str(target_angle))
+        logger.debug(f'{target_angle}')
+
         if abs(target_angle - self.current_angle) < 0.01:  # 0.01 radian is equal to .5 degree.
             pass
         else:
@@ -95,7 +99,7 @@ class Collimator:
             stop:       	         Stop flag of the tread about terminating it outside of the function's loop.
             direction:       	     Direction of the moving.
         """
-        # print(str(stop))
+
         self.motor_thread_stop = stop
         self.motor_thread_direction = direction
 
@@ -107,7 +111,6 @@ class Collimator:
             pass
         else:
             if not self.motor_thread_stop:
-                # print("started")
                 self.motor_thread = threading.Thread(target=self.motor.change_position_incregular, args=(lambda: self.motor_thread_stop, lambda: self.motor_thread_direction))
                 self.motor_thread.start()
 

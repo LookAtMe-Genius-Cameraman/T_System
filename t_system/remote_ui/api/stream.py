@@ -14,8 +14,11 @@ from flask_restful import Api, Resource
 
 from t_system.remote_ui.modules.stream import StreamManager
 
-api_bp = Blueprint('stream_api', __name__)
+from t_system import log_manager
 
+logger = log_manager.get_logger(__name__, "DEBUG")
+
+api_bp = Blueprint('stream_api', __name__)
 api = Api(api_bp)
 
 

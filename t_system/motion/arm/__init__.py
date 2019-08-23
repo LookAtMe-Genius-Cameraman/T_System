@@ -20,6 +20,9 @@ from math import pi
 from t_system.motion.motor import ServoMotor
 from t_system.motion import degree_to_radian
 from t_system import T_SYSTEM_PATH
+from t_system import log_manager
+
+logger = log_manager.get_logger(__name__, "DEBUG")
 
 
 class Joint:
@@ -59,6 +62,8 @@ class Joint:
         self.current_angle = self.q
 
         self.motor.start(degree_to_radian(self.q))
+
+        logger.info(f'Joint{self.number} started successfully.')
 
     def move_to_angle(self, target_angle):
         """The top-level method to provide servo motors moving.
@@ -134,6 +139,8 @@ class Arm:
         self.set_joints(joints)
         self.set_dh_params(self.joints)
 
+        logger.info(f'{self.name} arm started successfully.')
+
     def set_joints(self, joints):
         """The high-level method to setting joints with D-H parameters.
 
@@ -178,7 +185,7 @@ class Arm:
     def show_dh_params(self):
         """The high-level method to getting D-H parameters of joints of Arm as string message.
         """
-        print('DH Parameters are: {}'.format(self.dh_params))
+        print(f'DH Parameters are: {self.dh_params}')
 
     def set_tranform_matrices(self):
         """The low-level method to setting D-H transform matrices.
@@ -193,7 +200,7 @@ class Arm:
         """The high-level method to getting D-H parameters of joints of Arm as string message.
         """
 
-        print('Transform Matrices are: {}'.format(self.tf_matrices_list))
+        print(f'Transform Matrices are: {self.tf_matrices_list}')
 
     @staticmethod
     def create_tf_matrix(alpha, a, d, q):
@@ -306,7 +313,7 @@ class Arm:
         for target in target_list:
             Q = self.inverse_kinematics(guess, target)
             predicted_coordinates = self.forward_kinematics(Q)[-1]
-            print('Target: {} ,  Predicted: {}'.format(target, predicted_coordinates))
+            logger.info(f'Target: {target} ,  Predicted: {predicted_coordinates}')
             Q_list.append(Q)
             guess = Q
         # print(np.matrix(Q_list), np.matrix(Q_list).shape)
@@ -363,7 +370,6 @@ class Arm:
             delta_angle (float):       Angle to rotate.
             direction (bool):          Rotate direction. True means CW, otherwise CCW.
         """
-        print("in here")
         if direction is None:
             direction = False
             if delta_angle <= 0:
@@ -373,6 +379,7 @@ class Arm:
 
         for joint in self.joints:
             if joint.number == joint_number:
+                logger.debug(f'Joint {joint_number} moving...')
                 joint.change_angle_by(delta_angle, direction)
 
     def move_endpoint(self, axis, distance):

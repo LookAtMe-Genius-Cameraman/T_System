@@ -17,7 +17,6 @@ from t_system.remote_ui.modules.update import create_position, get_position, get
 from t_system.remote_ui.api.data_schema import UPDATE_SCHEMA
 
 api_bp = Blueprint('update_api', __name__)
-
 api = Api(api_bp)
 
 

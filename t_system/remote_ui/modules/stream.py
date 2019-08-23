@@ -13,6 +13,10 @@ import threading
 
 from t_system import seer
 
+from t_system import log_manager
+
+logger = log_manager.get_logger(__name__, "DEBUG")
+
 
 class StreamManager:
     """Class to define a manager for asynchronous work of t_system's online video stream.
@@ -42,7 +46,7 @@ class StreamManager:
                 return self.get_stream(), "multipart/x-mixed-replace; boundary=frame"
 
         except Exception as e:
-            print(e)
+            logger.error(e)
 
         return False, False
 
@@ -60,7 +64,7 @@ class StreamManager:
                 self.preview_thread.join()
 
         except Exception as e:
-            print(e)
+            logger.error(e)
             result = False
 
         return result

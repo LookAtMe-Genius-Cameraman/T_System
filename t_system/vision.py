@@ -30,8 +30,9 @@ from t_system.recordation import Recorder
 
 from t_system.high_tech_aim import Aimer
 from t_system import dot_t_system_dir, T_SYSTEM_PATH
+from t_system import log_manager
 
-T_SYSTEM_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+logger = log_manager.get_logger(__name__, "DEBUG")
 
 TRACKER_TYPES = ['BOOSTING', 'MIL', 'KCF', 'TLD', 'MEDIANFLOW', 'GOTURN', 'MOSSE', 'CSRT']
 
@@ -417,7 +418,7 @@ class Vision:
                     thread_of_scan.start()
                     thread_of_stream.start()
                 else:
-                    # print("thread killed")
+                    logger.info("thread killed")
 
                     thread_of_scan.join()
                     thread_of_stream.join()
@@ -511,7 +512,7 @@ class Vision:
         # if the `q` key was pressed, break from the loop
         key = cv2.waitKey(1) & 0xFF
         if (key == ord("q") or stop_thread()) and self.augmented:
-            # print("thread killed")
+            logger.info("All threads killed. In progress...")
             return True
         elif (key == ord("q") or stop_thread()) and not self.augmented:
             cv2.destroyAllWindows()
@@ -621,10 +622,10 @@ class Vision:
             tracker = cv2.TrackerCSRT_create()
         else:
             tracker = None
-            print('Incorrect tracker name')
-            print('Available trackers are:')
+            logger.error('Incorrect tracker name')
+            logger.info('Available trackers are:')
             for t in TRACKER_TYPES:
-                print(t)
+                logger.info(t)
 
         return tracker
 

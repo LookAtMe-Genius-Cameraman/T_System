@@ -9,7 +9,12 @@
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
 
+import paho.mqtt.client as mqtt
 import json
+
+from t_system import log_manager
+
+logger = log_manager.get_logger(__name__, "DEBUG")
 
 
 class MqttReceimitter:
@@ -28,7 +33,6 @@ class MqttReceimitter:
             port         :          Communication port of the host.
             keepalive    :          Keeping a live time of the communication. (secs.)
         """
-        import paho.mqtt.client as mqtt
         self.client = mqtt.Client()
 
         self.host = host
@@ -65,7 +69,7 @@ class MqttReceimitter:
         self.client.loop_start()
 
     def on_connect(self, client, userdata, flags, rc):
-        """The top-level method to realize processes at the moment of provided the connection.
+        """The top-level method to realize processes at the moment of providing the connection.
 
         Args:
             client:       	        Cilent object.
@@ -73,7 +77,8 @@ class MqttReceimitter:
             flags:
             rc:       	            Result code of the connection.
         """
-        print('Connected with result code ' + str(rc))
+
+        logger.info(f'Connected to {self.topic} with result code {rc}')
         # self.client.publish('Augmented/A.V.A.', str(rc))  # For return the connection situation to the subscriber device.
         if rc == 0:
             self.is_connected = True
