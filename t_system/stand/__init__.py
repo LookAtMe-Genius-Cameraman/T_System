@@ -14,6 +14,9 @@ import threading
 import time  # Time access and conversions
 
 from t_system.accession import NetworkConnector, AccessPoint
+from t_system import log_manager
+
+logger = log_manager.get_logger(__name__, "DEBUG")
 
 __version__ = '0.3.11'
 

@@ -13,8 +13,11 @@ from tinydb import TinyDB, Query  # TinyDB is a lightweight document oriented da
 
 from t_system.administration import is_admin
 from t_system.face_encoding import FaceEncodeManager
-from t_system import T_SYSTEM_PATH
-from t_system import dot_t_system_dir
+
+from t_system import dot_t_system_dir, T_SYSTEM_PATH
+from t_system import log_manager
+
+logger = log_manager.get_logger(__name__, "DEBUG")
 
 
 def create_face(admin_id, data):
@@ -48,7 +51,7 @@ def get_faces(admin_id):
         result = table.all()  # result = faces
 
     except Exception as e:
-        print(e)
+        logger.error(e)
         result = []
 
     return result
@@ -77,7 +80,7 @@ def get_face(admin_id, face_id):
             result = [face[0]]
 
     except Exception as e:
-        print(e)
+        logger.error(e)
         result = []
 
     return result

@@ -25,6 +25,9 @@ from os.path import isfile, join
 from multipledispatch import dispatch
 
 from t_system import dot_t_system_dir
+from t_system import log_manager
+
+logger = log_manager.get_logger(__name__, "DEBUG")
 
 
 class FaceEncodeManager:
@@ -174,7 +177,7 @@ class FaceEncoder:
         """
 
         self.is_creating_pickle_completed = False
-        print("[INFO] quantifying faces...")  # grab the paths to the input images in our dataset
+        logger.info("quantifying faces...")  # grab the paths to the input images in our dataset
         image_paths = list(paths.list_images(dataset_folder))
 
         known_encodings = []
@@ -186,7 +189,7 @@ class FaceEncoder:
         for (i, image_path) in enumerate(image_paths):
 
             # extract the person name from the image path
-            print(f"[INFO] processing image {i + 1}/{len(image_paths)}")
+            logger.info(f'processing image {i + 1}/{len(image_paths)}')
             if face_name is None:
                 name = image_path.split(os.path.sep)[-2]
 

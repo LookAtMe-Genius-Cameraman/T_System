@@ -17,7 +17,6 @@ from t_system.remote_ui.modules.face_encoding import create_face, get_face, get_
 from t_system.remote_ui.api.data_schema import FACE_ENCODING_SCHEMA
 
 api_bp = Blueprint('face_encoding_api', __name__)
-
 api = Api(api_bp)
 
 

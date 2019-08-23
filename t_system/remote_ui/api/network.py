@@ -18,7 +18,6 @@ from t_system.remote_ui.modules.network import create_network, get_networks, get
 from t_system.remote_ui.api.data_schema import NETWORK_SCHEMA
 
 api_bp = Blueprint('network_api', __name__)
-
 api = Api(api_bp)
 
 

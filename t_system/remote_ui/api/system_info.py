@@ -11,13 +11,10 @@
 
 from flask import Blueprint, request
 from flask_restful import Api, Resource
-from schema import SchemaError
 
 from t_system.remote_ui.modules.system_info import get_system_info
-from t_system.remote_ui.api.data_schema import SCENARIO_SCHEMA
 
 api_bp = Blueprint('system_info_api', __name__)
-
 api = Api(api_bp)
 
 

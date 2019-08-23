@@ -13,6 +13,9 @@ import datetime  # Basic date and time types
 import subprocess  # Subprocess managements
 
 from t_system import dot_t_system_dir
+from t_system import log_manager
+
+logger = log_manager.get_logger(__name__, "DEBUG")
 
 
 class Recorder:
@@ -70,7 +73,7 @@ class Recorder:
         """
         merge_cmd = 'ffmpeg -y -i ' + self.record_audio_name + ' -r 24 -i ' + self.record_video_name + ' -filter:a aresample=async=1 -c:a flac -c:v copy av.mkv'
         subprocess.call(merge_cmd, shell=True)
-        print('Muxing Done')
+        logger.info('Video and Audio Muxing Done')
 
     def set_record_name(self, mode, video_format="h264", audio_format="wav", final_format="mkv"):
         """The low-level method to prepare the name of recording video with its path.
