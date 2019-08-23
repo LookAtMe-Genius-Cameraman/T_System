@@ -25,7 +25,7 @@ from t_system.remote_ui.api.face_encoding import api_bp as face_encoding_api_bp
 from t_system.remote_ui.api.stream import api_bp as stream_api_bp
 from t_system import T_SYSTEM_PATH, dot_t_system_dir
 # dot_t_system_dir = "/home/baybars/.t_system"
-
+# T_SYSTEM_PATH = "/home/baybars/T_System/t_system"
 __version__ = '0.3.3'
 
 
@@ -125,6 +125,6 @@ if __name__ == "__main__":
     _template_folder = REMOTE_UI_PATH + "/www"
     _static_folder = _template_folder + "/static"
 
-    app = RemoteUI(args={"host": "localhost", "port": "5000", "debug": True, "environment": "development"}, template_folder=_template_folder, static_folder=_static_folder)
+    app = RemoteUI(args={"host": "localhost", "port": "5000", "debug": True, "environment": "development"})
     app.run(host="172.22.9.40", port="5000",  debug=True)
     # app.debug = True
