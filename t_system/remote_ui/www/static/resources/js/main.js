@@ -9,17 +9,18 @@
 /** @type {!Object} */
 const jquery_manager = JQueryManager;
 
-/** @type {!Element} */
-const create_new_event_div = document.getElementById("create_new_event");
-const controlling_template_container = document.getElementById("controlling_template_container");
-const settings_template_container = document.getElementById("settings_template_container");
-const on_work_template_container = document.getElementById("on_work_template_container");
-const managing_bar = document.getElementById("managing_bar");
 
 /** @type {!Element} */
 const control_btn = document.getElementById("control_btn");
 const settings_btn = document.getElementById("settings_btn");
 const on_work_btn = document.getElementById("on_work_btn");
+
+
+/** @type {!Element} */
+// const swiper = document.querySelector(".swiper-container");
+const controlling_template_container = document.getElementById("controlling_template_container");
+const settings_template_container = document.getElementById("settings_template_container");
+const on_work_template_container = document.getElementById("on_work_template_container");
 
 
 /**
@@ -74,29 +75,53 @@ function refresh_page() {
 }
 
 
-window.onload = function () {
+// window.onload = function () {
+//
+// };
+
+let swiper;
+$(document).ready(function () {
     //to check if javascript is disabled like in anroid preview
     // document.getElementById('warningmsg').style.display = 'none';
     connectdlg();
-};
+
+    swiper = new Swiper('.swiper-container', {
+        effect: 'cube',
+        grabCursor: true,
+        cubeEffect: {
+            shadow: true,
+            slideShadows: true,
+            shadowOffset: 20,
+            shadowScale: 0.94,
+        },
+        pagination: {
+            el: '.swiper-pagination',
+        },
+    });
+
+});
 
 
 settings_btn.addEventListener("click", function () {
-    show_element(settings_template_container);
-    hide_element(controlling_template_container);
-    hide_element(on_work_template_container);
+    // show_element(settings_template_container);
+    // hide_element(controlling_template_container);
+    // hide_element(on_work_template_container);
+
+    swiper.slideTo(0)
 });
 
 
 control_btn.addEventListener("click", function () {
-    show_element(controlling_template_container);
-    hide_element(settings_template_container);
-    hide_element(on_work_template_container);
+    // show_element(controlling_template_container);
+    // hide_element(settings_template_container);
+    // hide_element(on_work_template_container);
+    swiper.slideTo(1)
 });
 
 
 on_work_btn.addEventListener("click", function () {
-    show_element(on_work_template_container);
-    hide_element(controlling_template_container);
-    hide_element(settings_template_container)
+    // show_element(on_work_template_container);
+    // hide_element(controlling_template_container);
+    // hide_element(settings_template_container);
+    swiper.slideTo(2)
 });
