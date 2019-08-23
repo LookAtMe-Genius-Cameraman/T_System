@@ -1,6 +1,8 @@
 @import url(main.css);
 @import url(menu.css);
 @import url(settings_modal.css);
+@import url(prismatic_arm_control.css);
+@import url(rotational_arm_control.css);
 @import url(controlling_modal.css);
 @import url(system_info.css);
 @import url(managing_bar.css);
