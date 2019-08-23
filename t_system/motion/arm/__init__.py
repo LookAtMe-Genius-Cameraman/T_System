@@ -19,6 +19,7 @@ from math import pi
 
 from t_system.motion.motor import ServoMotor
 from t_system.motion import degree_to_radian
+from t_system import T_SYSTEM_PATH
 
 
 class Joint:
@@ -43,21 +44,21 @@ class Joint:
         self.rotation_type = joint['rotation_type']
 
         if self.structure == 'revolute':
-            self.d = joint['init_d']
             self.max_q = joint['max_q']
             self.min_q = joint['min_q']
-            self.q = joint['init_q']
 
         elif self.structure == 'prismatic':
-            self.q = joint['init_q']
             self.max_d = joint['max_d']
             self.min_d = joint['min_d']
-            self.d = joint['init_d']
 
-        self.alpha = joint['alpha']
+        self.d = joint['init_d']
+        self.q = joint['init_q']
         self.a = joint['a']
+        self.alpha = joint['alpha']
 
-        self.current_angle = 0.0
+        self.current_angle = self.q
+
+        self.motor.start(degree_to_radian(self.q))
 
     def move_to_angle(self, target_angle):
         """The top-level method to provide servo motors moving.
@@ -127,7 +128,7 @@ class Arm:
         self.current_pos_as_coord = []
         self.current_pos_as_theta = []
 
-        with open('arm_config.json') as conf_file:
+        with open(f'{T_SYSTEM_PATH}/motion/arm/arm_config.json') as conf_file:
             joints = json.load(conf_file)[arm_name]  # config file returns the arms.
 
         self.set_joints(joints)
@@ -183,7 +184,7 @@ class Arm:
         """The low-level method to setting D-H transform matrices.
         """
 
-        transform_matrix = eye(self.joint_count)  # creates a unit matrix via passing argument.
+        transform_matrix = eye(4)  # creates a unit matrix via passing argument.
         for i in range(self.joint_count):
             transform_matrix = transform_matrix * self.create_tf_matrix(self.alpha[i], self.a[i], self.d[i], self.q[i]).subs(self.dh_params)
             self.tf_matrices_list.append(transform_matrix)
@@ -362,7 +363,7 @@ class Arm:
             delta_angle (float):       Angle to rotate.
             direction (bool):          Rotate direction. True means CW, otherwise CCW.
         """
-
+        print("in here")
         if direction is None:
             direction = False
             if delta_angle <= 0:
