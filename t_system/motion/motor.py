@@ -56,6 +56,8 @@ class ServoMotor:
         self.servo.start(init_duty_cy)
         self.current_duty_cy = init_duty_cy
 
+        self.sleep()
+
     def low_pass_filter(self, init_angel):
         """The high-level method to start of the motor initially.
 
@@ -94,6 +96,8 @@ class ServoMotor:
             self.current_duty_cy = target_duty_cy
             logger.debug(f'Move of motor in GPIO {self.gpio_pin} completed')
 
+        self.sleep()
+
     def softly_goto_position(self, target_angle):
         """The high-level method to changing position to the target angle step by step for more softly than direct_goto_position func.
 
@@ -122,6 +126,8 @@ class ServoMotor:
             self.servo.ChangeDutyCycle(self.current_duty_cy)
 
         self.servo.ChangeDutyCycle(target_duty_cy)
+
+        self.sleep()
 
     def change_position_incregular(self, stop, direction):
         """The high-level method to changing position to the given direction as regularly and incremental when the stop flag is not triggered yet.
@@ -153,12 +159,21 @@ class ServoMotor:
 
             time.sleep(0.2)
 
+        self.sleep()
+
+    def sleep(self):
+        """The low-level method to provide stop the sending signal to motor's GPIO pin until coming new command.
+        """
+
+        time.sleep(0.2)
+        self.servo.ChangeDutyCycle(0)  # If duty cycle has been set 0 (zero), no signal sending to GPIO pin.
+
     def stop(self):
-        """The low-level method to provide stop the GPIO.PWM service that is reserved the servo motor.
+        """The high-level method to provide stop the GPIO.PWM service that is reserved the servo motor.
         """
         self.servo.stop()
 
     def gpio_cleanup(self):
-        """The low-level method to provide clean the GPIO pin that is reserved the servo motor.
+        """The high-level method to provide clean the GPIO pin that is reserved the servo motor.
         """
         GPIO.cleanup(self.gpio_pin)
