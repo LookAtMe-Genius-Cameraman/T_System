@@ -6,7 +6,7 @@ This process creates a login point to a new network.
 ```http
 POST /api/network?admin_id=<ADMIN_ID>
 Host: domain
-Content-Type: application/json
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 
 {
     "ssid": "ssid",
@@ -64,7 +64,7 @@ Returns an error if the ID is empty.
 ```http
 PUT /api/network?ssid=<SSID>&admin_id=<ADMIN_ID>
 Host: domain
-Content-Type: application/json
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 
 {
     "ssid": "ssid",
@@ -93,7 +93,7 @@ Removes the Network.
 ## Request
 ```http
 DEL /api/network?ssid=<SSID>&admin_id=<ADMIN_ID>
-Content-Type: application/json
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 ```
 
 ## Response

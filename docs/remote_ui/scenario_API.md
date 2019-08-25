@@ -6,7 +6,7 @@ Creates a new motion Scenario for T_System's arm to follow path during shoot wit
 ```http
 POST /api/scenario?admin_id=<ADMIN_ID>
 Host: domain
-Content-Type: application/json
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 
 {
     "name": "scenario_name",
@@ -92,7 +92,7 @@ Returns an error if the ID is empty.
 ```http
 PUT /api/scenario?id=<ID>&admin_id=<ADMIN_ID>
 Host: domain
-Content-Type: application/json
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 
 {
     "name": "scenario_name",
@@ -133,7 +133,7 @@ Removes the scenario.
 ## Request
 ```http
 DEL /api/scenario?id=<ID>&admin_id=<ADMIN_ID>
-Content-Type: application/json
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 ```
 
 ## Response

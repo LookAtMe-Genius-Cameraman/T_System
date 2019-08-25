@@ -5,7 +5,7 @@ Returns an error if the TYPE is empty.
 ```http
 GET /api/scenario?type=<TYPE>&admin_id=<ADMIN_ID>
 Host: domain
-Content-Type: application/json
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 ```
 
 ## Response
@@ -31,7 +31,7 @@ Returns an error if the TYPE is empty.
 ## Request
 ```http
 DEL /api/network?type=<TYPE>&admin_id=<ADMIN_ID>
-Content-Type: application/json
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 ```
 
 ## Response

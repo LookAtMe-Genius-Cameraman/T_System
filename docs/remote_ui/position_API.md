@@ -6,7 +6,7 @@ This process creates a new position for T_System's arm.
 ```http
 POST /api/position?admin_id=<ADMIN_ID>
 Host: domain
-Content-Type: application/json
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 
 {
     "name": "position_name",
@@ -68,7 +68,7 @@ Returns an error if the ID is empty.
 ```http
 PUT /api/position?id=<ID>&admin_id=<ADMIN_ID>
 Host: domain
-Content-Type: application/json
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 
 {
     "name": "position_name",
@@ -98,7 +98,7 @@ Removes the Position.
 ## Request
 ```http
 DEL /api/position?id=<ID>&admin_id=<ADMIN_ID>
-Content-Type: application/json
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 ```
 
 ## Response

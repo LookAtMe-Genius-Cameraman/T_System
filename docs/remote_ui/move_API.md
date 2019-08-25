@@ -5,7 +5,7 @@ Returns an error if the ID is empty.
 ```http
 PUT /api/move?id=<ID>&admin_id=<ADMIN_ID>
 Host: domain
-Content-Type: application/json
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 
 {
     "type": "Joint" / "axis",

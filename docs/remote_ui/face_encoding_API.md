@@ -6,7 +6,7 @@ This process generates a new face encoding for T_System's human face recognition
 ```http
 POST /api/face_encoding?admin_id=<ADMIN_ID>
 Host: domain
-Content-Type: application/json
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 
 {   
     "face_name": "face_name",
@@ -65,7 +65,7 @@ Returns an error if the ID is empty.
 ```http
 PUT /api/face_encoding?id=<ID>&admin_id=<ADMIN_ID>
 Host: domain
-Content-Type: application/json
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 
 {
     "face_name": "face_name",
@@ -94,7 +94,7 @@ Removes the Face.
 ## Request
 ```http
 DEL /api/face_encoding?id=<ID>&admin_id=<ADMIN_ID>
-Content-Type: application/json
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 ```
 
 ## Response
