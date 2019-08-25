@@ -23,8 +23,7 @@ const dark_deep_background_div = document.getElementById("dark_deep_background_d
 /** @type {!Element} */
 const video_area_div = document.getElementById("video_area_div");
 const get_preview_span = document.getElementById("get_preview_span");
-const stream_area_video = document.getElementById("stream_area_video");
-const stream_area_video_source = document.getElementById("stream_area_video_source");
+const stream_area_img = document.getElementById("stream_area_img");
 
 /** @type {!Element} */
 const motion_control_div = document.getElementById("motion_control_div");
@@ -64,17 +63,6 @@ const scenario_div_back_btn = document.getElementById("scenario_div_back_btn");
 /** @type {!Element} */
 const body = document.getElementsByTagName("BODY")[0];
 
-/**
- * The high-level method of getting specified network information with its ssid or the all existing network information.
- * It is triggered via a click on settings_btn or clicked specified network on network list.
- */
-function start_stream(type) {
-
-        // console.log("bla");
-        // console.log(response);
-        jquery_manager.get_data("/api/stream?type=" + type + "&admin_id=" + admin_id);
-
-}
 
 function stop_stream(type) {
             jquery_manager.delete_data("/api/stream?type=" + type + "&admin_id=" + admin_id);
@@ -184,63 +172,50 @@ controlling_template_sidebar_close_btn.addEventListener("click", function () {
 
 
 
-stream_area_video.addEventListener("mouseover", function () {
+stream_area_img.addEventListener("mouseover", function () {
 
     get_preview_span.style.color = "#008CBA";
 });
 
-stream_area_video.addEventListener("mouseout", function () {
+stream_area_img.addEventListener("mouseout", function () {
 
     get_preview_span.style.color = "#000000";
 });
 
 
-let stream_area_video_click_count = 0;
+let stream_area_img_click_count = 0;
 
-stream_area_video.addEventListener("click", function () {
-    stream_area_video_click_count++;
-    if (stream_area_video_click_count <= 1) {
-        start_stream("preview");
+video_area_div.addEventListener("click", function () {
+    stream_area_img_click_count++;
+    if (stream_area_img_click_count <= 1) {
+        stream_area_img.src = "/api/stream?type=preview&admin_id=" + admin_id;   // this url assigning creates a GET request.
 
-        let timer_settings_cont = setInterval(function () {
+        hide_element(sidebar_toggle_btn);
 
-            if (requested_data !== null) {
-                if (requested_data["status"] === "OK") {
-
-                    console.log(requested_data["data"]);
-                    stream_area_video_source.src = requested_data["data"];
-
-                    hide_element(sidebar_toggle_btn);
-
-                    dark_deep_background_div.classList.toggle("focused");
-                    stream_area_video.classList.toggle("focused");
-                    video_area_div.classList.toggle("focused");
-
-                }
-                requested_data = null;
-                clearInterval(timer_settings_cont);
-            }
-        }, 300);
+        dark_deep_background_div.classList.toggle("focused");
+        stream_area_img.classList.toggle("focused");
+        video_area_div.classList.toggle("focused");
 
     } else {
         stop_stream("preview");
+        stream_area_img.src = "";
         dark_deep_background_div.classList.toggle("focused");
-        stream_area_video.classList.toggle("focused");
+        stream_area_img.classList.toggle("focused");
         video_area_div.classList.toggle("focused");
 
         show_element(sidebar_toggle_btn);
 
-        stream_area_video_click_count = 0;
+        stream_area_img_click_count = 0;
     }
 });
 
-stream_area_video.addEventListener("dblclick", function () {
-    	if(stream_area_video.requestFullScreen){
-		stream_area_video.requestFullScreen();
-	} else if(stream_area_video.webkitRequestFullScreen){
-		stream_area_video.webkitRequestFullScreen();
-	} else if(stream_area_video.mozRequestFullScreen){
-		stream_area_video.mozRequestFullScreen();
+video_area_div.addEventListener("dblclick", function () {
+    	if(stream_area_img.requestFullScreen){
+		stream_area_img.requestFullScreen();
+	} else if(stream_area_img.webkitRequestFullScreen){
+		stream_area_img.webkitRequestFullScreen();
+	} else if(stream_area_img.mozRequestFullScreen){
+		stream_area_img.mozRequestFullScreen();
 	}
 });
 

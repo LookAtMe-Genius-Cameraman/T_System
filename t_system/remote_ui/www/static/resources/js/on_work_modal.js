@@ -4,10 +4,10 @@ const on_work_windows_size_select = document.getElementById("on_work_windows_siz
  * The high-level method to playing and pausing the streams from t_system.
  */
 function playPause() {
-  if (stream_area_video.paused)
-    stream_area_video.play();
+  if (stream_area_img.paused)
+    stream_area_img.play();
   else
-    stream_area_video.pause();
+    stream_area_img.pause();
 }
 
 /**
@@ -15,7 +15,7 @@ function playPause() {
  * @param {int} size: size value of window.
  */
 function set_window_size(size) {
-        stream_area_video.width = size;
+        stream_area_img.width = size;
 }
 
 on_work_windows_size_select.addEventListener("change", function () {

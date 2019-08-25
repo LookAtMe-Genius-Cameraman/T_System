@@ -68,7 +68,7 @@
 #video_area_div.focused {
 
     margin: -20% auto !important;
-    height: 50% !important;
+    height: 20% !important;
     width: 99% !important;
 
 }
@@ -95,14 +95,13 @@
 
 }
 
-#stream_area_video {
+#stream_area_img {
 
     max-width: 100%;
     max-height: 100%;
+
     margin: 0 auto;
     display: block;
-    text-rendering: optimizeLegibility;
-    align-items: center;
 
     /*alignment*/
     position: relative;
@@ -110,7 +109,7 @@
     vertical-align: middle;
 
     /*width: 32rem;*/
-    /*height: 20rem;*/
+    height: 75px;
     /*border: red solid;*/
     transition: all 300ms;
     background-color: #fff;
@@ -118,7 +117,7 @@
 
 }
 
-#stream_area_video.focused {
+#stream_area_img.focused {
     z-index: 200;
 
     width: 100%;
@@ -133,7 +132,7 @@
     opacity: 1;
     /*alignment*/
     margin: auto;
-    top: 40%;
+    top: 52%;
     left: 10%;
 
     max-width: 100%;
@@ -159,9 +158,6 @@
 
     transition: all 500ms;
     background: url(../images/motion_control/rotational.png) no-repeat;
-    /*font-size: 16px;*/
-    /*max-width: 30%;*/
-    /*max-height: 30%;*/
 
     width: 50px;
     height: 50px;
