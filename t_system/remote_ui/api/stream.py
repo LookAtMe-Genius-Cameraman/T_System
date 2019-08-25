@@ -18,6 +18,8 @@ from t_system import log_manager
 
 logger = log_manager.get_logger(__name__, "DEBUG")
 
+stream_manager = StreamManager()
+
 api_bp = Blueprint('stream_api', __name__)
 api = Api(api_bp)
 
@@ -35,8 +37,8 @@ class StreamApi(Resource):
     def __init__(self):
         """Initialization method of :class:`t_system.remote_ui.api.stream.StreamApi` class.
         """
-
-        self.stream_manager = StreamManager()
+        # Class has been creating again for each request.
+        pass
 
     def get(self):
         """The API method to get request for flask.
@@ -48,11 +50,12 @@ class StreamApi(Resource):
         if not stream_type:
             return {'status': 'ERROR', 'message': '\'id\' parameter is missing'}
 
-        stream, mimetype = self.stream_manager.start_stream(admin_id, stream_type)
+        stream, mimetype = stream_manager.start_stream(admin_id, stream_type)
 
         if stream and mimetype:
-            print(str(Response(stream, mimetype=mimetype).get_data()))
-            return {'status': 'OK', 'data': Response(stream, mimetype=mimetype).get_json()}
+            logger.debug("Response returning")
+            return Response(stream(), mimetype=mimetype)
+            # return {'status': 'OK', 'data': str(Response(stream(), mimetype=mimetype))}
         else:
             return {'status': 'ERROR', 'message': "FAILED"}
 
@@ -78,7 +81,8 @@ class StreamApi(Resource):
         if not stream_type:
             return {'status': 'ERROR', 'message': '\'id\' parameter is missing'}
 
-        result = self.stream_manager.stop_stream(admin_id, stream_type)
+        logger.debug("DELETE request triggered")
+        result = stream_manager.stop_stream(admin_id, stream_type)
 
         return {'status': 'OK' if result else 'ERROR'}
 

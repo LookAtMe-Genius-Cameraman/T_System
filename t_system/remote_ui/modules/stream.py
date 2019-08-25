@@ -12,6 +12,7 @@
 import threading
 
 from t_system import seer
+from t_system import dot_t_system_dir
 
 from t_system import log_manager
 
@@ -31,7 +32,7 @@ class StreamManager:
         """
 
         self.stop_thread = False
-        self.preview_thread = threading.Thread(target=seer.stream, args=(lambda: self.stop_thread, "bgr", "preview"))
+        self.stream_thread = None
 
     def start_stream(self, admin_id, stream_type):
         """The high-level method to return existing position with given id.
@@ -40,15 +41,12 @@ class StreamManager:
             admin_id (str):                 Root privileges flag.
             stream_type (str):               Stream's purpose. Preview, track-learn mode etc.
         """
-        try:
-            if stream_type == "preview":
-                self.preview_thread.start()
-                return self.get_stream(), "multipart/x-mixed-replace; boundary=frame"
 
-        except Exception as e:
-            logger.error(e)
+        self.stream_thread = threading.Thread(target=seer.stream, args=(lambda: self.stop_thread, "bgr", stream_type))
 
-        return False, False
+        logger.debug("video stream starting...")
+        self.stream_thread.start()
+        return self.get_stream, "multipart/x-mixed-replace; boundary=frame"
 
     def stop_stream(self, admin_id, stream_type):
         """The high-level method to remove existing position with given id.
@@ -57,25 +55,28 @@ class StreamManager:
             admin_id (str):                 Root privileges flag.
             stream_type (str):               Stream's purpose. Preview, track-learn mode etc.
         """
-        result = True
-        try:
-            if stream_type == "preview" and self.preview_thread.is_alive():
-                self.stop_thread = True
-                self.preview_thread.join()
+        result = False
 
-        except Exception as e:
-            logger.error(e)
-            result = False
+        logger.debug(f'Video stream stopping for {stream_type}. And preview thread is alive {self.stream_thread.is_alive()}')
+        if stream_type == "preview" and self.stream_thread.is_alive():
+            self.stop_thread = True
+            self.stream_thread.join()
+            self.stop_thread = False
+            logger.debug("Stream stopped")
+            result = True
 
         return result
 
-    @staticmethod
-    def get_stream():
+    def get_stream(self):
         """The low-level method to get camera stream frame by frame from seer.current_frame.
         """
+        logger.debug("frame sending processes starting")
+
         while True:
             frame = seer.get_current_frame()
             if frame is not None:
                 yield (b'--frame\r\n'
-                       b'Content-Type: image/jpeg\r\n\r\n' + frame.tobytes() + b'\r\n')
-
+                       b'Content-Type: image/jpeg\r\n\r\n' + open(f'{dot_t_system_dir}/online_stream.jpeg', 'rb').read() + b'\r\n')
+            if self.stop_thread:
+                logger.debug("Frame yielding process stopping...")  # this block is never triggered, but looks like no problem. Why?
+                break
