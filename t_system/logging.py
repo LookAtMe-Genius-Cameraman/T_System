@@ -70,51 +70,6 @@ class LogManager:
             self.error = self.logger.error
             self.critical = self.logger.critical
 
-        # def debug(self, msg):
-        #     """The high-level method to handle logging logger.debug method.
-        #
-        #     Args:
-        #         msg:                    The log message
-        #     """
-        #
-        #     self.logger.debug(msg)
-        #
-        # def info(self, msg):
-        #     """The high-level method to handle logging logger.info method.
-        #
-        #     Args:
-        #         msg:                    The log message
-        #     """
-        #
-        #     self.logger.info(msg)
-        #
-        # def warning(self, msg):
-        #     """The high-level method to handle logging logger.warning method.
-        #
-        #     Args:
-        #         msg:                    The log message
-        #     """
-        #
-        #     self.logger.warning(msg)
-        #
-        # def error(self, msg):
-        #     """The high-level method to handle logging logger.error method.
-        #
-        #     Args:
-        #         msg:                    The log message
-        #     """
-        #
-        #     self.logger.error(msg)
-        #
-        # def critical(self, msg):
-        #     """The high-level method to handle logging logger.critical method.
-        #
-        #     Args:
-        #         msg:                    The log message
-        #     """
-        #
-        #     self.logger.critical(msg)
-
         def set_logger(self):
             """The low-level method to setting logging logger.
             """
@@ -157,7 +112,7 @@ class LogManager:
 
             if self.root_system.environment == "production":
                 return False
-            return False
+            return True
 
         def get_handlers(self):
             """The low-level method to get handler for writing logs to the file and the console.
@@ -170,7 +125,7 @@ class LogManager:
             file_handler.setFormatter(file_formatter)
 
             if self.root_system.verbose:
-                console_formatter = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
+                console_formatter = logging.Formatter(' * %(levelname)s - %(name)s - %(message)s')
 
                 console_handler = logging.StreamHandler()
                 console_handler.setLevel(self.level)
