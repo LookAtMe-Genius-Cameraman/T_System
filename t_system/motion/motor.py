@@ -13,6 +13,10 @@ import time  # Time access and conversions
 from math import pi
 from RPi import GPIO as GPIO
 
+from t_system import log_manager
+
+logger = log_manager.get_logger(__name__, "DEBUG")
+
 
 class ServoMotor:
     """Class to define a servo motors of joints.
@@ -81,12 +85,14 @@ class ServoMotor:
         """
 
         target_duty_cy = self.angle_to_duty_cy(target_angle)
+        logger.debug(f' Target duty cycle of Motor in GPIO {self.gpio_pin} is {target_duty_cy}')
 
         if self.min_duty_cy <= target_duty_cy <= self.max_duty_cy:
             target_duty_cy = round(target_duty_cy, 5)
 
             self.servo.ChangeDutyCycle(target_duty_cy)
             self.current_duty_cy = target_duty_cy
+            logger.debug(f'Move of motor in GPIO {self.gpio_pin} completed')
 
     def softly_goto_position(self, target_angle):
         """The high-level method to changing position to the target angle step by step for more softly than direct_goto_position func.
