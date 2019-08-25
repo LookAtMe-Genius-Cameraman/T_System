@@ -149,8 +149,8 @@ class Stand:
 
         self.static_ip = args["static_ip"]
 
-        self.red_led = Led(args["stand_gpios"][1])
-        self.green_led = Led(args["stand_gpios"][2])
+        self.red_led = Led(args["stand_gpios"][0])
+        self.green_led = Led(args["stand_gpios"][1])
 
         self.stop_thread = False
 
