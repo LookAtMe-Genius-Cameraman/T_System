@@ -79,7 +79,7 @@ class Vision:
         self.hearer = Hearer(args)
         # self.hearer = None
 
-        resolution = (args["resolution"][0], args["resolution"][0])
+        resolution = (args["resolution"][0], args["resolution"][1])
         self.camera = PiCamera()
         self.camera.resolution = resolution
         self.camera.framerate = args["framerate"]
@@ -465,9 +465,12 @@ class Vision:
         if self.record:
             self.recorder.start(caller)
 
+        logger.debug("stream starting with capture_continuous")
+
         for frame in self.camera.capture_continuous(self.raw_capture, format=format, use_video_port=True):
-            # inside of the loop is optionally editable.
+
             self.current_frame = frame.array
+            cv2.imwrite(f'{dot_t_system_dir}/online_stream.jpeg', self.current_frame)
 
             self.show_frame(self.current_frame)
             self.truncate_stream()
@@ -496,10 +499,11 @@ class Vision:
             # show the frame
             cv2.imshow("Frame", frame)
 
-    def truncate_stream(self, ):
+    def truncate_stream(self):
         """The low-level method to clear the stream in preparation for the next frame.
         """
-        self.raw_capture.truncate(0)
+        self.raw_capture.seek(0)
+        self.raw_capture.truncate()
 
     def check_loop_ended(self, stop_thread):
         """The low-level method to detecting FACES with hog or cnn methoda.
