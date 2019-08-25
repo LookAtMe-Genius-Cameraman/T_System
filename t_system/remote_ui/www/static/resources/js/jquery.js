@@ -14,20 +14,20 @@
  * @param {function} callback: the callback function.
  * @return {ajax} Whether something occurred.
  */
-$.put = function(url, data, callback){
+$.put = function (url, data, callback) {
 
-  if ( $.isFunction(data) ){
-    callback = data;
-    data = {}
-  }
+    if ($.isFunction(data)) {
+        callback = data;
+        data = {}
+    }
 
-  return $.ajax({
-    url: url,
-    type: 'PUT',
-    success: callback,
-    data: data,
-    contentType: 'application/json'
-  });
+    return $.ajax({
+        url: url,
+        type: 'PUT',
+        success: callback,
+        data: data,
+        contentType: 'application/x-www-form-urlencoded; charset=UTF-8'  // Default one.
+    });
 };
 
 
@@ -38,20 +38,21 @@ $.put = function(url, data, callback){
  * @param {function} callback: the callback function.
  * @return {ajax} Whether something occurred.
  */
-$.delete = function(url, data, callback){
+$.delete = function (url, data, callback) {
 
-  if ( $.isFunction(data) ){
+    if ($.isFunction(data)) {
         callback = data;
         data = {}
-  }
+    }
 
-  return $.ajax({
-    url: url,
-    type: 'DELETE',
-    success: callback,
-    data: data,
-    contentType: 'application/json'
-  });
+    return $.ajax({
+        url: url,
+        type: 'DELETE',
+        success: callback,
+        data: data,
+        contentType: 'application/x-www-form-urlencoded; charset=UTF-8'
+
+    });
 };
 
 
