@@ -10,72 +10,72 @@
 joint_1_cw_btn.addEventListener("mousedown", function () {
 
     let route = "/api/move?id=1&admin_id=" + admin_id;
-    let data = {"type": "joint", "id": "1", "quantity": 3};
+    let data = {"type": "joint", "id": "1", "quantity": 5};
 
     interval = setInterval(function () {
         // console.log("gönderdi");
         jquery_manager.put_data(route, data);
-    }, 100);
+    }, 300);
 });
 
 
 joint_1_ccw_btn.addEventListener("mousedown", function () {
 
     let route = "/api/move?id=1&admin_id=" + admin_id;
-    let data = {"type": "joint", "id": "1", "quantity": -3};
+    let data = {"type": "joint", "id": "1", "quantity": -5};
 
     interval = setInterval(function () {
         // console.log("gönderdi");
         jquery_manager.put_data(route, data);
-    }, 100);
+    }, 300);
 });
 
 
 joint_2_cw_btn.addEventListener("mousedown", function () {
 
     let route = "/api/move?id=2&admin_id=" + admin_id;
-    let data = {"type": "joint", "id": "2", "quantity": 3};
+    let data = {"type": "joint", "id": "2", "quantity": 5};
 
     interval = setInterval(function () {
         // console.log("gönderdi");
         jquery_manager.put_data(route, data);
-    }, 100);
+    }, 300);
 });
 
 
 joint_2_ccw_btn.addEventListener("mousedown", function () {
 
     let route = "/api/move?id=2&admin_id=" + admin_id;
-    let data = {"type": "joint", "id": "2", "quantity": -3};
+    let data = {"type": "joint", "id": "2", "quantity": -5};
 
     interval = setInterval(function () {
         // console.log("gönderdi");
         jquery_manager.put_data(route, data);
-    }, 100);
+    }, 300);
 });
 
 
 joint_3_cw_btn.addEventListener("mousedown", function () {
 
     let route = "/api/move?id=3&admin_id=" + admin_id;
-    let data = {"type": "joint", "id": "3", "quantity": 3};
+    let data = {"type": "joint", "id": "3", "quantity": 5};
 
     interval = setInterval(function () {
         // console.log("gönderdi");
         jquery_manager.put_data(route, data);
-    }, 100);
+    }, 300);
 });
 
 
 joint_3_ccw_btn.addEventListener("mousedown", function () {
 
     let route = "/api/move?id=3&admin_id=" + admin_id;
-    let data = {"type": "joint", "id": "3", "quantity": -3};
+    let data = {"type": "joint", "id": "3", "quantity": -5};
 
     interval = setInterval(function () {
         // console.log("gönderdi");
         jquery_manager.put_data(route, data);
-    }, 100);
+    }, 300);
 });
 
 

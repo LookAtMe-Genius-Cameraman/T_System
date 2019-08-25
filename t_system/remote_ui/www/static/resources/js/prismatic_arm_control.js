@@ -10,72 +10,72 @@
 x_up_btn.addEventListener("mousedown", function () {
 
     let route = "/api/move?id=x&admin_id=" + admin_id;
-    let data = {"type": "axis", "id": "x", "quantity": 3};
+    let data = {"type": "axis", "id": "x", "quantity": 5};
 
     interval = setInterval(function () {
         // console.log("gönderdi");
         jquery_manager.put_data(route, data);
-    }, 100);
+    }, 300);
 });
 
 
 x_down_btn.addEventListener("mousedown", function () {
 
     let route = "/api/move?id=x&admin_id=" + admin_id;
-    let data = {"type": "axis", "id": "x", "quantity": -3};
+    let data = {"type": "axis", "id": "x", "quantity": -5};
 
     interval = setInterval(function () {
         // console.log("gönderdi");
         jquery_manager.put_data(route, data);
-    }, 100);
+    }, 300);
 });
 
 
 y_up_btn.addEventListener("mousedown", function () {
 
     let route = "/api/move?id=y&admin_id=" + admin_id;
-    let data = {"type": "axis", "id": "y", "quantity": 3};
+    let data = {"type": "axis", "id": "y", "quantity": 5};
 
     interval = setInterval(function () {
         // console.log("gönderdi");
         jquery_manager.put_data(route, data);
-    }, 100);
+    }, 300);
 });
 
 
 y_down_btn.addEventListener("mousedown", function () {
 
     let route = "/api/move?id=y&admin_id=" + admin_id;
-    let data = {"type": "axis", "id": "y", "quantity": -3};
+    let data = {"type": "axis", "id": "y", "quantity": -5};
 
     interval = setInterval(function () {
         // console.log("gönderdi");
         jquery_manager.put_data(route, data);
-    }, 100);
+    }, 300);
 });
 
 
 z_up_btn.addEventListener("mousedown", function () {
 
     let route = "/api/move?id=z&admin_id=" + admin_id;
-    let data = {"type": "axis", "id": "z", "quantity": 3};
+    let data = {"type": "axis", "id": "z", "quantity": 5};
 
     interval = setInterval(function () {
         // console.log("gönderdi");
         jquery_manager.put_data(route, data);
-    }, 100);
+    }, 300);
 });
 
 
 z_down_btn.addEventListener("mousedown", function () {
 
     let route = "/api/move?id=z&admin_id=" + admin_id;
-    let data = {"type": "axis", "id": "z", "quantity": -3};
+    let data = {"type": "axis", "id": "z", "quantity": -5};
 
     interval = setInterval(function () {
         // console.log("gönderdi");
         jquery_manager.put_data(route, data);
-    }, 100);
+    }, 300);
 });
 
 
