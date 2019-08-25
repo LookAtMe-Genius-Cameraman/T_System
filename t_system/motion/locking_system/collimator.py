@@ -168,7 +168,7 @@ class Collimator:
     def stop(self):
         """The low-level method to provide stop the GPIO.PWM services that are reserved for the collimator's servo motor.
         """
-        if self.motor_thread:
+        if self.motor_thread.is_alive():
             self.motor_thread_stop = True
             self.motor_thread.join()
 
