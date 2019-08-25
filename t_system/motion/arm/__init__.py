@@ -15,7 +15,6 @@ import json
 from numpy import linalg
 from sympy import symbols, eye, Matrix, cos, sin, diff
 from math import pi
-# from multipledispatch import dispatch
 
 from t_system.motion.motor import ServoMotor
 from t_system.motion import degree_to_radian
@@ -59,11 +58,10 @@ class Joint:
         self.a = joint['a']
         self.alpha = joint['alpha']
 
-        self.current_angle = self.q
+        self.current_angle = degree_to_radian(self.q)
+        self.motor.start(self.current_angle)
 
-        self.motor.start(degree_to_radian(self.q))
-
-        logger.info(f'Joint{self.number} started successfully.')
+        logger.info(f'Joint{self.number} started successfully. On {self.current_angle} degree.')
 
     def move_to_angle(self, target_angle):
         """The top-level method to provide servo motors moving.
@@ -71,7 +69,7 @@ class Joint:
         Args:
             target_angle:       	        The target angle of servo motors. In radian Unit.
         """
-
+        logger.debug(f' Motor of Joint {self.number} is moving...')
         self.motor.directly_goto_position(target_angle)
         self.current_angle = target_angle
 
@@ -367,7 +365,7 @@ class Arm:
 
         Args:
             joint_number (int):        Number of one of arm's joints.
-            delta_angle (float):       Angle to rotate.
+            delta_angle (float):       Angle to rotate. In degree.
             direction (bool):          Rotate direction. True means CW, otherwise CCW.
         """
         if direction is None:
@@ -376,6 +374,7 @@ class Arm:
                 direction = True
 
             delta_angle = abs(delta_angle)
+            logger.debug(f'Joint {joint_number} will change angle by {delta_angle} degree.')
 
         for joint in self.joints:
             if joint.number == joint_number:
