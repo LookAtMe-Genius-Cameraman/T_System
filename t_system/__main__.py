@@ -16,14 +16,11 @@ import sys
 from elevate import elevate
 
 from t_system.logging import LogManager
-from t_system.vision import Vision
-from t_system.accession import AccessPoint
-from t_system.administration import Administrator
-from t_system.updation import UpdateManager
 
 import t_system.__init__
 from t_system import dot_t_system_dir
 
+logger = None
 
 def start(args):
     """Function that starts the tracking system with the correct mode according to command-line arguments.
@@ -31,6 +28,7 @@ def start(args):
     Args:
         args:       Command-line arguments.
     """
+    from t_system.vision import Vision
 
     t_system.seer = Vision(args)
 
@@ -63,6 +61,7 @@ def start(args):
                 t_system.seer.detect_track(lambda: False)
 
     except KeyboardInterrupt:
+        logger.debug("Vision systems has been released!")
         t_system.seer.release_camera()
         t_system.seer.release_servos()
         t_system.seer.release_hearer()
@@ -105,18 +104,24 @@ def prepare(args):
         os.mkdir(dot_t_system_dir)
 
     t_system.log_manager = LogManager(args)
-    t_system.administrator = Administrator()
-    t_system.update_manager = UpdateManager()
 
     global logger
     logger = t_system.log_manager.get_logger(__name__, "DEBUG")
     logger.info("Logger integration successful.")
+
+    from t_system.administration import Administrator
+    from t_system.updation import UpdateManager
+
+    t_system.administrator = Administrator()
+    t_system.update_manager = UpdateManager()
 
     if args["sub_jobs"]:
         start_sub(args)
         sys.exit(1)
 
     if args["access_point"]:
+        from t_system.accession import AccessPoint
+
         elevate(show_console=False, graphical=False)
 
         access_point = AccessPoint(args)
