@@ -10,11 +10,8 @@ Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 
 ## Response
 ### On Success
-```json
-{
-    "status": "OK",
-    "data": "Response(stream, mimetype=mimetype)"
-}
+```
+Flask.Response(stream, mimetype=mimetype)
 ```
 
 ### On Failure
