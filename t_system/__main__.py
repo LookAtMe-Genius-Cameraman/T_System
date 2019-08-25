@@ -22,6 +22,7 @@ from t_system import dot_t_system_dir
 
 logger = None
 
+
 def start(args):
     """Function that starts the tracking system with the correct mode according to command-line arguments.
 
@@ -200,7 +201,6 @@ def initiate():
     access_p_gr.add_argument("--password", help="Password of the access point. 't_system' is default.", action="store", default="t_system", type=str)
 
     ext_network_gr = ap.add_argument_group('external network options')
-    # ext_network_gr.add_argument("-p", "--access-point", help="Become access point for serving remote UI inside the internal network.", action="store_true")
     ext_network_gr.add_argument("--wlan", help="network interface that will be used to connect to external network. 'wlp4s0' is default.", action="store", default="wlan0", type=str)
     access_p_gr.add_argument("--inet", help="forwarding interface. Default is None.", action="store", default=None, type=str)
     access_p_gr.add_argument("--static-ip", help="static ip address in connected external network. 192.168.45.1 is default.", action="store", default="192.168.45.1", type=str)
