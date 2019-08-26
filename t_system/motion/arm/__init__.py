@@ -80,8 +80,10 @@ class Joint:
             delta_angle (float):            Angle to rotate. In degree.
             direction (bool):               Rotate direction. True means CW, otherwise CCW.
         """
+        target_angle = self.calc_target_angle(degree_to_radian(delta_angle), direction)
 
-        self.move_to_angle(self.calc_target_angle(degree_to_radian(delta_angle), direction))
+        self.move_to_angle(target_angle)
+        self.current_angle = target_angle
 
     def calc_target_angle(self, delta_angle, direction):
         """The low-level method to calculate target angle with the given variation angle value.
@@ -381,6 +383,10 @@ class Arm:
                 logger.debug(f'Joint {joint_number} moving...')
                 joint.change_angle_by(delta_angle, direction)
 
+                self.current_pos_as_theta[joint_number - 1] = joint.current_angle
+
+        self.current_pos_as_coord = self.forward_kinematics(self.current_pos_as_theta)[-1]
+
     def move_endpoint(self, axis, distance):
         """The high-level method to move endpoint of the arm with the given axis and the distance.
 
@@ -395,6 +401,15 @@ class Arm:
         cartesian_coords[axis] += distance
 
         self.goto_position(pos_coords=current_pos_as_coord)
+
+    def get_current_positions(self):
+        """The high-level method to send current positions.
+
+        Returns:
+            dict: Response
+        """
+
+        return {"cartesian_coords": self.current_pos_as_coord, "polar_coords": self.current_pos_as_theta}
 
     def ang_diff(self, theta1, theta2):
         """
