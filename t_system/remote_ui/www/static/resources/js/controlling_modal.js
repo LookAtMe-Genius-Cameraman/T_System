@@ -190,39 +190,46 @@ stream_area_img.addEventListener("mouseout", function () {
 
 
 let stream_area_img_click_count = 0;
+let single_click_timeout;
+
 
 video_area_div.addEventListener("click", function () {
-    stream_area_img_click_count++;
-    if (stream_area_img_click_count <= 1) {
-        stream_area_img.src = "/api/stream?type=preview&admin_id=" + admin_id;   // this url assigning creates a GET request.
+    single_click_timeout = setTimeout(function () {
 
-        hide_element(sidebar_toggle_btn);
+        stream_area_img_click_count++;
 
-        dark_deep_background_div.classList.toggle("focused");
-        stream_area_img.classList.toggle("focused");
-        video_area_div.classList.toggle("focused");
+        if (stream_area_img_click_count <= 1) {
+            stream_area_img.src = "/api/stream?type=preview&admin_id=" + admin_id;   // this url assigning creates a GET request.
 
-    } else {
-        stop_stream("preview");
-        stream_area_img.src = "";
-        dark_deep_background_div.classList.toggle("focused");
-        stream_area_img.classList.toggle("focused");
-        video_area_div.classList.toggle("focused");
+            hide_element(sidebar_toggle_btn);
 
-        show_element(sidebar_toggle_btn);
+            dark_deep_background_div.classList.toggle("focused");
+            stream_area_img.classList.toggle("focused");
+            video_area_div.classList.toggle("focused");
 
-        stream_area_img_click_count = 0;
-    }
+        } else {
+            stop_stream("preview");
+            stream_area_img.src = "";
+            dark_deep_background_div.classList.toggle("focused");
+            stream_area_img.classList.toggle("focused");
+            video_area_div.classList.toggle("focused");
+            show_element(sidebar_toggle_btn);
+
+            stream_area_img_click_count = 0;
+        }
+    }, 300)
 });
 
+
 video_area_div.addEventListener("dblclick", function () {
-    	if(stream_area_img.requestFullScreen){
-		stream_area_img.requestFullScreen();
-	} else if(stream_area_img.webkitRequestFullScreen){
-		stream_area_img.webkitRequestFullScreen();
-	} else if(stream_area_img.mozRequestFullScreen){
-		stream_area_img.mozRequestFullScreen();
-	}
+    clearTimeout(single_click_timeout);
+    if (stream_area_img.requestFullScreen) {
+        stream_area_img.requestFullScreen();
+    } else if (stream_area_img.webkitRequestFullScreen) {
+        stream_area_img.webkitRequestFullScreen();
+    } else if (stream_area_img.mozRequestFullScreen) {
+        stream_area_img.mozRequestFullScreen();
+    }
 });
 
 let motion_control_btn_click_count = 0;
