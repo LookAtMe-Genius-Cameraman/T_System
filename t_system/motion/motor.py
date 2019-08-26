@@ -9,6 +9,7 @@
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
 import time  # Time access and conversions
+import threading
 
 from math import pi
 from RPi import GPIO as GPIO
@@ -39,11 +40,14 @@ class ServoMotor:
         GPIO.setup(self.gpio_pin, GPIO.OUT)
         GPIO.setwarnings(False)
 
-        self.servo = GPIO.PWM(gpio_pin, 50)  # GPIO 17 for PWM with 50Hz
+        self.servo = GPIO.PWM(gpio_pin, 50)  # GPIO pin for PWM with 50Hz
 
         self.max_duty_cy = 12.5
         self.min_duty_cy = 2.5
         self.current_duty_cy = None
+
+        self.last_work_time = None
+        self.sleep_listener_thread = threading.Thread(target=self.sleep_listener)
 
     def start(self, init_angel):
         """The high-level method to start of the motor initially.
@@ -56,7 +60,7 @@ class ServoMotor:
         self.servo.start(init_duty_cy)
         self.current_duty_cy = init_duty_cy
 
-        self.sleep()
+        self.last_work_time = time.time()
 
     def low_pass_filter(self, init_angel):
         """The high-level method to start of the motor initially.
@@ -92,11 +96,9 @@ class ServoMotor:
         if self.min_duty_cy <= target_duty_cy <= self.max_duty_cy:
             target_duty_cy = round(target_duty_cy, 5)
 
-            self.servo.ChangeDutyCycle(target_duty_cy)
+            self.change_duty_cycle(target_duty_cy)
             self.current_duty_cy = target_duty_cy
             logger.debug(f'Move of motor in GPIO {self.gpio_pin} completed')
-
-        self.sleep()
 
     def softly_goto_position(self, target_angle):
         """The high-level method to changing position to the target angle step by step for more softly than direct_goto_position func.
@@ -113,21 +115,19 @@ class ServoMotor:
             delta_duty_cy = target_duty_cy - self.current_duty_cy
 
             while self.current_duty_cy < target_duty_cy:
-                self.servo.ChangeDutyCycle(self.current_duty_cy)
+                self.change_duty_cycle(self.current_duty_cy)
                 self.current_duty_cy += delta_duty_cy / 50  # Divide the increasing to 50 parse.
 
         elif target_duty_cy < self.current_duty_cy:
             delta_duty_cy = self.current_duty_cy - target_duty_cy
 
             while self.current_duty_cy > target_duty_cy:
-                self.servo.ChangeDutyCycle(self.current_duty_cy)
+                self.change_duty_cycle(self.current_duty_cy)
                 self.current_duty_cy -= delta_duty_cy / 50  # Each 0.055 decrease decreases the angle as 1 degree.
         else:
-            self.servo.ChangeDutyCycle(self.current_duty_cy)
+            self.change_duty_cycle(self.current_duty_cy)
 
-        self.servo.ChangeDutyCycle(target_duty_cy)
-
-        self.sleep()
+        self.change_duty_cycle(target_duty_cy)
 
     def change_position_incregular(self, stop, direction):
         """The high-level method to changing position to the given direction as regularly and incremental when the stop flag is not triggered yet.
@@ -147,25 +147,46 @@ class ServoMotor:
 
                     self.current_duty_cy = self.current_duty_cy + increase
                     self.current_duty_cy = round(self.current_duty_cy, 4)
-                    self.servo.ChangeDutyCycle(self.current_duty_cy)
+                    self.change_duty_cycle(self.current_duty_cy)
 
             else:
                 if self.min_duty_cy <= self.current_duty_cy <= self.max_duty_cy:
 
                     self.current_duty_cy = self.current_duty_cy - increase
                     self.current_duty_cy = round(self.current_duty_cy, 4)
-                    self.servo.ChangeDutyCycle(self.current_duty_cy)
+                    self.change_duty_cycle(self.current_duty_cy)
             timeout += 1
 
             time.sleep(0.2)
 
-        self.sleep()
+    def change_duty_cycle(self, duty_cycle):
+        """The low-level method to handle changing duty-cycle of motor with listening sleep status for sending signal on unnecessary moments.
+
+        Args:
+            duty_cycle:               Cycle parameter of PWM signal.
+        """
+
+        self.servo.ChangeDutyCycle(duty_cycle)
+        self.last_work_time = time.time()
+
+        if not self.sleep_listener_thread.is_alive():
+            self.sleep_listener_thread = threading.Thread(target=self.sleep_listener)
+            self.sleep_listener_thread.start()
+
+    def sleep_listener(self):
+        """The low-level method to provide asynchronous listener to sending motor to sleep status with stop the signal sending to the PWM pin when work ended.
+        """
+
+        while True:
+            time.sleep(1.5)
+            if self.last_work_time < time.time():
+                self.sleep()
+                break
 
     def sleep(self):
         """The low-level method to provide stop the sending signal to motor's GPIO pin until coming new command.
         """
 
-        time.sleep(0.2)
         self.servo.ChangeDutyCycle(0)  # If duty cycle has been set 0 (zero), no signal sending to GPIO pin.
 
     def stop(self):
