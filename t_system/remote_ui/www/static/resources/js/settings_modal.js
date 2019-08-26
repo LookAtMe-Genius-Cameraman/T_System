@@ -28,21 +28,37 @@ const face_encoding_io_div = document.getElementById("face_encoding_io_div");
 //
 // });
 
+/**
+ * The high-level method of getting specified network information with its ssid or the all existing network information.
+ * It is triggered via a click on settings_btn or clicked specified network on network list.
+ */
+function get_network_data(ssid = null) {
+
+    if (ssid) {
+        jquery_manager.get_data("/api/network?ssid=" + ssid + "&admin_id=" + admin_id);
+    } else {
+        jquery_manager.get_data("/api/network?admin_id=" + admin_id);
+    }
+}
+
 let update_control_btn_click_count = 0;
 update_control_btn.addEventListener("click", function () {
     update_control_btn_click_count++;
 
     if (update_control_btn_click_count <= 1) {
 
-        update_control_div.style.top = "20%";
-        update_control_div.style.height = "50%";
-        show_element(update_control_io_div);
+        dark_deep_background_div.classList.toggle("focused");
+        toggle_elements([wifi_control_div, face_encoding_div, lang_select_div]);
+        update_control_div.classList.toggle("col");
+        update_control_div.classList.toggle("focused");
+        update_control_io_div.classList.toggle("focused");
 
     } else {
-        update_control_div.style.top = "0";
-        update_control_div.style.height = "40px";
-        hide_element(update_control_io_div);
-        update_control_btn_click_count = 0;
+        dark_deep_background_div.classList.toggle("focused");
+        toggle_elements([wifi_control_div, face_encoding_div, lang_select_div]);
+        update_control_div.classList.toggle("col");
+        update_control_div.classList.toggle("focused");
+        update_control_io_div.classList.toggle("focused");
     }
 });
 
@@ -81,9 +97,11 @@ wifi_connections_btn.addEventListener("click", function () {
                         network_list_ul.appendChild(li);
                     }
 
-                    wifi_control_div.style.top = "20%";
-                    wifi_control_div.style.height = "70%";
-                    show_element(wifi_control_io_div);
+                    dark_deep_background_div.classList.toggle("focused");
+                    toggle_elements([update_control_div, face_encoding_div, lang_select_div]);
+                    wifi_control_div.classList.toggle("col");
+                    wifi_control_div.classList.toggle("focused");
+                    wifi_control_io_div.classList.toggle("focused");
 
                 }
                 requested_data = null;
@@ -91,16 +109,14 @@ wifi_connections_btn.addEventListener("click", function () {
             }
         }, 500);
 
-        // wifi_control_div.style.top = "20%";
-        // wifi_control_div.style.height = "70%";
-        // show_element(wifi_control_io_div);
-
         // jquery_manager.post_data("/try", {"bla": "bla"})
 
     } else {
-        wifi_control_div.style.top = "0";
-        wifi_control_div.style.height = "40px";
-        hide_element(wifi_control_io_div);
+        dark_deep_background_div.classList.toggle("focused");
+        toggle_elements([update_control_div, face_encoding_div, lang_select_div]);
+        wifi_control_div.classList.toggle("col");
+        wifi_control_div.classList.toggle("focused");
+        wifi_control_io_div.classList.toggle("focused");
         wifi_connections_btn_click_count = 0;
     }
 
@@ -144,17 +160,3 @@ face_encoding_btn.addEventListener("click", function () {
     face_encoding_div.classList.toggle("focused");
     face_encoding_io_div.classList.toggle("focused");
 });
-
-
-/**
- * The high-level method of getting specified network information with its ssid or the all existing network information.
- * It is triggered via a click on settings_btn or clicked specified network on network list.
- */
-function get_network_data(ssid = null) {
-
-    if (ssid) {
-        jquery_manager.get_data("/api/network?ssid=" + ssid + "&admin_id=" + admin_id);
-    } else {
-        jquery_manager.get_data("/api/network?admin_id=" + admin_id);
-    }
-}
