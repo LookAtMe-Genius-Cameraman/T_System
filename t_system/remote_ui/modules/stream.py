@@ -10,6 +10,7 @@
 """
 
 import threading
+import time  # Time access and conversions
 
 from t_system import seer
 from t_system import dot_t_system_dir
@@ -72,11 +73,15 @@ class StreamManager:
         """
         logger.debug("frame sending processes starting")
 
+        while seer.get_current_frame() is None:
+            pass
+
         while True:
-            frame = seer.get_current_frame()
-            if frame is not None:
-                yield (b'--frame\r\n'
-                       b'Content-Type: image/jpeg\r\n\r\n' + open(f'{dot_t_system_dir}/online_stream.jpeg', 'rb').read() + b'\r\n')
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + open(f'{dot_t_system_dir}/online_stream.jpeg', 'rb').read() + b'\r\n')
+
             if self.stop_thread:
                 logger.debug("Frame yielding process stopping...")  # this block is never triggered, but looks like no problem. Why?
                 break
+
+            time.sleep(0.041)  # 1/24. for becoming the strem 24 fps.
