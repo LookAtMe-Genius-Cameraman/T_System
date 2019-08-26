@@ -263,6 +263,7 @@ Once you have successfully created the pull request, wait for a response from th
 | :pencil: | `:pencil:` | when **performing minor changes/fixing** the code or language |
 | :racehorse: | `:racehorse:` | when improving **performance** |
 | :books: | `:books:` | when writing **docs** |
+| :memo: | `:memo:` | when changing/improving **docs** |
 | :bug: | `:bug:` | when reporting a **bug**, with [`@FIXME`](https://github.com/slashsbin/styleguide-todo-grammar#bug-report)Comment Tag |
 | :ambulance: | `:ambulance:` | when fixing a **bug** |
 | :penguin: | `:penguin:` | when fixing something on **Linux** |
