@@ -29,3 +29,14 @@ def move_arm(admin_id, move_id, data):
         result = False
 
     return result
+
+
+def get_current_position(admin_id):
+    """The high-level method to get coordinates of T_System's arm current position  as polar and cartesian.
+
+    Args:
+        admin_id (str):                Admin privileges flag.
+    """
+
+    return seer.arm.get_current_positions()
+

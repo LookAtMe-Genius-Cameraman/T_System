@@ -13,7 +13,7 @@ from flask import Blueprint, request
 from flask_restful import Api, Resource
 from schema import SchemaError
 
-from t_system.remote_ui.modules.move import move_arm
+from t_system.remote_ui.modules.move import move_arm, get_current_position
 from t_system.remote_ui.api.data_schema import MOVE_SCHEMA
 
 api_bp = Blueprint('move_api', __name__)
@@ -38,7 +38,12 @@ class MoveApi(Resource):
         """The API method to get request for flask.
         """
 
-        return {'status': 'ERROR', 'message': 'NOT VALID'}
+        # move_id = request.args.get('id', None)
+        admin_id = request.args.get('admin_id', None)
+
+        current_position = get_current_position(admin_id)
+
+        return {'status': 'OK', 'data': current_position}
 
     def post(self):
         """The API method to post request for flask.
