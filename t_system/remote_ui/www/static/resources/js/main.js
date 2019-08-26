@@ -46,10 +46,15 @@ function update_ui_text() {
     build_HTML_setting_list(current_setting_filter);
 }
 
+function toggle_elements(elements) {
+    for (let i = 0; i < elements.length; i++) {
+        elements[i].classList.toggle("hidden_element")
+    }
+}
 
 /**
  * The low-level method to change visibility and opacity for making usable of given element.
- * @param {Element} element: the route address of the flask
+ * @param {Object} element: the route address of the flask
  */
 function show_element(element) {
     element.style.opacity = "1";
@@ -59,7 +64,7 @@ function show_element(element) {
 
 /**
  * The low-level method to change visibility and opacity for making unusable of given element.
- * @param {Element} element: the route address of the flask
+ * @param {Object} element: the route address of the flask
  */
 function hide_element(element) {
     element.style.opacity = "0";
