@@ -320,7 +320,6 @@ position_div_back_btn.addEventListener("click", function () {
 
 
 position_name_input.addEventListener("mousemove", function () {
-
     create_pos_btn.disabled = position_name_input.value === "";
 });
 
@@ -332,9 +331,11 @@ create_pos_btn.addEventListener("click", function () {
 
     jquery_manager.post_data("/api/position&admin_id=" + admin_id, data);
 
+    position_name_input.value = "";
     position_div_back_btn.click();
     record_pos_sce_btn.click();
 
+    swal(translate_text_item("Position Created!"), "", "success");
 });
 
 record_in_sce_btn.addEventListener("click", function () {
