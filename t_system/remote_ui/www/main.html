@@ -23,7 +23,7 @@
             <mark translate>T_System</mark>
         </a></footer>
         <div id="page_control_div" class="btn-group justify-content-center">
-            <button id="settings_btn" class="btn btn-dark swiper-button" translate>Settings</button>
+            <button id="settings_btn" class="btn btn-dark" translate>Settings</button>
             <button id="control_btn" class="btn btn-dark" translate>Control</button>
             <button id="on_work_btn" class="btn btn-dark" translate>Let's Begin</button>
         </div>
@@ -48,8 +48,8 @@
                         <button id="wifi_connections_btn" translate>Wifi Connections</button>
                         <div id="wifi_control_io_div">
                             <div id="create_new_network">
-                                <input class="new_network_input" type="text" name="network_ssid" id="network_ssid_input" placeholder="ssid"/>
-                                <input class="new_network_input" type="text" name="network_password" id="network_password_input" placeholder="password"/>
+                                <input class="text_input" type="text" name="network_ssid" id="network_ssid_input" placeholder="ssid"/>
+                                <input class="text_input" type="text" name="network_password" id="network_password_input" placeholder="password"/>
                                 <button id="create_new_network_btn" translate>&#187;</button>
                             </div>
                             <ul class="network_list" id="network_list_ul"></ul>
@@ -77,7 +77,7 @@
                         <button id="face_encoding_btn" translate>Facial Recognitions</button>
                         <div id="face_encoding_io_div">
                             <div id="encode_new_face_div">
-                                <input class="new_network_input" type="text" name="face_name" id="face_name_input" placeholder="name"/>
+                                <input class="text_input" type="text" name="face_name" id="face_name_input" placeholder="name"/>
                                 <button id="encode_new_face_btn" translate>&#187;</button>
                             </div>
                             <ul class="network_list" id="encoded_face_list_ul"></ul>
@@ -138,12 +138,13 @@
                             <button id="record_in_sce_btn" class="position-relative btn" translate>In scenario</button>
                         </div>
                         <div id="record_as_position_div" class="position-absolute">
-                            <button id="position_div_back_btn" class="position-relative btn" translate>Back</button>
-                            <input class="new_network_input" type="text" name="position_name" id="position_name_input" placeholder="name"/>
+                            <button id="position_div_back_btn" class="position-relative btn _button" translate>Back</button>
+                            <input class="text_input" type="text" name="position_name" id="position_name_input" placeholder="name"/>
+                            <button id="create_pos_btn" class="position-relative btn btn-dark" translate>save</button>
                         </div>
                         <div id="record_in_scenario_div" class="position-absolute">
                             <button id="scenario_div_back_btn" class="position-relative btn" translate>Back</button>
-                            <input class="new_network_input" type="text" name="scenario_name" id="scenario_name_input" placeholder="name"/>
+                            <input class="text_input" type="text" name="scenario_name" id="scenario_name_input" placeholder="name"/>
                         </div>
                     </div>
                 </div>
