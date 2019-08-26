@@ -11,6 +11,13 @@ const network_password_input = document.getElementById("network_password_input")
 const create_new_network_btn = document.getElementById("create_new_network_btn");
 const network_list_ul = document.getElementById("network_list_ul");
 
+const lang_select_div = document.getElementById("lang_select_div");
+
+const face_encoding_div = document.getElementById("face_encoding_div");
+const face_encoding_btn = document.getElementById("face_encoding_btn");
+const face_encoding_io_div = document.getElementById("face_encoding_io_div");
+
+
 
 // a_i_checkbox.addEventListener("change", function () {  // Checkbox onchange sample
 //
@@ -127,6 +134,15 @@ create_new_network_btn.addEventListener("click", function () {
 
     admin_id = response_data["admin_id"];
     console.log(admin_id)
+});
+
+face_encoding_btn.addEventListener("click", function () {
+
+    dark_deep_background_div.classList.toggle("focused");
+    toggle_elements([update_control_div, wifi_control_div, lang_select_div]);
+    face_encoding_div.classList.toggle("col");
+    face_encoding_div.classList.toggle("focused");
+    face_encoding_io_div.classList.toggle("focused");
 });
 
 
