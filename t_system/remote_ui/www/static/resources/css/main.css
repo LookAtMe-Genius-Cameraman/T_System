@@ -8,6 +8,18 @@ body {
     opacity: 0 !important;
 }
 
+.text_input {
+    /*alignment*/
+    position: relative;
+    width: 98%;
+
+    transition: all 300ms;
+    background-color: #fff0eb;
+    border: 2px #008CBA;
+    border-style: none none solid none;
+    border-radius: 5px;
+}
+
 #main_container {
     max-width: 100%;
     max-height: 100%;
