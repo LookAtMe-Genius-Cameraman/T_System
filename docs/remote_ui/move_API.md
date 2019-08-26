@@ -40,14 +40,24 @@ Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 }
 ```
 
-## GET Request
+# Getting Current Position
+- Returns T_System's arm current position info as cartesian and polar coordinates.
+
+## Request
+```http
+GET /api/move?admin_id=<ADMIN_ID>
+Host: domain
+```
 
 ## Response
-
+### On Success
 ```json
 {
-    "status": "ERROR",
-    "message": "NOT VALID"
+    "status": "OK",
+    "data": {
+        "cartesian_coords": [30, 25, 42],
+        "polar_coords": [1.5, 1.02, 0.5]
+    }
 }
 ```
 
