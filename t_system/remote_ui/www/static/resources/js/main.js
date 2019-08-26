@@ -99,6 +99,8 @@ $(document).ready(function () {
         },
     });
 
+    control_btn.click()
+
 });
 
 
