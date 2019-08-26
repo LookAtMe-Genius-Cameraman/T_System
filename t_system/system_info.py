@@ -22,7 +22,7 @@ def get_disk_usage(admin_id):
         admin_id:   	     ID of the administration authentication.
 
     Returns:
-            dict:  Response.
+        dict:  Response.
     """
     usage = psutil.disk_usage('/')
 
