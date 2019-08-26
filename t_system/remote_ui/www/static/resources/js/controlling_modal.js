@@ -56,6 +56,8 @@ const record_in_sce_btn = document.getElementById("record_in_sce_btn");
 
 const record_as_position_div = document.getElementById("record_as_position_div");
 const position_div_back_btn = document.getElementById("position_div_back_btn");
+const position_name_input = document.getElementById("position_name_input");
+const create_pos_btn = document.getElementById("create_pos_btn");
 
 const record_in_scenario_div = document.getElementById("record_in_scenario_div");
 const scenario_div_back_btn = document.getElementById("scenario_div_back_btn");
@@ -65,8 +67,12 @@ const body = document.getElementsByTagName("BODY")[0];
 
 
 function stop_stream(type) {
-            jquery_manager.delete_data("/api/stream?type=" + type + "&admin_id=" + admin_id);
+    jquery_manager.delete_data("/api/stream?type=" + type + "&admin_id=" + admin_id);
 
+}
+
+function get_current_position() {
+    jquery_manager.get_data("/api/move?admin_id=" + admin_id);
 }
 
 function get_position_s(id = null) {
@@ -260,12 +266,27 @@ let record_pos_sce_btn_click_count = 0;
 record_pos_sce_btn.addEventListener("click", function () {
     record_pos_sce_btn_click_count++;
     if (record_pos_sce_btn_click_count <= 1) {
-        record_pos_sce_btn.innerHTML = "cancel";
 
-        hide_element(motion_control_div);
-        hide_element(video_area_div);
-        hide_element(controlling_template_sidebar);
-        hide_element(sidebar_toggle_btn);
+        get_current_position();
+        let timer_settings_cont = setInterval(function () {
+
+            if (requested_data !== null) {
+                if (requested_data["status"] === "OK") {
+
+                    current_arm_position = requested_data["data"];
+                    // console.log(requested_data["data"]);
+                    record_pos_sce_btn.innerHTML = "cancel";
+
+                    hide_element(motion_control_div);
+                    hide_element(video_area_div);
+                    hide_element(controlling_template_sidebar);
+                    hide_element(sidebar_toggle_btn);
+                }
+                requested_data = null;
+                clearInterval(timer_settings_cont)
+            }
+        }, 300);
+
     } else {
         record_pos_sce_btn.innerHTML = "save";
 
@@ -279,19 +300,41 @@ record_pos_sce_btn.addEventListener("click", function () {
     record_pos_sce_div.classList.toggle("focused");
 });
 
+
 record_as_pos_btn.addEventListener("click", function () {
     pos_sce_select_div.classList.toggle("inactive");
+    create_pos_btn.disabled = true;
 
     setTimeout(function () {
         record_as_position_div.classList.toggle("focused");
         }, 175)
 });
 
+
 position_div_back_btn.addEventListener("click", function () {
     record_as_position_div.classList.toggle("focused");
     setTimeout(function () {
         pos_sce_select_div.classList.toggle("inactive");
         }, 175)
+});
+
+
+position_name_input.addEventListener("mousemove", function () {
+
+    create_pos_btn.disabled = position_name_input.value === "";
+});
+
+
+create_pos_btn.addEventListener("click", function () {
+
+    let name_dict = {"name": position_name_input.value};
+    let data = Object.assign({}, name_dict, current_arm_position);
+
+    jquery_manager.post_data("/api/position&admin_id=" + admin_id, data);
+
+    position_div_back_btn.click();
+    record_pos_sce_btn.click();
+
 });
 
 record_in_sce_btn.addEventListener("click", function () {

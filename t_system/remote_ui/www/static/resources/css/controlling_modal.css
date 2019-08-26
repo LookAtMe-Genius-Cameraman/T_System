@@ -277,9 +277,30 @@
     height: 70% !important;
 }
 
-#record_as_position_div button {
+#record_as_position_div ._button {
     background-color: #fff0eb;
     color: #008CBA;
+}
+
+#position_div_back_btn {
+    border-style: none solid solid none;
+    border-color: #008CBA;
+}
+
+#position_name_input {
+    margin: 20px auto;
+
+}
+
+#create_pos_btn {
+
+    left: 50%;
+    transform: translate(-50%);
+
+    margin: 5px auto;
+
+
+
 }
 
 #record_in_scenario_div {
