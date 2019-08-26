@@ -13,3 +13,7 @@ let requested_data = null;
 let response_data = null;
 
 let interval = 0;
+
+let current_arm_position = null;
+
+
