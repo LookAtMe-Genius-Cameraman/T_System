@@ -1,5 +1,5 @@
 body {
-    /*overflow-y: hidden;*/
+    overflow: hidden;
     background-color: #fff0eb; /*Default white tone*/
 }
 
@@ -8,6 +8,10 @@ body {
     opacity: 0 !important;
 
     pointer-events: none;
+}
+
+.hidden_element_without_child {
+    visibility: hidden !important;
 }
 
 .text_input {
@@ -31,7 +35,7 @@ body {
     height: 97%;
 
     min-width: 20rem;
-    min-height: 35rem;
+    min-height: 30rem;
 }
 
 #title_div {
@@ -90,6 +94,7 @@ body {
     visibility: visible;
     opacity: 1;
 
+    /*background-color: #fff0eb;*/
     transition: opacity 300ms;
     border: #8d75a3 dashed;
     margin: auto;
@@ -110,6 +115,7 @@ body {
     visibility: visible;
     opacity: 1;
 
+    margin: auto;
     transition: opacity 300ms;
     border: #8d75a3 dashed;
 }
