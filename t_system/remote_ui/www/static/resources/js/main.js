@@ -104,31 +104,21 @@ $(document).ready(function () {
         },
     });
 
-    control_btn.click()
+    on_work_btn.click()
 
 });
 
 
 settings_btn.addEventListener("click", function () {
-    // show_element(settings_template_container);
-    // hide_element(controlling_template_container);
-    // hide_element(on_work_template_container);
-
     swiper.slideTo(0)
 });
 
 
 control_btn.addEventListener("click", function () {
-    // show_element(controlling_template_container);
-    // hide_element(settings_template_container);
-    // hide_element(on_work_template_container);
     swiper.slideTo(1)
 });
 
 
 on_work_btn.addEventListener("click", function () {
-    // show_element(on_work_template_container);
-    // hide_element(controlling_template_container);
-    // hide_element(settings_template_container);
     swiper.slideTo(2)
 });
