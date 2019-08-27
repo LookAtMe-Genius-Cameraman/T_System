@@ -99,7 +99,7 @@
 
                 <!-- Sidebar -->
                 <div id="controlling_template_sidebar" class="sidenav">
-                    <a href="javascript:void(0)" id="controlling_template_sidebar_close_btn" class="close_btn" onclick="closeNav()">&times;</a>
+                    <a href="javascript:void(0)" id="controlling_template_sidebar_close_btn" class="close_btn">&times;</a>
                     <h6 id="scenarios_title" style="max-width: 150px" translate>Scenarios :</h6>
                     <ul class="list-unstyled components network_list" id="scenario_list_ul"></ul>
                     <h6 id="positions_title" style="max-width: 150px" translate>Positions :</h6>
@@ -159,25 +159,43 @@
             </div><!--        ======================================================CONTROLLING MODAL======================================================        -->
 
             <!--        ======================================================ON WORK MODAL======================================================        -->
-            <div id="on_work_template_container" class="jumbotron vertical-center swiper-slide">
-                <div style="text-align:center">
-                    <button onclick="playPause()">Play/Pause</button>
-                    <label for="on_work_windows_size_select">Size</label><select class="dropdown" style="height: 30px; width: 70px" id="on_work_windows_size_select">
-                    <option value="big">Big</option>
-                    <option value="small">Small</option>
-                    <option value="normal">Normal</option>
-                </select>
-                    <br><br>
-                    <div id="on_work_video_area_div">
-                        <span id="on_work_get_preview_span">Click here to get preview</span>
-                        <video id="_on_work_stream_area_video" width="420">
-                            <!--<source src="http://localhost:5000/live_stream" type="video/mp4">-->
-                            <!--<source src="mov_bbb.ogg" type="video/ogg">-->
-                            Your browser does not support HTML5 video.
-                        </video>
-                        <button id="on_work_start_stop_record_btn">READY</button>
+            <div id="on_work_template_container" class="swiper-slide">
+                <!--<br><br>-->
+                <div id="monitor_area_div" class="position-relative">
+                    <span id="monitor_job_span" class="position-absolute" translate>Monitor the job</span>
+                    <img id="monitor_stream_area_img" class="position-relative" src="" alt="">
+                </div>
+                <div id="main_specify_div" class="position-absolute d-flex justify-content-center">
+                    <div id="specify_sce_div" class="pl-1 mr-1">
+                        <span id="specify_sce_span" translate>Specify Scenarios</span>
+                        <div id="available_sce_div">
+                            <ul class="network_list" id="available_sce_ul"></ul>
+                        </div>
+                    </div>
+                    <div id="specify_parameters_div" class="pl-1 ml-1">
+                        <span id="specify_parameters_span" translate>Specify Parameters</span>
+                        <div id="select_param_cb_div">
+                            <div class="form-check mt-1">
+                                <input id="ai_select_checkbox" class="form-check-input" type="checkbox" value="">
+                                <label id="ai_select_cb_label" class="form-check-label" for="ai_select_checkbox" translate>AI</label>
+                            </div>
+                            <div class="form-check mt-1">
+                                <input id="security_mode_checkbox" class="form-check-input" type="checkbox" value="">
+                                <label id="security_mode_cb_label" class="form-check-label" for="security_mode_checkbox" translate>Security Mode</label>
+                            </div>
+                            <div class="form-check mt-1">
+                                <input id="non_moving_target_checkbox" class="form-check-input" type="checkbox" value="">
+                                <label id="non_moving_target_cb_label" class="form-check-label" for="non_moving_target_checkbox" translate>Target is not-moving</label>
+                            </div>
+                            <div class="form-check mt-1">
+                                <input id="time_laps_checkbox" class="form-check-input" type="checkbox" value="">
+                                <label id="time_laps_cb_label" class="form-check-label" for="time_laps_checkbox" translate>Time-laps</label>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <button id="on_work_job_btn" class="position-absolute btn btn-warning">READY</button>
+
             </div><!--        ======================================================ON WORK MODAL======================================================        -->
         </div>
     </div>
