@@ -62,6 +62,9 @@ class ServoMotor:
 
         self.last_work_time = time.time()
 
+        time.sleep(1)
+        self.sleep()
+
     def low_pass_filter(self, init_angel):
         """The high-level method to start of the motor initially.
 
