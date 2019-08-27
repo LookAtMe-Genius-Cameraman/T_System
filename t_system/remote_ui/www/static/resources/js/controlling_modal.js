@@ -282,7 +282,7 @@ record_pos_sce_btn.addEventListener("click", function () {
 
                     current_arm_position = requested_data["data"];
                     // console.log(requested_data["data"]);
-                    record_pos_sce_btn.innerHTML = "cancel";
+                    record_pos_sce_btn.innerHTML = translate_text_item("cancel");
 
                     hide_element(motion_control_div);
                     hide_element(video_area_div);
@@ -295,7 +295,7 @@ record_pos_sce_btn.addEventListener("click", function () {
         }, 300);
 
     } else {
-        record_pos_sce_btn.innerHTML = "save";
+        record_pos_sce_btn.innerHTML = translate_text_item("save");
 
         show_element(motion_control_div);
         show_element(video_area_div);

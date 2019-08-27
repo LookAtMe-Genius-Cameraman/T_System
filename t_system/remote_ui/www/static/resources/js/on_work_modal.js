@@ -36,7 +36,7 @@ let on_work_job_btn_click_count = 0;
 on_work_job_btn.addEventListener("click", function () {
     on_work_job_btn_click_count++;
     if (on_work_job_btn_click_count <= 1) {
-        on_work_job_btn.innerHTML = "START";
+        on_work_job_btn.innerHTML = translate_text_item("START");
         on_work_job_btn.classList.toggle("ready");
         on_work_job_btn.classList.toggle("btn-warning");
         on_work_job_btn.classList.toggle("btn-danger");
@@ -50,7 +50,7 @@ on_work_job_btn.addEventListener("click", function () {
         shine_checked_boxes([ai_select_checkbox, security_mode_checkbox, non_moving_target_checkbox, time_laps_checkbox])
 
     } else if (on_work_job_btn_click_count <= 2) {
-        on_work_job_btn.innerHTML = "STOP";
+        on_work_job_btn.innerHTML = translate_text_item("STOP");
         on_work_job_btn.classList.toggle("ready");
         on_work_job_btn.classList.toggle("btn-danger");
         on_work_job_btn.classList.toggle("btn-dark");
@@ -62,7 +62,7 @@ on_work_job_btn.addEventListener("click", function () {
         shine_checked_boxes([ai_select_checkbox, security_mode_checkbox, non_moving_target_checkbox, time_laps_checkbox])
 
     } else {
-        on_work_job_btn.innerHTML = "READY";
+        on_work_job_btn.innerHTML = translate_text_item("READY");
         on_work_job_btn.classList.toggle("btn-dark");
         on_work_job_btn.classList.toggle("btn-warning");
         dark_deep_background_div.classList.toggle("focused");
@@ -78,7 +78,7 @@ on_work_job_btn.addEventListener("click", function () {
 on_work_cancel_btn.addEventListener("click", function () {
     on_work_cancel_btn.classList.toggle("active");
 
-    on_work_job_btn.innerHTML = "READY";
+    on_work_job_btn.innerHTML = translate_text_item("READY");
     on_work_job_btn.classList.toggle("ready");
     on_work_job_btn.classList.toggle("btn-danger");
     on_work_job_btn.classList.toggle("btn-warning");
