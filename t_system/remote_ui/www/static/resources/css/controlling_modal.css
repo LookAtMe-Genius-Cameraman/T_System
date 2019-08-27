@@ -1,16 +1,15 @@
-
 /* The side navigation menu */
 #controlling_template_sidebar {
-  height: 100%; /* 100% Full-height */
-  width: 0; /* 0 width - change this with JavaScript */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Stay on top */
-  top: 0; /* Stay at the top */
-  left: 0;
-  background-color: #111; /* Black*/
-  overflow-x: hidden; /* Disable horizontal scroll */
-  padding-top: 60px; /* Place content 60px from the top */
-  transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+    height: 100%; /* 100% Full-height */
+    width: 0; /* 0 width - change this with JavaScript */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Stay on top */
+    top: 0; /* Stay at the top */
+    left: 0;
+    background-color: #111; /* Black*/
+    overflow-x: hidden; /* Disable horizontal scroll */
+    padding-top: 60px; /* Place content 60px from the top */
+    transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
     border-bottom-right-radius: 10px;
     border-top-right-radius: 10px;
 }
@@ -22,15 +21,15 @@
 
 /* Position and style the close button (top right corner) */
 #controlling_template_sidebar .close_btn {
-  position: absolute;
-  top: 0;
-  right: 25px;
-  font-size: 24px;
-  margin-left: 50px;
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 24px;
+    margin-left: 50px;
 }
 
 #controlling_template_sidebar.active {
-      width: 100px !important; /* 0 width - change this with JavaScript */
+    width: 100px !important; /* 0 width - change this with JavaScript */
 }
 
 
@@ -59,7 +58,10 @@
     height: 20%;
     margin: 1% auto;
 
+    background-color: #fff;
+    border-radius: 5px;
     border: #8d75a3 solid;
+
 
     transition: all 500ms;
 }
@@ -113,7 +115,7 @@
     /*border: red solid;*/
     transition: all 300ms;
     background-color: #fff;
-    box-shadow: 0 20px 40px 0 rgba(0,0,0,0.5), 0 6px 20px 0 rgba(0,0,0,0.19);
+    box-shadow: 0 20px 40px 0 rgba(0, 0, 0, 0.5), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
 }
 
@@ -132,7 +134,7 @@
     opacity: 1;
     /*alignment*/
     margin: auto;
-    top: 52%;
+    top: 42%;
     left: 10%;
 
     max-width: 100%;
