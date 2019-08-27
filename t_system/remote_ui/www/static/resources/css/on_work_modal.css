@@ -19,6 +19,22 @@
     top: 5% !important;
 }
 
+#on_work_cancel_btn {
+    visibility: hidden;
+    opacity: 0;
+    top: 5%;
+    left: 50%;
+    transform: translate(-50%);
+
+    transition: all 300ms;
+}
+
+#on_work_cancel_btn.active {
+    visibility: visible !important;
+    opacity: 1 !important;
+    top: 90% !important;
+}
+
 #monitor_area_div {
     visibility: hidden;
     opacity: 0;
