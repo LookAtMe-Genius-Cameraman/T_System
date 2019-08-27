@@ -280,6 +280,8 @@
 
     transition: all 300ms;
     border: tan solid;
+    border-radius: 5px;
+    background-color: #fff0eb;
 }
 
 #lang_select_div.focused {
