@@ -40,7 +40,7 @@ class Joint:
         """
         self.number = joint['joint_number']
 
-        self.motor = ServoMotor(joint['motor_gpio_pin'])
+        self.motor = None
 
         self.structure = joint['structure']
         self.rotation_type = joint['rotation_type']
@@ -59,9 +59,12 @@ class Joint:
         self.alpha = joint['alpha']
 
         self.current_angle = degree_to_radian(self.q)
-        self.motor.start(self.current_angle)
 
-        logger.info(f'Joint{self.number} started successfully. On {self.current_angle} degree.')
+        if self.structure != 'constant':
+            self.motor = ServoMotor(joint['motor_gpio_pin'])
+            self.motor.start(self.current_angle)
+
+        logger.info(f'Joint{self.number} started successfully. As {self.structure}, in {self.rotation_type} rotation type.')
 
     def move_to_angle(self, target_angle):
         """The top-level method to provide servo motors moving.
@@ -147,6 +150,8 @@ class Arm:
         Args:
             joints (list):          The joint list from the config file.
         """
+
+        # Todo: handle gripper(constant joint), maybe create a class, remember this:  if eval(joint['motor_gpio_pin']) is not None:
         self.joint_count = len(joints)
         for joint in joints:
             self.joints.append(Joint(joint))
@@ -179,6 +184,10 @@ class Arm:
             elif joints[i].structure == 'prismatic':
                 self.dh_params[self.q[i]] = joints[i].q
                 self.dh_params[self.d[i]] = self.d[i]
+
+            elif joints[i].structure == 'constant':
+                self.dh_params[self.q[i]] = joints[i].q
+                self.dh_params[self.d[i]] = joints[i].d
 
         self.set_tranform_matrices()
 
@@ -360,7 +369,8 @@ class Arm:
         """
 
         for joint in self.joints:
-            joint.move_to_angle(pos_thetas[joint.number - 1])
+            if joint.structure != "constant":
+                joint.move_to_angle(pos_thetas[joint.number - 1])
 
     def rotate_single_joint(self, joint_number, delta_angle, direction=None):
         """The high-level method to move a single joint towards the given direction with the given variation.
@@ -379,11 +389,12 @@ class Arm:
             logger.debug(f'Joint {joint_number} will change angle by {delta_angle} degree.')
 
         for joint in self.joints:
-            if joint.number == joint_number:
-                logger.debug(f'Joint {joint_number} moving...')
-                joint.change_angle_by(delta_angle, direction)
+            if joint.structure != "constant":
+                if joint.number == joint_number:
+                    logger.debug(f'Joint {joint_number} moving...')
+                    joint.change_angle_by(delta_angle, direction)
 
-                self.current_pos_as_theta[joint_number - 1] = joint.current_angle
+                    self.current_pos_as_theta[joint_number - 1] = joint.current_angle
 
         self.current_pos_as_coord = self.forward_kinematics(self.current_pos_as_theta)[-1]
 
@@ -417,5 +428,3 @@ class Arm:
         """
 
         return (theta1 - theta2 + np.pi) % (2 * np.pi) - np.pi
-
-
