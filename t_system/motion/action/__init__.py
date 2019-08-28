@@ -15,9 +15,10 @@ from multipledispatch import dispatch
 
 from tinydb import TinyDB, Query  # TinyDB is a lightweight document oriented database
 
-from t_system import dot_t_system_dir, T_SYSTEM_PATH
-
 from t_system.motion.arm import Arm
+from t_system.db_fetching import DBFetcher
+
+from t_system import dot_t_system_dir, T_SYSTEM_PATH
 
 
 class ActionManager:
@@ -106,14 +107,14 @@ class Scenario:
         self.positions = []
         self.root = root
 
-        self.table = None
-
         if self.root:
-            actions_db = f'{T_SYSTEM_PATH}/motion/action/predicted_actions.json'
-            self.set_db(actions_db, 30)
+            db_folder = f'{T_SYSTEM_PATH}/motion/action'
+            db_name = 'predicted_actions'
+            self.table = self.__get_db(db_folder, db_name, 30)
         else:
-            actions_db = dot_t_system_dir + "/actions.json"
-            self.set_db(actions_db)
+            db_folder = dot_t_system_dir
+            db_name = 'actions'
+            self.table = self.__get_db(db_folder, db_name)
 
         self.refresh_positions()
 
@@ -174,16 +175,17 @@ class Scenario:
 
         return ""
 
-    def set_db(self, db_file, cache_size=None):
+    @staticmethod
+    def __get_db(db_folder, db_name, cache_size=None):
         """Function to set the database of the scenario.
 
         Args:
-            db_file (str):                  Database of the position abject.
+            db_folder (str):                Containing folder of the database file
+            db_name (str):                  Database file of the scenario abject.
             cache_size (int):               TinyDB caches query result for performance.
         """
 
-        db = TinyDB(db_file)
-        self.table = db.table("scenarios", cache_size=cache_size)
+        return DBFetcher(db_folder, db_name, "scenarios", cache_size).fetch()
 
     def refresh_positions(self):
         """low-level method to refreshing the members
@@ -224,14 +226,14 @@ class Position:
         self.root = root
         self.is_for_scenario = is_for_scenario
 
-        self.table = None
-
         if self.root:
-            actions_db = f'{T_SYSTEM_PATH}/motion/action/predicted_actions.json'
-            self.set_db(actions_db, 30)
+            db_folder = f'{T_SYSTEM_PATH}/motion/action'
+            db_name = 'predicted_actions'
+            self.table = self.__get_db(db_folder, db_name, 30)
         else:
-            actions_db = dot_t_system_dir + "/actions.json"
-            self.set_db(actions_db)
+            db_folder = dot_t_system_dir
+            db_name = 'actions'
+            self.table = self.__get_db(db_folder, db_name)
 
         self.db_upsert()
 
@@ -280,20 +282,19 @@ class Position:
 
         return ""
 
-    def set_db(self, db_file, cache_size=30):
+    def __get_db(self, db_folder, db_name, cache_size=30):
         """Function to set the database of the position.
 
         Args:
-            db_file (str):                  Database of the position abject.
+            db_folder (str):                Containing folder of the database file
+            db_name (str):                  Database of the position abject.
             cache_size (int):               TinyDB caches query result for performance.
         """
 
-        db = TinyDB(db_file)
-
         if self.is_for_scenario:
-            self.table = db.table("scenario", cache_size=cache_size)
+            return DBFetcher(db_folder, db_name, "scenarios", cache_size).fetch()
         else:
-            self.table = db.table("positions", cache_size=cache_size)
+            return DBFetcher(db_folder, db_name, "positions", cache_size).fetch()
 
 
 if __name__ == '__main__':

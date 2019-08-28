@@ -24,6 +24,8 @@ from os import listdir
 from os.path import isfile, join
 from multipledispatch import dispatch
 
+from t_system.db_fetching import DBFetcher
+
 from t_system import dot_t_system_dir
 from t_system import log_manager
 
@@ -52,8 +54,7 @@ class FaceEncodeManager:
 
         self.__check_folders()
 
-        self.db = TinyDB(self.recognition_folder + '/db.json')
-        self.table = self.db.table("faces")
+        self.table = DBFetcher(self.recognition_folder, "db", "faces").fetch()
 
         self.face_encoder = FaceEncoder(detection_method)
 
@@ -76,7 +77,7 @@ class FaceEncodeManager:
             if os.path.isfile(full_file_name):
                 copy(full_file_name, face.dataset_folder)
 
-        face.__refresh_image_names()
+        face.refresh_image_names()
 
         self.face_encoder.encode(face.dataset_folder, face.pickle_file, face.name)
         self.faces.append(face)
@@ -313,11 +314,10 @@ class Face:
         self.dataset_folder = f'{self.recognition_folder}/dataset/{self.name}'
         self.pickle_file = f'{self.recognition_folder}/encodings/{self.name}_encoding.pickle'
 
-        self.db = TinyDB(self.recognition_folder + '/db.json')
-        self.table = self.db.table("faces")
+        self.table = DBFetcher(self.recognition_folder, "db", "faces").fetch()
 
         self.image_names = []
-        self.__refresh_image_names()
+        self.refresh_image_names()
 
         self.__db_upsert()
 
@@ -365,8 +365,8 @@ class Face:
 
         return ""
 
-    def __refresh_image_names(self, use_db=False):
-        """Method to reload the image_names from given source flag.
+    def refresh_image_names(self, use_db=False):
+        """The top-level method to reload the image_names from given source flag.
 
         Args:
             use_db (bool):      Refreshing source flag. False is for using directly by scanning dataset folder
@@ -410,7 +410,7 @@ class Face:
                 except binascii.Error:
                     raise Exception("no correct base64")
 
-        self.__refresh_image_names()
+        self.refresh_image_names()
         self.__db_upsert(force_insert=True)
 
     def remove_self(self):
