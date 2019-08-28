@@ -14,8 +14,7 @@ from tinydb import TinyDB, Query  # TinyDB is a lightweight document oriented da
 from t_system.administration import is_admin
 from t_system.motion.action.__init__ import Scenario
 
-from t_system.motion.action.__init__ import predicted_actions_db
-from t_system import dot_t_system_dir
+from t_system import dot_t_system_dir, T_SYSTEM_PATH
 from t_system import log_manager
 
 logger = log_manager.get_logger(__name__, "DEBUG")
@@ -137,7 +136,7 @@ def get_db_table(is_admin):
         is_admin (bool):                 Root privileges flag.
     """
     if is_admin:
-        db_file = predicted_actions_db
+        db_file = f'{T_SYSTEM_PATH}/motion/action/predicted_actions.json'
     else:
         db_file = dot_t_system_dir + "/actions.json"
 

@@ -15,8 +15,6 @@ from tinydb import TinyDB, Query  # TinyDB is a lightweight document oriented da
 
 from t_system import dot_t_system_dir, T_SYSTEM_PATH
 
-predicted_actions_db = f'{T_SYSTEM_PATH}/motion/action/predicted_actions.json'
-
 
 class ActionManager:
     """Class to define action manager to managing movements of Arm and Locking System (when it is using independent from seer during tracking non-moving objects).
@@ -34,6 +32,9 @@ class ActionManager:
             name (str):                     The name of the scenario.
             root (bool):                    Root privileges flag.
         """
+
+        self.predicted_actions_db = f'{T_SYSTEM_PATH}/motion/action/predicted_actions.json'
+        self.actions_db = dot_t_system_dir + "/actions.json"
 
 
 class Scenario:
@@ -63,7 +64,8 @@ class Scenario:
         self.table = None
 
         if root:
-            self.set_db(cache_size=30)
+            actions_db = f'{T_SYSTEM_PATH}/motion/action/predicted_actions.json'
+            self.set_db(actions_db, 30)
         else:
             actions_db = dot_t_system_dir + "/actions.json"
             self.set_db(actions_db)
@@ -122,7 +124,7 @@ class Scenario:
 
         return ""
 
-    def set_db(self, db_file=predicted_actions_db, cache_size=None):
+    def set_db(self, db_file, cache_size=None):
         """Function to set the database of the scenario.
 
         Args:
@@ -164,7 +166,8 @@ class Position:
         self.table = None
 
         if root:
-            self.set_db(cache_size=30)
+            actions_db = f'{T_SYSTEM_PATH}/motion/action/predicted_actions.json'
+            self.set_db(actions_db, 30)
         else:
             actions_db = dot_t_system_dir + "/actions.json"
             self.set_db(actions_db)
@@ -217,7 +220,7 @@ class Position:
 
         return ""
 
-    def set_db(self, db_file=predicted_actions_db, cache_size=30):
+    def set_db(self, db_file, cache_size=30):
         """Function to set the database of the position.
 
         Args:
