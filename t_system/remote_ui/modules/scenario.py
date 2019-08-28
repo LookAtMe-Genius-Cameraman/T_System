@@ -12,9 +12,9 @@
 from tinydb import TinyDB, Query  # TinyDB is a lightweight document oriented database
 
 from t_system.administration import is_admin
-from t_system.motion.arm.action import Scenario
+from t_system.motion.action.__init__ import Scenario
 
-from t_system.motion.arm.action import predicted_actions_db
+from t_system.motion.action.__init__ import predicted_actions_db
 from t_system import dot_t_system_dir
 from t_system import log_manager
 

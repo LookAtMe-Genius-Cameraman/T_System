@@ -32,7 +32,7 @@
     },
     {
       "joint_number": 3,
-      "motor_gpio_pin": "None",
+      "motor_gpio_pin": null,
       "max_d": 0,
       "min_d": 0,
       "init_d": 0,
@@ -42,7 +42,7 @@
       "a": 54.75,
       "alpha": 0,
       "structure": "constant",
-      "rotation_type": "None",
+      "rotation_type": null,
       "description": "symbolic, compulsory. For gripper."
     }
   ],
@@ -94,7 +94,7 @@
     },
     {
       "joint_number": 4,
-      "motor_gpio_pin": "None",
+      "motor_gpio_pin": null,
       "max_d": 0,
       "min_d": 0,
       "init_d": 0,
@@ -104,7 +104,7 @@
       "a": 54.75,
       "alpha": 0,
       "structure": "constant",
-      "rotation_type": "None",
+      "rotation_type": null,
       "description": "symbolic. Gripper. In this situation, start point of Locking System."
     }
   ],
@@ -126,7 +126,7 @@
     },
     {
       "joint_number": 2,
-      "motor_gpio_pin": "None",
+      "motor_gpio_pin": null,
       "max_d": 0,
       "min_d": 0,
       "init_d": 0,
@@ -136,7 +136,7 @@
       "a": 54.75,
       "alpha": 0,
       "structure": "constant",
-      "rotation_type": "None",
+      "rotation_type": null,
       "description": "symbolic, compulsory. For gripper."
     }
   ]
