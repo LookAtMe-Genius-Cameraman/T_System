@@ -12,7 +12,8 @@
       "a": 0,
       "alpha": 0,
       "structure": "revolute",
-      "rotation_type": "pan"
+      "rotation_type": "pan",
+      "description": "First axis."
     },
     {
       "joint_number": 2,
@@ -26,13 +27,44 @@
       "a": 30,
       "alpha": 90,
       "structure": "revolute",
-      "rotation_type": "tilt"
+      "rotation_type": "tilt",
+      "description": "Has big freedom degree."
+    },
+    {
+      "joint_number": 3,
+      "motor_gpio_pin": "None",
+      "max_d": 0,
+      "min_d": 0,
+      "init_d": 0,
+      "max_q": 0,
+      "min_q": 0,
+      "init_q": 0,
+      "a": 54.75,
+      "alpha": 0,
+      "structure": "constant",
+      "rotation_type": "None",
+      "description": "symbolic, compulsory. For gripper."
     }
   ],
   "Senior": [
     {
       "joint_number": 1,
       "motor_gpio_pin": 17,
+      "max_d": 8.05,
+      "min_d": 8.05,
+      "init_d": 8.05,
+      "max_q": 180,
+      "min_q": 0,
+      "init_q": 90,
+      "a": 0,
+      "alpha": 0,
+      "structure": "revolute",
+      "rotation_type": "pan",
+      "description": "Base axis. Embedded on the body."
+    },
+    {
+      "joint_number": 2,
+      "motor_gpio_pin": 27,
       "max_d": 0,
       "min_d": 0,
       "init_d": 0,
@@ -40,37 +72,40 @@
       "min_q": 0,
       "init_q": 90,
       "a": 0,
-      "alpha": 0,
-      "structure": "revolute",
-      "rotation_type": "pan"
-    },
-    {
-      "joint_number": 2,
-      "motor_gpio_pin": 27,
-      "max_d": 15,
-      "min_d": 15,
-      "init_d": 15,
-      "max_q": 180,
-      "min_q": 0,
-      "init_q": 90,
-      "a": 30,
       "alpha": 90,
       "structure": "revolute",
-      "rotation_type": "tilt"
+      "rotation_type": "tilt",
+      "description": "First moving axis. Exposed to much stress."
     },
     {
       "joint_number": 3,
       "motor_gpio_pin": 22,
-      "max_d": 15,
-      "min_d": 15,
-      "init_d": 15,
+      "max_d": 0,
+      "min_d": 0,
+      "init_d": 0,
       "max_q": 180,
       "min_q": 0,
       "init_q": 90,
-      "a": 30,
-      "alpha": 90,
+      "a": 55,
+      "alpha": 0,
       "structure": "revolute",
-      "rotation_type": "tilt"
+      "rotation_type": "tilt",
+      "description": "Last moving axis."
+    },
+    {
+      "joint_number": 4,
+      "motor_gpio_pin": "None",
+      "max_d": 0,
+      "min_d": 0,
+      "init_d": 0,
+      "max_q": 0,
+      "min_q": 0,
+      "init_q": 0,
+      "a": 54.75,
+      "alpha": 0,
+      "structure": "constant",
+      "rotation_type": "None",
+      "description": "symbolic. Gripper. In this situation, start point of Locking System."
     }
   ],
   "Arm_3": [
@@ -86,21 +121,23 @@
       "a": 0,
       "alpha": 0,
       "structure": "revolute",
-      "rotation_type": "pan"
+      "rotation_type": "pan",
+      "description": "First axis."
     },
     {
       "joint_number": 2,
-      "motor_gpio_pin": 25,
-      "max_d": 15,
-      "min_d": 15,
-      "init_d": 15,
-      "max_q": 180,
+      "motor_gpio_pin": "None",
+      "max_d": 0,
+      "min_d": 0,
+      "init_d": 0,
+      "max_q": 0,
       "min_q": 0,
-      "init_q": 90,
-      "a": 30,
-      "alpha": 90,
-      "structure": "revolute",
-      "rotation_type": "tilt"
+      "init_q": 0,
+      "a": 54.75,
+      "alpha": 0,
+      "structure": "constant",
+      "rotation_type": "None",
+      "description": "symbolic, compulsory. For gripper."
     }
   ]
 }
