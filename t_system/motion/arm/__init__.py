@@ -151,7 +151,6 @@ class Arm:
             joints (list):          The joint list from the config file.
         """
 
-        # Todo: handle gripper(constant joint), maybe create a class, remember this:  if eval(joint['motor_gpio_pin']) is not None:
         self.joint_count = len(joints)
         for joint in joints:
             self.joints.append(Joint(joint))
