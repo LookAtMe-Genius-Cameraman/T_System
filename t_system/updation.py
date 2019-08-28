@@ -17,7 +17,6 @@ import hashlib
 import git
 
 from elevate import elevate  # partial root authentication interface
-from tinydb import TinyDB, Query  # TinyDB is a lightweight document oriented database
 
 from t_system.db_fetching import DBFetcher
 from t_system import dot_t_system_dir, T_SYSTEM_PATH
@@ -51,7 +50,7 @@ class UpdateManager:
         self.installer = Installer(self.editable, self.verbose)
 
     def update(self):
-        """The high-level method to pulling updates from remote git repo, checking differences inside installation scripts and starting the installation if necessary.
+        """Method to pulling updates from remote git repo, checking differences inside installation scripts and starting the installation if necessary.
         """
         if self.is_update_available():
             self.updater.update_self()
@@ -60,13 +59,13 @@ class UpdateManager:
         return False
 
     def is_update_auto(self):
-        """The high-level method to getting auto-update status from the database.
+        """Method to getting auto-update status from the database.
         """
 
         return self.auto_update
 
     def is_update_available(self):
-        """The high-level method to getting auto-update status from the database.
+        """Method to getting auto-update status from the database.
         """
 
         return self.updater.is_update_available()
@@ -114,7 +113,7 @@ class UpdateManager:
         self.refresh_members()
 
     def set_editability(self, editable):
-        """The high-level method to set editable member externally.
+        """Method to set editable member externally.
 
         Args:
             editable:   	        Editable updation mode flag. For making updates as development.
@@ -123,7 +122,7 @@ class UpdateManager:
         self.editable = editable
 
     def set_verbosity(self, verbose):
-        """The high-level method to set verbose member externally.
+        """Method to set verbose member externally.
 
         Args:
             verbose:   	            Verbosity flag about printing debug messages.
@@ -132,7 +131,7 @@ class UpdateManager:
         self.verbose = verbose
 
     def listen_updates(self):
-        """The high-level method to controlling repo is up-to-date with updater object. (Deprecated)
+        """Method to controlling repo is up-to-date with updater object. (Deprecated)
         """
 
         while True:
@@ -158,7 +157,7 @@ class Updater:
         self.verbose = verbose  # this argument will be added.
 
     def update_self(self, force=False, check_dev=True, verbose=False):
-        """The high-level method that can be called to automatically update the repo in which the calling file is located.
+        """Method that can be called to automatically update the repo in which the calling file is located.
 
         Args:
                 force (bool):           Force pull flag.
@@ -169,7 +168,7 @@ class Updater:
         self.__print(verbose, "Pulled any possible remote changes")
 
     def is_update_available(self, verbose=False):
-        """The high-level method to check git repo is up-to-date with git.fetch.
+        """Method to check git repo is up-to-date with git.fetch.
 
         Args:
                 verbose:   	            Verbosity flag about printing debug messages.
@@ -192,7 +191,7 @@ class Updater:
             return True
 
     def pull(self, force=False, check_dev=True, verbose=False):
-        """The high-level method to attempt to pull any remote changes down to the repository that the calling script is contained in. If
+        """Method to attempt to pull any remote changes down to the repository that the calling script is contained in. If
         there are any file conflicts the pull will fail and the function will return. This function is *safe* and does not perform
         destructive actions on the repo it is being called on. This function returns a tuple containing 2 fields. The first is a
         boolean value that indicates if the pull was successful or not. The second field contains a list of the files that were effected
@@ -325,7 +324,7 @@ class Updater:
                 raise
 
     def update_git_repo(self, force=False, check_dev=True, message="Pushing up changes with python selfupdate", username=None, password=None, verbose=False):
-        """The high-level method that can be called to automatically update the repo in which the calling file is located.
+        """Method that can be called to automatically update the repo in which the calling file is located.
         The 'force' parameter will cause the module to force do a pull and push. This is a destructive action that can
         cause loss of local data. 'check_dev' when set to True will not allow any destructive action to take place IFF
         the calling script is in a updation dev environment. 'message' is the commit message that will be used when
@@ -352,7 +351,7 @@ class Updater:
             self.__print(verbose, "Pushed any possible local changes")
 
     def __print(self, verbose, msg):
-        """The low-level method to help assist in adding debug messages throughout the code. Print messages are formated as such:
+        """Method to help assist in adding debug messages throughout the code. Print messages are formated as such:
         <name of calling function>:<line #> :: <msg>
 
         Args:
@@ -370,7 +369,7 @@ class Updater:
         logger.debug(f'{calling_func}():{line} :: {msg}')
 
     def __get_calling_file(self, verbose=False):
-        """The low-level method to go through the python call stack and find the script that originally called into this file.
+        """Method to go through the python call stack and find the script that originally called into this file.
         Returns a tuple where the first element is a string that is the folder containing the calling script,
         and the second element is the name of the file name of the calling script. If a file can not
         be found for some reason a LookupError is raised to indicate that an external script could not be found.
@@ -390,7 +389,7 @@ class Updater:
         raise LookupError("Module was not called by an external script.")
 
     def __find_repo(self, verbose=False):
-        """The low-level method to go figure out if the calling python script is inside a git repo, and if so, return a string that is the
+        """Method to go figure out if the calling python script is inside a git repo, and if so, return a string that is the
         location of the base of the git repo. If the script is not, a LookupError is raised to indicate it could not find the repo.
 
         Args:
@@ -411,7 +410,7 @@ class Updater:
                 file_path = os.path.normpath(file_path + "/..")
 
     def __find_current_branch(self, repo, verbose=False):
-        """The low-level method that returns the name of the current branch. If for some reason the function fails to find the current branch
+        """Method that returns the name of the current branch. If for some reason the function fails to find the current branch
         an IOError is raised to indicate something has gone wrong.
 
         Args:
@@ -429,7 +428,7 @@ class Updater:
         raise IOError("Failed to find current branch")
 
     def __is_dev_env(self, directory, suppress_errors=False, verbose=False):
-        """The low-level method to return 'True' if the git repo is setup to be a updation development environment. This indicates that
+        """Method to return 'True' if the git repo is setup to be a updation development environment. This indicates that
         functions that perform destructive file manipulation will be limited in scope as to not cause the script to complicate
         development efforts when using the updation module. A updation development environment is configured by placing
         an empty file in the root directory of the repo simply named '.devenv'. This file must also be included in the .gitignore
@@ -465,7 +464,7 @@ class Updater:
         return False
 
     def __get_file_conflicts(self, repo, verbose=False):
-        """The low-level method that takes in pointer to the repo and returns a list of files that have conflicts with the remote repo.
+        """Method that takes in pointer to the repo and returns a list of files that have conflicts with the remote repo.
 
         Args:
                 repo:   	            git.repo.base.Repo object.
@@ -484,7 +483,7 @@ class Updater:
         return diff
 
     def __get_file_diffs(self, repo, verbose=False):
-        """The low-level method that takes in a pointer to the repo and returns a list of files that contain changes between the remote and local repo.
+        """Method that takes in a pointer to the repo and returns a list of files that contain changes between the remote and local repo.
 
         Args:
                 repo:   	            git.repo.base.Repo object.
@@ -507,7 +506,7 @@ class Installer:
     """Class to define an installer of tracking system itself.
 
     This class provides necessary initiations and functions named :func:`t_system.updation.Installer.install`
-    as the install point for the changed install scripts and named :func:`t_system.updation.Installer.get_hash_of`
+    as the install point for the changed install scripts and named :func:`t_system.updation.Installer.__get_hash_of`
     for creating SHA-256 hash of the given file.
     """
 
@@ -525,24 +524,24 @@ class Installer:
         self.install_sh = f'{T_SYSTEM_PATH}/../install.sh'
 
         if self.editable:
-            self.last_hash = self.get_hash_of(self.install_dev_sh)
+            self.last_hash = self.__get_hash_of(self.install_dev_sh)
         else:
-            self.last_hash = self.get_hash_of(self.install_sh)
+            self.last_hash = self.__get_hash_of(self.install_sh)
 
     def install(self):
-        """The high-level method to install the dependencies after git updation. It creates the sha-256 hash of the changed install scripts.
+        """Method to install the dependencies after git updation. It creates the sha-256 hash of the changed install scripts.
         Then compares them with the scripts those has hash when the Installer instance generates. If there is a difference between old and new install scripts, starts reinstallation.
         otherwise, terminates.
         """
 
         if self.editable:
-            current_hash = self.get_hash_of(self.install_dev_sh)
+            current_hash = self.__get_hash_of(self.install_dev_sh)
             if current_hash == self.last_hash:
                 return
 
             install_sh = self.install_dev_sh
         else:
-            current_hash = self.get_hash_of(self.install_sh)
+            current_hash = self.__get_hash_of(self.install_sh)
             if current_hash == self.last_hash:
                 return
 
@@ -552,8 +551,8 @@ class Installer:
         subprocess.call(install_sh, shell=True)
 
     @staticmethod
-    def get_hash_of(filename):
-        """The low-level method to send SHA-256 hash of the given file.
+    def __get_hash_of(filename):
+        """Method to send SHA-256 hash of the given file.
 
         Args:
                 filename:   	        Name of the file that will hashed with sha-256.

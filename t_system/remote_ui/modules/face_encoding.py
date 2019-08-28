@@ -21,7 +21,7 @@ logger = log_manager.get_logger(__name__, "DEBUG")
 
 
 def create_face(admin_id, data):
-    """The high-level method to create new face with its encoding pickle data.
+    """Method to create new face with its encoding pickle data.
 
     Args:
         admin_id (str):                Root privileges flag.
@@ -40,7 +40,7 @@ def create_face(admin_id, data):
 
 
 def get_faces(admin_id):
-    """The high-level method to return existing faces.
+    """Method to return existing faces.
 
     Args:
         admin_id (str):                 Root privileges flag.
@@ -58,7 +58,7 @@ def get_faces(admin_id):
 
 
 def get_face(admin_id, face_id):
-    """The high-level method to return existing face and copying its images under the static folder with given id.
+    """Method to return existing face and copying its images under the static folder with given id.
 
     Args:
         admin_id (str):                 Root privileges flag.
@@ -87,7 +87,7 @@ def get_face(admin_id, face_id):
 
 
 def update_face(admin_id, face_id, data):
-    """The high-level method to update the face and its encodings that is recorded in database with given parameters.
+    """Method to update the face and its encodings that is recorded in database with given parameters.
 
     Args:
         admin_id (str):                Root privileges flag.
@@ -103,7 +103,7 @@ def update_face(admin_id, face_id, data):
 
 
 def delete_face(admin_id, face_id):
-    """The high-level method to remove existing face with given id.
+    """Method to remove existing face with given id.
 
     Args:
         admin_id (str):                 Root privileges flag.
@@ -117,7 +117,7 @@ def delete_face(admin_id, face_id):
 
 
 def get_db_table(is_admin):
-    """The low-level method to set work database.
+    """Method to set work database.
 
     Args:
         is_admin (bool):                 Root privileges flag.

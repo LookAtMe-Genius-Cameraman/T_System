@@ -11,30 +11,74 @@
 
 import uuid  # The random id generator
 
+from multipledispatch import dispatch
+
 from tinydb import TinyDB, Query  # TinyDB is a lightweight document oriented database
 
 from t_system import dot_t_system_dir, T_SYSTEM_PATH
+
+from t_system.motion.arm import Arm
 
 
 class ActionManager:
     """Class to define action manager to managing movements of Arm and Locking System (when it is using independent from seer during tracking non-moving objects).
 
-        This class provides necessary initiations and a function named :func:`t_system.motion.action.ActionManager.`
+        This class provides necessary initiations and a function named :func:`t_system.motion.action.Action_Manager.`
         for the provide move of servo motor.
 
     """
 
-    def __init__(self, name, id=None, root=False):
+    def __init__(self, args):
         """Initialization method of :class:`t_system.motion.action.ActionManager` class.
 
         Args:
-            id (str):                       The id of the scenario.
-            name (str):                     The name of the scenario.
-            root (bool):                    Root privileges flag.
+            args:                   Command-line arguments.
         """
 
         self.predicted_actions_db = f'{T_SYSTEM_PATH}/motion/action/predicted_actions.json'
         self.actions_db = dot_t_system_dir + "/actions.json"
+
+
+class Actor:
+    """Class to define an actor to fulfill tasks with given positions and scenarios.
+
+        This class provides necessary initiations and a function named :func:`t_system.motion.action.Actor.`
+        for the provide move of servo motor.
+
+    """
+
+    def __init__(self, args):
+        """Initialization method of :class:`t_system.motion.action.Actor` class.
+
+        Args:
+            args:                   Command-line arguments.
+        """
+
+        self.arm = None
+        if args["robotic_arm"]:
+            self.arm = Arm(args["robotic_arm"])
+
+    @dispatch(object)
+    def act(self, position):
+        """Method to moving by given position object.
+
+        Args:
+            position (Position):            A Position object
+        """
+
+        self.arm.goto_position(pos_thetas=position.polar_coords, pos_coords=position.cartesian_coords)
+
+    @dispatch(list)
+    def act(self, scenarios):
+        """Method to moving by given position object.
+
+        Args:
+            scenarios (list):"              Scenario object list
+        """
+
+        for scenario in scenarios:
+            for position in scenario.positions:
+                self.arm.goto_position(pos_thetas=position.polar_coords, pos_coords=position.cartesian_coords)
 
 
 class Scenario:
@@ -60,18 +104,21 @@ class Scenario:
 
         self.name = name
         self.positions = []
+        self.root = root
 
         self.table = None
 
-        if root:
+        if self.root:
             actions_db = f'{T_SYSTEM_PATH}/motion/action/predicted_actions.json'
             self.set_db(actions_db, 30)
         else:
             actions_db = dot_t_system_dir + "/actions.json"
             self.set_db(actions_db)
 
+        self.refresh_positions()
+
     def add_positions(self, positions):
-        """The low-level method to add position to the scenario.
+        """Method to add position to the scenario.
 
         Args:
             positions (list):               Position object list.
@@ -81,7 +128,7 @@ class Scenario:
         self.db_upsert()
 
     def delete_positions(self, positions):
-        """The low-level method to add position to the scenario.
+        """Method to add position to the scenario.
 
         Args:
             positions (list):               Position object list.
@@ -93,7 +140,7 @@ class Scenario:
         self.db_upsert(force_insert=True)
 
     def delete_self(self):
-        """The high-level method to delete scenario itself.
+        """Method to delete scenario itself.
         """
         self.table.remove((Query().name == self.name))
 
@@ -109,17 +156,20 @@ class Scenario:
 
         if self.table.search((Query().name == self.name)):
             if force_insert:
-                # self.already_exist = False
                 self.table.update({'name': self.name, 'positions': self.positions}, Query().id == self.id)
 
             else:
-                # self.already_exist = True
                 return "Already Exist"
         else:
             self.table.insert({
                 'id': self.id,
                 'name': self.name,
-                'positions': self.positions
+                'positions': [{
+                    "id": position.id,
+                    "name": position.name,
+                    "cartesian_coords": position.cartesian_coords,
+                    "polar_coords": position.polar_coords
+                } for position in self.positions]
             })  # insert the given data
 
         return ""
@@ -135,6 +185,14 @@ class Scenario:
         db = TinyDB(db_file)
         self.table = db.table("scenarios", cache_size=cache_size)
 
+    def refresh_positions(self):
+        """low-level method to refreshing the members
+        """
+
+        scenarios = self.table.search((Query().id == self.id))
+        for position in scenarios["positions"]:
+            self.positions.append(Position(position["name"], position["id"], position["cartesian_coords"], position["polar_coords"], self.root, is_for_scenario=True))
+
 
 class Position:
     """Class to define the position of the arm with cartesian coordinates of arms' last point and angle value of its joints.
@@ -144,7 +202,7 @@ class Position:
 
     """
 
-    def __init__(self, name, id=None, cartesian_coords=None, polar_coords=None, root=False):
+    def __init__(self, name, id=None, cartesian_coords=None, polar_coords=None, root=False, is_for_scenario=False):
         """Initialization method of :class:`t_system.motion.arm.action.Position` class.
 
         Args:
@@ -153,6 +211,7 @@ class Position:
             cartesian_coords (list):        Cartesian coordinate value list of the position.
             polar_coords (list):            Polar coordinate value list of the position.
             root (bool):                    Root privileges flag.
+            is_for_scenario (bool):        Flag that is specified position is inside a scenario.
         """
 
         self.id = id
@@ -162,10 +221,12 @@ class Position:
         self.name = name
         self.cartesian_coords = cartesian_coords
         self.polar_coords = polar_coords
+        self.root = root
+        self.is_for_scenario = is_for_scenario
 
         self.table = None
 
-        if root:
+        if self.root:
             actions_db = f'{T_SYSTEM_PATH}/motion/action/predicted_actions.json'
             self.set_db(actions_db, 30)
         else:
@@ -175,7 +236,7 @@ class Position:
         self.db_upsert()
 
     def update_coords(self, cartesian_coords, polar_cords):
-        """The low-level method to add position to the scenario.
+        """Method to updating self coordinates via by given parameters.
 
         Args:
             cartesian_coords (list):        Cartesian coordinate value list of the position.
@@ -188,7 +249,7 @@ class Position:
         self.db_upsert(force_insert=True)
 
     def delete_self(self):
-        """The high-level method to delete scenario itself.
+        """Method to delete position itself.
         """
         self.table.remove((Query().name == self.name))
 
@@ -202,21 +263,20 @@ class Position:
             str:  Response.
         """
 
-        if self.table.search((Query().name == self.name)):
-            if force_insert:
-                # self.already_exist = False
-                self.table.update({'name': self.name, 'cartesian_coords': self.cartesian_coords, 'polar_cords': self.polar_coords}, Query().id == self.id)
+        if not self.is_for_scenario:
+            if self.table.search((Query().name == self.name)):
+                if force_insert:
+                    self.table.update({'name': self.name, 'cartesian_coords': self.cartesian_coords, 'polar_cords': self.polar_coords}, Query().id == self.id)
 
+                else:
+                    return "Already Exist"
             else:
-                # self.already_exist = True
-                return "Already Exist"
-        else:
-            self.table.insert({
-                'id': self.id,
-                'name': self.name,
-                'cartesian_coords': self.cartesian_coords,
-                'polar_cords': self.polar_coords
-            })  # insert the given data
+                self.table.insert({
+                    'id': self.id,
+                    'name': self.name,
+                    'cartesian_coords': self.cartesian_coords,
+                    'polar_cords': self.polar_coords
+                })  # insert the given data
 
         return ""
 
@@ -229,7 +289,11 @@ class Position:
         """
 
         db = TinyDB(db_file)
-        self.table = db.table("positions", cache_size=cache_size)
+
+        if self.is_for_scenario:
+            self.table = db.table("scenario", cache_size=cache_size)
+        else:
+            self.table = db.table("positions", cache_size=cache_size)
 
 
 if __name__ == '__main__':

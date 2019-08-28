@@ -65,9 +65,9 @@ class Collimator:
 
         dis_to_des = self.current_dis_to_des(obj_first_px, obj_last_px)
 
-        delta_angle = self.calc_delta_angle(obj_width, dis_to_des, k_fact)
+        delta_angle = self.__calc_delta_angle(obj_width, dis_to_des, k_fact)
 
-        target_angle = self.calc_target_angle(delta_angle)
+        target_angle = self.__calc_target_angle(delta_angle)
         logger.debug(f'{target_angle}')
 
         if abs(target_angle - self.current_angle) < 0.01:  # 0.01 radian is equal to .5 degree.
@@ -114,8 +114,8 @@ class Collimator:
                 self.motor_thread = threading.Thread(target=self.motor.change_position_incregular, args=(lambda: self.motor_thread_stop, lambda: self.motor_thread_direction))
                 self.motor_thread.start()
 
-    def calc_target_angle(self, delta_angle):
-        """The low-level method to calculate what are going to be servo motors duty cycles.
+    def __calc_target_angle(self, delta_angle):
+        """Method to calculate what are going to be servo motors duty cycles.
 
         Args:
             delta_angle (float):     Calculated theta angle for going to object position. In radian type.
@@ -131,7 +131,7 @@ class Collimator:
             return self.current_angle + delta_angle
 
     def current_dis_to_des(self, obj_first_px, obj_last_px):
-        """The low-level method to calculate the distance to the destination at that moment.
+        """Method to calculate the distance to the destination at that moment.
 
         Args:
             obj_first_px:       	 initial pixel value of found object from haarcascade.
@@ -143,8 +143,8 @@ class Collimator:
         return float(obj_middle_px - frame_middle_px)
 
     @staticmethod
-    def calc_delta_angle(obj_width, dis_to_des, k_fact):
-        """The low-level method to calculate theta angle(delta angle) via k factor for reaching the destination position. In radian type.
+    def __calc_delta_angle(obj_width, dis_to_des, k_fact):
+        """Method to calculate theta angle(delta angle) via k factor for reaching the destination position. In radian type.
 
         Theta angle, in radian type, is equal to divide the distance to the destination to physically distance of the object.
         And there is a relationship as the object's area / k factor with physical distance and object's area.
@@ -158,7 +158,7 @@ class Collimator:
         return dis_to_des / (obj_width / k_fact)
 
     def get_previous_dis_to_des(self):
-        """The low-level method to provide return previous_dis_to_des variable.
+        """Method to provide return previous_dis_to_des variable.
         """
         if self.previous_dis_to_des == 0.0:
             self.previous_dis_to_des = 0.00001  # For avoid the 'float division by zero' error
@@ -166,7 +166,7 @@ class Collimator:
         return self.previous_dis_to_des
 
     def stop(self):
-        """The low-level method to provide stop the GPIO.PWM services that are reserved for the collimator's servo motor.
+        """Method to provide stop the GPIO.PWM services that are reserved for the collimator's servo motor.
         """
         if self.motor_thread.is_alive():
             self.motor_thread_stop = True
@@ -175,6 +175,6 @@ class Collimator:
         self.motor.stop()
 
     def gpio_cleanup(self):
-        """The low-level method to provide clean the GPIO pins that are reserved for the collimator's servo motor.
+        """Method to provide clean the GPIO pins that are reserved for the collimator's servo motor.
         """
         self.motor.gpio_cleanup()

@@ -53,15 +53,15 @@ class LockingSystem:
             self.locker = self.OfficialAILocker(self)
             self.lock = self.locker.lock
             self.check_error = self.locker.check_error
-            self.get_physically_distance = self.locker.get_physically_distance
+            self.get_physically_distance = self.locker.__get_physically_distance
         elif args["non_moving_target"]:
             self.locker = self.NonMovingTargetLocker(self)
             self.lock = self.locker.lock
-            self.get_physically_distance = self.locker.get_physically_distance
+            self.get_physically_distance = self.locker.__get_physically_distance
         else:
             self.locker = self.RegularLocker(self)
             self.lock = self.locker.lock
-            self.get_physically_distance = self.locker.get_physically_distance
+            self.get_physically_distance = self.locker.__get_physically_distance
 
     class OfficialAILocker:
         """Class to define a official AI method of the t_system's motion ability.
@@ -86,7 +86,7 @@ class LockingSystem:
             self.current_target_obj_width = 0
 
         def lock(self, x, y, w, h):
-            """The high-level method for locking to the target in the frame.
+            """Method for locking to the target in the frame.
 
             Args:
                 x           :       	 the column number of the top left point of found object from haarcascade.
@@ -97,13 +97,13 @@ class LockingSystem:
 
             # obj_width is equal to w
             self.current_target_obj_width = w
-            self.current_k_fact = self.get_k_fact(w)
+            self.current_k_fact = self.__get_k_fact(w)
 
             self.root_system.pan.move(x, x + w, w, self.current_k_fact)
             self.root_system.tilt.move(y, y + h, w, self.current_k_fact)
 
         def check_error(self, ex, ey, ew, eh):
-            """The high-level method for checking error during locking to the target in the frame.
+            """Method for checking error during locking to the target in the frame.
 
             Args:
                 ex           :       	 the column number of the top left point of found object from haarcascade.
@@ -118,8 +118,8 @@ class LockingSystem:
             self.decider.decision(self.current_target_obj_width, err_rate_pan, True)
             self.decider.decision(self.current_target_obj_width, err_rate_tilt, True)
 
-        def get_k_fact(self, obj_width):
-            """The low-level method to getting necessary k_fact by given object width.
+        def __get_k_fact(self, obj_width):
+            """Method to getting necessary k_fact by given object width.
 
             Args:
                 obj_width (int):         Width of the found object from haarcascade for measurement inferencing.
@@ -127,8 +127,8 @@ class LockingSystem:
 
             return self.decider.decision(obj_width)
 
-        def get_physically_distance(self, obj_width):
-            """The low-level method to provide return the tracking object's physically distance value.
+        def __get_physically_distance(self, obj_width):
+            """Method to provide return the tracking object's physically distance value.
             """
 
             return obj_width / self.current_k_fact  # physically distance is equal to obj_width / k_fact.
@@ -152,7 +152,7 @@ class LockingSystem:
             self.root_system = locking_system
 
         def lock(self, x, y, w, h):
-            """The high-level method for locking to the target in the frame.
+            """Method for locking to the target in the frame.
 
             Args:
                 x           :       	 the column number of the top left point of found object from haarcascade.
@@ -180,8 +180,8 @@ class LockingSystem:
                 self.root_system.tilt.move(True, False)
 
         @staticmethod
-        def get_physically_distance(obj_width):
-            """The low-level method to provide return the tracking object's physically distance value.
+        def __get_physically_distance(obj_width):
+            """Method to provide return the tracking object's physically distance value.
             """
             kp = 28.5823  # gain rate with the width of object and physically distance.
             return obj_width * kp  # physically distance is equal to obj_width * kp in px unit. 1 px length is equal to 0.164 mm
@@ -204,7 +204,7 @@ class LockingSystem:
             self.root_system = locking_system
 
         def lock(self, x, y, w, h):
-            """The high-level method for locking to the target in the frame.
+            """Method for locking to the target in the frame.
 
             Args:
                 x           :       	 the column number of the top left point of found object from haarcascade.
@@ -215,20 +215,20 @@ class LockingSystem:
             pass
 
         @staticmethod
-        def get_physically_distance(obj_width):
-            """The low-level method to provide return the tracking object's physically distance value.
+        def __get_physically_distance(obj_width):
+            """Method to provide return the tracking object's physically distance value.
             """
             kp = 28.5823  # gain rate with the width of object and physically distance.
             return obj_width * kp  # physically distance is equal to obj_width * kp in px unit. 1 px length is equal to 0.164 mm
 
     def stop(self):
-        """The low-level method to provide stop the GPIO.PWM services that are reserved for the locking system's servo motors.
+        """Method to provide stop the GPIO.PWM services that are reserved for the locking system's servo motors.
         """
         self.pan.stop()
         self.tilt.stop()
 
     def gpio_cleanup(self):
-        """The low-level method to provide clean the GPIO pins that are reserved for the locking system's servo motors
+        """Method to provide clean the GPIO pins that are reserved for the locking system's servo motors
         """
         self.pan.gpio_cleanup()
         self.tilt.gpio_cleanup()

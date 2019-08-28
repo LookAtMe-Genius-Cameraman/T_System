@@ -36,7 +36,7 @@ class RemoteUI:
     """Class to define a flask handler to T_System communication ability with html and js.
 
         This class provides necessary initiations and a function named
-        :func:`t_system.remote_ui.RemoteUI._set_app`
+        :func:`t_system.remote_ui.RemoteUI.__set_app`
         for the using flask api to communications with html and js.
 
     """
@@ -63,10 +63,10 @@ class RemoteUI:
 
         Session(self.app)
 
-        self._set_app()
+        self.__set_app()
 
-    def _set_app(self):
-        """The low-level method to setting flask API.
+    def __set_app(self):
+        """Method to setting flask API.
         """
 
         self.app.register_blueprint(position_api_bp)
@@ -79,7 +79,7 @@ class RemoteUI:
 
         @self.app.route('/')
         def main():
-            """The low-level method to routing main.html .
+            """Method to routing main.html .
             """
             # db_json = json.dumps(self.db.all())
             db_json = json.dumps("something")
@@ -87,7 +87,7 @@ class RemoteUI:
 
         @self.app.route('/try', methods=['POST'])
         def tryer():
-            """The low-level method to set working parameter of t_system.
+            """Method to set working parameter of t_system.
             """
             cmd = request.form
 
@@ -95,7 +95,7 @@ class RemoteUI:
             return str(json.dumps({"vfdv": True}))  # it drops the resp.responseText.
 
     def run(self, host=None, port=None, debug=None):
-        """The high-level method to running flask with given parameters.
+        """Method to running flask with given parameters.
 
         Args:
             host (string):          Host of the flask server.

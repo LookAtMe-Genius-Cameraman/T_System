@@ -37,7 +37,7 @@ class Augmenter:
         mqtt_proc.start()
 
         self.vision = vision
-        self.vision.set_mqtt_receimitter(self.mqtt_receimitter)
+        self.vision.__set_mqtt_receimitter(self.mqtt_receimitter)
 
     def run(self, stop_main_thread):
         """The top-level method to checking incoming message to augmented mode.

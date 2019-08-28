@@ -36,7 +36,7 @@ class StreamManager:
         self.stream_thread = None
 
     def start_stream(self, admin_id, stream_type):
-        """The high-level method to return existing position with given id.
+        """Method to start video streaming.
 
         Args:
             admin_id (str):                 Root privileges flag.
@@ -50,7 +50,7 @@ class StreamManager:
         return self.get_stream, "multipart/x-mixed-replace; boundary=frame"
 
     def stop_stream(self, admin_id, stream_type):
-        """The high-level method to remove existing position with given id.
+        """Method to stop continuing video stream.
 
         Args:
             admin_id (str):                 Root privileges flag.
@@ -69,7 +69,7 @@ class StreamManager:
         return result
 
     def get_stream(self):
-        """The low-level method to get camera stream frame by frame from seer.current_frame.
+        """Method to get camera stream frame by frame from seer.current_frame.
         """
         logger.debug("frame sending processes starting")
 

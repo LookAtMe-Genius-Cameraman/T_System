@@ -13,7 +13,7 @@ from t_system import seer
 
 
 def move_arm(admin_id, move_id, data):
-    """The high-level method to move T_System's arm.
+    """Method to move T_System's arm.
 
     Args:
         admin_id (str):                Admin privileges flag.
@@ -32,7 +32,7 @@ def move_arm(admin_id, move_id, data):
 
 
 def get_current_position(admin_id):
-    """The high-level method to get coordinates of T_System's arm current position  as polar and cartesian.
+    """Method to get coordinates of T_System's arm current position  as polar and cartesian.
 
     Args:
         admin_id (str):                Admin privileges flag.

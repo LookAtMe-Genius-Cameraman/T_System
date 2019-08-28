@@ -21,7 +21,7 @@ logger = log_manager.get_logger(__name__, "DEBUG")
 class Recorder:
     """Class to define a recording ability of tracking system.
 
-    This class provides necessary initiations and functions named :func:`t_system.audition.Audition.listen_async`
+    This class provides necessary initiations and functions named :func:`t_system.audition.Audition.__listen_async`
     as the loop for asynchronous collecting audio data to the vision ability, named :func:`t_system.audition.Audition.listen_sync`
     for the synchronous collecting audio data to the vision ability and named :func:`t_system.audition.Audition.start_recording`
     as entry point from vision ability for starting recording processes.
@@ -47,7 +47,7 @@ class Recorder:
         self.hearer = hearer
     
     def start(self, mode="track", video_format="h264", audio_format="wav", final_format="mkv"):
-        """The low-level method to start audio and video recording asynchronously.
+        """Method to start audio and video recording asynchronously.
 
          Args:
                 mode:       	        The running mode which is wants to set video name.
@@ -56,27 +56,27 @@ class Recorder:
                 final_format:       	The final recording format after audio and video files merged.
         """
 
-        self.set_record_name(mode, video_format, audio_format, final_format)
+        self.__set_record_name(mode, video_format, audio_format, final_format)
         self.camera.start_recording(self.record_video_name, video_format)
 
         self.hearer.start_recording(self.record_audio_name, audio_format)
 
     def stop(self):
-        """The low-level method to stop audio and video recording
+        """Method to stop audio and video recording
         """
 
         self.camera.stop_recording()
         self.hearer.stop_recording()
 
     def merge_audio_and_video(self):
-        """The low-level method to merge recorded audio and video files.
+        """Method to merge recorded audio and video files.
         """
         merge_cmd = 'ffmpeg -y -i ' + self.record_audio_name + ' -r 24 -i ' + self.record_video_name + ' -filter:a aresample=async=1 -c:a flac -c:v copy av.mkv'
         subprocess.call(merge_cmd, shell=True)
         logger.info('Video and Audio Muxing Done')
 
-    def set_record_name(self, mode, video_format="h264", audio_format="wav", final_format="mkv"):
-        """The low-level method to prepare the name of recording video with its path.
+    def __set_record_name(self, mode, video_format="h264", audio_format="wav", final_format="mkv"):
+        """Method to prepare the name of recording video with its path.
 
          Args:
                 mode:       	        The running mode which is wants to set video name.

@@ -61,18 +61,18 @@ class Aimer:
         center_x = center[0]
         center_y = center[1]
 
-        self.draw_arc(center_x, center_y, radius, thickness, self.thick_arc_start_angle, self.thick_arc_end_angle)
-        self.draw_arc(center_x, center_y, radius * 0.95, thickness * 0.15, self.thin_arc_start_angle, self.thin_arc_end_angle)
+        self.__draw_arc(center_x, center_y, radius, thickness, self.thick_arc_start_angle, self.thick_arc_end_angle)
+        self.__draw_arc(center_x, center_y, radius * 0.95, thickness * 0.15, self.thin_arc_start_angle, self.thin_arc_end_angle)
 
         text_point = (int(center_x - radius * 0.15), int(center_y + radius * 0.95 - radius * 0.1))
 
         # parameters: image, put text, text's coordinates,font, scale, color, thickness, line type(this type is best for texts.)
         cv2.putText(self.image, self.object_distance, text_point, self.text_font, radius * 0.004, (0, 0, 200), int(radius * 0.004), cv2.LINE_AA)
 
-        self.draw_phys_dist_container(center_x, center_y, radius)
+        self.__draw_phys_dist_container(center_x, center_y, radius)
 
-        self.check_angle_of_arcs()
-        self.rotate_arcs()
+        self.__check_angle_of_arcs()
+        self.__rotate_arcs()
 
         return self.image
 
@@ -96,7 +96,7 @@ class Aimer:
         center_x = center[0]
         center_y = center[1]
 
-        self.draw_rect(center_x, center_y, radius * 1.2, thickness * 0.4)
+        self.__draw_rect(center_x, center_y, radius * 1.2, thickness * 0.4)
         # self.draw_rect_triangler(center_x, center_y, radius * self.rect_diagonal_rate, thickness * 0.2)
 
         text_point = (int(center_x - radius * 0.15), int(center_y + radius * 0.95 - radius * 0.1))
@@ -110,8 +110,8 @@ class Aimer:
 
         return self.image
 
-    def draw_arc(self, center_x, center_y, radius, thickness, start_angle, end_angle, edge_shine=False):
-        """The low-level method to draw arcs of the mark.
+    def __draw_arc(self, center_x, center_y, radius, thickness, start_angle, end_angle, edge_shine=False):
+        """Method to draw arcs of the mark.
 
         Args:
                 center_x:       	  The object's x center(by column count).
@@ -157,8 +157,8 @@ class Aimer:
                 angle += 0.25
             rad += 1
 
-    def draw_rect(self, center_x, center_y, radius, thickness):
-        """The low-level method to draw partial rectangles those have missing parts of their edges.
+    def __draw_rect(self, center_x, center_y, radius, thickness):
+        """Method to draw partial rectangles those have missing parts of their edges.
 
         Args:
                 center_x:       	  The object's x center(by column count).
@@ -218,8 +218,8 @@ class Aimer:
             if self.image_height > y >= 0:  # for the frames' limit protection.
                 self.image[y, center_x] = numpy.array(self.image[y, center_x]) * numpy.array([0, 2, 0])
 
-    def draw_phys_dist_container(self, center_x, center_y, radius):
-        """The low-level method to draw the trapezoid shape for the container of physically distance value.
+    def __draw_phys_dist_container(self, center_x, center_y, radius):
+        """Method to draw the trapezoid shape for the container of physically distance value.
         """
 
         dis_con_point_1 = int(center_x - radius * 0.95 * sin(radians(15))), int(center_y + radius * 0.95 * cos(radians(45)))
@@ -231,8 +231,8 @@ class Aimer:
         cv2.line(self.image, dis_con_point_2, dis_con_point_3, (0, 0, 255), 1, cv2.LINE_AA)
         cv2.line(self.image, dis_con_point_1, dis_con_point_4, (0, 0, 255), 1, cv2.LINE_AA)
 
-    def check_angle_of_arcs(self):
-        """The low-level method to limit the value of the arc's angle.
+    def __check_angle_of_arcs(self):
+        """Method to limit the value of the arc's angle.
         """
 
         if self.thin_arc_start_angle >= 3600:
@@ -267,8 +267,8 @@ class Aimer:
             self.thick_arc_end_angle %= 360
             self.thick_arc_end_angle -= 360
 
-    def rotate_arcs(self):
-        """The low-level method to rotating the arcs.
+    def __rotate_arcs(self):
+        """Method to rotating the arcs.
         """
 
         if self.arc_direction:

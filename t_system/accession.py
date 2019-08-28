@@ -30,7 +30,7 @@ logger = log_manager.get_logger(__name__, "DEBUG")
 
 
 def set_local_ip_address(wlan, ip_address):
-    """The high-level method to set static local ip address.
+    """Method to set static local ip address.
 
     Args:
         wlan (str):       	        wi-fi interface that will be used to connect to external network
@@ -72,7 +72,7 @@ class AccessPoint:
         self.access_point = pyaccesspoint.AccessPoint(wlan=self.wlan, inet=self.inet, ip=self.ip, netmask=self.netmask, ssid=self.ssid, password=self.password)
 
     def set_parameters(self, wlan=None, inet=None, ip=None, netmask=None, ssid=None, password=None):
-        """The high-level method to set access point parameters.
+        """Method to set access point parameters.
 
         Args:
             wlan:       	        wi-fi interface that will be used to create hotSpot
@@ -99,7 +99,7 @@ class AccessPoint:
         self.access_point = pyaccesspoint.AccessPoint(wlan=self.wlan, inet=self.inet, ip=self.ip, netmask=self.netmask, ssid=self.ssid, password=self.password)
 
     def start(self):
-        """The high-level method to start serving network connection.
+        """Method to start serving network connection.
         """
 
         if self.is_working():
@@ -111,13 +111,13 @@ class AccessPoint:
         logger.info("AP started")
 
     def stop(self):
-        """The high-level method to stop serving network connection.
+        """Method to stop serving network connection.
         """
 
         self.access_point.stop()
 
     def is_working(self):
-        """The high-level method to sending access point's working status.
+        """Method to sending access point's working status.
         """
 
         return self.access_point.is_running()
@@ -126,7 +126,7 @@ class AccessPoint:
 class NetworkConnector:
     """Class to define an accessing to the around networks ability of tracking system.
 
-    This class provides necessary initiations and functions named :func:`t_system.audition.Audition.listen_async`
+    This class provides necessary initiations and functions named :func:`t_system.audition.Audition.__listen_async`
     as the loop for asynchronous collecting audio data to the vision ability, named :func:`t_system.audition.Audition.listen_sync`
     for the synchronous collecting audio data to the vision ability and named :func:`t_system.audition.Audition.start_recording`
     as entry point from vision ability for starting recording processes.
@@ -156,11 +156,11 @@ class NetworkConnector:
         set_local_ip_address(args["wlan"], args["static_ip"])
 
         self.scan()
-        self.set_available_networks()
-        self.refresh_known_networks()
+        self.__set_available_networks()
+        self.__refresh_known_networks()
 
     def scan(self, wlan=None):
-        """The high-level method to scan around for searching available networks.
+        """Method to scan around for searching available networks.
 
         Args:
             wlan:       	        wi-fi interface that will be used to create hotSpot.
@@ -169,8 +169,8 @@ class NetworkConnector:
             self.wlan = wlan
         self.current_cells = list(Cell.all(self.wlan))
 
-    def set_available_networks(self):
-        """The low-level method to setting available networks with their ssid and passwords.
+    def __set_available_networks(self):
+        """Method to setting available networks with their ssid and passwords.
         """
         self.current_available_networks.clear()
 
@@ -179,7 +179,7 @@ class NetworkConnector:
             self.current_available_networks.append(network)
 
     def add_network(self, ssid, password):
-        """The high-level method to set network parameter for reaching it.
+        """Method to set network parameter for reaching it.
 
         Args:
             ssid:       	        The name of the surrounding access point.
@@ -195,16 +195,16 @@ class NetworkConnector:
         for network in self.current_available_networks:
             if ssid == network["ssid"]:
                 self.db_upsert(ssid, password)
-                self.refresh_known_networks()
+                self.__refresh_known_networks()
                 self.wpa_supplicant.add_network_to_wsc(ssid, password)
-                self.restart_networking_service()
+                self.__restart_networking_service()
                 status = True
                 break
 
         return status, admin_id
 
     def delete_network(self, ssid):
-        """The high-level method to set network parameter for reaching it.
+        """Method to set network parameter for reaching it.
 
         Args:
             ssid:       	        The name of the surrounding access point.
@@ -218,13 +218,13 @@ class NetworkConnector:
 
     @dispatch()
     def connect(self):
-        """The high-level method to try to connect to one of the available networks using wpa_supplicant.conf file that is restarted by subprocess.
+        """Method to try to connect to one of the available networks using wpa_supplicant.conf file that is restarted by subprocess.
         """
 
         result = False
         # self.wpa_supplicant.restart_ws_service()
 
-        # time.sleep(5)
+        # time.__sleep(5)
         # TODO: External network may not be able to access the internet. So create a difference here as 'is there any connected network?' and 'is network online'
         if self.is_network_online():
             logger.info("Network is online!")
@@ -234,7 +234,7 @@ class NetworkConnector:
 
     @dispatch(str, str)
     def connect(self, ssid, password):
-        """The high-level method to try connect to one of available networks with using `wifi` library.
+        """Method to try connect to one of available networks with using `wifi` library.
 
         Args:
             ssid (str):       	        The name of the surrounding access point.
@@ -253,7 +253,7 @@ class NetworkConnector:
         return result
 
     def try_creating_connection(self):
-        """The high-level method to try connect to one of available networks.
+        """Method to try connect to one of available networks.
         """
 
         for network in self.known_networks:
@@ -290,8 +290,8 @@ class NetworkConnector:
 
         return ""
 
-    def refresh_known_networks(self):
-        """The low-level method to refreshing known networks from the database (and creating objects for them.)
+    def __refresh_known_networks(self):
+        """Method to refreshing known networks from the database (and creating objects for them.)
         """
 
         self.known_networks.clear()
@@ -301,8 +301,8 @@ class NetworkConnector:
             self.known_networks.append(network)
 
     @staticmethod
-    def restart_networking_service():
-        """The low-level method to to restart networking.service
+    def __restart_networking_service():
+        """Method to to restart networking.service
         """
         call("systemctl restart networking.service", shell=True)
 
@@ -328,7 +328,7 @@ class NetworkConnector:
 class WpaSupplicant:
     """Class to define a wpa supplicant handler to managing wpa_supplicant.conf file for its headers and networks.
 
-    This class provides necessary initiations and functions named :func:`t_system.audition.Audition.listen_async`
+    This class provides necessary initiations and functions named :func:`t_system.audition.Audition.__listen_async`
     as the loop for asynchronous collecting audio data to the vision ability, named :func:`t_system.audition.Audition.listen_sync`
     for the synchronous collecting audio data to the vision ability and named :func:`t_system.audition.Audition.start_recording`
     as entry point from vision ability for starting recording processes.
@@ -349,7 +349,7 @@ class WpaSupplicant:
         self.check_wsc()
 
     def check_wsc(self):
-        """The high-level method to check wpa_supplicant.conf file's validation. If the file is not valid, method creates new valid file.
+        """Method to check wpa_supplicant.conf file's validation. If the file is not valid, method creates new valid file.
         """
 
         if os.path.isfile(self.wpa_supp_conf_file):
@@ -376,7 +376,7 @@ class WpaSupplicant:
 
     @staticmethod
     def restart_ws_service():
-        """The high-level method to restart wpa_supplicant service with reconfigured wpa_supplicant.conf file.
+        """Method to restart wpa_supplicant service with reconfigured wpa_supplicant.conf file.
         """
 
         # call("rm -f /var/run/wpa_supplicant/wlan0", shell=True)

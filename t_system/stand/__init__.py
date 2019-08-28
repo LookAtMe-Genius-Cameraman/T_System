@@ -24,7 +24,7 @@ __version__ = '0.3.12'
 class Button:
     """Class to define input buttons of T_System's stand interface.
 
-        This class provides necessary initiations and a function named :func:`t_system.stand.Button.set_press_state`
+        This class provides necessary initiations and a function named :func:`t_system.stand.Button.__set_press_state`
         for holding press event info.
 
     """
@@ -45,10 +45,10 @@ class Button:
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.gpio_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)  # Set pin 10 to be an input pin and set initial value to be pulled low (off)
 
-        GPIO.add_event_detect(self.gpio_pin, GPIO.RISING, callback=self.set_press_state)  # Setup event on self.gpio_pin rising edge
+        GPIO.add_event_detect(self.gpio_pin, GPIO.RISING, callback=self.__set_press_state)  # Setup event on self.gpio_pin rising edge
 
-    def set_press_state(self, channel):
-        """The low-level method to provide callback event to catching button's press state.
+    def __set_press_state(self, channel):
+        """Method to provide callback event to catching button's press state.
         """
         start_time = time.time()
 
@@ -59,18 +59,18 @@ class Button:
 
         # if hold_time >= .1:  # ignore noise
         #     self.is_pressed = True
-        #     self.increase_press_count()
+        #     self.__increase_press_count()
 
         self.is_pressed = True
-        self.increase_press_count()
+        self.__increase_press_count()
 
     def reset_press_state(self):
         """The top-level method to provide resetting of button's press state.
         """
         self.is_pressed = False
 
-    def increase_press_count(self):
-        """The low-level method to provide increasing of button's press count value.
+    def __increase_press_count(self):
+        """Method to provide increasing of button's press count value.
         """
         self.press_count += 1
 
@@ -85,7 +85,7 @@ class Button:
         self.pressed_hold_time = 0
 
     def gpio_cleanup(self):
-        """The low-level method to provide clean the GPIO pin that is reserved the button.
+        """The top-level method to provide clean the GPIO pin that is reserved the button.
         """
         GPIO.cleanup(self.gpio_pin)
 
@@ -93,7 +93,7 @@ class Button:
 class Led:
     """Class to define input buttons of T_System's stand interface.
 
-        This class provides necessary initiations and a function named :func:`t_system.stand.Button.set_press_state`
+        This class provides necessary initiations and a function named :func:`t_system.stand.Button.__set_press_state`
         for holding press event info.
 
     """
@@ -120,7 +120,7 @@ class Led:
         GPIO.output(self.gpio_pin, GPIO.LOW)
 
     def gpio_cleanup(self):
-        """The low-level method to provide clean the GPIO pin that is reserved the led.
+        """The top-level method to provide clean the GPIO pin that is reserved the led.
         """
         GPIO.cleanup(self.gpio_pin)
 
@@ -169,7 +169,7 @@ class Stand:
                 self.access_point.stop()
 
     def blink_led(self, stop_thread, led, delay_time=None):
-        """The low-level method to blinking the LEDs with different on/off combinations.
+        """Method to blinking the LEDs with different on/off combinations.
 
         Args:
             stop_thread:   	            Stop flag of the tread about terminating it outside of the function's loop.
@@ -191,14 +191,14 @@ class Stand:
             led.on()
 
     def reset_leds(self):
-        """The low-level method to turning off the all led lights.
+        """Method to turning off the all led lights.
         """
         self.red_led.off()
         self.green_led.off()
 
     @staticmethod
     def start_thread(job, job_args, working_threads):
-        """The low-level method to starting new thread.
+        """Method to starting new thread.
 
         Args:
             job:                        The function that is going to applied with multiprocessing.
@@ -210,8 +210,8 @@ class Stand:
         working_threads.append(thread)
         thread.start()
 
-    def terminate_threads(self, working_threads):
-        """The low-level method to killing existing threads/running modes.
+    def __terminate_threads(self, working_threads):
+        """Method to killing existing threads/running modes.
 
         Args:
             working_threads (list):     List of working threads.
@@ -224,7 +224,7 @@ class Stand:
         self.stop_thread = False
 
     def release_members(self):
-        """The low-level method to releasing camera, stop sending signals and clean up the gpio pins.
+        """Method to releasing camera, stop sending signals and clean up the gpio pins.
         """
 
         self.red_led.gpio_cleanup()

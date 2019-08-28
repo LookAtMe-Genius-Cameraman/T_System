@@ -16,7 +16,7 @@ from t_system.administration import is_admin
 
 
 def get_disk_usage(admin_id):
-    """The high-level method to provide getting system's disk usage.
+    """Method to provide getting system's disk usage.
 
     Args:
         admin_id:   	     ID of the administration authentication.
@@ -33,7 +33,7 @@ def get_disk_usage(admin_id):
 
 
 def get_cpu_usage(admin_id):
-    """The high-level method to provide getting system's cpu usage.
+    """Method to provide getting system's cpu usage.
 
     Args:
         admin_id:   	     ID of the administration authentication.
@@ -48,7 +48,7 @@ def get_cpu_usage(admin_id):
 
 
 def get_ram_usage(admin_id):
-    """The high-level method to provide getting system's ram usage.
+    """Method to provide getting system's ram usage.
     Args:
         admin_id:   	     ID of the administration authentication.
 
@@ -62,7 +62,7 @@ def get_ram_usage(admin_id):
 
 
 def get_cpu_temperature(admin_id):
-    """The high-level method to provide getting temperature of system's components.
+    """Method to provide getting temperature of system's components.
 
     Args:
         admin_id:   	     ID of the administration authentication.
@@ -79,7 +79,7 @@ def get_cpu_temperature(admin_id):
 
 
 def get_versions(admin_id):
-    """The high-level method to provide getting versions of `t_system`, `remote_ui` and `stand`.
+    """Method to provide getting versions of `t_system`, `remote_ui` and `stand`.
 
     Returns:
             dict:  Response.

@@ -58,11 +58,11 @@ class LogManager:
             self.root_system = log_manager
 
             self.caller_name = caller_name
-            self.level = self.get_level(level)
+            self.level = self.__get_level(level)
 
             self.logger = logging.getLogger(self.caller_name)
 
-            self.set_logger()
+            self.__set_logger()
 
             self.debug = self.logger.debug
             self.info = self.logger.info
@@ -70,14 +70,14 @@ class LogManager:
             self.error = self.logger.error
             self.critical = self.logger.critical
 
-        def set_logger(self):
-            """The low-level method to setting logging logger.
+        def __set_logger(self):
+            """Method to setting logging logger.
             """
 
             self.logger.setLevel(self.level)
-            self.logger.propagate = self.get_propagate()
+            self.logger.propagate = self.__get_propagate()
 
-            file_handler, console_handler = self.get_handlers()
+            file_handler, console_handler = self.__get_handlers()
 
             if file_handler:
                 self.logger.addHandler(file_handler)
@@ -86,8 +86,8 @@ class LogManager:
                 self.logger.addHandler(console_handler)
 
         @staticmethod
-        def get_level(level):
-            """The low-level method to setting level of logger with given level parameter.
+        def __get_level(level):
+            """Method to setting level of logger with given level parameter.
 
             Args:
                 level:                  Level of logging. either `DEBUG`, `INFO`, `WARNING`, `ERROR` or `CRITICAL`.
@@ -106,16 +106,16 @@ class LogManager:
             else:
                 raise Exception(f'{level} is not valid level type')
 
-        def get_propagate(self):
-            """The low-level method to get propagate of logger for setting activation status of the writing logs.
+        def __get_propagate(self):
+            """Method to get propagate of logger for setting activation status of the writing logs.
             """
 
             if self.root_system.environment == "production":
                 return False
             return True
 
-        def get_handlers(self):
-            """The low-level method to get handler for writing logs to the file and the console.
+        def __get_handlers(self):
+            """Method to get handler for writing logs to the file and the console.
             """
 
             file_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -137,7 +137,7 @@ class LogManager:
             return file_handler, console_handler
 
     def get_logger(self, caller_name, level):
-        """The high-level method to create a Logger object with given parameters.
+        """Method to create a Logger object with given parameters.
 
         Args:
             caller_name:            The name who called the logger.

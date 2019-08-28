@@ -13,7 +13,7 @@ from t_system import update_manager
 
 
 def get_status(admin_id, update_key):
-    """The high-level method to return existing positions.
+    """Method to return existing positions.
 
     Args:
         admin_id (str):                 Root privileges flag.
@@ -31,7 +31,7 @@ def get_status(admin_id, update_key):
 
 
 def update_status(admin_id, data):
-    """The high-level method to update the position that is recorded in database with given parameters.
+    """Method to update the position that is recorded in database with given parameters.
 
     Args:
         admin_id (str):                 Root privileges flag.

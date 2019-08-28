@@ -15,7 +15,7 @@ import time  # Time access and conversions
 
 
 def calc_ellipsoidal_angle(angle, pan_max, tilt_max):
-    """The low-level method to calculate what is going to be angle of second axis to ellipsoidal scanning of the around.
+    """The top-level method to calculate what is going to be angle of second axis to ellipsoidal scanning of the around.
 
     Args:
         angle:       	         Servo motor's angle. Between 0 - 180 Degree.

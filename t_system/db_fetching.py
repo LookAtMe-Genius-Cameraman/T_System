@@ -35,7 +35,7 @@ class DBFetcher:
         self.cache_size = cache_size
 
     def fetch(self):
-        """The high-level method to return database. If there is a table name method  creates a table and returns that. Otherwise returns all db.
+        """Method to return database. If there is a table name method  creates a table and returns that. Otherwise returns all db.
 
         Returns:
                 TinyDB: database object.
@@ -44,13 +44,13 @@ class DBFetcher:
         db = TinyDB(f'{self.folder}/{self.name}.json')
 
         if self.table:
-            return self.set_table(db, self.table, self.cache_size)
+            return self.__set_table(db, self.table, self.cache_size)
 
         return db
 
     @staticmethod
-    def set_table(db, table_name, cache_size=None):
-        """The low-level method to set database by table name.
+    def __set_table(db, table_name, cache_size=None):
+        """Method to set database by table name.
 
         Args:
             db (TinyDB):                    TinyDB object.

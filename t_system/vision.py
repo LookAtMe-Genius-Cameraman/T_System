@@ -56,22 +56,22 @@ class Vision:
         self.detection_model = args["detection_model"]
 
         if self.detection_model == "haarcascade":
-            self.detect_things = self.detect_with_haarcascade
+            self.detect_things = self.__detect_with_haarcascade
         else:
-            self.detect_things = self.detect_with_hog_or_cnn
+            self.detect_things = self.__detect_with_hog_or_cnn
 
         if args['use_tracking_api']:
-            self.detect_track = self.d_t_with_cv_ta
+            self.detect_track = self.__d_t_with_cv_ta
         else:
-            self.detect_track = self.d_t_without_cv_ta
+            self.detect_track = self.__d_t_without_cv_ta
 
         self.no_recognize = args["no_recognize"]
 
         if not self.no_recognize:
-            self.recognition_data = self.get_recognition_data(args["encoding_file"])
-            self.track = self.track_with_recognizing
+            self.recognition_data = self.__get_recognition_data(args["encoding_file"])
+            self.track = self.__track_with_recognizing
         else:
-            self.track = self.track_without_recognizing
+            self.track = self.__track_without_recognizing
 
         # Specify the tracker type
         self.tracker_type = args["tracker_type"]
@@ -106,7 +106,7 @@ class Vision:
         self.aimer = Aimer()
 
         self.show_stream = args["show_stream"]  # 'show-stream' argument automatically converted this type.
-        self.mark_object = self.get_mark_object(args["found_object_mark"])
+        self.mark_object = self.__get_mark_object(args["found_object_mark"])
 
         self.record = args["record"]
         self.record_path = ""
@@ -123,8 +123,8 @@ class Vision:
         # Allow the camera to warm up
         time.sleep(0.1)
 
-    def d_t_without_cv_ta(self, stop_thread, format='bgr'):
-        """The low-level method to provide detecting and tracking objects without using OpenCV's tracking API.
+    def __d_t_without_cv_ta(self, stop_thread, format='bgr'):
+        """Method to provide detecting and tracking objects without using OpenCV's tracking API.
 
         Args:
                 stop_thread:       	    Stop flag of the tread about terminating it outside of the function's loop.
@@ -133,7 +133,7 @@ class Vision:
         if self.record:
             self.recorder.start("track")
 
-        self.detect_initiate()
+        self.__detect_initiate()
 
         for frame in self.camera.capture_continuous(self.raw_capture, format=format, use_video_port=True):
 
@@ -142,25 +142,25 @@ class Vision:
             self.current_frame = frame.copy()  # For reaching with overwrite privileges.
 
             rgb, detected_boxes = self.detect_things(self.current_frame)
-            reworked_boxes = self.relocate_detected_coords(detected_boxes)
+            reworked_boxes = self.__relocate_detected_coords(detected_boxes)
 
             if not self.no_recognize:
-                names = self.recognize_things(rgb, detected_boxes)
+                names = self.__recognize_things(rgb, detected_boxes)
             else:
                 names = None
 
             self.track(self.current_frame, reworked_boxes, names)
 
-            # time.sleep(0.1)  # Allow the servos to complete the moving.
+            # time.__sleep(0.1)  # Allow the servos to complete the moving.
 
-            self.show_frame(self.current_frame)
-            self.truncate_stream()
+            self.__show_frame(self.current_frame)
+            self.__truncate_stream()
             # print("frame showed!")
-            if self.check_loop_ended(stop_thread):
+            if self.__check_loop_ended(stop_thread):
                 break
 
-    def d_t_with_cv_ta(self, stop_thread, format='bgr'):
-        """The low-level method to provide detecting and tracking objects with using OpenCV's tracking API.
+    def __d_t_with_cv_ta(self, stop_thread, format='bgr'):
+        """Method to provide detecting and tracking objects with using OpenCV's tracking API.
 
         Args:
                 stop_thread:       	    Stop flag of the tread about terminating it outside of the function's loop.
@@ -174,7 +174,7 @@ class Vision:
 
         multi_tracker = cv2.MultiTracker_create()
 
-        rgb, detected_boxes = self.detect_initiate()
+        rgb, detected_boxes = self.__detect_initiate()
 
         found_count = 0
         d_t_failure_count = 0
@@ -185,7 +185,7 @@ class Vision:
             if len(detected_boxes) > len(tracked_boxes):
 
                 if not self.no_recognize:
-                    names = self.recognize_things(rgb, detected_boxes)
+                    names = self.__recognize_things(rgb, detected_boxes)
                 else:
                     names = None
 
@@ -202,7 +202,7 @@ class Vision:
                     # box[2] is y + h.
                     reworked_box = box[3], box[0], box[1] - box[3], box[2] - box[0]
 
-                    multi_tracker.add(self.create_tracker_by_name(), self.current_frame, reworked_box)
+                    multi_tracker.add(self.__create_tracker_by_name(), self.current_frame, reworked_box)
                 found_count += 1
 
             # grab the raw NumPy array representing the image, then initialize the timestamp and occupied/unoccupied text
@@ -244,14 +244,14 @@ class Vision:
             # # Display FPS on frame
             # cv2.putText(frame, "FPS : " + str(int(fps)), (100, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50, 170, 50), 2)
 
-            self.show_frame(self.current_frame)
-            self.truncate_stream()
+            self.__show_frame(self.current_frame)
+            self.__truncate_stream()
 
-            if self.check_loop_ended(stop_thread):
+            if self.__check_loop_ended(stop_thread):
                 break
 
-    def track_without_recognizing(self, frame, boxes, names):
-        """The low-level method to track the objects without recognize them, for detect_track methods.
+    def __track_without_recognizing(self, frame, boxes, names):
+        """Method to track the objects without recognize them, for detect_track methods.
 
         Args:
                 frame:  	            Frame matrix in rgb format.
@@ -270,10 +270,10 @@ class Vision:
                 if (self.show_stream and self.augmented) or self.show_stream:
                     self.mark_object(frame, x, y, w, h, radius, physically_distance, (255, 0, 0), 2)
 
-            # time.sleep(0.1)  # Allow the servos to complete the moving.
+            # time.__sleep(0.1)  # Allow the servos to complete the moving.
 
-    def track_with_recognizing(self, frame, boxes, names):
-        """The low-level method to track the objects with recognize them, for detect_track methods.
+    def __track_with_recognizing(self, frame, boxes, names):
+        """Method to track the objects with recognize them, for detect_track methods.
 
         Args:
                 frame:  	            Frame matrix in rgb format.
@@ -295,7 +295,7 @@ class Vision:
                 if (self.show_stream and self.augmented) or self.show_stream:
                     self.mark_object(frame, x, y, w, h, radius, physically_distance, (255, 0, 0), 2)
 
-        # time.sleep(0.1)  # Allow the servos to complete the moving.
+        # time.__sleep(0.1)  # Allow the servos to complete the moving.
 
     def learn(self, stop_thread, format="bgr"):
         """The top-level method to learn how to track objects.
@@ -308,7 +308,7 @@ class Vision:
         if self.record:
             self.recorder.start("learn")
 
-        self.detect_initiate()
+        self.__detect_initiate()
 
         for frame in self.camera.capture_continuous(self.raw_capture, format=format, use_video_port=True):
             # grab the raw NumPy array representing the image, then initialize the timestamp
@@ -319,11 +319,11 @@ class Vision:
             # err_check_image = None
 
             rgb, detected_boxes = self.detect_things(self.current_frame)
-            # names = self.recognize_things(rgb, detected_boxes)
-            reworked_boxes = self.relocate_detected_coords(detected_boxes)
+            # names = self.__recognize_things(rgb, detected_boxes)
+            reworked_boxes = self.__relocate_detected_coords(detected_boxes)
 
             if not len(reworked_boxes) == 1:
-                # self.show_frame(self.current_frame)
+                # self.__show_frame(self.current_frame)
                 pass
             else:
                 for (x, y, w, h) in reworked_boxes:
@@ -335,20 +335,20 @@ class Vision:
 
                     self.target_locker.lock(x, y, w, h)
 
-                    # time.sleep(0.2)  # allow the camera to capture after moving.
+                    # time.__sleep(0.2)  # allow the camera to capture after moving.
 
-                    # self.show_frame(self.current_frame)
-                    self.truncate_stream()
+                    # self.__show_frame(self.current_frame)
+                    self.__truncate_stream()
 
                     self.camera.capture(self.raw_capture, format=format)
                     err_check_image = self.raw_capture.array
 
                     rgb, detected_boxes = self.detect_things(err_check_image)
-                    # names = self.recognize_things(rgb, detected_boxes)
-                    rb_after_move = self.relocate_detected_coords(detected_boxes)
+                    # names = self.__recognize_things(rgb, detected_boxes)
+                    rb_after_move = self.__relocate_detected_coords(detected_boxes)
 
                     if not len(rb_after_move) == 1:
-                        # self.show_frame(err_check_image)
+                        # self.__show_frame(err_check_image)
                         pass
                     else:
                         for (ex, ey, ew, eh) in rb_after_move:  # e means error.
@@ -358,15 +358,15 @@ class Vision:
 
                             self.target_locker.check_error(ex, ey, ew, eh)
 
-                            # self.show_frame(self.current_frame)
+                            # self.__show_frame(self.current_frame)
 
-            self.show_frame(self.current_frame)
-            self.truncate_stream()
-            if self.check_loop_ended(stop_thread):
+            self.__show_frame(self.current_frame)
+            self.__truncate_stream()
+            if self.__check_loop_ended(stop_thread):
                 break
 
-    def detect_initiate(self, format="bgr"):
-        """The low-level method to serve as the entry point to detection, recognition and tracking features of t_system's vision ability.
+    def __detect_initiate(self, format="bgr"):
+        """Method to serve as the entry point to detection, recognition and tracking features of t_system's vision ability.
 
         Args:
                 format:       	        Color space format.
@@ -386,10 +386,10 @@ class Vision:
                 if (self.show_stream and self.augmented) or self.show_stream:
                     cv2.putText(gray, "Scanning...", (int(self.frame_width - self.frame_width * 0.2), int(self.frame_height * 0.1)), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (200, 0, 0), 2)
 
-                self.show_frame(gray)
-                self.truncate_stream()
+                self.__show_frame(gray)
+                self.__truncate_stream()
 
-                if self.check_loop_ended(lambda: False):
+                if self.__check_loop_ended(lambda: False):
                     break
             else:
                 self.raw_capture.truncate(0)
@@ -427,7 +427,7 @@ class Vision:
             time.sleep(0.5)  # for relieve the cpu.
 
     def scan(self, stop_thread, resolution=3):
-        """The low-level method to provide the scanning around for security mode of T_System.
+        """Method to provide the scanning around for security mode of T_System.
 
         Args:
                 stop_thread:   	       Stop flag of the tread about terminating it outside of the function's loop.
@@ -454,7 +454,7 @@ class Vision:
                 time.sleep(0.1)
 
     def stream(self, stop_thread, format="bgr", caller="security"):
-        """The low-level method to provide the video stream for security mode of T_System.
+        """The high(and low)-level method to provide the video stream for security mode of T_System.
 
         Args:
                 stop_thread:   	        Stop flag of the tread about terminating it outside of the function's loop.
@@ -472,23 +472,23 @@ class Vision:
             self.current_frame = frame.array
             cv2.imwrite(f'{dot_t_system_dir}/online_stream.jpeg', self.current_frame)
 
-            self.show_frame(self.current_frame)
-            self.truncate_stream()
+            self.__show_frame(self.current_frame)
+            self.__truncate_stream()
 
-            if self.check_loop_ended(stop_thread):
+            if self.__check_loop_ended(stop_thread):
                 break
 
     def track_focused_point(self):
-        """The high-level method to provide the tracking predetermined non-moving target according to with locking_system's current position for track mode of T_System.
+        """Method to provide the tracking predetermined non-moving target according to with locking_system's current position for track mode of T_System.
 
         Args:
-                stop_thread:   	        Stop flag of the tread about terminating it outside of the function's loop.
+                __stop_thread:   	        Stop flag of the tread about terminating it outside of the function's loop.
                 format:       	        Color space format.
         """
         pass
 
-    def show_frame(self, frame):
-        """The low-level method to show the captured frame.
+    def __show_frame(self, frame):
+        """Method to show the captured frame.
 
         Args:
                 frame:       	        Frame matrix in bgr format.
@@ -499,14 +499,14 @@ class Vision:
             # show the frame
             cv2.imshow("Frame", frame)
 
-    def truncate_stream(self):
-        """The low-level method to clear the stream in preparation for the next frame.
+    def __truncate_stream(self):
+        """Method to clear the stream in preparation for the next frame.
         """
         self.raw_capture.seek(0)
         self.raw_capture.truncate()
 
-    def check_loop_ended(self, stop_thread):
-        """The low-level method to detecting FACES with hog or cnn methoda.
+    def __check_loop_ended(self, stop_thread):
+        """Method to detecting FACES with hog or cnn methoda.
 
         Args:
                 stop_thread:   	        Stop flag of the tread about terminating it outside of the function's loop.
@@ -525,8 +525,8 @@ class Vision:
             self.release_hearer()
             return True
 
-    def detect_with_hog_or_cnn(self, frame):
-        """The low-level method to detecting FACES with hog or cnn methoda.
+    def __detect_with_hog_or_cnn(self, frame):
+        """Method to detecting FACES with hog or cnn methoda.
 
         Args:
                 frame:       	        Frame matrix in bgr format.
@@ -540,8 +540,8 @@ class Vision:
 
         return rgb, detected_boxes
 
-    def detect_with_haarcascade(self, frame):
-        """The low-level method to detecting objects with haarcascade method.
+    def __detect_with_haarcascade(self, frame):
+        """Method to detecting objects with haarcascade method.
 
         Args:
                 frame:       	        Frame matrix in bgr format.
@@ -561,12 +561,12 @@ class Vision:
             # box[2] is y + h.
             reworked_boxes.append((box[1], box[0] + box[2], box[1] + box[3], box[0]))
 
-        rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # For recognize_things compatibility.
+        rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # For __recognize_things compatibility.
 
         return rgb, reworked_boxes
 
-    def recognize_things(self, rgb, boxes):
-        """The low-level method to recognizing objects with encodings pickle files.
+    def __recognize_things(self, rgb, boxes):
+        """Method to recognizing objects with encodings pickle files.
 
         Args:
                 rgb:       	            Frame matrix in rgb format.
@@ -605,8 +605,8 @@ class Vision:
 
         return names
 
-    def create_tracker_by_name(self):
-        """The low-level method to creating a tracker object via type that is chosen by the user.
+    def __create_tracker_by_name(self):
+        """Method to creating a tracker object via type that is chosen by the user.
         """
         if self.tracker_type == TRACKER_TYPES[0]:
             tracker = cv2.TrackerBoosting_create()
@@ -634,8 +634,8 @@ class Vision:
         return tracker
 
     @staticmethod
-    def relocate_detected_coords(detected_boxes):
-        """The low-level method to relocating members of detected boxes from given shape to wanted shape.
+    def __relocate_detected_coords(detected_boxes):
+        """Method to relocating members of detected boxes from given shape to wanted shape.
 
          Args:
                 detected_boxes (tuple): Top left and bottom right coordinates of the detected thing.
@@ -662,8 +662,9 @@ class Vision:
         self.object_cascade = cv2.CascadeClassifier(ccade_xml_file)
         self.decider.set_db(file)
 
-    def mark_as_single_rect(self, frame, x, y, w, h, radius, physically_distance, color, thickness):
-        """The low-level method to set mark_object method as drawing method with OpenCV's basic rectangle.
+    @staticmethod
+    def __mark_as_single_rect(frame, x, y, w, h, radius, physically_distance, color, thickness):
+        """Method to set mark_object method as drawing method with OpenCV's basic rectangle.
 
          Args:
                 frame:       	        Frame matrix.
@@ -679,8 +680,8 @@ class Vision:
 
         cv2.rectangle(frame, (x, y), (x + w, y + h), color, thickness)
 
-    def mark_as_partial_rect(self, frame, x, y, w, h, radius, physically_distance, color, thickness):
-        """The low-level method to set mark_object method as drawing method with aimer's partial rect.
+    def __mark_as_partial_rect(self, frame, x, y, w, h, radius, physically_distance, color, thickness):
+        """Method to set mark_object method as drawing method with aimer's partial rect.
 
          Args:
                 frame:       	        Frame matrix.
@@ -696,8 +697,8 @@ class Vision:
 
         self.aimer.mark_partial_rect(frame, (int(x + w / 2), int(y + h / 2)), radius, physically_distance)
 
-    def mark_as_rotation_arcs(self, frame, x, y, w, h, radius, physically_distance, color, thickness):
-        """The low-level method to set mark_object method as drawing method with aimer's rotating arcs.
+    def __mark_as_rotation_arcs(self, frame, x, y, w, h, radius, physically_distance, color, thickness):
+        """Method to set mark_object method as drawing method with aimer's rotating arcs.
 
          Args:
                 frame:       	        Frame matrix.
@@ -713,8 +714,8 @@ class Vision:
 
         self.aimer.mark_rotating_arcs(frame, (int(x + w / 2), int(y + h / 2)), radius, physically_distance)
 
-    def mark_as_none(self, frame, x, y, w, h, radius, physically_distance, color, thickness):
-        """The low-level method to set mark_object method for draw nothing.
+    def __mark_as_none(self, frame, x, y, w, h, radius, physically_distance, color, thickness):
+        """Method to set mark_object method for draw nothing.
 
          Args:
                 frame:       	        Frame matrix.
@@ -730,8 +731,8 @@ class Vision:
         pass
 
     @staticmethod
-    def get_recognition_data(encoding_file_name):
-        """The low-level method to get encoded recognition data from picke file.
+    def __get_recognition_data(encoding_file_name):
+        """Method to get encoded recognition data from picke file.
 
          Args:
                 encoding_file_name (str):  The file that is keep faces's encoded data.
@@ -743,29 +744,29 @@ class Vision:
 
         return pickle.loads(open(encoding_pickle_file, "rb").read())  # this is recognition_data
 
-    def get_mark_object(self, mark_found_object):
-        """The low-level method to set mqtt_receimitter object for publishing and subscribing data echos.
+    def __get_mark_object(self, mark_found_object):
+        """Method to set mqtt_receimitter object for publishing and subscribing data echos.
 
          Args:
                 mark_found_object (str):   The mark type of the detected object.
         """
 
         if mark_found_object == "single_rect":
-            return self.mark_as_single_rect
+            return self.__mark_as_single_rect
         elif mark_found_object == "partial_rect":
-            return self.mark_as_partial_rect
+            return self.__mark_as_partial_rect
         elif mark_found_object == "rotating_arcs":
-            return self.mark_as_rotation_arcs
+            return self.__mark_as_rotation_arcs
         else:
-            return self.mark_as_none
+            return self.__mark_as_none
 
     def get_current_frame(self):
-        """The high-level method to get current working camera frame.
+        """Method to get current working camera frame.
         """
         return self.current_frame
 
-    def set_mqtt_receimitter(self, mqtt_receimitter):
-        """The low-level method to set mqtt_receimitter object for publishing and subscribing data echos.
+    def __set_mqtt_receimitter(self, mqtt_receimitter):
+        """Method to set mqtt_receimitter object for publishing and subscribing data echos.
 
          Args:
                 mqtt_receimitter:          transmit and receive data function for mqtt communication
@@ -773,24 +774,24 @@ class Vision:
         self.mqtt_receimitter = mqtt_receimitter
 
     def start_preview(self):
-        """The high-level method to start preview of the vision without move action.
+        """Method to start preview of the vision without move action.
         """
         self.camera.start_preview()
 
     def stop_preview(self):
-        """The high-level method to stop preview of the vision.
+        """Method to stop preview of the vision.
         """
         self.camera.stop_preview()
 
     def release_servos(self):
-        """The low-level method to stop sending signals to servo motors pins and clean up the gpio pins.
+        """Method to stop sending signals to servo motors pins and clean up the gpio pins.
         """
 
         self.target_locker.stop()
         self.target_locker.gpio_cleanup()
 
     def release_camera(self):
-        """The low-level method to stop receiving signals from the camera and stop video recording.
+        """Method to stop receiving signals from the camera and stop video recording.
         """
 
         # self.camera.release()
@@ -798,7 +799,7 @@ class Vision:
             self.camera.stop_recording()
 
     def release_hearer(self):
-        """The low-level method to stop sending signals to servo motors pins and clean up the gpio pins.
+        """Method to stop sending signals to servo motors pins and clean up the gpio pins.
         """
 
         self.hearer.release_members()

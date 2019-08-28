@@ -28,7 +28,7 @@ class LowPassFilter:
 
     @staticmethod
     def butter_low_pass(cutoff, fs, order=5):
-        """The high-level method to start of the motor initially.
+        """Method to start of the motor initially.
 
         Args:
             init_angel (float):     Initialization angle value for servo motor in radian unit.
@@ -41,7 +41,7 @@ class LowPassFilter:
         return b, a
 
     def butter_low_pass_filter(self, data, cutoff, fs, order=5):
-        """The high-level method to start of the motor initially.
+        """Method to start of the motor initially.
 
         Args:
             init_angel (float):     Initialization angle value for servo motor in radian unit.

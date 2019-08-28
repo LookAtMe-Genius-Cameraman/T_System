@@ -14,7 +14,7 @@ from t_system.administration import is_admin
 
 
 def get_system_info(admin_id):
-    """The high-level method to get system info.
+    """Method to get system info.
 
     Args:
         admin_id (str):                 Admin privileges flag.

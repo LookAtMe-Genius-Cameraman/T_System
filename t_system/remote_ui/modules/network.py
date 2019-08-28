@@ -18,7 +18,7 @@ logger = log_manager.get_logger(__name__, "DEBUG")
 
 
 def create_network(admin_id, data):
-    """The high-level method to create new scenario.
+    """Method to create new scenario.
 
     Args:
         admin_id (str):                 Admin privileges flag.
@@ -35,7 +35,7 @@ def create_network(admin_id, data):
 
 
 def get_networks(admin_id):
-    """The high-level method to return existing scenarios.
+    """Method to return existing scenarios.
 
     Args:
         admin_id (str):                 Admin privileges flag.
@@ -52,7 +52,7 @@ def get_networks(admin_id):
 
 
 def get_network(admin_id, network_ssid):
-    """The high-level method to return existing network with given id.
+    """Method to return existing network with given id.
 
     Args:
         admin_id (str):                 Admin privileges flag.
@@ -76,7 +76,7 @@ def get_network(admin_id, network_ssid):
 
 
 def update_network(admin_id, ssid, data):
-    """The high-level method to update the scenario that is recorded in database with given parameters.
+    """Method to update the scenario that is recorded in database with given parameters.
 
     Args:
         admin_id (str):                 Admin privileges flag.
@@ -99,7 +99,7 @@ def update_network(admin_id, ssid, data):
 
 
 def delete_network(admin_id, ssid):
-    """The high-level method to remove existing position with given id.
+    """Method to remove existing position with given id.
 
     Args:
         admin_id (str):                 Admin privileges flag.
@@ -118,7 +118,7 @@ def delete_network(admin_id, ssid):
 
 
 def get_db_table():
-    """The low-level method to get work database.
+    """Method to get work database.
     """
 
     db_file = dot_t_system_dir + "/network/db.json"

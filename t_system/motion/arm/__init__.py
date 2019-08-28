@@ -83,13 +83,13 @@ class Joint:
             delta_angle (float):            Angle to rotate. In degree.
             direction (bool):               Rotate direction. True means CW, otherwise CCW.
         """
-        target_angle = self.calc_target_angle(degree_to_radian(delta_angle), direction)
+        target_angle = self.__calc_target_angle(degree_to_radian(delta_angle), direction)
 
         self.move_to_angle(target_angle)
         self.current_angle = target_angle
 
-    def calc_target_angle(self, delta_angle, direction):
-        """The low-level method to calculate target angle with the given variation angle value.
+    def __calc_target_angle(self, delta_angle, direction):
+        """Method to calculate target angle with the given variation angle value.
 
         Args:
             delta_angle (float):            Calculated theta angle for going to object position. In radian type.
@@ -139,13 +139,13 @@ class Arm:
         with open(f'{T_SYSTEM_PATH}/motion/arm/arm_config.json') as conf_file:
             joints = json.load(conf_file)[arm_name]  # config file returns the arms.
 
-        self.set_joints(joints)
-        self.set_dh_params(self.joints)
+        self.__set_joints(joints)
+        self.__set_dh_params(self.joints)
 
         logger.info(f'{self.name} arm started successfully.')
 
-    def set_joints(self, joints):
-        """The high-level method to setting joints with D-H parameters.
+    def __set_joints(self, joints):
+        """Method to setting joints with D-H parameters.
 
         Args:
             joints (list):          The joint list from the config file.
@@ -155,18 +155,18 @@ class Arm:
         for joint in joints:
             self.joints.append(Joint(joint))
 
-        self.prepare_dh_params()
+        self.__prepare_dh_params()
 
-    def prepare_dh_params(self):
-        """The high-level method to preparing D-H parameters of Arm.
+    def __prepare_dh_params(self):
+        """Method to preparing D-H parameters of Arm.
         """
         self.alpha = symbols('alpha0:' + str(self.joint_count))
         self.a = symbols('a0:' + str(self.joint_count))
         self.q = symbols('q1:' + str(self.joint_count + 1))
         self.d = symbols('d1:' + str(self.joint_count + 1))
 
-    def set_dh_params(self, joints):
-        """The high-level method to setting joint's D-H parameters.
+    def __set_dh_params(self, joints):
+        """Method to setting joint's D-H parameters.
 
         Args:
             joints (list):    The arm's joints list for preparing parameters of Denavit-Hartenberg chart.
@@ -188,31 +188,31 @@ class Arm:
                 self.dh_params[self.q[i]] = joints[i].q
                 self.dh_params[self.d[i]] = joints[i].d
 
-        self.set_tranform_matrices()
+        self.__set_tranform_matrices()
 
     def show_dh_params(self):
-        """The high-level method to getting D-H parameters of joints of Arm as string message.
+        """Method to getting D-H parameters of joints of Arm as string message.
         """
         print(f'DH Parameters are: {self.dh_params}')
 
-    def set_tranform_matrices(self):
-        """The low-level method to setting D-H transform matrices.
+    def __set_tranform_matrices(self):
+        """Method to setting D-H transform matrices.
         """
 
         transform_matrix = eye(4)  # creates a unit matrix via passing argument.
         for i in range(self.joint_count):
-            transform_matrix = transform_matrix * self.create_tf_matrix(self.alpha[i], self.a[i], self.d[i], self.q[i]).subs(self.dh_params)
+            transform_matrix = transform_matrix * self.__create_tf_matrix(self.alpha[i], self.a[i], self.d[i], self.q[i]).subs(self.dh_params)
             self.tf_matrices_list.append(transform_matrix)
 
     def show_transform_matrices(self):
-        """The high-level method to getting D-H parameters of joints of Arm as string message.
+        """Method to getting D-H parameters of joints of Arm as string message.
         """
 
         print(f'Transform Matrices are: {self.tf_matrices_list}')
 
     @staticmethod
-    def create_tf_matrix(alpha, a, d, q):
-        """The high-level method to calculate transform matrix of Denavit-Hartenberg Method.
+    def __create_tf_matrix(alpha, a, d, q):
+        """Method to calculate transform matrix of Denavit-Hartenberg Method.
 
         Args:
             alpha:                      The twist angle. Axis angle between consecutive two axes.
@@ -230,8 +230,8 @@ class Arm:
                             [0., 0., 0., 1.]])
         return tf_matrix
 
-    def forward_kinematics(self, theta_list):
-        """The high-level method to calculate forword kinematics of the Arm.
+    def __forward_kinematics(self, theta_list):
+        """Method to calculate forword kinematics of the Arm.
 
         Args:
             theta_list (list):          The list of current joints angles.
@@ -257,16 +257,16 @@ class Arm:
 
         return to_current_pos
 
-    def calc_jacobian_matrix(self):
-        """The low-level method to calculate jacobian matrix of Arm's General Denavit-Hartenberg Transform Matrix.
+    def __calc_jacobian_matrix(self):
+        """Method to calculate jacobian matrix of Arm's General Denavit-Hartenberg Transform Matrix.
         """
 
         tf_matrix_first_to_last = self.tf_matrices_list[-1]
         self.jacobian_matrix = [diff(tf_matrix_first_to_last[:3, -1], self.q[i]).reshape(1, 3) for i in range(len(self.q))]
         self.jacobian_matrix = Matrix(self.jacobian_matrix).T  # .T returns the transpose of matrix.
 
-    def inverse_kinematics(self, guess, target_point):
-        """The high-level method to calculate forword kinematics of the Arm.
+    def __inverse_kinematics(self, guess, target_point):
+        """Method to calculate forword kinematics of the Arm.
 
         Args:
             guess:                      The twist angle. Axis angle between consecutive two axes.
@@ -284,7 +284,7 @@ class Arm:
         target_point = np.matrix(target_point)  # X, Y, Z list to matrix for Target Position
         # print(target_point.shape)
         # Jacobian
-        self.calc_jacobian_matrix()
+        self.__calc_jacobian_matrix()
         tf_matrix_first_to_last = self.tf_matrices_list[-1]
 
         error_grad = []
@@ -296,7 +296,7 @@ class Arm:
             for i in range(len(thetas)):
                 theta_dict[self.q[i]] = thetas[i]
 
-            calculated_target_point = np.matrix(self.forward_kinematics(thetas)[-1])
+            calculated_target_point = np.matrix(self.__forward_kinematics(thetas)[-1])
 
             diff_wanted_calculated = target_point - calculated_target_point
 
@@ -319,8 +319,8 @@ class Arm:
     def path_plan(self, guess, target_list, time, acceleration):
         Q_list = []
         for target in target_list:
-            Q = self.inverse_kinematics(guess, target)
-            predicted_coordinates = self.forward_kinematics(Q)[-1]
+            Q = self.__inverse_kinematics(guess, target)
+            predicted_coordinates = self.__forward_kinematics(Q)[-1]
             logger.info(f'Target: {target} ,  Predicted: {predicted_coordinates}')
             Q_list.append(Q)
             guess = Q
@@ -330,7 +330,7 @@ class Arm:
         return Q_list
 
     def goto_position(self, pos_thetas=None, pos_coords=None):
-        """The high-level method to go to given position via position angles or coordinates of the Arm.
+        """Method to go to given position via position angles or coordinates of the Arm.
 
            If the target position is given with angles, cartesian coordinates have been created,
            else cartesian coordinates given the joints angles create.
@@ -342,17 +342,17 @@ class Arm:
         """
 
         if pos_coords and pos_thetas:
-            self.rotate_joints(pos_thetas)
+            self.__rotate_joints(pos_thetas)
 
         elif pos_thetas:
-            self.rotate_joints(pos_thetas)
+            self.__rotate_joints(pos_thetas)
 
-            pos_coords = self.forward_kinematics(pos_thetas)[-1]
+            pos_coords = self.__forward_kinematics(pos_thetas)[-1]
 
         elif pos_coords:
-            pos_thetas = self.inverse_kinematics(self.current_pos_as_theta, pos_coords)
+            pos_thetas = self.__inverse_kinematics(self.current_pos_as_theta, pos_coords)
 
-            self.rotate_joints(pos_thetas)
+            self.__rotate_joints(pos_thetas)
 
         else:
             raise Exception('Going to position requires angle or coordinate!')
@@ -360,8 +360,8 @@ class Arm:
         self.current_pos_as_theta = pos_thetas
         self.current_pos_as_coord = pos_coords
 
-    def rotate_joints(self, pos_thetas):
-        """The low-level method to rotate all joints according to given position theta angles.
+    def __rotate_joints(self, pos_thetas):
+        """Method to rotate all joints according to given position theta angles.
 
         Args:
             pos_thetas (list):          Angular position list to go. List length equals to joint count.
@@ -372,7 +372,7 @@ class Arm:
                 joint.move_to_angle(pos_thetas[joint.number - 1])
 
     def rotate_single_joint(self, joint_number, delta_angle, direction=None):
-        """The high-level method to move a single joint towards the given direction with the given variation.
+        """Method to move a single joint towards the given direction with the given variation.
 
         Args:
             joint_number (int):        Number of one of arm's joints.
@@ -395,10 +395,10 @@ class Arm:
 
                     self.current_pos_as_theta[joint_number - 1] = joint.current_angle
 
-        self.current_pos_as_coord = self.forward_kinematics(self.current_pos_as_theta)[-1]
+        self.current_pos_as_coord = self.__forward_kinematics(self.current_pos_as_theta)[-1]
 
     def move_endpoint(self, axis, distance):
-        """The high-level method to move endpoint of the arm with the given axis and the distance.
+        """Method to move endpoint of the arm with the given axis and the distance.
 
         Args:
             axis (str):                Number of one of arm's joints.
@@ -413,7 +413,7 @@ class Arm:
         self.goto_position(pos_coords=current_pos_as_coord)
 
     def get_current_positions(self):
-        """The high-level method to send current positions.
+        """Method to send current positions.
 
         Returns:
             dict: Response

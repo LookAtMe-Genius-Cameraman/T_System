@@ -21,7 +21,7 @@ logger = log_manager.get_logger(__name__, "DEBUG")
 
 
 def create_position(admin_id, data):
-    """The high-level method to create new position.
+    """Method to create new position.
 
     Args:
         admin_id (str):                 Root privileges flag.
@@ -43,7 +43,7 @@ def create_position(admin_id, data):
 
 
 def get_positions(admin_id):
-    """The high-level method to return existing positions.
+    """Method to return existing positions.
 
     Args:
         admin_id (str):                 Root privileges flag.
@@ -61,7 +61,7 @@ def get_positions(admin_id):
 
 
 def get_position(admin_id, position_id):
-    """The high-level method to return existing position with given id.
+    """Method to return existing position with given id.
 
     Args:
         admin_id (str):                 Root privileges flag.
@@ -86,7 +86,7 @@ def get_position(admin_id, position_id):
 
 
 def update_position(admin_id, position_id, data):
-    """The high-level method to update the position that is recorded in database with given parameters.
+    """Method to update the position that is recorded in database with given parameters.
 
     Args:
         admin_id (str):                 Root privileges flag.
@@ -111,7 +111,7 @@ def update_position(admin_id, position_id, data):
 
 
 def delete_position(admin_id, position_id):
-    """The high-level method to remove existing position with given id.
+    """Method to remove existing position with given id.
 
     Args:
         admin_id (str):                 Root privileges flag.
@@ -130,7 +130,7 @@ def delete_position(admin_id, position_id):
 
 
 def get_db_table(is_admin):
-    """The low-level method to set work database by root.
+    """Method to set work database by root.
 
     Args:
         is_admin (bool):                 Root privileges flag.
