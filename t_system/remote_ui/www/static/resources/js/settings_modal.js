@@ -31,7 +31,7 @@ const face_encoding_io_div = document.getElementById("face_encoding_io_div");
 // });
 
 /**
- * The high-level method of getting specified network information with its ssid or the all existing network information.
+ * Method of getting specified network information with its ssid or the all existing network information.
  * It is triggered via a click on settings_btn or clicked specified network on network list.
  */
 function get_network_data(ssid = null) {

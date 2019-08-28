@@ -53,7 +53,7 @@ system_info_btn.addEventListener("click", function () {
 
 
 /**
- * The low-level method to make specific request for system_info of T_System.
+ * Method to make specific request for system_info of T_System.
  */
 function get_system_info() {
     jquery_manager.get_data("/api/system_info?admin_id=" + admin_id);
@@ -61,7 +61,7 @@ function get_system_info() {
 
 
 /**
- * The high-level method to set system info chart/table by administration or normal entry.
+ * Method to set system info chart/table by administration or normal entry.
  */
 function set_system_info() {
     get_system_info();

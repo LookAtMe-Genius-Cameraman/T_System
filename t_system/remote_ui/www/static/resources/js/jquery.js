@@ -8,7 +8,7 @@
 
 
 /**
- * The high-level method to handle of PUT request of $.ajax query.
+ * Method to handle of PUT request of $.ajax query.
  * @param {string} url: the route address of the flask
  * @param data: posting data to route.
  * @param {function} callback: the callback function.
@@ -32,7 +32,7 @@ $.put = function (url, data, callback) {
 
 
 /**
- * The high-level method to handle of DELETE request of $.ajax query.
+ * Method to handle of DELETE request of $.ajax query.
  * @param {string} url: the route address of the flask
  * @param data: posting data to route.
  * @param {function} callback: the callback function.
@@ -65,7 +65,7 @@ class JQueryManager {
     }
 
     /**
-     * The high-level method to sending data that is given with data parameter to the route.
+     * Method to sending data that is given with data parameter to the route.
      * @param {string} route: the route address of the flask
      * @param {dict} data: posting data to route.
      * @return {string} Whether something occurred.
@@ -87,7 +87,7 @@ class JQueryManager {
     }
 
     /**
-     * The high-level method to getting data from given route as response.
+     * Method to getting data from given route as response.
      * The getting dictionary data from python flask assigns to `requested_data` variable.
      * @param {string} route: the route address of the flask
      */
@@ -104,7 +104,7 @@ class JQueryManager {
     }
 
     /**
-     * The high-level method to send DELETE request to given route.
+     * Method to send DELETE request to given route.
      * The response of request assigns to `response_data` variable.
      * @param {string} route: the route address of the flask
      */
@@ -122,7 +122,7 @@ class JQueryManager {
     }
 
     /**
-     * The high-level method to send PUT request to given route.
+     * Method to send PUT request to given route.
      * The response of request assigns to `response_data` variable.
      * @param {string} route: the route address of the flask
      * @param data: putting data to route.

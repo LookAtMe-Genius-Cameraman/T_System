@@ -24,7 +24,7 @@ const on_work_template_container = document.getElementById("on_work_template_con
 
 
 /**
- * The low-level method to create drop-down language selection menu.
+ * Method to create drop-down language selection menu.
  */
 function build_language_menu() {
     let content = "";
@@ -53,7 +53,7 @@ function toggle_elements(elements) {
 }
 
 /**
- * The low-level method to change visibility and opacity for making usable of given element.
+ * Method to change visibility and opacity for making usable of given element.
  * @param {Object} element: the route address of the flask
  */
 function show_element(element) {
@@ -63,7 +63,7 @@ function show_element(element) {
 
 
 /**
- * The low-level method to change visibility and opacity for making unusable of given element.
+ * Method to change visibility and opacity for making unusable of given element.
  * @param {Object} element: the route address of the flask
  */
 function hide_element(element) {
