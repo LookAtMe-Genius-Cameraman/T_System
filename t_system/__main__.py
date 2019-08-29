@@ -113,10 +113,12 @@ def prepare(args):
     from t_system.administration import Administrator
     from t_system.updation import UpdateManager
     from t_system.motion.arm import Arm
+    from t_system.motion.action import MissionManager
 
     t_system.administrator = Administrator()
     t_system.update_manager = UpdateManager()
     t_system.arm = Arm(args["robotic_arm"])
+    t_system.mission_manager = MissionManager()
 
     if not args["no_emotion"]:
         from t_system.motion.action import EmotionManager
@@ -139,6 +141,9 @@ def prepare(args):
             raise Exception('All AI learning tools deprecated. Don\'t use the learn mode without AI.')
 
     logger.info("Package preparation completed.")
+
+    t_system.mission_manager.execute("initial", "position", True)
+    logger.info("Initial position taken.")
 
 
 def initiate():
@@ -208,10 +213,10 @@ def initiate():
 
     ext_network_gr = ap.add_argument_group('external network options')
     ext_network_gr.add_argument("--wlan", help="network interface that will be used to connect to external network. 'wlan0' is default.", action="store", default="wlan0", type=str)
-    access_p_gr.add_argument("--inet", help="forwarding interface. Default is None.", action="store", default=None, type=str)
-    access_p_gr.add_argument("--static-ip", help="static ip address in connected external network. 192.168.45.1 is default.", action="store", default="192.168.45.1", type=str)
-    access_p_gr.add_argument("--netmask", help="netmask address. 255.255.255.0 is default.", action="store", default="255.255.255.0", type=str)
-    access_p_gr.add_argument("--country-code", help="Wifi country code for the wpa_supplicant.conf. To use look at: https://github.com/recalbox/recalbox-os/wiki/Wifi-country-code-(EN). Default is `TR`", action="store", default="TR", type=str)
+    ext_network_gr.add_argument("--inet", help="forwarding interface. Default is None.", action="store", default=None, type=str)
+    ext_network_gr.add_argument("--static-ip", help="static ip address in connected external network. 192.168.45.1 is default.", action="store", default="192.168.45.1", type=str)
+    ext_network_gr.add_argument("--netmask", help="netmask address. 255.255.255.0 is default.", action="store", default="255.255.255.0", type=str)
+    ext_network_gr.add_argument("--country-code", help="Wifi country code for the wpa_supplicant.conf. To use look at: https://github.com/recalbox/recalbox-os/wiki/Wifi-country-code-(EN). Default is `TR`", action="store", default="TR", type=str)
 
     other_gr = ap.add_argument_group('others')
     other_gr.add_argument("--environment", help="The running environment. It specify the configuration files and logs. To use: either `production`, `development` or `testing`. Default is production", action="store", type=str, default="development")

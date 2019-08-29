@@ -26,6 +26,7 @@ stand_ui = None
 administrator = None
 update_manager = None
 arm = None
+mission_manager = None
 emotion_manager = None
 
 __author__ = 'Cem Baybars GÜÇLÜ'
