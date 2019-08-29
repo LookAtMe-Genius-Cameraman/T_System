@@ -9,7 +9,7 @@
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
 
-from t_system import seer
+from t_system import arm
 
 
 def move_arm(admin_id, move_id, data):
@@ -22,9 +22,9 @@ def move_arm(admin_id, move_id, data):
     result = True
 
     if data["type"] == "joint":
-        seer.arm.rotate_single_joint(int(data["id"]), data["quantity"])
+        arm.rotate_single_joint(int(data["id"]), data["quantity"])
     elif data["type"] == "axis":
-        seer.arm.move_endpoint(data["id"], data["quantity"])
+        arm.move_endpoint(data["id"], data["quantity"])
     else:
         result = False
 
@@ -38,5 +38,5 @@ def get_current_position(admin_id):
         admin_id (str):                Admin privileges flag.
     """
 
-    return seer.arm.get_current_positions()
+    return arm.get_current_positions()
 
