@@ -31,7 +31,7 @@ author = 'Cem Baybars GÜÇLÜ'
 # The short X.Y version
 version = '0.9'
 # The full version, including alpha/beta/rc tags
-release = '0.9-alpha2.41'
+release = '0.9-alpha2.42'
 
 
 # -- General configuration ---------------------------------------------------
