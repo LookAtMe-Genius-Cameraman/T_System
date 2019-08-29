@@ -99,10 +99,6 @@ class Vision:
 
         self.target_locker = LockingSystem(args, resolution, self.decider)
 
-        self.arm = None
-        if args["robotic_arm"]:
-            self.arm = Arm(args["robotic_arm"])
-
         self.aimer = Aimer()
 
         self.show_stream = args["show_stream"]  # 'show-stream' argument automatically converted this type.
