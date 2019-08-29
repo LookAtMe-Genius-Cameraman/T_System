@@ -12,6 +12,11 @@ const system_info_template_container = document.getElementById("system_info_temp
 const system_info_btn = document.getElementById("system_info_btn");
 const system_info_chart_div = document.getElementById("system_info_chart_div");
 const system_info_chart = document.getElementById('system_info_chart').getContext('2d');
+
+const disk_usage_div = document.getElementById('disk_usage_div');
+const d_u_title = document.getElementById('d_u_title');
+const d_u_as_giga_min = document.getElementById('d_u_as_giga_min');
+
 const versions_div = document.getElementById('versions_div');
 const stand_version_p = document.getElementById('stand_version_p');
 const remote_ui_version_p = document.getElementById('remote_ui_version_p');
@@ -34,7 +39,8 @@ system_info_btn.addEventListener("click", function () {
 
 
         show_element(system_info_chart_div);
-        show_element(versions_div)
+        show_element(versions_div);
+        show_element(disk_usage_div);
 
     } else {
         system_info_template_container.classList.toggle("focused");
@@ -42,6 +48,7 @@ system_info_btn.addEventListener("click", function () {
 
         hide_element(system_info_chart_div);
         hide_element(versions_div);
+        hide_element(disk_usage_div);
 
         settings_template_container.classList.toggle("hidden_element");
         controlling_template_container.classList.toggle("hidden_element");
@@ -71,6 +78,7 @@ function set_system_info() {
         if (requested_data !== null) {
             if (requested_data["status"] === "OK") {
 
+                let free_disk_space = requested_data["data"]["free_disk_space"];
                 let disk_usage_percentage = requested_data["data"]["disk_usage_percent"];
                 let cpu_usage_percentage = requested_data["data"]["cpu_usage_percent"];
                 let ram_usage_percentage = requested_data["data"]["ram_usage_percent"];
@@ -78,6 +86,10 @@ function set_system_info() {
                 let t_system_version = requested_data["data"]["versions"]["t_system"];
                 let stand_version = requested_data["data"]["versions"]["stand"];
                 let remote_ui_version = requested_data["data"]["versions"]["remote_ui"];
+
+                d_u_title.innerHTML = "Available:";
+                d_u_as_giga_min.style.color = "rgba(0 255 0)";
+                d_u_as_giga_min.innerHTML = free_disk_space + " GB ~ " + free_disk_space * 1024 / 2.4  + " min";  // 1 min record spends 2.4 mb.
 
                 if (ram_usage_percentage === null) {
                     new Chart(system_info_chart, {

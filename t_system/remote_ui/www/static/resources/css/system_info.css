@@ -24,9 +24,23 @@
 }
 
 #system_info_chart_div{
-
     visibility: hidden;
     opacity: 0;
+}
+
+#disk_usage_div {
+    visibility: hidden;
+    opacity: 0;
+
+    top: 57%;
+    left: 50%;
+    transform: translate(-50%);
+}
+
+#disk_usage_div p {
+    font-size: 100%;
+    margin: auto;
+    color: #fff0eb;
 }
 
 #versions_div {
