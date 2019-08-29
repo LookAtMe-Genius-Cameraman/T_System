@@ -38,11 +38,15 @@ class PositionApi(Resource):
         """The API method to get request for flask.
         """
 
+        db_name = request.args.get('db')
         position_id = request.args.get('id', None)
         admin_id = request.args.get('admin_id', None)
 
+        if not db_name:
+            return {'status': 'ERROR', 'message': '\'db\' parameter is missing'}
+
         if position_id:
-            position = get_position(admin_id, position_id)
+            position = get_position(admin_id, db_name, position_id)
             return {'status': 'OK', 'data': position}
 
         positions = get_positions(admin_id)
@@ -52,22 +56,30 @@ class PositionApi(Resource):
     def post(self):
         """The API method to post request for flask.
         """
+        db_name = request.args.get('db')
         admin_id = request.args.get('admin_id', None)
+
+        if not db_name:
+            return {'status': 'ERROR', 'message': '\'db\' parameter is missing'}
 
         try:
             form = request.form.to_dict(flat=True)
             data = POSITION_SCHEMA.validate(form)
         except SchemaError as e:
             return {'status': 'ERROR', 'message': e.code}
-        result, position_id = create_position(admin_id, data)
+        result, position_id = create_position(admin_id, db_name, data)
 
         return {'status': 'OK' if result else 'ERROR', 'id': position_id}
 
     def put(self):
         """The API method to put request for flask.
         """
+        db_name = request.args.get('db')
         position_id = request.args.get('id')
         admin_id = request.args.get('admin_id', None)
+
+        if not db_name:
+            return {'status': 'ERROR', 'message': '\'db\' parameter is missing'}
 
         if not position_id:
             return {'status': 'ERROR', 'message': '\'id\' parameter is missing'}
@@ -77,19 +89,24 @@ class PositionApi(Resource):
         except SchemaError as e:
             return {'status': 'ERROR', 'message': e.code}
 
-        result = update_position(admin_id, position_id, data)
+        result = update_position(admin_id, db_name, position_id, data)
         return {'status': 'OK' if result else 'ERROR'}
 
     def delete(self):
         """The API method to delete request for flask.
         """
+
+        db_name = request.args.get('db')
         position_id = request.args.get('id')
         admin_id = request.args.get('admin_id', None)
+
+        if not db_name:
+            return {'status': 'ERROR', 'message': '\'db\' parameter is missing'}
 
         if not position_id:
             return {'status': 'ERROR', 'message': '\'id\' parameter is missing'}
 
-        result = delete_position(admin_id, position_id)
+        result = delete_position(admin_id, db_name, position_id)
 
         return {'status': 'OK' if result else 'ERROR'}
 

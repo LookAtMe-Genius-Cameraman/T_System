@@ -37,12 +37,14 @@ class ScenarioApi(Resource):
     def get(self):
         """The API method to get request for flask.
         """
-
+        db_name = request.args.get('db')
         scenario_id = request.args.get('id', None)
         admin_id = request.args.get('admin_id', None)
 
+        if not db_name:
+            return {'status': 'ERROR', 'message': '\'db\' parameter is missing'}
         if scenario_id:
-            scenario = get_scenario(admin_id, scenario_id)
+            scenario = get_scenario(admin_id, db_name, scenario_id)
             return {'status': 'OK', 'data': scenario}
 
         scenarios = get_scenarios(admin_id)
@@ -52,22 +54,30 @@ class ScenarioApi(Resource):
     def post(self):
         """The API method to post request for flask.
         """
+        db_name = request.args.get('db')
         admin_id = request.args.get('admin_id', None)
+
+        if not db_name:
+            return {'status': 'ERROR', 'message': '\'db\' parameter is missing'}
 
         try:
             form = request.form.to_dict(flat=True)
             data = SCENARIO_SCHEMA.validate(form)
         except SchemaError as e:
             return {'status': 'ERROR', 'message': e.code}
-        result, scenario_id = create_scenario(admin_id, data)
+        result, scenario_id = create_scenario(admin_id, db_name, data)
 
         return {'status': 'OK' if result else 'ERROR', 'id': scenario_id}
 
     def put(self):
         """The API method to put request for flask.
         """
+        db_name = request.args.get('db')
         scenario_id = request.args.get('id')
         admin_id = request.args.get('admin_id', None)
+
+        if not db_name:
+            return {'status': 'ERROR', 'message': '\'db\' parameter is missing'}
 
         if not scenario_id:
             return {'status': 'ERROR', 'message': '\'id\' parameter is missing'}
@@ -77,19 +87,23 @@ class ScenarioApi(Resource):
         except SchemaError as e:
             return {'status': 'ERROR', 'message': e.code}
 
-        result = update_scenario(admin_id, scenario_id, data)
+        result = update_scenario(admin_id, db_name, scenario_id, data)
         return {'status': 'OK' if result else 'ERROR'}
 
     def delete(self):
         """The API method to delete request for flask.
         """
+        db_name = request.args.get('db')
         scenario_id = request.args.get('id')
         admin_id = request.args.get('admin_id', None)
+
+        if not db_name:
+            return {'status': 'ERROR', 'message': '\'db\' parameter is missing'}
 
         if not scenario_id:
             return {'status': 'ERROR', 'message': '\'id\' parameter is missing'}
 
-        result = delete_scenario(admin_id, scenario_id)
+        result = delete_scenario(admin_id, db_name, scenario_id)
 
         return {'status': 'OK' if result else 'ERROR'}
 
