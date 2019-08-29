@@ -13,7 +13,7 @@ import uuid  # The random id generator
 
 from multipledispatch import dispatch
 
-from tinydb import TinyDB, Query  # TinyDB is a lightweight document oriented database
+from tinydb import Query  # TinyDB is a lightweight document oriented database
 
 from t_system.db_fetching import DBFetcher
 
@@ -21,36 +21,90 @@ from t_system import dot_t_system_dir, T_SYSTEM_PATH
 
 
 class MissionManager:
-    """Class to define action manager to managing movements of Arm and Locking System (when it is using independent from seer during tracking non-moving objects).
+    """Class to define a mission manager to managing movements of Arm and Locking System(when it is using independent from seer during tracking non-moving objects) during job.
 
-        This class provides necessary initiations and a function named :func:`t_system.motion.action.Action_Manager.`
-        for the provide move of servo motor.
+        This class provides necessary initiations and a function named :func:`t_system.motion.action.MissionManager.execute`
+        for the realize mission that is formed positions or scenarios.
 
     """
 
-    def __init__(self, args):
+    def __init__(self):
         """Initialization method of :class:`t_system.motion.action.ActionManager` class.
-
-        Args:
-            args:                   Command-line arguments.
         """
 
         db_folder = f'{T_SYSTEM_PATH}/motion/action'
-        db_name = 'predicted_missions'
-        self.predicted_scenarios_table = DBFetcher(db_folder, db_name, "scenarios", 30).fetch()
-        self.predicted_positions_table = DBFetcher(db_folder, db_name, "positions", 30).fetch()
+        self.predicted_db_name = 'predicted_missions'
+        self.predicted_scenarios_table = DBFetcher(db_folder, self.predicted_db_name, "scenarios", 30).fetch()
+        self.predicted_positions_table = DBFetcher(db_folder, self.predicted_db_name, "positions", 30).fetch()
 
         db_folder = dot_t_system_dir
-        db_name = 'missions'
-        self.scenarios_table = DBFetcher(db_folder, db_name, "scenarios").fetch()
-        self.positions_table = DBFetcher(db_folder, db_name, "positions").fetch()
+        self.db_name = 'missions'
+        self.scenarios_table = DBFetcher(db_folder, self.db_name, "scenarios").fetch()
+        self.positions_table = DBFetcher(db_folder, self.db_name, "positions").fetch()
+
+        self.predicted_positions = []
+        self.predicted_scenarios = []
+        self.positions = []
+        self.scenarios = []
+
+        self.__refresh_members()
+
+        self.actor = Actor()
+
+    def __refresh_members(self):
+        """low-level method to refreshing the members
+        """
+
+        predicted_scenarios = self.predicted_scenarios_table.all()
+        for scenario in predicted_scenarios:
+            self.predicted_scenarios.append(Scenario(scenario["name"], scenario["id"], root=True, db_name=self.predicted_db_name))
+
+        predicted_positions = self.predicted_positions_table.all()
+        for position in predicted_positions:
+            self.predicted_positions.append(Position(position["name"], position["id"], position["cartesian_coords"], position["polar_coords"], root=True, db_name=self.predicted_db_name))
+
+        scenarios = self.scenarios_table.all()
+        for scenario in scenarios:
+            self.scenarios.append(Scenario(scenario["name"], scenario["id"], root=True, db_name=self.db_name))
+
+        positions = self.positions_table.all()
+        for position in positions:
+            self.positions.append(Position(position["name"], position["id"], position["cartesian_coords"], position["polar_coords"], root=True, db_name=self.db_name))
+
+    def execute(self, mission, type, root):
+        """The top-level method to fulfill mission with using position or scenarios their names specified with given parameter.
+
+        Args:
+            mission (str):                  Name of the position or scenario that is created for mission.
+            type (str):                     Type of the mission. Either `position` or `scenario`.
+            root (bool):                    Root privileges flag.
+        """
+
+        if root:
+            positions = self.predicted_positions
+            scenarios = self.predicted_scenarios
+        else:
+            positions = self.positions
+            scenarios = self.scenarios
+
+        if type == "position":
+            for position in positions:
+                if position.name == mission:
+                    self.actor.act(position)
+                    break
+
+        elif type == "scenario":
+            for scenario in scenarios:
+                if scenario.name == mission:
+                    self.actor.act([scenario])
+                    break
 
 
 class EmotionManager:
-    """Class to define action manager to managing movements of Arm and Locking System (when it is using independent from seer during tracking non-moving objects).
+    """Class to define emotion manager to managing movements of Arm and Locking System(when it is using independent from seer during tracking non-moving objects) for creating emotion effects.
 
-        This class provides necessary initiations and a function named :func:`t_system.motion.action.Action_Manager.`
-        for the provide move of servo motor.
+        This class provides necessary initiations and a function named :func:`t_system.motion.action.EmotionManager.make_feel`
+        for the realize emotion that is formed positions or scenarios.
     """
 
     def __init__(self):
@@ -82,7 +136,7 @@ class EmotionManager:
             self.positions.append(Position(position["name"], position["id"], position["cartesian_coords"], position["polar_coords"], root=True, db_name=self.db_name))
 
     def make_feel(self, emotion, type):
-        """Method to generating emotion with using position or scenarios their names specified with given parameter.
+        """The top-level method to generating emotion with using position or scenarios their names specified with given parameter.
 
         Args:
             emotion (str):                  Name of the position or scenario that is created for emotion.
