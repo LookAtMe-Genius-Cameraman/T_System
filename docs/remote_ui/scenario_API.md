@@ -1,10 +1,11 @@
 # Creating new Scenario
 
 Creates a new motion Scenario for T_System's arm to follow path during shoot with camera.
+Returns an error if the DB is empty.
 
 ## Request
 ```http
-POST /api/scenario?admin_id=<ADMIN_ID>
+POST /api/scenario?db=<DB>&admin_id=<ADMIN_ID>
 Host: domain
 Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 
@@ -46,10 +47,11 @@ Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 
 # Getting Scenarios
 - If a specific parameter ID is given, its scenario are listed.
+- Returns an error if the DB is empty.
 
 ## Request
 ```http
-GET /api/scenario?id=<ID>&admin_id=<ADMIN_ID>
+GET /api/scenario?db=<DB>&id=<ID>&admin_id=<ADMIN_ID>
 Host: domain
 ```
 
@@ -86,11 +88,11 @@ Host: domain
 ```
 
 # Updating Scenario
-Returns an error if the ID is empty.
+Returns an error if the ID or DB is empty.
 
 ## Request
 ```http
-PUT /api/scenario?id=<ID>&admin_id=<ADMIN_ID>
+PUT /api/scenario?db=<DB>&id=<ID>&admin_id=<ADMIN_ID>
 Host: domain
 Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 
@@ -129,10 +131,11 @@ Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 
 # Deleting scenario
 Removes the scenario.
+Returns an error if the DB is empty.
 
 ## Request
 ```http
-DEL /api/scenario?id=<ID>&admin_id=<ADMIN_ID>
+DEL /api/scenario?db=<DB>&id=<ID>&admin_id=<ADMIN_ID>
 Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 ```
 

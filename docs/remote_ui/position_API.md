@@ -1,10 +1,11 @@
 # Creating new Position
 
 This process creates a new position for T_System's arm.
+Returns an error if the DB is empty.
 
 ## Request
 ```http
-POST /api/position?admin_id=<ADMIN_ID>
+POST /api/position?db=<DB>&admin_id=<ADMIN_ID>
 Host: domain
 Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 
@@ -34,10 +35,11 @@ Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 
 # Getting Positions
 - If a specific parameter ID is given, its position are listed.
+- Returns an error if the DB is empty.
 
 ## Request
 ```http
-GET /api/position?id=<ID>&admin_id=<ADMIN_ID>
+GET /api/position?db=<DB>&id=<ID>&admin_id=<ADMIN_ID>
 Host: domain
 ```
 
@@ -62,11 +64,11 @@ Host: domain
 ```
 
 # Updating Position
-Returns an error if the ID is empty.
+Returns an error if the ID or DB is empty.
 
 ## Request
 ```http
-PUT /api/position?id=<ID>&admin_id=<ADMIN_ID>
+PUT /api/position?db=<DB>&id=<ID>&admin_id=<ADMIN_ID>
 Host: domain
 Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 
@@ -94,10 +96,12 @@ Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 
 # Deleting Position
 Removes the Position.
+Returns an error if the DB is empty.
+
 
 ## Request
 ```http
-DEL /api/position?id=<ID>&admin_id=<ADMIN_ID>
+DEL /api/position?db=<DB>&id=<ID>&admin_id=<ADMIN_ID>
 Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 ```
 
