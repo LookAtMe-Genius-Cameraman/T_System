@@ -53,15 +53,15 @@ class LockingSystem:
             self.locker = self.OfficialAILocker(self)
             self.lock = self.locker.lock
             self.check_error = self.locker.check_error
-            self.get_physically_distance = self.locker.__get_physically_distance
+            self.get_physically_distance = self.locker.get_physically_distance
         elif args["non_moving_target"]:
             self.locker = self.NonMovingTargetLocker(self)
             self.lock = self.locker.lock
-            self.get_physically_distance = self.locker.__get_physically_distance
+            self.get_physically_distance = self.locker.get_physically_distance
         else:
             self.locker = self.RegularLocker(self)
             self.lock = self.locker.lock
-            self.get_physically_distance = self.locker.__get_physically_distance
+            self.get_physically_distance = self.locker.get_physically_distance
 
     class OfficialAILocker:
         """Class to define a official AI method of the t_system's motion ability.
@@ -127,7 +127,7 @@ class LockingSystem:
 
             return self.decider.decision(obj_width)
 
-        def __get_physically_distance(self, obj_width):
+        def get_physically_distance(self, obj_width):
             """Method to provide return the tracking object's physically distance value.
             """
 
@@ -180,7 +180,7 @@ class LockingSystem:
                 self.root_system.tilt.move(True, False)
 
         @staticmethod
-        def __get_physically_distance(obj_width):
+        def get_physically_distance(obj_width):
             """Method to provide return the tracking object's physically distance value.
             """
             kp = 28.5823  # gain rate with the width of object and physically distance.
@@ -215,7 +215,7 @@ class LockingSystem:
             pass
 
         @staticmethod
-        def __get_physically_distance(obj_width):
+        def get_physically_distance(obj_width):
             """Method to provide return the tracking object's physically distance value.
             """
             kp = 28.5823  # gain rate with the width of object and physically distance.
