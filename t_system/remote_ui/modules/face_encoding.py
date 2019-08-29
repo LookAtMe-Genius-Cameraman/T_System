@@ -9,10 +9,11 @@
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
 
-from tinydb import TinyDB, Query  # TinyDB is a lightweight document oriented database
+from tinydb import Query  # TinyDB is a lightweight document oriented database
 
-from t_system.administration import is_admin
+from t_system.db_fetching import DBFetcher
 from t_system.face_encoding import FaceEncodeManager
+from t_system.administration import is_admin
 
 from t_system import dot_t_system_dir, T_SYSTEM_PATH
 from t_system import log_manager
@@ -123,7 +124,5 @@ def get_db_table(is_admin):
         is_admin (bool):                 Root privileges flag.
     """
 
-    db_file = dot_t_system_dir + "recognition/db.json"
-    db = TinyDB(db_file)
-
-    return db.table("faces")
+    db_folder = f'{dot_t_system_dir}/recognition'
+    return DBFetcher(db_folder, "db", "faces").fetch()

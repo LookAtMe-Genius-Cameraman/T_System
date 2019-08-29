@@ -9,8 +9,9 @@
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
 
-from tinydb import TinyDB, Query  # TinyDB is a lightweight document oriented database
+from tinydb import Query  # TinyDB is a lightweight document oriented database
 
+from t_system.db_fetching import DBFetcher
 from t_system import dot_t_system_dir
 from t_system import log_manager
 
@@ -121,7 +122,5 @@ def get_db_table():
     """Method to get work database.
     """
 
-    db_file = dot_t_system_dir + "/network/db.json"
-    db = TinyDB(db_file)
-
-    return db.table("login")
+    db_folder = f'{dot_t_system_dir}/network'
+    return DBFetcher(db_folder, "db", "login").fetch()
