@@ -35,7 +35,7 @@ let on_work_job_btn_click_count = 0;
 
 on_work_job_btn.addEventListener("click", function () {
     on_work_job_btn_click_count++;
-    if (on_work_job_btn_click_count <= 1) {
+    if (on_work_job_btn.innerHTML === translate_text_item("READY")) {
         on_work_job_btn.innerHTML = translate_text_item("START");
         on_work_job_btn.classList.toggle("ready");
         on_work_job_btn.classList.toggle("btn-warning");
@@ -49,45 +49,66 @@ on_work_job_btn.addEventListener("click", function () {
 
         shine_checked_boxes([ai_select_checkbox, security_mode_checkbox, non_moving_target_checkbox, time_laps_checkbox])
 
-    } else if (on_work_job_btn_click_count <= 2) {
-        on_work_job_btn.innerHTML = translate_text_item("STOP");
+    } else if (on_work_job_btn.innerHTML === translate_text_item("START")) {
+        on_work_job_btn.innerHTML = translate_text_item("FINISH");
         on_work_job_btn.classList.toggle("ready");
         on_work_job_btn.classList.toggle("btn-danger");
         on_work_job_btn.classList.toggle("btn-dark");
 
-        on_work_cancel_btn.classList.toggle("active");
+        on_work_cancel_btn.classList.toggle("pause_job");
+        on_work_cancel_btn.classList.toggle("btn-warning");
+        on_work_cancel_btn.classList.toggle("btn-dark");
+        on_work_cancel_btn.innerHTML = translate_text_item("PAUSE");
 
         monitor_area_div.classList.toggle("focused");
 
         shine_checked_boxes([ai_select_checkbox, security_mode_checkbox, non_moving_target_checkbox, time_laps_checkbox])
 
-    } else {
+    } else if(on_work_job_btn.innerHTML === translate_text_item("FINISH")) {
         on_work_job_btn.innerHTML = translate_text_item("READY");
         on_work_job_btn.classList.toggle("btn-dark");
         on_work_job_btn.classList.toggle("btn-warning");
         dark_deep_background_div.classList.toggle("focused");
+
+        on_work_cancel_btn.classList.toggle("active");
+        on_work_cancel_btn.classList.toggle("pause_job");
+        on_work_cancel_btn.classList.toggle("btn-dark");
+        on_work_cancel_btn.classList.toggle("btn-warning");
+        on_work_cancel_btn.innerHTML = translate_text_item("CANCEL");
 
         main_specify_div.classList.toggle("hidden_element_without_child");
         monitor_area_div.classList.toggle("focused");
 
         on_work_job_btn_click_count = 0;
     }
+    else if(on_work_job_btn.innerHTML === translate_text_item("RESUME")){
+        on_work_job_btn.innerHTML = translate_text_item("FINISH");
+        on_work_job_btn.classList.toggle("btn-light");
+        on_work_job_btn.classList.toggle("btn-dark");
+    }
 });
 
 
 on_work_cancel_btn.addEventListener("click", function () {
-    on_work_cancel_btn.classList.toggle("active");
+    if (on_work_cancel_btn.innerText === translate_text_item("CANCEL")) {
+        on_work_cancel_btn.classList.toggle("active");
 
-    on_work_job_btn.innerHTML = translate_text_item("READY");
-    on_work_job_btn.classList.toggle("ready");
-    on_work_job_btn.classList.toggle("btn-danger");
-    on_work_job_btn.classList.toggle("btn-warning");
-    dark_deep_background_div.classList.toggle("focused");
+        on_work_job_btn.innerHTML = translate_text_item("READY");
+        on_work_job_btn.classList.toggle("ready");
+        on_work_job_btn.classList.toggle("btn-danger");
+        on_work_job_btn.classList.toggle("btn-warning");
+        dark_deep_background_div.classList.toggle("focused");
 
-    main_specify_div.classList.toggle("hidden_element_without_child");
+        main_specify_div.classList.toggle("hidden_element_without_child");
 
-    shine_checked_boxes([ai_select_checkbox, security_mode_checkbox, non_moving_target_checkbox, time_laps_checkbox]);
+        shine_checked_boxes([ai_select_checkbox, security_mode_checkbox, non_moving_target_checkbox, time_laps_checkbox]);
 
 
-    on_work_job_btn_click_count = 0
+        on_work_job_btn_click_count = 0
+    } else if (on_work_cancel_btn.innerText === translate_text_item("PAUSE")) {
+        on_work_job_btn.innerHTML = translate_text_item("RESUME");
+        on_work_job_btn.classList.toggle("btn-dark");
+        on_work_job_btn.classList.toggle("btn-light");
+
+    }
 });
