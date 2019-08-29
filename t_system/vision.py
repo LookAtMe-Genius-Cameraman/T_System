@@ -10,8 +10,6 @@
 """
 
 import time  # Time access and conversions
-import inspect  # Inspect live objects
-import os  # Miscellaneous operating system interfaces
 
 from math import sqrt
 from picamera import PiCamera
@@ -21,7 +19,6 @@ import cv2
 import face_recognition
 import pickle
 
-from t_system.motion.arm import Arm
 from t_system.motion.locking_system import LockingSystem
 from t_system.motion import calc_ellipsoidal_angle
 from t_system.decision import Decider
