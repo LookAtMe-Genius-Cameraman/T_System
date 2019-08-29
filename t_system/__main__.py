@@ -112,9 +112,15 @@ def prepare(args):
 
     from t_system.administration import Administrator
     from t_system.updation import UpdateManager
+    from t_system.motion.arm import Arm
 
     t_system.administrator = Administrator()
     t_system.update_manager = UpdateManager()
+    t_system.arm = Arm(args["robotic_arm"])
+
+    if not args["no_emotion"]:
+        from t_system.motion.action import EmotionManager
+        t_system.emotion_manager = EmotionManager()
 
     if args["sub_jobs"]:
         start_sub(args)
@@ -193,7 +199,7 @@ def initiate():
 
     access_p_gr = ap.add_argument_group('access point options')
     access_p_gr.add_argument("-p", "--access-point", help="Become access point for serving remote UI inside the internal network.", action="store_true")
-    access_p_gr.add_argument("--ap-wlan", help="network interface that will be used to create hotspot. 'wlp4s0' is default.", action="store", default="wlan0", type=str)
+    access_p_gr.add_argument("--ap-wlan", help="network interface that will be used to create HotSpot. 'wlan0' is default.", action="store", default="wlan0", type=str)
     access_p_gr.add_argument("--ap-inet", help="forwarding interface. Default is None.", action="store", default=None, type=str)
     access_p_gr.add_argument("--ap-ip", help="ip address of this machine in new network. 192.168.45.1 is default.", action="store", default="192.168.45.1", type=str)
     access_p_gr.add_argument("--ap-netmask", help="access point netmask address. 255.255.255.0 is default.", action="store", default="255.255.255.0", type=str)
@@ -201,7 +207,7 @@ def initiate():
     access_p_gr.add_argument("--password", help="Password of the access point. 't_system' is default.", action="store", default="t_system", type=str)
 
     ext_network_gr = ap.add_argument_group('external network options')
-    ext_network_gr.add_argument("--wlan", help="network interface that will be used to connect to external network. 'wlp4s0' is default.", action="store", default="wlan0", type=str)
+    ext_network_gr.add_argument("--wlan", help="network interface that will be used to connect to external network. 'wlan0' is default.", action="store", default="wlan0", type=str)
     access_p_gr.add_argument("--inet", help="forwarding interface. Default is None.", action="store", default=None, type=str)
     access_p_gr.add_argument("--static-ip", help="static ip address in connected external network. 192.168.45.1 is default.", action="store", default="192.168.45.1", type=str)
     access_p_gr.add_argument("--netmask", help="netmask address. 255.255.255.0 is default.", action="store", default="255.255.255.0", type=str)
@@ -209,6 +215,7 @@ def initiate():
 
     other_gr = ap.add_argument_group('others')
     other_gr.add_argument("--environment", help="The running environment. It specify the configuration files and logs. To use: either `production`, `development` or `testing`. Default is production", action="store", type=str, default="development")
+    other_gr.add_argument("--no-emotion", help="Do not mak feelings with using motion mechanisms.(Arm and Locking System.)", action="store_true")
     other_gr.add_argument("-S", "--show-stream", help="Display the camera stream. Enable the stream window.(Require gui environment.)", action="store_true")
     other_gr.add_argument("-m", "--found-object-mark", help="Specify the mark type of the found object.  To use: either `single_rect`, `rotating_arcs`, `partial_rect` or None. Default is `single_rect`", action="store", default="single_rect", type=str)
     other_gr.add_argument("-r", "--record", help="Record the video stream. Files are named by the date.", action="store_true")
