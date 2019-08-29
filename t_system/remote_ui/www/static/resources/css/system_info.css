@@ -43,6 +43,10 @@
     color: #fff0eb;
 }
 
+#d_u_as_giga_min {
+    color: rgb(0 255 0) !important;
+}
+
 #versions_div {
     visibility: hidden;
     opacity: 0;

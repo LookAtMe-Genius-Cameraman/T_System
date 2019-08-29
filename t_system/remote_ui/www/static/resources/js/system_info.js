@@ -87,9 +87,8 @@ function set_system_info() {
                 let stand_version = requested_data["data"]["versions"]["stand"];
                 let remote_ui_version = requested_data["data"]["versions"]["remote_ui"];
 
-                d_u_title.innerHTML = "Available:";
-                d_u_as_giga_min.style.color = "rgba(0 255 0)";
-                d_u_as_giga_min.innerHTML = free_disk_space + " GB ~ " + free_disk_space * 1024 / 2.4  + " min";  // 1 min record spends 2.4 mb.
+                d_u_title.innerHTML =  translate_text_item("Available:");
+                d_u_as_giga_min.innerHTML = free_disk_space + " GB ~ " + free_disk_space * 1024 / 2.4  + translate_text_item("min");  // 1 min record spends 2.4 mb.
 
                 if (ram_usage_percentage === null) {
                     new Chart(system_info_chart, {

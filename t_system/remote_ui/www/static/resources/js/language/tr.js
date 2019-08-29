@@ -44,6 +44,11 @@ const turkishtrans = {
     "READY": "HAZIR",
     "CANCEL": "İPTAL",
     "START": "BAŞLA",
+    "FINISH": "BITIR",
+    "PAUSE": "DURAKLAT",
     "STOP": "BITIR",
-    "System Info": "Sistem bilgisi"
+    "RESUME": "DEVAM ET",
+    "System Info": "Sistem bilgisi",
+    "Available:": "Kullanılabilir:",
+    "min": "dk"
 };
