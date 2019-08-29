@@ -15,13 +15,12 @@ from multipledispatch import dispatch
 
 from tinydb import TinyDB, Query  # TinyDB is a lightweight document oriented database
 
-from t_system.motion.arm import Arm
 from t_system.db_fetching import DBFetcher
 
 from t_system import dot_t_system_dir, T_SYSTEM_PATH
 
 
-class ActionManager:
+class MissionManager:
     """Class to define action manager to managing movements of Arm and Locking System (when it is using independent from seer during tracking non-moving objects).
 
         This class provides necessary initiations and a function named :func:`t_system.motion.action.Action_Manager.`
@@ -36,8 +35,71 @@ class ActionManager:
             args:                   Command-line arguments.
         """
 
-        self.predicted_actions_db = f'{T_SYSTEM_PATH}/motion/action/predicted_actions.json'
-        self.actions_db = dot_t_system_dir + "/actions.json"
+        db_folder = f'{T_SYSTEM_PATH}/motion/action'
+        db_name = 'predicted_missions'
+        self.predicted_scenarios_table = DBFetcher(db_folder, db_name, "scenarios", 30).fetch()
+        self.predicted_positions_table = DBFetcher(db_folder, db_name, "positions", 30).fetch()
+
+        db_folder = dot_t_system_dir
+        db_name = 'missions'
+        self.scenarios_table = DBFetcher(db_folder, db_name, "scenarios").fetch()
+        self.positions_table = DBFetcher(db_folder, db_name, "positions").fetch()
+
+
+class EmotionManager:
+    """Class to define action manager to managing movements of Arm and Locking System (when it is using independent from seer during tracking non-moving objects).
+
+        This class provides necessary initiations and a function named :func:`t_system.motion.action.Action_Manager.`
+        for the provide move of servo motor.
+    """
+
+    def __init__(self):
+        """Initialization method of :class:`t_system.motion.action.EmotionManager` class.
+        """
+
+        db_folder = f'{T_SYSTEM_PATH}/motion/action'
+        self.db_name = 'emotions'
+        self.scenarios_table = DBFetcher(db_folder, self.db_name, "scenarios", 30).fetch()
+        self.positions_table = DBFetcher(db_folder, self.db_name, "positions", 30).fetch()
+
+        self.positions = []
+        self.scenarios = []
+
+        self.__refresh_members()
+
+        self.actor = Actor()
+
+    def __refresh_members(self):
+        """low-level method to refreshing the members
+        """
+
+        scenarios = self.scenarios_table.all()
+        for scenario in scenarios:
+            self.scenarios.append(Scenario(scenario["name"], scenario["id"], root=True, db_name=self.db_name))
+
+        positions = self.positions_table.all()
+        for position in positions:
+            self.positions.append(Position(position["name"], position["id"], position["cartesian_coords"], position["polar_coords"], root=True, db_name=self.db_name))
+
+    def make_feel(self, emotion, type):
+        """Method to generating emotion with using position or scenarios their names specified with given parameter.
+
+        Args:
+            emotion (str):                  Name of the position or scenario that is created for emotion.
+            type (str):                     Type of the emotion. Either `position` or `scenario`.
+        """
+
+        if type == "position":
+            for position in self.positions:
+                if position.name == emotion:
+                    self.actor.act(position)
+                    break
+
+        elif type == "scenario":
+            for scenario in self.scenarios:
+                if scenario.name == emotion:
+                    self.actor.act([scenario])
+                    break
 
 
 class Actor:
@@ -48,20 +110,19 @@ class Actor:
 
     """
 
-    def __init__(self, args):
+    def __init__(self):
         """Initialization method of :class:`t_system.motion.action.Actor` class.
 
         Args:
             args:                   Command-line arguments.
         """
 
-        self.arm = None
-        if args["robotic_arm"]:
-            self.arm = Arm(args["robotic_arm"])
+        from t_system import arm
+        self.arm = arm
 
     @dispatch(object)
     def act(self, position):
-        """Method to moving by given position object.
+        """Method to acting by given position object.
 
         Args:
             position (Position):            A Position object
@@ -71,7 +132,7 @@ class Actor:
 
     @dispatch(list)
     def act(self, scenarios):
-        """Method to moving by given position object.
+        """Method to acting by given scenarios object.
 
         Args:
             scenarios (list):"              Scenario object list
@@ -90,13 +151,14 @@ class Scenario:
 
     """
 
-    def __init__(self, name, id=None, root=False):
+    def __init__(self, name, id=None, root=False, db_name="predicted_missions"):
         """Initialization method of :class:`t_system.motion.action.Scenario` class.
 
         Args:
             id (str):                       The id of the scenario.
             name (str):                     The name of the scenario.
             root (bool):                    Root privileges flag.
+            db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
         """
 
         self.id = id
@@ -106,17 +168,17 @@ class Scenario:
         self.name = name
         self.positions = []
         self.root = root
+        self.db_name = db_name
 
         if self.root:
             db_folder = f'{T_SYSTEM_PATH}/motion/action'
-            db_name = 'predicted_actions'
             self.table = self.__get_db(db_folder, db_name, 30)
         else:
             db_folder = dot_t_system_dir
-            db_name = 'actions'
+            db_name = 'missions'
             self.table = self.__get_db(db_folder, db_name)
 
-        self.refresh_positions()
+        self.__refresh_positions()
 
     def add_positions(self, positions):
         """Method to add position to the scenario.
@@ -187,13 +249,13 @@ class Scenario:
 
         return DBFetcher(db_folder, db_name, "scenarios", cache_size).fetch()
 
-    def refresh_positions(self):
-        """low-level method to refreshing the members
+    def __refresh_positions(self):
+        """Method to refreshing the members
         """
 
         scenarios = self.table.search((Query().id == self.id))
         for position in scenarios["positions"]:
-            self.positions.append(Position(position["name"], position["id"], position["cartesian_coords"], position["polar_coords"], self.root, is_for_scenario=True))
+            self.positions.append(Position(position["name"], position["id"], position["cartesian_coords"], position["polar_coords"], self.root, self.db_name, is_for_scenario=True, ))
 
 
 class Position:
@@ -204,7 +266,7 @@ class Position:
 
     """
 
-    def __init__(self, name, id=None, cartesian_coords=None, polar_coords=None, root=False, is_for_scenario=False):
+    def __init__(self, name, id=None, cartesian_coords=None, polar_coords=None, root=False, db_name="predicted_missions", is_for_scenario=False):
         """Initialization method of :class:`t_system.motion.arm.action.Position` class.
 
         Args:
@@ -213,7 +275,8 @@ class Position:
             cartesian_coords (list):        Cartesian coordinate value list of the position.
             polar_coords (list):            Polar coordinate value list of the position.
             root (bool):                    Root privileges flag.
-            is_for_scenario (bool):        Flag that is specified position is inside a scenario.
+            db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
+            is_for_scenario (bool):         Flag that is specified position is inside a scenario.
         """
 
         self.id = id
@@ -228,11 +291,10 @@ class Position:
 
         if self.root:
             db_folder = f'{T_SYSTEM_PATH}/motion/action'
-            db_name = 'predicted_actions'
             self.table = self.__get_db(db_folder, db_name, 30)
         else:
             db_folder = dot_t_system_dir
-            db_name = 'actions'
+            db_name = 'missions'
             self.table = self.__get_db(db_folder, db_name)
 
         self.db_upsert()
@@ -300,5 +362,3 @@ class Position:
 if __name__ == '__main__':
 
     position_demonstration = Position("go_to_home", cartesian_coords=[1.5, 1.5, 1.5], root=True)
-
-
