@@ -63,6 +63,7 @@ def start(args):
 
     except KeyboardInterrupt:
         logger.debug("Vision systems has been released!")
+        t_system.seer.stop_recording()
         t_system.seer.release_camera()
         t_system.seer.release_servos()
         t_system.seer.release_hearer()
@@ -97,6 +98,8 @@ def prepare(args):
     Args:
         args:       Command-line arguments.
     """
+    from t_system.presentation import startup_banner
+    startup_banner()
 
     if args["interface"] == "official_stand" or args["interface"] == "remote_ui":
         elevate(show_console=False, graphical=False)
@@ -244,14 +247,8 @@ def initiate():
     args = vars(ap.parse_args())
 
     if args["version"]:
-        import pkg_resources
-
-        from t_system.stand import __version__ as stand_version
-        from t_system.remote_ui import __version__ as remote_ui_version
-
-        t_system_version = pkg_resources.get_distribution("t_system").version
-
-        print(f't_system: {t_system_version}\nremote_ui: {remote_ui_version}\n stand: {stand_version}')
+        from t_system.presentation import versions_banner
+        versions_banner()
         sys.exit(1)
 
     prepare(args)
