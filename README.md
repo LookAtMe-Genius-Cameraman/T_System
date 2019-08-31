@@ -1,6 +1,6 @@
 # T_System
 
-the (non-)moving objects tracking system via two axis camera motion (and as optionally n joint robotic arm) for raspberry pi distributions
+the (non-)moving objects tracking system via two axis camera motion and n joint robotic arm for raspberry pi distributions
 
 <p align="center" >
 <a href="https://github.com/connected-life/T_System/graphs/contributors"><img src="https://img.shields.io/github/contributors/connected-life/T_System" alt="Github contributors"/></a>
@@ -221,6 +221,8 @@ others:
   --version             Display the version number of T_System.
 ```
 
+<sup>Detailed usage available inside [`USAGE.md`](https://raw.githubusercontent.com/Connected-life/T_System/master/USAGE.md)</sup>
+
 <br>
 
 ### Interfaces
@@ -252,16 +254,16 @@ Portable usage interface v0.3.1
             A micro fan for falling down the cpu temperature.
     - Local network Management
         -
-            Scan the around networks. If there is no network connection become an Access Point and serve Remote UI ınteernally.
+            Scan the around networks. If there is no network connection become an Access Point and serve Remote UI ınternally.
     - Remote UI accessing
         -
             No control by tapping. Accessing with Remote UI from mobile or desktop.
 
-<sup><i>To see the old version explainings go [here](https://raw.githubusercontent.com/Connected-life/T_System/master/docs/stand/README.me)</i></sup>
+<sup><i>To see the old version explaining go [here](https://raw.githubusercontent.com/Connected-life/T_System/master/docs/stand/README.md)</i></sup>
 
 #### Remote UI
 
-The remotely controlling interface v0.4.8
+The remotely controlling interface v0.4.9
 
 - Properties
     -             
@@ -274,7 +276,7 @@ The remotely controlling interface v0.4.8
     - Scenario Control
         -
             create scenarios by specifying arm positions and generating motion paths with them for behaving like a camera dolly.
-    - Previewing
+    - Previewing / Monitoring
         -
             watch the live video stream during creating scenarios and monitor what is it recording on working.
 
