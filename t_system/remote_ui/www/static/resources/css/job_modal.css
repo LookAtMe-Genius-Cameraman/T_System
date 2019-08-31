@@ -33,16 +33,45 @@
     opacity: 1;
 }
 
+#job_simulate_btn {
+    visibility: visible;
+    opacity: 1;
+    top: 90%;
+    left: 60%;
+
+    transition: all 300ms;
+
+}
+
+#job_simulate_btn.active {
+    left: 50% !important;
+    transform: translate(-50%) !important;
+}
+
+#job_simulate_btn.inactive {
+    visibility: hidden !important;
+    opacity: 0 !important;
+
+    left: 100% !important;
+}
+
 #job_ready_btn {
     top: 90%;
-    left: 50%;
-    transform: translate(-50%);
+    left: 10%;
 
     transition: all 300ms;
 }
 
 #job_ready_btn.ready {
     top: 5% !important;
+    left: 50% !important;
+    transform: translate(-50%) !important;
+}
+
+#job_ready_btn.start {
+    top: 90% !important;
+    left: 50% !important;
+    transform: translate(-50%) !important;
 }
 
 #job_cancel_btn {
@@ -97,6 +126,9 @@
 
     height: 20% !important;
     width: 85% !important;
+
+    top: 40% !important;
+
 
 }
 

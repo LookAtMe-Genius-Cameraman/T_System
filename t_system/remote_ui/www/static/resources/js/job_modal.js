@@ -2,6 +2,7 @@ const job_template_container = document.getElementById("job_template_container")
 const job_btn = document.getElementById("job_btn");
 const job_div = document.getElementById("job_div");
 
+const job_simulate_btn = document.getElementById("job_simulate_btn");
 const job_ready_btn = document.getElementById("job_ready_btn");
 const job_cancel_btn = document.getElementById("job_cancel_btn");
 
@@ -64,7 +65,7 @@ function toggle_job_modal() {
     job_div.classList.toggle("focused");
     job_btn.classList.toggle("clicked");
 
-    if(dark_overlay_active) {
+    if (dark_overlay_active) {
 
     } else {
         dark_deep_background_div.classList.toggle("focused");
@@ -102,13 +103,12 @@ job_ready_btn.addEventListener("click", function () {
 
         job_cancel_btn.classList.toggle("active");
 
-        // dark_deep_background_div.classList.toggle("focused");
-
-        // shine_checked_boxes([ai_select_checkbox, security_mode_checkbox, non_moving_target_checkbox, time_laps_checkbox])
+        job_simulate_btn.classList.toggle("inactive")
 
     } else if (job_ready_btn.innerHTML === translate_text_item("START")) {
         job_ready_btn.innerHTML = translate_text_item("FINISH");
         job_ready_btn.classList.toggle("ready");
+        job_ready_btn.classList.toggle("start");
         job_ready_btn.classList.toggle("btn-danger");
         job_ready_btn.classList.toggle("btn-dark");
 
@@ -123,6 +123,7 @@ job_ready_btn.addEventListener("click", function () {
 
     } else if (job_ready_btn.innerHTML === translate_text_item("FINISH")) {
         job_ready_btn.innerHTML = translate_text_item("READY");
+        job_ready_btn.classList.toggle("start");
         job_ready_btn.classList.toggle("btn-dark");
         job_ready_btn.classList.toggle("btn-warning");
         // dark_deep_background_div.classList.toggle("focused");
@@ -132,6 +133,8 @@ job_ready_btn.addEventListener("click", function () {
         job_cancel_btn.classList.toggle("btn-dark");
         job_cancel_btn.classList.toggle("btn-warning");
         job_cancel_btn.innerHTML = translate_text_item("CANCEL");
+
+        job_simulate_btn.classList.toggle("inactive");
 
         monitor_area_div.classList.toggle("focused");
 
@@ -145,19 +148,48 @@ job_ready_btn.addEventListener("click", function () {
 
 job_cancel_btn.addEventListener("click", function () {
     if (job_cancel_btn.innerText === translate_text_item("CANCEL")) {
+
+        job_simulate_btn.classList.toggle("inactive");
+
         job_cancel_btn.classList.toggle("active");
 
         job_ready_btn.innerHTML = translate_text_item("READY");
         job_ready_btn.classList.toggle("ready");
         job_ready_btn.classList.toggle("btn-danger");
         job_ready_btn.classList.toggle("btn-warning");
-        // dark_deep_background_div.classList.toggle("focused");
-
-        // shine_checked_boxes([ai_select_checkbox, security_mode_checkbox, non_moving_target_checkbox, time_laps_checkbox]);
 
     } else if (job_cancel_btn.innerText === translate_text_item("PAUSE")) {
         job_ready_btn.innerHTML = translate_text_item("RESUME");
         job_ready_btn.classList.toggle("btn-dark");
         job_ready_btn.classList.toggle("btn-light");
     }
+});
+
+job_simulate_btn.addEventListener("click", function () {
+
+    if (job_simulate_btn.innerText === translate_text_item("SIMULATE")) {
+
+        job_simulate_btn.innerHTML = translate_text_item("HOLD TO PAUSE");
+        job_simulate_btn.classList.toggle("active");
+        job_ready_btn.classList.toggle("btn-dark");
+
+        job_cancel_btn.classList.toggle("hidden_element");
+
+        job_ready_btn.classList.toggle("hidden_element");
+
+        monitor_area_div.classList.toggle("focused");
+
+    } else if (job_simulate_btn.innerText === translate_text_item("HOLD TO PAUSE")) {
+        job_simulate_btn.innerHTML = translate_text_item("SIMULATE");
+        job_simulate_btn.classList.toggle("active");
+        job_ready_btn.classList.toggle("btn-dark");
+
+        job_cancel_btn.classList.toggle("hidden_element");
+
+        job_ready_btn.classList.toggle("hidden_element");
+
+        monitor_area_div.classList.toggle("focused");
+    }
+
+
 });
