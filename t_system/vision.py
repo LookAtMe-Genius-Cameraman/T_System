@@ -513,9 +513,7 @@ class Vision:
             return True
         elif (key == ord("q") or stop_thread()) and not self.augmented:
             cv2.destroyAllWindows()
-            self.release_camera()
-            self.release_servos()
-            self.release_hearer()
+            self.release_members()
             return True
 
     def __detect_with_hog_or_cnn(self, frame):
@@ -776,23 +774,37 @@ class Vision:
         """
         self.camera.stop_preview()
 
-    def release_servos(self):
+    def stop_recording(self):
+        """Method to stop recording video and audio stream.
+        """
+        if self.record:
+            self.recorder.stop()
+
+    def __release_servos(self):
         """Method to stop sending signals to servo motors pins and clean up the gpio pins.
         """
 
         self.target_locker.stop()
         self.target_locker.gpio_cleanup()
 
-    def release_camera(self):
+    def __release_camera(self):
         """Method to stop receiving signals from the camera and stop video recording.
         """
 
         # self.camera.release()
-        if self.record:
-            self.camera.stop_recording()
+        pass
 
-    def release_hearer(self):
+    def __release_hearer(self):
         """Method to stop sending signals to servo motors pins and clean up the gpio pins.
         """
 
         self.hearer.release_members()
+
+    def release_members(self):
+        """Method to close all streaming and terminate vision processes.
+        """
+
+        self.stop_recording()
+        self.__release_hearer()
+        self.__release_camera()
+        self.__release_servos()

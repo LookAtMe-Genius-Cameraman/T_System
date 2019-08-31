@@ -63,10 +63,7 @@ def start(args):
 
     except KeyboardInterrupt:
         logger.debug("Vision systems has been released!")
-        t_system.seer.stop_recording()
-        t_system.seer.release_camera()
-        t_system.seer.release_servos()
-        t_system.seer.release_hearer()
+        t_system.seer.release_members()
 
 
 def start_sub(args):
