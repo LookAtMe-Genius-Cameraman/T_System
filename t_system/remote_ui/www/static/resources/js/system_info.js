@@ -23,7 +23,17 @@ const remote_ui_version_p = document.getElementById('remote_ui_version_p');
 const t_system_version_p = document.getElementById('t_system_version_p');
 
 
+function toggle_elements_if_necessary(elements, class_names, way) {
+    for (let i = 0; i < elements.length; i++) {
+        if (elements[i].classList.contains(class_names[i]) === way[i]) {
+            elements[i].classList.toggle(class_names[i]);
+        }
+    }
+}
+
+let already_dark = false;
 let system_info_btn_click_count = 0;
+
 system_info_btn.addEventListener("click", function () {
     system_info_btn_click_count++;
 
@@ -31,12 +41,15 @@ system_info_btn.addEventListener("click", function () {
         set_system_info();
 
         system_info_template_container.classList.toggle("focused");
-        dark_deep_background_div.classList.toggle("focused");
 
-        settings_template_container.classList.toggle("hidden_element");
-        controlling_template_container.classList.toggle("hidden_element");
-        on_work_template_container.classList.toggle("hidden_element");
 
+        if (dark_deep_background_div.classList.contains("focused") === false) {
+            dark_deep_background_div.classList.toggle("focused");
+        } else {
+            already_dark = true
+        }
+
+        toggle_elements_if_necessary([settings_template_container, controlling_template_container, prepare_template_container, job_template_container], ["hidden_element", "hidden_element", "hidden_element", "hidden_element"], [false, false, false, false]);
 
         show_element(system_info_chart_div);
         show_element(versions_div);
@@ -44,15 +57,22 @@ system_info_btn.addEventListener("click", function () {
 
     } else {
         system_info_template_container.classList.toggle("focused");
-        dark_deep_background_div.classList.toggle("focused");
+        settings_template_container.classList.toggle("hidden_element");
+        controlling_template_container.classList.toggle("hidden_element");
+        prepare_template_container.classList.toggle("hidden_element");
+        job_template_container.classList.toggle("hidden_element");
+
+
+        if (already_dark === false) {
+            dark_deep_background_div.classList.toggle("focused");
+
+        } else {
+            already_dark = false
+        }
 
         hide_element(system_info_chart_div);
         hide_element(versions_div);
         hide_element(disk_usage_div);
-
-        settings_template_container.classList.toggle("hidden_element");
-        controlling_template_container.classList.toggle("hidden_element");
-        on_work_template_container.classList.toggle("hidden_element");
 
         system_info_btn_click_count = 0;
     }
@@ -87,8 +107,8 @@ function set_system_info() {
                 let stand_version = requested_data["data"]["versions"]["stand"];
                 let remote_ui_version = requested_data["data"]["versions"]["remote_ui"];
 
-                d_u_title.innerHTML =  translate_text_item("Available:");
-                d_u_as_giga_min.innerHTML = free_disk_space + " GB ~ " + free_disk_space * 1024 / 2.4  + translate_text_item("min");  // 1 min record spends 2.4 mb.
+                d_u_title.innerHTML = translate_text_item("Available:");
+                d_u_as_giga_min.innerHTML = free_disk_space + " GB ~ " + free_disk_space * 1024 / 2.4 + translate_text_item("min");  // 1 min record spends 2.4 mb.
 
                 if (ram_usage_percentage === null) {
                     new Chart(system_info_chart, {
