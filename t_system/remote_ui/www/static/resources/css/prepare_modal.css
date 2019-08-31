@@ -7,123 +7,8 @@
     z-index: 200 !important;
 }
 
-#on_work_job_btn {
-    top: 90%;
-    left: 50%;
-    transform: translate(-50%);
-
-    transition: all 300ms;
-}
-
-#on_work_job_btn.ready {
-    top: 5% !important;
-}
-
-#on_work_cancel_btn {
-    visibility: hidden;
-    opacity: 0;
-    top: 5%;
-    left: 50%;
-    transform: translate(-50%);
-
-    transition: all 10ms;
-}
-
-#on_work_cancel_btn.active {
-    visibility: visible !important;
-    opacity: 1 !important;
-    top: 90% !important;
-    transition: all 300ms !important;
-}
-
-#on_work_cancel_btn.pause_job {
-    left: 65% !important;
-    transform: translate(0) !important;
-    transition: all 300ms !important;
-}
-
-#monitor_area_div {
-    visibility: hidden;
-    opacity: 0;
-
-    max-width: 720px;
-    max-height: 640px;
-
-    /*alignment*/
-    top: 60%;
-    left: 50%;
-    transform: translate(-50%);
-
-    width: 44%;
-    height: 20%;
-
-    background-color: #fff;
-    border-radius: 10px;
-    border: #8d75a3 solid;
-
-    transition: all 500ms;
-}
-
-
-#monitor_area_div.focused {
-    visibility: visible !important;
-    opacity:1 !important;
-
-    height: 20% !important;
-    width: 85% !important;
-
-}
-
-#monitor_job_span {
-    visibility: visible;
-    max-width: 100%;
-    max-height: 50%;
-
-    width: 180px;
-    height: 20px;
-
-    top: 40%;
-    left: 50%;
-    z-index: 150;
-    opacity: 1;
-    font-size: 90%;
-
-    transform: translate(-50%);
-    /*border: black dotted;*/
-}
-
-#monitor_stream_area_img {
-
-    max-width: 100%;
-    max-height: 100%;
-
-    margin: 0 auto;
-    display: block;
-
-    /*alignment*/
-    position: relative;
-    /*top: 2rem;*/
-    vertical-align: middle;
-
-    /*width: 32rem;*/
-    height: 75px;
-    /*border: red solid;*/
-    transition: all 300ms;
-    background-color: #fff;
-    box-shadow: 0 20px 40px 0 rgba(0, 0, 0, 0.5), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-
-}
-
-#monitor_stream_area_img.focused {
-    z-index: 200;
-
-    width: 100%;
-    height: 100%;
-
-    object-fit: contain;
-}
-
 #main_specify_div {
+    top: 25%;
     left: 50%;
     transform: translate(-50%);
 }
@@ -133,7 +18,7 @@
     width: 170px;
 }
 
-#specify_parameters_div {
+#specify_param_div {
 
     border: #20c997 solid;
     width: 170px;
