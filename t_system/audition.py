@@ -19,7 +19,7 @@ from t_system import dot_t_system_dir
 
 
 class Hearer:
-    """Class to define an audition of tracking system..
+    """Class to define an audition of tracking system.
 
     This class provides necessary initiations and functions named :func:`t_system.audition.Audition.__listen_async`
     as the loop for asynchronous collecting audio data to the vision ability, named :func:`t_system.audition.Audition.listen_sync`
@@ -84,7 +84,7 @@ class Hearer:
             if stop():
                 self.__stop_stream()
                 break
-            data = self.stream.read(self.chunk)
+            data = self.stream.read(self.chunk, exception_on_overflow=False)
             self.frames.append(data)
 
     def listen_sync(self):
@@ -117,7 +117,7 @@ class Hearer:
     def __stop_stream(self):
         """Method to provide stop the audio stream.
         """
-        self.stream.__stop_stream()  # "Pause the Stream"
+        self.stream.stop_stream()  # "Pause the Stream"
 
     def release_members(self):
         """Method to provide close the audio stream and terminate the PyAudio object.
