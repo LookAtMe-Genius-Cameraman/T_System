@@ -66,7 +66,7 @@ body {
 
 #control_btn {}
 
-#on_work_btn {}
+#prepare_btn {}
 
 .swiper-container {
     max-width: 90%;
@@ -110,7 +110,7 @@ body {
     z-index: 61;
 }
 
-#on_work_template_container {
+#prepare_template_container {
 
     visibility: visible;
     opacity: 1;
@@ -118,6 +118,36 @@ body {
     margin: auto;
     transition: opacity 300ms;
     border: #8d75a3 dashed;
+}
+
+#job_template_container {
+    visibility: visible;
+    opacity: 1;
+
+    max-width: 500px;
+    max-height: 580px;
+
+    /*alignment*/
+    top: 25%;
+    left: 70%;
+
+    width: 55px; /*goes to 85%*/
+    height: 45px; /* goes to 68%*/
+
+    transition: opacity 300ms;
+    /*border: #3c763d solid;*/
+
+    margin: auto;
+    z-index: 62;
+}
+
+#job_template_container.focused {
+    top: 5% !important;
+    left: 50% !important;
+    transform: translate(-50%) !important;
+
+    width: 85% !important;
+    height: 85% !important;
 }
 
 #system_info_template_container {
@@ -167,6 +197,8 @@ body {
 
 #dark_deep_background_div.focused {
         opacity: 1 !important;
+        pointer-events: all !important;
+
 }
 
 
