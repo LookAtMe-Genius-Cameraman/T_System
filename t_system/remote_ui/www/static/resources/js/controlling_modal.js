@@ -303,6 +303,7 @@ record_pos_sce_btn.addEventListener("click", function () {
         show_element(sidebar_toggle_btn);
         record_pos_sce_btn_click_count = 0
     }
+    dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
     record_pos_sce_div.classList.toggle("focused");
 });
