@@ -64,7 +64,12 @@ function toggle_job_modal() {
     job_div.classList.toggle("focused");
     job_btn.classList.toggle("clicked");
 
-    dark_deep_background_div.classList.toggle("focused");
+    if(dark_overlay_active) {
+
+    } else {
+        dark_deep_background_div.classList.toggle("focused");
+        dark_overlay_active = false
+    }
 
     settings_template_container.classList.toggle("hidden_element");
     controlling_template_container.classList.toggle("hidden_element");

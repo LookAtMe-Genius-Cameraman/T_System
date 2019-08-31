@@ -31,7 +31,6 @@ function toggle_elements_if_necessary(elements, class_names, way) {
     }
 }
 
-let already_dark = false;
 let system_info_btn_click_count = 0;
 
 system_info_btn.addEventListener("click", function () {
@@ -46,7 +45,7 @@ system_info_btn.addEventListener("click", function () {
         if (dark_deep_background_div.classList.contains("focused") === false) {
             dark_deep_background_div.classList.toggle("focused");
         } else {
-            already_dark = true
+            dark_overlay_active = true
         }
 
         toggle_elements_if_necessary([settings_template_container, controlling_template_container, prepare_template_container, job_template_container], ["hidden_element", "hidden_element", "hidden_element", "hidden_element"], [false, false, false, false]);
@@ -63,11 +62,11 @@ system_info_btn.addEventListener("click", function () {
         job_template_container.classList.toggle("hidden_element");
 
 
-        if (already_dark === false) {
+        if (dark_overlay_active === false) {
             dark_deep_background_div.classList.toggle("focused");
 
         } else {
-            already_dark = false
+            dark_overlay_active = false
         }
 
         hide_element(system_info_chart_div);

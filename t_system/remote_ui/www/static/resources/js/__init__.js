@@ -7,12 +7,13 @@
  */
 
 let admin_id = false;
-let timer;
 
 let requested_data = null;
 let response_data = null;
 
 let interval = 0;
+
+let dark_overlay_active = false;
 
 let current_arm_position = {
     "cartesian_coords": [30, 25, 42],
