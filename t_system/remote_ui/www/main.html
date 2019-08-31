@@ -5,7 +5,7 @@
     <title>T_System</title>
     <link rel="stylesheet" href="static/vendors/bootstrap/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="static/vendors/chart.js/css/Chart.min.css">
-    <link rel="stylesheet" href="static/vendors/swiper/swiper.min.css">
+    <link rel="stylesheet" href="static/vendors/swiper/css/swiper.min.css">
     <link rel="stylesheet" media="all" type="text/css" href="static/resources/css/master.css">
     <script>
         let event_db = null;
@@ -25,7 +25,7 @@
         <div id="page_control_div" class="btn-group justify-content-center">
             <button id="settings_btn" class="btn btn-dark" translate>Settings</button>
             <button id="control_btn" class="btn btn-dark" translate>Control</button>
-            <button id="on_work_btn" class="btn btn-dark" translate>Let's Begin</button>
+            <button id="prepare_btn" class="btn btn-dark" translate>Prepare</button>
         </div>
     </div>
 
@@ -92,8 +92,8 @@
                         </div>
                     </div>
                 </div>
-            </div><!--        ======================================================SETTINGS MODAL======================================================        -->
-
+            </div>
+            <!--        ======================================================SETTINGS MODAL======================================================        -->
             <!--        ======================================================CONTROLLING MODAL======================================================        -->
             <div id="controlling_template_container" class="swiper-slide">
 
@@ -156,15 +156,10 @@
                         </div>
                     </div>
                 </div>
-            </div><!--        ======================================================CONTROLLING MODAL======================================================        -->
-
-            <!--        ======================================================ON WORK MODAL======================================================        -->
-            <div id="on_work_template_container" class="swiper-slide">
-                <!--<br><br>-->
-                <div id="monitor_area_div" class="position-relative">
-                    <span id="monitor_job_span" class="position-absolute" translate>Click to monitoring job</span>
-                    <img id="monitor_stream_area_img" class="position-relative" src="" alt="">
-                </div>
+            </div>
+            <!--        ======================================================CONTROLLING MODAL======================================================        -->
+            <!--        ======================================================PREPARE MODAL======================================================        -->
+            <div id="prepare_template_container" class="swiper-slide">
                 <div id="main_specify_div" class="position-absolute d-flex justify-content-center">
                     <div id="specify_sce_div" class="pl-1 mr-1">
                         <span id="specify_sce_span" translate>Specify Scenarios</span>
@@ -172,8 +167,8 @@
                             <ul class="network_list" id="available_sce_ul"></ul>
                         </div>
                     </div>
-                    <div id="specify_parameters_div" class="pl-1 ml-1">
-                        <span id="specify_parameters_span" translate>Specify Parameters</span>
+                    <div id="specify_param_div" class="pl-1 ml-1">
+                        <span id="specify_param_span" translate>Specify Parameters</span>
                         <div id="select_param_cb_div">
                             <div class="form-check mt-1">
                                 <input id="ai_select_checkbox" class="form-check-input" type="checkbox" value="">
@@ -194,12 +189,35 @@
                         </div>
                     </div>
                 </div>
-                <button id="on_work_job_btn" class="position-absolute btn btn-warning" translate>READY</button>
-                <button id="on_work_cancel_btn" class="position-absolute btn btn-warning" translate>CANCEL</button>
-            </div><!--        ======================================================ON WORK MODAL======================================================        -->
+            </div>
+            <!--        ======================================================PREPARE MODAL======================================================        -->
         </div>
     </div>
 </div>
+
+<!--        ======================================================JOB MODAL======================================================        -->
+<div id="job_template_container" class="position-absolute">
+    <button id="job_btn" class="position-relative btn btn-dark" translate>job</button>
+    <div id="job_div" class="position-relative">
+        <div id="monitor_area_div" class="position-relative">
+            <span id="monitor_job_span" class="position-absolute" translate>Click to monitoring job</span>
+            <img id="monitor_stream_area_img" class="position-relative" src="" alt="">
+        </div>
+        <div id="main_selected_div" class="position-absolute d-flex justify-content-center">
+            <div id="selected_sce_div" class="pl-1 mr-1">
+                <span id="selected_sce_span" translate>Scenarios</span>
+                <ul class="network_list" id="selected_sce_ul"></ul>
+            </div>
+            <div id="selected_param_div" class="pl-1 ml-1">
+                <span id="selected_param_span" translate>Parameters</span>
+                <ul class="network_list" id="selected_param_ul"></ul>
+            </div>
+        </div>
+        <button id="job_ready_btn" class="position-absolute btn btn-warning" translate>READY</button>
+        <button id="job_cancel_btn" class="position-absolute btn btn-warning" translate>CANCEL</button>
+    </div>
+</div>
+<!--        ======================================================JOB MODAL======================================================        -->
 
 <!--        ======================================================SYSTEM INFO MODAL======================================================        -->
 <div id="system_info_template_container" class="position-absolute">
@@ -222,7 +240,7 @@
 <div id="dark_deep_background_div" class="position-fixed"></div>
 
 <!-- inserting these scripts at the end to be able to use all the elements in the DOM -->
-<script src="static/vendors/swiper/swiper.min.js"></script>
+<script src="static/vendors/swiper/js/swiper.min.js"></script>
 <script src="static/vendors/chart.js/js/Chart.min.js"></script>
 <script src="static/vendors/sweetalert.min.js"></script>
 <script src="static/vendors/jquery/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -243,11 +261,12 @@
 <script src="static/resources/js/translate.js"></script>
 <script src="static/resources/js/localstorage.js"></script>
 <script src="static/resources/js/managing_bar.js"></script>
-<script src="static/resources/js/on_work_modal.js"></script>4
+<script src="static/resources/js/prepare_modal.js"></script>4
 <script src="static/resources/js/controlling_modal.js"></script>
 <script src="static/resources/js/prismatic_arm_control.js"></script>
 <script src="static/resources/js/rotational_arm_control.js"></script>
 <script src="static/resources/js/settings_modal.js"></script>
+<script src="static/resources/js/job_modal.js"></script>
 <script src="static/resources/js/system_info.js"></script>
 
 <script src="static/resources/js/main.js"></script>
