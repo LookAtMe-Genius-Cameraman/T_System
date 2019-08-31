@@ -79,6 +79,7 @@ class MissionManager:
             type (str):                     Type of the mission. Either `position` or `scenario`.
             root (bool):                    Root privileges flag.
         """
+        result = False
 
         if root:
             positions = self.predicted_positions
@@ -91,13 +92,17 @@ class MissionManager:
             for position in positions:
                 if position.name == mission:
                     self.actor.act(position)
+                    result = True
                     break
 
         elif type == "scenario":
             for scenario in scenarios:
                 if scenario.name == mission:
                     self.actor.act([scenario])
+                    result = True
                     break
+
+        return result
 
 
 class EmotionManager:
