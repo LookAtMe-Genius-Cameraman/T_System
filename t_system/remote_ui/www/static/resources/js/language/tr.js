@@ -50,6 +50,8 @@ const turkishtrans = {
     "PAUSE": "DURAKLAT",
     "STOP": "BITIR",
     "RESUME": "DEVAM ET",
+    "SIMULATE": "SİMÜLE ET",
+    "HOLD TO PAUSE": "DURAKLAMA İÇİN BASILI TUT",
     "System Info": "Sistem bilgisi",
     "Available:": "Kullanılabilir:",
     "min": "dk",
