@@ -5,7 +5,7 @@ const turkishtrans = {
     "T_System": "T_System",
     "Settings": "Ayarlar",
     "Control": "Kontrol",
-    "Let's Begin": "Çekime Başla",
+    "Prepare": "Hazırla",
     "Updates": "Güncellemeler",
     "Auto Update": "Otomatik Güncelleme",
     "Up To Date": "Güncelle",
@@ -37,6 +37,8 @@ const turkishtrans = {
     "Click to monitoring job": "İşi izlemek için tıkla",
     "Specify Scenarios": "Senaryoları Belirle",
     "Specify Parameters": "Parametreleri Belirle",
+    "Scenarios": "Senaryolar",
+    "Parameters": "Parametreler",
     "AI": "YZ",
     "Security Mode": "Güvenlik Modu",
     "Target is not-moving": "Hedef hareket etmiyor",
@@ -50,5 +52,6 @@ const turkishtrans = {
     "RESUME": "DEVAM ET",
     "System Info": "Sistem bilgisi",
     "Available:": "Kullanılabilir:",
-    "min": "dk"
+    "min": "dk",
+    "job": "iş"
 };
