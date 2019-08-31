@@ -76,6 +76,8 @@ class StreamManager:
         while seer.get_current_frame() is None:
             pass
 
+        time.sleep(0.05)
+
         while True:
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + open(f'{dot_t_system_dir}/online_stream.jpeg', 'rb').read() + b'\r\n')
@@ -84,4 +86,4 @@ class StreamManager:
                 logger.debug("Frame yielding process stopping...")  # this block is never triggered, but looks like no problem. Why?
                 break
 
-            time.sleep(0.041)  # 1/24. for becoming the strem 24 fps.
+            time.sleep(0.066)  # 1/15. for becoming the stream 15 fps.
