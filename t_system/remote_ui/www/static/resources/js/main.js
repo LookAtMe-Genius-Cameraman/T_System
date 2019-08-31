@@ -13,14 +13,14 @@ const jquery_manager = JQueryManager;
 /** @type {!Element} */
 const control_btn = document.getElementById("control_btn");
 const settings_btn = document.getElementById("settings_btn");
-const on_work_btn = document.getElementById("on_work_btn");
+const prepare_btn = document.getElementById("prepare_btn");
 
 
 /** @type {!Element} */
 // const swiper = document.querySelector(".swiper-container");
 const controlling_template_container = document.getElementById("controlling_template_container");
 const settings_template_container = document.getElementById("settings_template_container");
-const on_work_template_container = document.getElementById("on_work_template_container");
+const prepare_template_container = document.getElementById("prepare_template_container");
 
 
 /**
@@ -104,7 +104,7 @@ $(document).ready(function () {
         },
     });
 
-    on_work_btn.click()
+    control_btn.click()
 
 });
 
@@ -119,6 +119,6 @@ control_btn.addEventListener("click", function () {
 });
 
 
-on_work_btn.addEventListener("click", function () {
+prepare_btn.addEventListener("click", function () {
     swiper.slideTo(2)
 });
