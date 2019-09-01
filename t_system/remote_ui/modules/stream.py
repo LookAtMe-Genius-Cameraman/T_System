@@ -11,6 +11,7 @@
 
 import threading
 import time  # Time access and conversions
+import numpy as np
 
 from t_system import seer
 from t_system import dot_t_system_dir
@@ -33,7 +34,7 @@ class StreamManager:
         """
 
         self.stop_thread = False
-        self.stream_thread = None
+        self.watch_thread = threading.Thread(target=seer.watch, args=(lambda: self.stop_thread, "bgr", "initial"))
 
     def start_stream(self, admin_id, stream_type):
         """Method to start video streaming.
@@ -42,11 +43,10 @@ class StreamManager:
             admin_id (str):                 Root privileges flag.
             stream_type (str):               Stream's purpose. Preview, track-learn mode etc.
         """
+        if not seer.is_watching:
+            self.watch_thread = threading.Thread(target=seer.watch, args=(lambda: self.stop_thread, "bgr", stream_type))
+            self.watch_thread.start()
 
-        self.stream_thread = threading.Thread(target=seer.stream, args=(lambda: self.stop_thread, "bgr", stream_type))
-
-        logger.debug("video stream starting...")
-        self.stream_thread.start()
         return self.get_stream, "multipart/x-mixed-replace; boundary=frame"
 
     def stop_stream(self, admin_id, stream_type):
@@ -58,13 +58,16 @@ class StreamManager:
         """
         result = False
 
-        logger.debug(f'Video stream stopping for {stream_type}. And preview thread is alive {self.stream_thread.is_alive()}')
-        if stream_type == "preview" and self.stream_thread.is_alive():
-            self.stop_thread = True
-            self.stream_thread.join()
-            self.stop_thread = False
+        logger.debug(f'Video stream stopping for {stream_type}. And preview thread is alive {self.watch_thread.is_alive()}')
+
+        self.stop_thread = True
+
+        if self.watch_thread.is_alive():
+            self.watch_thread.join()
             logger.debug("Stream stopped")
             result = True
+
+        self.stop_thread = False
 
         return result
 
@@ -73,17 +76,12 @@ class StreamManager:
         """
         logger.debug("frame sending processes starting")
 
-        while seer.get_current_frame() is None:
-            pass
-
-        time.sleep(0.05)
-
         while True:
+            seer.serve_frame_online()
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + open(f'{dot_t_system_dir}/online_stream.jpeg', 'rb').read() + b'\r\n')
-
             if self.stop_thread:
                 logger.debug("Frame yielding process stopping...")  # this block is never triggered, but looks like no problem. Why?
                 break
 
-            time.sleep(0.066)  # 1/15. for becoming the stream 15 fps.
+            # time.sleep(0.066)  # 1/15. for becoming the stream 15 fps.
