@@ -434,36 +434,6 @@ class Vision:
                     break
         return rgb, detected_boxes
 
-    def security(self, stop_thread,  format="bgr"):
-        """The top-level method to provide the security via scanning and taking photos.
-
-         Args:
-                stop_thread:       	    Stop flag of the tread about terminating it outside of the function's loop.
-                format:       	        Color space format.
-        """
-        import threading
-
-        global thread_of_scan
-        global thread_of_stream
-        is_first_run = True
-
-        while True:
-            if is_first_run or stop_thread():
-                if not stop_thread():
-                    thread_of_scan = threading.Thread(target=self.scan, args=(stop_thread, 3))
-                    thread_of_stream = threading.Thread(target=self.watch, args=(stop_thread, format, "security"))
-
-                    thread_of_scan.start()
-                    thread_of_stream.start()
-                else:
-                    logger.info("thread killed")
-
-                    thread_of_scan.join()
-                    thread_of_stream.join()
-                    break
-                is_first_run = False
-            time.sleep(0.5)  # for relieve the cpu.
-
     def scan(self, stop_thread, resolution=3):
         """Method to provide the scanning around for security mode of T_System.
 
