@@ -44,7 +44,7 @@ def start(args):
         elif args["interface"] == "augmented":
             from t_system.augmented import Augmenter
 
-            t_system.augmenter = Augmenter(t_system.seer)
+            t_system.augmenter = Augmenter()
             t_system.augmenter.run(lambda: False)
 
         elif args["interface"] == "remote_ui":
@@ -55,11 +55,11 @@ def start(args):
 
         else:
             if args["learn"]:
-                t_system.seer.learn(lambda: False)
+                t_system.seer.watch_and("learn")
             elif args["security"]:
-                t_system.seer.security(lambda: False)
+                t_system.seer.watch_and("secure")
             else:
-                t_system.seer.detect_track(lambda: False)
+                t_system.seer.watch_and("track")
 
     except KeyboardInterrupt:
         logger.debug("Vision systems has been released!")
