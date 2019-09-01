@@ -15,6 +15,8 @@ import threading
 from t_system.augmented.mqtt import MqttReceimitter
 from t_system.augmented.online_stream import start_stream
 
+from t_system import seer
+
 
 class Augmenter:
     """Class to define a take orders ability from remote user of tracking system..
@@ -25,19 +27,15 @@ class Augmenter:
 
         """
 
-    def __init__(self, vision):
+    def __init__(self):
         """Initialization method of :class:`t_system.augmented.Augmenter` class.
-
-        Args:
-                vision:       	        Vision object from t_system.vision.Vision Class.
         """
         self.mqtt_receimitter = MqttReceimitter('10.42.0.151')
 
         mqtt_proc = threading.Thread(target=self.mqtt_receimitter.subscribe, args=('Augmented/T_System',))
         mqtt_proc.start()
 
-        self.vision = vision
-        self.vision.__set_mqtt_receimitter(self.mqtt_receimitter)
+        seer.__set_mqtt_receimitter(self.mqtt_receimitter)
 
     def run(self, stop_main_thread):
         """The top-level method to checking incoming message to augmented mode.
@@ -76,18 +74,22 @@ class Augmenter:
                         working_mode_threads.clear()
                         stop_thread = False
 
+                        watch_thread = threading.Thread(target=seer.watch, args=(lambda: stop_thread, "bgr", msg['reason']))
+                        working_mode_threads.append(watch_thread)
+                        watch_thread.start()
+
                         if msg['reason'] == 'track':
-                            thread = threading.Thread(target=self.vision.detect_track, args=(lambda: stop_thread,))
-                            working_mode_threads.append(thread)
-                            thread.start()
+                            track_thread = threading.Thread(target=seer.detect_track, args=(lambda: stop_thread,))
+                            working_mode_threads.append(track_thread)
+                            track_thread.start()
                         elif msg['reason'] == 'security':
-                            thread = threading.Thread(target=self.vision.security, args=(lambda: stop_thread,))
-                            working_mode_threads.append(thread)
-                            thread.start()
+                            secure_thread = threading.Thread(target=seer.scan, args=(lambda: stop_thread, 3))
+                            working_mode_threads.append(secure_thread)
+                            secure_thread.start()
                         elif msg['reason'] == 'learn':
-                            thread = threading.Thread(target=self.vision.learn, args=(lambda: stop_thread,))
-                            working_mode_threads.append(thread)
-                            thread.start()
+                            learn_thread = threading.Thread(target=seer.learn, args=(lambda: stop_thread,))
+                            working_mode_threads.append(learn_thread)
+                            learn_thread.start()
                         elif msg['reason'] == 'shutdown':
                             # Here is for shutdown the system.
                             pass
@@ -103,9 +105,9 @@ class Augmenter:
                 elif msg['for'] == 'change_target':
                     if not msg['reason'] == current_target:
                         if msg['reason'] == ('cat' or 'cats'):
-                            self.vision.change_tracked_thing("frontalcatface_extended")
+                            seer.change_tracked_thing("frontalcatface_extended")
                         elif msg['reason'] == ('clock' or 'wall clock'):
-                            self.vision.change_tracked_thing("wallclock")
+                            seer.change_tracked_thing("wallclock")
 
                         current_target = msg['reason']
                         msg_order_report['status'] = True
@@ -119,9 +121,9 @@ class Augmenter:
                 elif msg['for'] == 'live_stream':
                     if not msg['reason'] == current_stream_state:
                         if msg['reason'] == 'start':
-                            thread = threading.Thread(target=start_stream, args=(lambda: stop_thread, self.vision.camera))
-                            working_live_stream_threads.append(thread)
-                            thread.start()
+                            track_thread = threading.Thread(target=start_stream, args=(lambda: stop_thread, seer.camera))
+                            working_live_stream_threads.append(track_thread)
+                            track_thread.start()
                         if msg['reason'] == 'stop':
                             stop_thread = True
                             for worker in working_live_stream_threads:  # For checking the existing thread.
