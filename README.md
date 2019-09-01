@@ -280,7 +280,7 @@ Portable usage interface v0.3.1
 
 #### Remote UI
 
-The remotely controlling interface v0.5.0
+The remotely controlling interface v0.5.2
 
 - Properties
     -             
