@@ -238,7 +238,7 @@ others:
   --version             Display the version number of T_System.
 ```
 
-<sup>Detailed usage available inside [`USAGE.md`](https://raw.githubusercontent.com/Connected-life/T_System/master/USAGE.md)</sup>
+<sup>Detailed usage available inside [`USAGE.md`](https://github.com/connected-life/T_System/blob/master/USAGE.md)</sup>
 
 <br>
 
@@ -276,7 +276,7 @@ Portable usage interface v0.3.1
         -
             No control by tapping. Accessing with Remote UI from mobile or desktop.
 
-<sup><i>To see the old version explaining go [here](https://raw.githubusercontent.com/Connected-life/T_System/master/docs/stand/README.md)</i></sup>
+<sup><i>To see the old version explaining go [here](https://github.com/Connected-life/T_System/blob/master/docs/stand/README.md)</i></sup>
 
 #### Remote UI
 
