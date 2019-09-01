@@ -10,14 +10,15 @@
 """
 
 import time  # Time access and conversions
+import cv2
+import face_recognition
+import pickle
+import numpy as np
+import threading
 
 from math import sqrt
 from picamera import PiCamera
 from picamera.array import PiRGBArray
-
-import cv2
-import face_recognition
-import pickle
 
 from t_system.motion.locking_system import LockingSystem
 from t_system.motion import calc_ellipsoidal_angle
@@ -111,10 +112,69 @@ class Vision:
 
         self.mqtt_receimitter = None
         
-        self.current_frame = None
+        self.current_frame = np.zeros(shape=(self.frame_height, self.frame_width))
+
+        self.stop_thread = False
+        self.active_threads = []
+
+        self.is_watching = False
 
         # Allow the camera to warm up
         time.sleep(0.1)
+
+    def watch(self, stop_thread, format="bgr", caller="security"):
+        """The top-level method to provide the video stream for security mode of T_System.
+
+        Args:
+                stop_thread:   	        Stop flag of the tread about terminating it outside of the function's loop.
+                format (str):  	        Color space format.
+                caller (str): 	        The method that calls the stream.
+        """
+
+        self.is_watching = True
+
+        if self.record:
+            self.recorder.start(caller)
+
+        logger.debug("stream starting with capture_continuous")
+
+        for frame in self.camera.capture_continuous(self.raw_capture, format=format, use_video_port=True):
+
+            self.current_frame = frame.array
+
+            self.__show_frame(self.current_frame)
+            self.__truncate_stream()
+
+            if self.__check_loop_ended(stop_thread):
+                break
+
+        self.is_watching = False
+
+    def watch_and(self, task):
+        """Method to provide starting watching ability of the around of Vision and accordingly starting given task.
+
+        Args:
+                task:             	    Task for the seer. Either `learn`, `track` or `secure`.
+        """
+
+        watch_thread = threading.Thread(target=self.watch, args=(lambda: self.stop_thread, "bgr", task))
+        self.active_threads.append(watch_thread)
+        watch_thread.start()
+
+        if task == "learn":
+            learn_thread = threading.Thread(target=self.learn, args=(lambda: self.stop_thread,))
+            self.active_threads.append(learn_thread)
+            learn_thread.start()
+
+        elif task == "track":
+            track_thread = threading.Thread(target=self.detect_track, args=(lambda: self.stop_thread,))
+            track_thread.start()
+            self.active_threads.append(track_thread)
+
+        elif task == "secure":
+            secure_thread = threading.Thread(target=self.scan, args=(lambda: self.stop_thread, 3))
+            secure_thread.start()
+            self.active_threads.append(secure_thread)
 
     def __d_t_without_cv_ta(self, stop_thread, format='bgr'):
         """Method to provide detecting and tracking objects without using OpenCV's tracking API.
@@ -123,32 +183,28 @@ class Vision:
                 stop_thread:       	    Stop flag of the tread about terminating it outside of the function's loop.
                 format:       	        Color space format.
         """
-        if self.record:
-            self.recorder.start("track")
 
         self.__detect_initiate()
 
-        for frame in self.camera.capture_continuous(self.raw_capture, format=format, use_video_port=True):
+        last_frame = np.zeros(shape=(self.frame_height, self.frame_width))
 
-            # grab the raw NumPy array representing the image, then initialize the timestamp and occupied/unoccupied text
-            frame = frame.array
-            self.current_frame = frame.copy()  # For reaching with overwrite privileges.
+        while True:
+            if last_frame.any() != self.current_frame.any():
 
-            rgb, detected_boxes = self.detect_things(self.current_frame)
-            reworked_boxes = self.__relocate_detected_coords(detected_boxes)
+                last_frame = self.current_frame
 
-            if not self.no_recognize:
-                names = self.__recognize_things(rgb, detected_boxes)
-            else:
-                names = None
+                rgb, detected_boxes = self.detect_things(last_frame)
+                reworked_boxes = self.__relocate_detected_coords(detected_boxes)
 
-            self.track(self.current_frame, reworked_boxes, names)
+                if not self.no_recognize:
+                    names = self.__recognize_things(rgb, detected_boxes)
+                else:
+                    names = None
 
-            # time.__sleep(0.1)  # Allow the servos to complete the moving.
+                self.track(last_frame, reworked_boxes, names)
 
-            self.__show_frame(self.current_frame)
-            self.__truncate_stream()
-            # print("frame showed!")
+                self.__show_frame(last_frame)
+                # print("frame showed!")
             if self.__check_loop_ended(stop_thread):
                 break
 
@@ -159,8 +215,6 @@ class Vision:
                 stop_thread:       	    Stop flag of the tread about terminating it outside of the function's loop.
                 format:       	        Color space format.
         """
-        if self.record:
-            self.recorder.start("track")
 
         tracked_boxes = []  # this became array.  because of overriding.
         names = []
@@ -173,72 +227,73 @@ class Vision:
         d_t_failure_count = 0
         use_detection = 0
 
-        for frame in self.camera.capture_continuous(self.raw_capture, format=format, use_video_port=True):
+        last_frame = np.zeros(shape=(self.frame_height, self.frame_width))
 
-            if len(detected_boxes) > len(tracked_boxes):
+        while True:
+            if last_frame.any() != self.current_frame.any():
 
-                if not self.no_recognize:
-                    names = self.__recognize_things(rgb, detected_boxes)
+                last_frame = self.current_frame
+
+                if len(detected_boxes) > len(tracked_boxes):
+
+                    if not self.no_recognize:
+                        names = self.__recognize_things(rgb, detected_boxes)
+                    else:
+                        names = None
+
+                    last_frame = cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR)
+
+                    # Create MultiTracker object
+                    multi_tracker = cv2.MultiTracker_create()
+
+                    # Initialize MultiTracker
+                    for box in detected_boxes:
+                        # box[3] is x,
+                        # box[0] is y,
+                        # box[1] is x + w,
+                        # box[2] is y + h.
+                        reworked_box = box[3], box[0], box[1] - box[3], box[2] - box[0]
+
+                        multi_tracker.add(self.__create_tracker_by_name(), last_frame, reworked_box)
+                    found_count += 1
+
+                if use_detection >= 3:
+                    rgb, detected_boxes = self.detect_things(last_frame)
+                    use_detection = 0
+
+                use_detection += 1
+
+                # Start timer
+                timer = cv2.getTickCount()
+
+                # get updated location of objects in subsequent frames
+                is_tracking_success, tracked_boxes = multi_tracker.update(last_frame)
+
+                if not len(detected_boxes) >= len(tracked_boxes):
+                    d_t_failure_count += 1
                 else:
-                    names = None
+                    d_t_failure_count = 0
 
-                self.current_frame = cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR)
+                # Calculate Frames per second (FPS)
+                fps = cv2.getTickFrequency() / (cv2.getTickCount() - timer)
 
-                # Create MultiTracker object
-                multi_tracker = cv2.MultiTracker_create()
+                if is_tracking_success and d_t_failure_count < 5:
 
-                # Initialize MultiTracker
-                for box in detected_boxes:
-                    # box[3] is x,
-                    # box[0] is y,
-                    # box[1] is x + w,
-                    # box[2] is y + h.
-                    reworked_box = box[3], box[0], box[1] - box[3], box[2] - box[0]
+                    self.track(last_frame, tracked_boxes, names)
 
-                    multi_tracker.add(self.__create_tracker_by_name(), self.current_frame, reworked_box)
-                found_count += 1
+                elif not is_tracking_success or d_t_failure_count >= 5:
+                    # Tracking failure
+                    cv2.putText(last_frame, "Tracking failure detected", (100, 80), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
+                    tracked_boxes = []  # for clearing tracked_boxes list.
 
-            # grab the raw NumPy array representing the image, then initialize the timestamp and occupied/unoccupied text
-            frame = frame.array
-            self.current_frame = frame.copy()  # For reaching with overwrite privileges.
+                # # Display tracker type on frame
+                # cv2.putText(frame, self.tracker_type + " Tracker", (100, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50, 170, 50), 2)
+                #
+                # # Display FPS on frame
+                # cv2.putText(frame, "FPS : " + str(int(fps)), (100, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50, 170, 50), 2)
 
-            if use_detection >= 3:
-                rgb, detected_boxes = self.detect_things(self.current_frame)
-                use_detection = 0
-
-            use_detection += 1
-
-            # Start timer
-            timer = cv2.getTickCount()
-
-            # get updated location of objects in subsequent frames
-            is_tracking_success, tracked_boxes = multi_tracker.update(self.current_frame)
-
-            if not len(detected_boxes) >= len(tracked_boxes):
-                d_t_failure_count += 1
-            else:
-                d_t_failure_count = 0
-
-            # Calculate Frames per second (FPS)
-            fps = cv2.getTickFrequency() / (cv2.getTickCount() - timer)
-
-            if is_tracking_success and d_t_failure_count < 5:
-
-                self.track(self.current_frame, tracked_boxes, names)
-
-            elif not is_tracking_success or d_t_failure_count >= 5:
-                # Tracking failure
-                cv2.putText(self.current_frame, "Tracking failure detected", (100, 80), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
-                tracked_boxes = []  # for clearing tracked_boxes list.
-
-            # # Display tracker type on frame
-            # cv2.putText(frame, self.tracker_type + " Tracker", (100, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50, 170, 50), 2)
-            #
-            # # Display FPS on frame
-            # cv2.putText(frame, "FPS : " + str(int(fps)), (100, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50, 170, 50), 2)
-
-            self.__show_frame(self.current_frame)
-            self.__truncate_stream()
+                self.__show_frame(last_frame)
+                # self.__truncate_stream()
 
             if self.__check_loop_ended(stop_thread):
                 break
@@ -298,63 +353,55 @@ class Vision:
                 format:       	        Color space format.
         """
 
-        if self.record:
-            self.recorder.start("learn")
-
         self.__detect_initiate()
 
-        for frame in self.camera.capture_continuous(self.raw_capture, format=format, use_video_port=True):
-            # grab the raw NumPy array representing the image, then initialize the timestamp
-            # and occupied/unoccupied text
+        last_frame = np.zeros(shape=(self.frame_height, self.frame_width))
 
-            image = frame.array
-            self.current_frame = image.copy()  # For reaching with overwrite privileges.
-            # err_check_image = None
+        while True:
+            if last_frame.any() != self.current_frame.any():
 
-            rgb, detected_boxes = self.detect_things(self.current_frame)
-            # names = self.__recognize_things(rgb, detected_boxes)
-            reworked_boxes = self.__relocate_detected_coords(detected_boxes)
+                last_frame = self.current_frame
 
-            if not len(reworked_boxes) == 1:
-                # self.__show_frame(self.current_frame)
-                pass
-            else:
-                for (x, y, w, h) in reworked_boxes:
+                rgb, detected_boxes = self.detect_things(last_frame)
+                # names = self.__recognize_things(rgb, detected_boxes)
+                reworked_boxes = self.__relocate_detected_coords(detected_boxes)
 
-                    if (self.show_stream and self.augmented) or self.show_stream:
-                        self.mark_object(self.current_frame, x, y, w, h, 30, 50, (255, 0, 0), 2)
-                    obj_width = w
-                    # obj_area = w * h  # unit of obj_width is px ^ 2.
-
-                    self.target_locker.lock(x, y, w, h)
-
-                    # time.__sleep(0.2)  # allow the camera to capture after moving.
-
+                if not len(reworked_boxes) == 1:
                     # self.__show_frame(self.current_frame)
-                    self.__truncate_stream()
+                    pass
+                else:
+                    for (x, y, w, h) in reworked_boxes:
 
-                    self.camera.capture(self.raw_capture, format=format)
-                    err_check_image = self.raw_capture.array
+                        if (self.show_stream and self.augmented) or self.show_stream:
+                            self.mark_object(last_frame, x, y, w, h, 30, 50, (255, 0, 0), 2)
+                        obj_width = w
+                        # obj_area = w * h  # unit of obj_width is px ^ 2.
 
-                    rgb, detected_boxes = self.detect_things(err_check_image)
-                    # names = self.__recognize_things(rgb, detected_boxes)
-                    rb_after_move = self.__relocate_detected_coords(detected_boxes)
+                        self.target_locker.lock(x, y, w, h)
 
-                    if not len(rb_after_move) == 1:
-                        # self.__show_frame(err_check_image)
-                        pass
-                    else:
-                        for (ex, ey, ew, eh) in rb_after_move:  # e means error.
+                        # time.__sleep(0.2)  # allow the camera to capture after moving.
 
-                            if (self.show_stream and self.augmented) or self.show_stream:
-                                self.mark_object(self.current_frame, ex, ey, ew, eh, 30, 50, (255, 0, 0), 2)
+                        while True:
+                            if last_frame.any() != self.current_frame.any():
+                                last_frame = self.current_frame
 
-                            self.target_locker.check_error(ex, ey, ew, eh)
+                                rgb, detected_boxes = self.detect_things(last_frame)
+                                # names = self.__recognize_things(rgb, detected_boxes)
+                                rb_after_move = self.__relocate_detected_coords(detected_boxes)
 
-                            # self.__show_frame(self.current_frame)
+                                if not len(rb_after_move) == 1:
+                                    pass
+                                else:
+                                    for (ex, ey, ew, eh) in rb_after_move:  # e means error.
 
-            self.__show_frame(self.current_frame)
-            self.__truncate_stream()
+                                        if (self.show_stream and self.augmented) or self.show_stream:
+                                            self.mark_object(last_frame, ex, ey, ew, eh, 30, 50, (255, 0, 0), 2)
+
+                                        self.target_locker.check_error(ex, ey, ew, eh)
+                                break
+
+                self.__show_frame(last_frame)
+            # self.__truncate_stream()
             if self.__check_loop_ended(stop_thread):
                 break
 
@@ -367,26 +414,24 @@ class Vision:
         detected_boxes = []
         rgb = None
 
-        for frame in self.camera.capture_continuous(self.raw_capture, format=format, use_video_port=True):
+        last_frame = np.zeros(shape=(self.frame_height, self.frame_width))
+        while True:
+            if last_frame.any() != self.current_frame.any():
+                last_frame = self.current_frame
 
-            frame = frame.array
-            self.current_frame = frame.copy()  # For reaching to frame with overwrite privileges.
+                rgb, detected_boxes = self.detect_things(last_frame)
 
-            rgb, detected_boxes = self.detect_things(self.current_frame)
+                if not detected_boxes:
+                    gray = cv2.cvtColor(rgb, cv2.COLOR_BGR2GRAY)
+                    if (self.show_stream and self.augmented) or self.show_stream:
+                        cv2.putText(gray, "Scanning...", (int(self.frame_width - self.frame_width * 0.2), int(self.frame_height * 0.1)), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (200, 0, 0), 2)
 
-            if not detected_boxes:
-                gray = cv2.cvtColor(rgb, cv2.COLOR_BGR2GRAY)
-                if (self.show_stream and self.augmented) or self.show_stream:
-                    cv2.putText(gray, "Scanning...", (int(self.frame_width - self.frame_width * 0.2), int(self.frame_height * 0.1)), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (200, 0, 0), 2)
+                    self.__show_frame(gray)
 
-                self.__show_frame(gray)
-                self.__truncate_stream()
-
-                if self.__check_loop_ended(lambda: False):
+                    if self.__check_loop_ended(lambda: False):
+                        break
+                else:
                     break
-            else:
-                self.raw_capture.truncate(0)
-                break
         return rgb, detected_boxes
 
     def security(self, stop_thread,  format="bgr"):
@@ -406,7 +451,7 @@ class Vision:
             if is_first_run or stop_thread():
                 if not stop_thread():
                     thread_of_scan = threading.Thread(target=self.scan, args=(stop_thread, 3))
-                    thread_of_stream = threading.Thread(target=self.stream, args=(stop_thread, format, "security"))
+                    thread_of_stream = threading.Thread(target=self.watch, args=(stop_thread, format, "security"))
 
                     thread_of_scan.start()
                     thread_of_stream.start()
@@ -446,30 +491,11 @@ class Vision:
                 self.target_locker.tilt.move(angle_for_ellipse_move, 75.0)  # last parameter not used for both funcs
                 time.sleep(0.1)
 
-    def stream(self, stop_thread, format="bgr", caller="security"):
-        """The high(and low)-level method to provide the video stream for security mode of T_System.
-
-        Args:
-                stop_thread:   	        Stop flag of the tread about terminating it outside of the function's loop.
-                format (str):  	        Color space format.
-                caller (str): 	        The method that calls the stream.
+    def serve_frame_online(self):
+        """The top-level method to provide the serving video stream online for sending Flask framework based remote_ui.
         """
 
-        if self.record:
-            self.recorder.start(caller)
-
-        logger.debug("stream starting with capture_continuous")
-
-        for frame in self.camera.capture_continuous(self.raw_capture, format=format, use_video_port=True):
-
-            self.current_frame = frame.array
-            cv2.imwrite(f'{dot_t_system_dir}/online_stream.jpeg', self.current_frame)
-
-            self.__show_frame(self.current_frame)
-            self.__truncate_stream()
-
-            if self.__check_loop_ended(stop_thread):
-                break
+        cv2.imwrite(f'{dot_t_system_dir}/online_stream.jpeg', self.current_frame)
 
     def track_focused_point(self):
         """Method to provide the tracking predetermined non-moving target according to with locking_system's current position for track mode of T_System.
@@ -774,6 +800,16 @@ class Vision:
         """
         self.camera.stop_preview()
 
+    def __release_threads(self):
+        """Method to terminate active threads of vision.
+        """
+        for thread in self.active_threads:
+            if thread.is_alive():
+                self.stop_thread = True
+                thread.join()
+
+        self.stop_thread = False
+
     def stop_recording(self):
         """Method to stop recording video and audio stream.
         """
@@ -783,27 +819,24 @@ class Vision:
     def __release_servos(self):
         """Method to stop sending signals to servo motors pins and clean up the gpio pins.
         """
-
         self.target_locker.stop()
         self.target_locker.gpio_cleanup()
 
     def __release_camera(self):
         """Method to stop receiving signals from the camera and stop video recording.
         """
-
         # self.camera.release()
         pass
 
     def __release_hearer(self):
         """Method to stop sending signals to servo motors pins and clean up the gpio pins.
         """
-
         self.hearer.release_members()
 
     def release_members(self):
         """Method to close all streaming and terminate vision processes.
         """
-
+        self.__release_threads()
         self.stop_recording()
         self.__release_hearer()
         self.__release_camera()
