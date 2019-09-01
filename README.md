@@ -82,8 +82,9 @@ usage: t_system [-h] [--stand-gpios RED-LED GREEN-LED] [--host HOST]
                 [--ap-wlan AP_WLAN] [--ap-inet AP_INET] [--ap-ip AP_IP]
                 [--ap-netmask AP_NETMASK] [--ssid SSID] [--password PASSWORD]
                 [--wlan WLAN] [--inet INET] [--static-ip STATIC_IP]
-                [--netmask NETMASK] [-S] [-m FOUND_OBJECT_MARK] [-r]
-                [--version]
+                [--netmask NETMASK] [--country-code COUNTRY_CODE]
+                [--environment ENVIRONMENT] [--no-emotion] [-S]
+                [-m FOUND_OBJECT_MARK] [-r] [-v] [--version]
                 interface {remote-ui-authentication,face-encoding,self-update}
                 ...
 
@@ -118,7 +119,7 @@ user-interfaces:
 
 official_stand:
   --stand-gpios RED-LED GREEN-LED
-                        GPIO pin numbers of official stand's LEDs.5(as red
+                        GPIO pin numbers of official stand's LEDs. 5(as red
                         led) and 6(as green led) GPIO pins are default.
 
 remote_ui:
@@ -145,9 +146,13 @@ running tools:
   -j, --no-recognize    Do not recognize the things.(faces, objects etc.)
   --encoding-file ENCODING_FILE
                         Specify the trained recognition encoding pickle file
-                        for recognize object. Sample: 'encodings' for
-                        encodings.pickle file under the
-                        'recognition_encodings' folder.
+                        for recognize object. Sample: 'jane_encoding' for
+                        jane_encoding.pickle file under the
+                        '.t_system/recognition/encodings' folder in your Home
+                        directory. If `main_encoding` chosen,
+                        `main_encoding.pickle` file that creates from merging
+                        all encoding files under `.../encodings` folder will
+                        used. Default is `main_encoding`
   --use-tracking-api    Use the openCV's tracking API for realize the next
                         object is same as previous one.
   --tracker-type TRACKER_TYPE
@@ -190,8 +195,8 @@ target locking system:
 access point options:
   -p, --access-point    Become access point for serving remote UI inside the
                         internal network.
-  --ap-wlan AP_WLAN     network interface that will be used to create hotspot.
-                        'wlp4s0' is default.
+  --ap-wlan AP_WLAN     network interface that will be used to create HotSpot.
+                        'wlan0' is default.
   --ap-inet AP_INET     forwarding interface. Default is None.
   --ap-ip AP_IP         ip address of this machine in new network.
                         192.168.45.1 is default.
@@ -200,17 +205,27 @@ access point options:
                         default.
   --ssid SSID           Preferred access point name. 'T_System' is default.
   --password PASSWORD   Password of the access point. 't_system' is default.
+
+external network options:
+  --wlan WLAN           network interface that will be used to connect to
+                        external network. 'wlan0' is default.
   --inet INET           forwarding interface. Default is None.
   --static-ip STATIC_IP
                         static ip address in connected external network.
                         192.168.45.1 is default.
   --netmask NETMASK     netmask address. 255.255.255.0 is default.
-
-external network options:
-  --wlan WLAN           network interface that will be used to connect to
-                        external network. 'wlp4s0' is default.
+  --country-code COUNTRY_CODE
+                        Wifi country code for the wpa_supplicant.conf. To use
+                        look at: https://github.com/recalbox/recalbox-
+                        os/wiki/Wifi-country-code-(EN). Default is `TR`
 
 others:
+  --environment ENVIRONMENT
+                        The running environment. It specify the configuration
+                        files and logs. To use: either `production`,
+                        `development` or `testing`. Default is production
+  --no-emotion          Do not mak feelings with using motion mechanisms.(Arm
+                        and Locking System.)
   -S, --show-stream     Display the camera stream. Enable the stream
                         window.(Require gui environment.)
   -m FOUND_OBJECT_MARK, --found-object-mark FOUND_OBJECT_MARK
@@ -218,6 +233,8 @@ others:
                         either `single_rect`, `rotating_arcs`, `partial_rect`
                         or None. Default is `single_rect`
   -r, --record          Record the video stream. Files are named by the date.
+  -v, --verbose         Print various debugging logs to console for debug
+                        problems
   --version             Display the version number of T_System.
 ```
 
