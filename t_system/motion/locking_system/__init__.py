@@ -46,15 +46,27 @@ class LockingSystem:
 
         self.current_target_obj_width = 0
 
+        self.locker = None
+        self.lock = None
         self.check_error = None
         self.get_physically_distance = None
 
-        if args["AI"] == "official_ai":
+        self.load_locker(args["AI"], args["non_moving_target"])
+
+    def load_locker(self, ai, non_moving_target):
+        """Method to set locking system's locker as given AI and target object status parameters.
+
+        Args:
+            ai (str):                       AI type that will using during locking the target.
+            non_moving_target (bool):       Non-moving target flag.
+        """
+
+        if ai == "official_ai":
             self.locker = self.OfficialAILocker(self)
             self.lock = self.locker.lock
             self.check_error = self.locker.check_error
             self.get_physically_distance = self.locker.get_physically_distance
-        elif args["non_moving_target"]:
+        elif non_moving_target:
             self.locker = self.NonMovingTargetLocker(self)
             self.lock = self.locker.lock
             self.get_physically_distance = self.locker.get_physically_distance
