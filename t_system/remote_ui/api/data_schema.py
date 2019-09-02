@@ -1,4 +1,4 @@
-from schema import Schema, Use, Optional
+from schema import Schema, Use, Optional, And, Or
 
 
 POSITION_SCHEMA = Schema({
@@ -23,8 +23,13 @@ NETWORK_SCHEMA = Schema({
     'password': Use(str),
 })
 
-VISION_SCHEMA = Schema({
-    'work_type': Use(str),
+JOB_SCHEMA = Schema({
+    'job_type': And(str, Use(str.lower), lambda s: s in ('track', 'learn', 'secure')),
+    'scenario': Use(str),
+    'predicted_mission': Use(bool),
+    'recognized_person': Or(None, Use(str)),
+    'non_moving_target': Or(None, Use(bool)),
+    'ai': Or(None, Use(str)),
 })
 
 FACE_ENCODING_SCHEMA = Schema({
@@ -35,9 +40,3 @@ FACE_ENCODING_SCHEMA = Schema({
 UPDATE_SCHEMA = Schema({
     'auto_update': Use(bool),
 })
-
-# LOCATION_SCHEMA = Schema({
-#     'name': Use(str),
-#     'ip': Use(str),
-#     Optional('description'): Use(str),
-# })
