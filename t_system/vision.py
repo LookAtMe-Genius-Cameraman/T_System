@@ -63,6 +63,9 @@ class Vision:
         else:
             self.detect_track = self.__d_t_without_cv_ta
 
+        # Specify the tracker type
+        self.tracker_type = args["tracker_type"]
+
         self.no_recognize = args["no_recognize"]
 
         if not self.no_recognize:
@@ -70,9 +73,6 @@ class Vision:
             self.track = self.__track_with_recognizing
         else:
             self.track = self.__track_without_recognizing
-
-        # Specify the tracker type
-        self.tracker_type = args["tracker_type"]
 
         self.hearer = Hearer(args)
         # self.hearer = None
@@ -461,6 +461,16 @@ class Vision:
                 self.target_locker.tilt.move(angle_for_ellipse_move, 75.0)  # last parameter not used for both funcs
                 time.sleep(0.1)
 
+    def reload_target_locker(self, ai, non_moving_target):
+        """The top-level method to set locking system's locker of Vision as given AI and target object status parameters.
+
+        Args:
+            ai (str):                       AI type that will using during locking the target.
+            non_moving_target (bool):       Non-moving target flag.
+        """
+
+        self.target_locker.load_locker(ai, non_moving_target)
+
     def serve_frame_online(self):
         """The top-level method to provide the serving video stream online for sending Flask framework based remote_ui.
         """
@@ -719,7 +729,7 @@ class Vision:
 
     @staticmethod
     def __get_recognition_data(encoding_file_name):
-        """Method to get encoded recognition data from picke file.
+        """Method to get encoded recognition data from pickle file.
 
          Args:
                 encoding_file_name (str):  The file that is keep faces's encoded data.
@@ -730,6 +740,21 @@ class Vision:
             encoding_pickle_file = f'{dot_t_system_dir}/recognition/encodings/{encoding_file_name}.pickle'
 
         return pickle.loads(open(encoding_pickle_file, "rb").read())  # this is recognition_data
+
+    def set_recognizing(self, encoding_file_name=None):
+        """The top-level method to set recognition status and parameters of Vision.
+
+         Args:
+                encoding_file_name (str):  The file that is keep faces's encoded data.
+        """
+        if encoding_file_name is None:
+            self.no_recognize = True
+            self.track = self.__track_without_recognizing
+            return True
+
+        self.no_recognize = False
+        self.recognition_data = self.__get_recognition_data(encoding_file_name)
+        self.track = self.__track_with_recognizing
 
     def __get_mark_object(self, mark_found_object):
         """Method to set mqtt_receimitter object for publishing and subscribing data echos.
@@ -770,7 +795,7 @@ class Vision:
         """
         self.camera.stop_preview()
 
-    def __release_threads(self):
+    def terminate_active_threads(self):
         """Method to terminate active threads of vision.
         """
         for thread in self.active_threads:
@@ -806,7 +831,7 @@ class Vision:
     def release_members(self):
         """Method to close all streaming and terminate vision processes.
         """
-        self.__release_threads()
+        self.terminate_active_threads()
         self.stop_recording()
         self.__release_hearer()
         self.__release_camera()
