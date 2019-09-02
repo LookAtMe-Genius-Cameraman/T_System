@@ -49,7 +49,7 @@ class PositionApi(Resource):
             position = get_position(admin_id, db_name, position_id)
             return {'status': 'OK', 'data': position}
 
-        positions = get_positions(admin_id)
+        positions = get_positions(admin_id, db_name)
 
         return {'status': 'OK', 'data': positions}
 
