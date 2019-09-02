@@ -52,7 +52,7 @@ class MissionManager:
         self.actor = Actor()
 
     def __refresh_members(self):
-        """low-level method to refreshing the members
+        """Method to refreshing the members
         """
 
         predicted_scenarios = self.predicted_scenarios_table.all()
@@ -71,12 +71,26 @@ class MissionManager:
         for position in positions:
             self.positions.append(Position(position["name"], position["id"], position["cartesian_coords"], position["polar_coords"], root=True, db_name=self.db_name))
 
-    def execute(self, mission, type, root):
+    def continuous_execute(self, stop, pause, mission, m_type, root):
+        """The top-level method for executing the missions as continuously.
+
+        Args:
+            stop:       	                Stop flag of the tread about terminating it outside of the function's loop.
+            pause:       	                Pause flag of the tread about freezing it outside of the function's loop.
+            mission (str):                  Name of the position or scenario that is created for mission.
+            m_type (str):                   Type of the mission. Either `position` or `scenario`.
+            root (bool):                    Root privileges flag.
+        """
+
+        while True:
+            self.execute(mission, m_type, root)
+
+    def execute(self, mission, m_type, root):
         """The top-level method to fulfill mission with using position or scenarios their names specified with given parameter.
 
         Args:
             mission (str):                  Name of the position or scenario that is created for mission.
-            type (str):                     Type of the mission. Either `position` or `scenario`.
+            m_type (str):                   Type of the mission. Either `position` or `scenario`.
             root (bool):                    Root privileges flag.
         """
         result = False
@@ -88,14 +102,14 @@ class MissionManager:
             positions = self.positions
             scenarios = self.scenarios
 
-        if type == "position":
+        if m_type == "position":
             for position in positions:
                 if position.name == mission:
                     self.actor.act(position)
                     result = True
                     break
 
-        elif type == "scenario":
+        elif m_type == "scenario":
             for scenario in scenarios:
                 if scenario.name == mission:
                     self.actor.act([scenario])
@@ -129,7 +143,7 @@ class EmotionManager:
         self.actor = Actor()
 
     def __refresh_members(self):
-        """low-level method to refreshing the members
+        """Method to refreshing the members
         """
 
         scenarios = self.scenarios_table.all()
