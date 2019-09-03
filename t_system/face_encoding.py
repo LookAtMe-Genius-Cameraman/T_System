@@ -18,7 +18,7 @@ import binascii
 
 from imutils import paths
 from shutil import copy, rmtree
-from tinydb import TinyDB, Query  # TinyDB is a lightweight document oriented database
+from tinydb import Query  # TinyDB is a lightweight document oriented database
 from base64 import b64decode
 from os import listdir
 from os.path import isfile, join

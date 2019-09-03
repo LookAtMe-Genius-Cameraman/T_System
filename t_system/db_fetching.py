@@ -9,7 +9,7 @@
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
 
-from tinydb import TinyDB, Query  # TinyDB is a lightweight document oriented database
+from tinydb import TinyDB  # TinyDB is a lightweight document oriented database
 
 
 class DBFetcher:
