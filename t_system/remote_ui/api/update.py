@@ -13,7 +13,7 @@ from flask import Blueprint, request
 from flask_restful import Api, Resource
 from schema import SchemaError
 
-from t_system.remote_ui.modules.update import create_position, get_position, get_status, update_status, delete_position
+from t_system.remote_ui.modules.update import get_status, update_status
 from t_system.remote_ui.api.data_schema import UPDATE_SCHEMA
 
 api_bp = Blueprint('update_api', __name__)
@@ -35,7 +35,7 @@ class UpdateApi(Resource):
         """
 
     def get(self):
-        """The API method to get request for flask.
+        """The API method to GET request for flask.
         """
 
         update_key = request.args.get('key')
@@ -49,24 +49,27 @@ class UpdateApi(Resource):
         return {'status': 'OK', 'data': status}
 
     def post(self):
-        """The API method to post request for flask.
+        """The API method to POST request for flask.
         """
 
         return {'status': 'ERROR', 'message': 'NOT VALID'}
 
     def put(self):
-        """The API method to put request for flask.
+        """The API method to PUT request for flask.
         """
         admin_id = request.args.get('admin_id', None)
 
-        form = request.form.to_dict(flat=True)
-        data = UPDATE_SCHEMA.validate(form)
+        try:
+            form = request.form.to_dict(flat=True)
+            data = UPDATE_SCHEMA.validate(form)
+        except SchemaError as e:
+            return {'status': 'ERROR', 'message': e.code}
 
         result = update_status(admin_id, data)
         return {'status': 'OK' if result else 'ERROR'}
 
     def delete(self):
-        """The API method to delete request for flask.
+        """The API method to DELETE request for flask.
         """
 
         return {'status': 'ERROR', 'message': 'NOT VALID'}
