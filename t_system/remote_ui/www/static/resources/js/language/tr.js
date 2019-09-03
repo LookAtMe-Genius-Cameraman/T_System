@@ -11,6 +11,7 @@ const turkishtrans = {
     "Up To Date": "Güncelle",
     "Wi-Fi Connections": "Wi-Fi Bağlantıları",
     "&#187;": "&#187;",
+    "Audio Inputs": "Ses Girişleri",
     "Language": "Dil",
     "Facial Recognitions": "Yüz tanıma",
     "Upload Photo": "Fotoğraf Yükle",
