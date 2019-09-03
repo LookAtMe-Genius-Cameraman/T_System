@@ -12,10 +12,10 @@
 import uuid  # The random id generator
 
 from multipledispatch import dispatch
-
 from tinydb import Query  # TinyDB is a lightweight document oriented database
 
 from t_system.db_fetching import DBFetcher
+from t_system import arm
 
 from t_system import dot_t_system_dir, T_SYSTEM_PATH
 
@@ -185,13 +185,7 @@ class Actor:
 
     def __init__(self):
         """Initialization method of :class:`t_system.motion.action.Actor` class.
-
-        Args:
-            args:                   Command-line arguments.
         """
-
-        from t_system import arm
-        self.arm = arm
 
     @dispatch(object)
     def act(self, position):
@@ -201,7 +195,7 @@ class Actor:
             position (Position):            A Position object
         """
 
-        self.arm.goto_position(pos_thetas=position.polar_coords, pos_coords=position.cartesian_coords)
+        arm.goto_position(pos_thetas=position.polar_coords, pos_coords=position.cartesian_coords)
 
     @dispatch(list)
     def act(self, scenarios):
@@ -213,7 +207,7 @@ class Actor:
 
         for scenario in scenarios:
             for position in scenario.positions:
-                self.arm.goto_position(pos_thetas=position.polar_coords, pos_coords=position.cartesian_coords)
+                arm.goto_position(pos_thetas=position.polar_coords, pos_coords=position.cartesian_coords)
 
 
 class Scenario:
