@@ -25,10 +25,9 @@ logger = log_manager.get_logger(__name__, "DEBUG")
 class Recorder:
     """Class to define a recording ability of tracking system.
 
-    This class provides necessary initiations and functions named :func:`t_system.audition.Audition.__listen_async`
-    as the loop for asynchronous collecting audio data to the vision ability, named :func:`t_system.audition.Audition.listen_sync`
-    for the synchronous collecting audio data to the vision ability and named :func:`t_system.audition.Audition.start_recording`
-    as entry point from vision ability for starting recording processes.
+    This class provides necessary initiations and functions named :func:`t_system.recordation.RecordManager.start`
+    for creating a Record object and start recording by this object. :func:`t_system.recordation.RecordManager.merge_audio_and_video`
+    for merging separate audio and video file to one.
     """
 
     def __init__(self, record_formats, camera, hearer):
@@ -39,12 +38,6 @@ class Recorder:
                 camera:       	        Camera object from PiCamera.
                 hearer:       	        Hearer object.
         """
-        self.records_folder = dot_t_system_dir + "/records"
-
-        self.db = DBFetcher(self.records_folder, "db").fetch()
-
-        if not os.path.exists(self.records_folder):
-            os.mkdir(self.records_folder)
 
         self.current_video_file = ""
         self.current_audio_file = ""
@@ -76,6 +69,7 @@ class Recorder:
         self.camera.stop_recording()
         self.hearer.stop_recording()
 
+        # Todo: This is disgusting way to merging audio and silent video. Fix this.
         self.merge_audio_and_video()
 
     def merge_audio_and_video(self):
@@ -96,26 +90,30 @@ class Recorder:
 
 
 class RecordManager:
-    """Class to define records of t_systems vision.
+    """Class to define Record manager for handling the recordation database of t_system's vision.
 
-    This class provides necessary initiations and functions named :func:`t_system.audition.Audition.__listen_async`
-    as the loop for asynchronous collecting audio data to the vision ability, named :func:`t_system.audition.Audition.listen_sync`
-    for the synchronous collecting audio data to the vision ability and named :func:`t_system.audition.Audition.start_recording`
-    as entry point from vision ability for starting recording processes.
+    This class provides necessary initiations and functions named :func:`t_system.recordation.RecordManager.get_records`
+    for returning the Record objects of existing records with given table(date at the same time) parameter.
     """
 
     def __init__(self):
-        """Initialization method of :class:`t_system.recordation.Recorder` class.
-        Args:
-                d_m_y (str):            Date that is day_mount_year format.
+        """Initialization method of :class:`t_system.recordation.RecordManager` class.
         """
 
         self.records_folder = f'{dot_t_system_dir}/records'
 
-        self.table_names = list(DBFetcher(self.records_folder, "db").fetch().tables())
+        if not os.path.exists(self.records_folder):
+            os.mkdir(self.records_folder)
+
+        self.db = DBFetcher(self.records_folder, "db").fetch()
+
+        self.table_names = list(self.db.tables())
         self.tables = []
 
         self.records = []
+
+        self.__set_tables()
+        self.__set_records()
 
     def __set_tables(self):
         """Method to set table of record database.
@@ -149,10 +147,8 @@ class RecordManager:
 class Record:
     """Class to define records of t_systems vision.
 
-    This class provides necessary initiations and functions named :func:`t_system.audition.Audition.__listen_async`
-    as the loop for asynchronous collecting audio data to the vision ability, named :func:`t_system.audition.Audition.listen_sync`
-    for the synchronous collecting audio data to the vision ability and named :func:`t_system.audition.Audition.start_recording`
-    as entry point from vision ability for starting recording processes.
+    This class provides necessary initiations and functions named :func:`t_system.recordation.Record.__db_upsert`
+    for saving records to the database safely.
     """
 
     def __init__(self, d_m_y, h_m_s, scope, record_formats):
