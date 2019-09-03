@@ -1,4 +1,4 @@
-#update_control_div {
+.option_div {
     visibility: visible;
     opacity: 1;
 
@@ -16,13 +16,13 @@
     transition: all 300ms;
     border: tan solid;
     border-radius: 5px;
-
+    background-color: #fff0eb;
     /*margin: auto 5px auto auto;*/
 }
 
-#update_control_div.focused {
+.option_div.focused {
     position: absolute !important;
-    top: 10%;
+    /*top: 10%;*/
     left: 50%;
 
     transform: translate(-50%);
@@ -30,80 +30,14 @@
     height: 700px !important;
 }
 
-#update_control_btn {
+.option_btn {
     visibility: visible;
     opacity: 1;
 
     max-width: 100%;
     max-height: 100%;
 
-    width: 98%;
-    height: 38px;
-
-    transition: all 300ms;
-    border-radius: 5px;
-
-    background-color: #fff;
-    color: #008CBA;
-
-    font-size: 13px;
-}
-
-#update_control_io_div {
-
-    visibility: hidden;
-    opacity: 0;
-
-    max-width: 100%;
-    max-height: 100%;
-}
-
-#update_control_io_div.focused {
-    visibility: visible;
-    opacity: 1;
-
-    margin: 20px auto;
-}
-
-#wifi_control_div {
-    visibility: visible;
-    opacity: 1;
-
-    /*max-width: 175px;*/
-    max-height: 280px;
-
-    float: left;
-
-    /*width: 55%;*/
-    height: 40px; /*when activate goes to 70%*/
-
-    transition: all 300ms;
-    border: tan solid;
-    border-radius: 5px;
-    background-color: #fff0eb;
-
-}
-
-#wifi_control_div.focused {
-    position: absolute !important;
-    top: 10%;
-    left: 50%;
-
-    transform: translate(-50%);
-    width: 200px !important;
-    height: 700px !important;
-}
-
-#wifi_connections_btn {
-    position: relative;
-
-    visibility: visible;
-    opacity: 1;
-
-    max-width: 100%;
-    max-height: 100%;
-
-    width: 98%;
+    width: 100%;
     height: 40px;
 
     transition: all 300ms;
@@ -112,10 +46,10 @@
     background-color: #fff;
     color: #008CBA;
 
-    font-size: 13px;
+    font-size: 12px;
 }
 
-#wifi_control_io_div {
+.option_io_div {
     position: relative;
 
     visibility: hidden;
@@ -123,17 +57,30 @@
 
     max-width: 100%;
     max-height: 100%;
-    /*margin: 0 auto;*/
+
+    left: 50%;
+    transform: translate(-50%);
 
     transition: opacity 300ms;
     /*border: #8a6d3b solid;*/
 }
 
-#wifi_control_io_div.focused {
+.option_io_div.focused {
     visibility: visible;
     opacity: 1;
 
     margin: 20px auto;
+}
+
+
+/*UPDATE CONTROL OPTION*/
+#update_control_div.higher {
+    top: -60% !important;
+}
+
+/*WIFI CONNECTIONS OPTION*/
+#wifi_control_div.higher {
+    top: -60% !important;
 }
 
 .new_network_input_transition {
@@ -187,157 +134,25 @@
     /*border: turquoise solid;*/
 }
 
-#face_encoding_div {
-    visibility: visible;
-    opacity: 1;
 
-    /*max-width: 175px;*/
-    max-height: 280px;
-
-    float: left;
-
-    /*width: 55%;*/
-    height: 40px; /*when activate goes to 70%*/
-
-    transition: all 300ms;
-    border: tan solid;
-    border-radius: 5px;
-    background-color: #fff0eb;
+/*AUDIO INPUTS OPTION*/
+#audio_control_div.higher {
+    top: -200% !important;
 }
 
-#face_encoding_div.focused {
-    position: absolute !important;
-    top: 10%;
-    left: 50%;
-
-    transform: translate(-50%);
-    width: 200px !important;
-    height: 700px !important;
-}
-
-#face_encoding_btn {
-    position: relative;
-
-    visibility: visible;
-    opacity: 1;
-
-    max-width: 100%;
-    max-height: 100%;
-
-    left: 50%;
-    transform: translate(-50%);
-
-    width: 98%;
-    height: 40px;
-
-    transition: all 300ms;
-    border-radius: 5px;
-
-    background-color: #fff;
-    color: #008CBA;
-
-    font-size: 13px;
-}
-
-#face_encoding_io_div {
-    position: relative;
-
-    visibility: hidden;
-    opacity: 0;
-
-    max-width: 100%;
-    max-height: 100%;
-
-    left: 50%;
-    transform: translate(-50%);
-
-    transition: opacity 300ms;
-    /*border: #8a6d3b solid;*/
-}
-
-#face_encoding_io_div.focused {
-    visibility: visible;
-    opacity: 1;
-
-    margin: 20px auto;
+/*FACIAL RECOGNITIONS OPTION*/
+#face_encoding_div.higher {
+    top: -200% !important;
 }
 
 #f_enc_photo_label {
     font-size: 75%;
 }
 
-#lang_select_div {
-    visibility: visible;
-    opacity: 1;
-
-    max-width: 175px;
-    max-height: 280px;
-
-    float: left;
-
-    width: 44%;
-    height: 40px; /*when activate goes to 70%*/
-
-    transition: all 300ms;
-    border: tan solid;
-    border-radius: 5px;
-    background-color: #fff0eb;
+/*LANGUAGE OPTION*/
+#lang_select_div.higher {
+    top: -340% !important;
 }
-
-#lang_select_div.focused {
-    position: absolute !important;
-    top: 10%;
-    left: 50%;
-
-    transform: translate(-50%);
-    width: 200px !important;
-    height: 700px !important;
-}
-
-#lang_select_btn {
-    position: relative;
-
-    visibility: visible;
-    opacity: 1;
-
-    max-width: 100%;
-    max-height: 100%;
-
-    width: 98%;
-    height: 40px;
-
-    transition: all 300ms;
-    border-radius: 5px;
-
-    background-color: #fff;
-    color: #008CBA;
-
-    font-size: 13px;
-}
-
-#language_dropdown_div {
-    position: relative;
-
-    visibility: hidden;
-    opacity: 0;
-
-    max-width: 100%;
-    max-height: 100%;
-
-    left: 50%;
-    transform: translate(-50%);
-
-    transition: opacity 300ms;
-    /*border: #8a6d3b solid;*/
-}
-
-#language_dropdown_div.focused {
-    visibility: visible;
-    opacity: 1;
-
-    margin: 20px auto;
-}
-
 
 #language_dropdown_ul {
 
