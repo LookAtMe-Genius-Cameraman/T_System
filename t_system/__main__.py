@@ -192,6 +192,7 @@ def initiate():
     video_gr.add_argument("--rate", help="Bit Rate of audio stream / Frame Rate. 44100 Hz sample rate is default.", action="store", default=44100, type=int)
     video_gr.add_argument("--channels", help="Number of microphone's channels. Default value is 1.", action="store", default=1, type=int)
     video_gr.add_argument("--audio_device_index", help="Index of the using audio device. 2 is default.", action="store", default=2, type=int)
+    video_gr.add_argument("--record-formats", help="Formats for recording the work. `h264` and `wav` for separate video and audio recording and `mkv` for merged file are default.", nargs=3, default=["h264", "wav", "mkv"], type=str, metavar=('VIDEO', 'AUDIO', 'MERGED'))
 
     motion_gr = ap.add_argument_group('motion mechanism')
     motion_gr.add_argument("--robotic-arm", help="One of the robotic arm names those are defined in arm_config.json file. The arm is for relocating the 2 axis target locking system hybrid-synchronously.", default="Senior", type=str, metavar=('ARM',))

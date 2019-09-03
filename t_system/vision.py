@@ -83,7 +83,7 @@ class Vision:
         self.camera.framerate = args["framerate"]
         # self.camera.rotation = 180
 
-        self.recorder = Recorder(self.camera, self.hearer)
+        self.recorder = Recorder(args["record_formats"], self.camera, self.hearer)
 
         self.raw_capture = PiRGBArray(self.camera, size=resolution)
 
