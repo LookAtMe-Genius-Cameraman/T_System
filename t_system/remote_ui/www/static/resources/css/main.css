@@ -29,7 +29,7 @@ body {
 #main_container {
     max-width: 100%;
     max-height: 100%;
-    border: #3c763d dashed;
+    /*border: #3c763d dashed;*/
 
     width: 90%;
     height: 97%;
@@ -44,11 +44,9 @@ body {
     margin: auto;
 
     width: 100%;
-    height: 115px;
+    height: 50px;
 
     min-width: 100px;
-    border: tomato solid;
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
     z-index: 59;
 }
 
@@ -56,7 +54,9 @@ body {
     margin: 0;
 }
 
-#title_footer{ /* Powered by*/}
+#title_footer{ /* Powered by*/
+    left: 65%;
+}
 
 #title_a{ /*T_System*/}
 
@@ -73,14 +73,15 @@ body {
     max-height: 95%;
 
     /*alignment*/
-    top: 20%;
+    top: 13%;
     left: 50%;
 
     width: 85%;
-    height: 70%;
+    height: 75%;
 
     position: absolute;
     transform: translate(-50%);
+
     z-index: 61;
 }
 
@@ -90,14 +91,14 @@ body {
 }
 
 #settings_template_container {
-
     visibility: visible;
     opacity: 1;
 
-    /*background-color: #fff0eb;*/
     transition: opacity 300ms;
-    border: #8d75a3 dashed;
     margin: auto;
+
+    border-radius: 25px;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 }
 
 #controlling_template_container {
@@ -105,19 +106,23 @@ body {
     opacity: 1;
 
     transition: opacity 300ms;
-    border:#3c763d  dashed;
     margin: auto;
+
+    border-radius: 25px;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+
     z-index: 61;
 }
 
 #prepare_template_container {
-
     visibility: visible;
     opacity: 1;
 
-    margin: auto;
     transition: opacity 300ms;
-    border: #8d75a3 dashed;
+    margin: auto;
+
+    border-radius: 25px;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 }
 
 #job_template_container {
@@ -135,7 +140,6 @@ body {
     height: 45px; /* goes to 68%*/
 
     transition: opacity 300ms;
-    /*border: #3c763d solid;*/
 
     margin: auto;
     z-index: 62;
@@ -168,7 +172,6 @@ body {
     transform: translate(-50%);
 
     margin: auto;
-    /*border: turquoise solid;*/
     z-index: 61;
 }
 
@@ -191,15 +194,9 @@ body {
     -moz-transition: opacity 400ms ease-in;
     transition: opacity 400ms ease-in;
     pointer-events: none;
-
-    /*border: #3c763d solid;*/
 }
 
 #dark_deep_background_div.focused {
         opacity: 1 !important;
         pointer-events: all !important;
-
 }
-
-
-

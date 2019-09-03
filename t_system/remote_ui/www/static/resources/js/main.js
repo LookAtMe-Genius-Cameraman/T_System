@@ -9,6 +9,7 @@
 /** @type {!Object} */
 const jquery_manager = JQueryManager;
 
+const title_footer = document.getElementById("title_footer");
 
 /** @type {!Element} */
 const control_btn = document.getElementById("control_btn");
@@ -106,6 +107,10 @@ $(document).ready(function () {
 
     control_btn.click()
 
+});
+
+title_footer.addEventListener("click", function () {
+   window.open('https://github.com/connected-life/T_System', '_system');
 });
 
 
