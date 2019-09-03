@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale = 1.0, maximum-scale = 1.0, user-scalable=no">
     <title>T_System</title>
+    <link rel="shortcut icon" href="static/resources/images/favicon.ico">
+    <link rel="apple-touch-icon image_src" href="static/resources/images/favicon.png">
+
     <link rel="stylesheet" href="static/vendors/bootstrap/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="static/vendors/chart.js/css/Chart.min.css">
     <link rel="stylesheet" href="static/vendors/swiper/css/swiper.min.css">
@@ -18,10 +21,7 @@
 
 <div id="main_container" class="container align-content-center">
     <div id="title_div" class="text-center">
-        <h1 id="title_h1" class="position-relative" translate>Look.At.Me.</h1>
-        <footer id="title_footer" class="position-relative page-footer font-small blue pull-right text-right" translate>Powered By <a href="https://github.com/connected-life/T_System" target="_blank">
-            <mark translate>T_System</mark>
-        </a></footer>
+        <!--<h1 id="title_h1" class="position-relative" translate>Look.At.Me.</h1>-->
         <div id="page_control_div" class="btn-group justify-content-center">
             <button id="settings_btn" class="btn btn-dark" translate>Settings</button>
             <button id="control_btn" class="btn btn-dark" translate>Control</button>
@@ -35,18 +35,18 @@
             <!--        ======================================================SETTINGS MODAL======================================================        -->
             <div id="settings_template_container" class="container swiper-slide">
                 <div class="position-relative row mt-4">
-                    <div id="update_control_div" class="position-relative col">
-                        <button id="update_control_btn" class="position-relative" translate>Updates</button>
-                        <div id="update_control_io_div" class="position-relative form-group row">
+                    <div id="update_control_div" class="position-relative col option_div">
+                        <button id="update_control_btn" class="position-relative option_btn" translate>Updates</button>
+                        <div id="update_control_io_div" class="position-relative form-group row option_io_div">
                             <label class="checkbox-inline"><input type="checkbox" id="auto_update_checkbox" value="" translate>Auto Update</label>
                             <!--<label for="auto_update_checkbox" class="col-sm-2 col-form-label"></label><input type="checkbox" id="auto_update_checkbox" class="form-control">-->
                             <button id="update_btn" class="btn btn-info" translate>Up To Date</button>
                         </div>
                     </div>
 
-                    <div id="wifi_control_div" class="position-relative col">
-                        <button id="wifi_connections_btn" translate>Wi-Fi Connections</button>
-                        <div id="wifi_control_io_div">
+                    <div id="wifi_control_div" class="position-relative col option_div">
+                        <button id="wifi_connections_btn" class="option_btn" translate>Wi-Fi Connections</button>
+                        <div id="wifi_control_io_div" class="option_io_div">
                             <div id="create_new_network">
                                 <input class="text_input" type="text" name="network_ssid" id="network_ssid_input" placeholder="ssid"/>
                                 <input class="text_input" type="text" name="network_password" id="network_password_input" placeholder="password"/>
@@ -58,17 +58,17 @@
                 </div>
 
                 <div class="position-relative row mt-3">
-                    <div id="audio_control_div" class="col">
-                        <button id="audio_control_btn" translate>Audio</button>
-                        <div id="audio_control_io_div">
+                    <div id="audio_control_div" class="col option_div">
+                        <button id="audio_control_btn" class="option_btn" translate>Audio Inputs</button>
+                        <div id="audio_control_io_div" class="option_io_div">
                             <span id="using_audio_input"></span>
                             <ul class="network_list" id="available_audio_inputs"></ul>
                         </div>
                     </div>
 
-                    <div id="face_encoding_div" class="position-relative col">
-                        <button id="face_encoding_btn" translate>Facial Recognitions</button>
-                        <div id="face_encoding_io_div">
+                    <div id="face_encoding_div" class="position-relative col option_div">
+                        <button id="face_encoding_btn" class="option_btn" translate>Facial Recognitions</button>
+                        <div id="face_encoding_io_div" class="option_io_div">
                             <div id="encode_new_face_div">
                                 <input class="text_input" type="text" name="face_name" id="face_name_input" placeholder="name"/>
                                 <div class="input-group pt-3">
@@ -87,9 +87,9 @@
                 </div>
 
                 <div class="position-relative row mt-3">
-                    <div id="lang_select_div" class="col">
-                        <button id="lang_select_btn" translate>Language</button>
-                        <div id="language_dropdown_div">
+                    <div id="lang_select_div" class="position-relative col option_div">
+                        <button id="lang_select_btn" class="option_btn" translate>Language</button>
+                        <div id="language_dropdown_div" class="option_io_div">
                             <ul id="language_dropdown_ul">
                                 <li class="dropdown">
                                     <a href="#">
@@ -100,6 +100,9 @@
                                 </li>
                             </ul>
                         </div>
+                    </div>
+                    <div id="empty" class="position-relative col option_div">
+
                     </div>
                 </div>
             </div>
@@ -247,7 +250,9 @@
     </div>
 </div>
 <!--        ======================================================SYSTEM INFO MODAL======================================================        -->
-
+<footer id="title_footer" class="position-absolute page-footer font-small blue pull-right text-right" translate>Powered By <a>
+    <mark translate>T_System</mark>
+</a></footer>
 <div id="dark_deep_background_div" class="position-fixed"></div>
 
 <!-- inserting these scripts at the end to be able to use all the elements in the DOM -->
