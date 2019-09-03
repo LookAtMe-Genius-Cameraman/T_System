@@ -35,7 +35,7 @@ class ScenarioApi(Resource):
         """
 
     def get(self):
-        """The API method to get request for flask.
+        """The API method to GET request for flask.
         """
         db_name = request.args.get('db')
         scenario_id = request.args.get('id', None)
@@ -52,7 +52,7 @@ class ScenarioApi(Resource):
         return {'status': 'OK', 'data': scenarios}
 
     def post(self):
-        """The API method to post request for flask.
+        """The API method to POST request for flask.
         """
         db_name = request.args.get('db')
         admin_id = request.args.get('admin_id', None)
@@ -70,7 +70,7 @@ class ScenarioApi(Resource):
         return {'status': 'OK' if result else 'ERROR', 'id': scenario_id}
 
     def put(self):
-        """The API method to put request for flask.
+        """The API method to PUT request for flask.
         """
         db_name = request.args.get('db')
         scenario_id = request.args.get('id')
@@ -91,7 +91,7 @@ class ScenarioApi(Resource):
         return {'status': 'OK' if result else 'ERROR'}
 
     def delete(self):
-        """The API method to delete request for flask.
+        """The API method to DELETE request for flask.
         """
         db_name = request.args.get('db')
         scenario_id = request.args.get('id')

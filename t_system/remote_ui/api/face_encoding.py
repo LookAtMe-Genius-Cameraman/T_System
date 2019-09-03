@@ -24,10 +24,10 @@ class FaceEncodingApi(Resource):
     """Class to define an API of the face encoding ability of T_System.
 
         This class provides necessary initiations and functions named;
-         :func:`t_system.remote_ui.api.face_encoder.FaceEncoderApi.get`for the provide get face data from database,
-         :func:`t_system.remote_ui.api.face_encoder.FaceEncoderApi.post` for provide creating new face encoding,
-         :func:`t_system.remote_uia.api.face_encoder.FaceEncoderApi.put` for provide updating the putted faces's encodings,
-         :func:`t_system.remote_ui.api.face_encoder.FaceEncoderApi.delete` for provide deleting the face.
+         :func:`t_system.remote_ui.api.face_encoding.FaceEncodingApi.get`for the provide get face data from database,
+         :func:`t_system.remote_ui.api.face_encoding.FaceEncodingApi.post` for provide creating new face encoding,
+         :func:`t_system.remote_uia.api.face_encoding.FaceEncodingApi.put` for provide updating the putted faces's encodings,
+         :func:`t_system.remote_ui.api.face_encoding.FaceEncodingApi.delete` for provide deleting the face.
     """
 
     def __init__(self):
@@ -35,7 +35,7 @@ class FaceEncodingApi(Resource):
         """
 
     def get(self):
-        """The API method to get request for flask.
+        """The API method to GET request for flask.
         """
 
         face_id = request.args.get('id', None)
@@ -50,7 +50,7 @@ class FaceEncodingApi(Resource):
         return {'status': 'OK', 'data': faces}
 
     def post(self):
-        """The API method to post request for flask.
+        """The API method to POST request for flask.
         """
         admin_id = request.args.get('admin_id', None)
 
@@ -64,7 +64,7 @@ class FaceEncodingApi(Resource):
         return {'status': 'OK' if result else 'ERROR'}
 
     def put(self):
-        """The API method to put request for flask.
+        """The API method to PUT request for flask.
         """
         face_id = request.args.get('id')
         admin_id = request.args.get('admin_id', None)
@@ -81,7 +81,7 @@ class FaceEncodingApi(Resource):
         return {'status': 'OK' if result else 'ERROR'}
 
     def delete(self):
-        """The API method to delete request for flask.
+        """The API method to DELETE request for flask.
         """
         face_id = request.args.get('id')
         admin_id = request.args.get('admin_id', None)

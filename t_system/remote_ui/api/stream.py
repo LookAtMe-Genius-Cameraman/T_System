@@ -28,10 +28,10 @@ class StreamApi(Resource):
     """Class to define an API to manage the video and audio stream of T_System.
 
         This class provides necessary initiations and functions named;
-         :func:`t_system.remote_ui.api.system_info.SystemInfoApi.get` for getting T_System base OS system info,
-         :func:`t_system.remote_ui.api.system_info.SystemInfoApi.post` INVALID,
-         :func:`t_system.remote_ui.api.system_info.SystemInfoApi.put` INVALID,
-         :func:`t_system.remote_ui.api.system_info.SystemInfoApi.delete` INVALID.
+         :func:`t_system.remote_ui.api.stream.StreamApi.get` for getting video stream of t_system's vision,
+         :func:`t_system.remote_ui.api.stream.StreamApi.post` INVALID,
+         :func:`t_system.remote_ui.api.stream.StreamApi.put` INVALID,
+         :func:`t_system.remote_ui.api.stream.StreamApi.delete` for stopping video stream.
     """
 
     def __init__(self):
@@ -41,7 +41,7 @@ class StreamApi(Resource):
         pass
 
     def get(self):
-        """The API method to get request for flask.
+        """The API method to GET request for flask.
         """
 
         stream_type = request.args.get('type')
@@ -60,19 +60,19 @@ class StreamApi(Resource):
             return {'status': 'ERROR', 'message': "FAILED"}
 
     def post(self):
-        """The API method to post request for flask.
+        """The API method to POST request for flask.
         """
 
         return {'status': 'ERROR', 'message': 'NOT VALID'}
 
     def put(self):
-        """The API method to get request for flask.
+        """The API method to GET request for flask.
         """
 
         return {'status': 'ERROR', 'message': 'NOT VALID'}
 
     def delete(self):
-        """The API method to delete request for flask.
+        """The API method to DELETE request for flask.
         """
 
         stream_type = request.args.get('type')

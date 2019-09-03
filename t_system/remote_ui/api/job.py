@@ -4,7 +4,7 @@
 """
 .. module:: job
     :platform: Unix
-    :synopsis: the top-level submodule of T_System's remote_ui that contains the API for T_System's vision ability.
+    :synopsis: the top-level submodule of T_System's remote_ui that contains the API for managing the T_System's work with specified scenarios and parameters.
 
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
@@ -26,18 +26,19 @@ class JobApi(Resource):
     """Class to define an API of the positions of the arm.
 
         This class provides necessary initiations and functions named;
-         :func:`t_system.remote_ui.api.vision.VisionApi.get`for the provide get vision data from database,
-         :func:`t_system.remote_ui.api.vision.VisionApi.post` for provide creating new vision,
-         :func:`t_system.remote_uia.api.vision.VisionApi.put` for provide updating the vision,
-         :func:`t_system.remote_ui.api.vision.VisionApi.delete` for provide deleting the vision.
+         :func:`t_system.remote_ui.api.job.JobApi.get` INVALID,
+         :func:`t_system.remote_ui.api.job.JobApi.post` for setting seer's work parameters,
+         :func:`t_system.remote_uia.api.job.JobApi.put` for starting work of seer,
+         :func:`t_system.remote_uia.api.job.JobApi.patch` for resuming paused work of seer,
+         :func:`t_system.remote_ui.api.job.JobApi.delete` for stopping or pausing work of seer.
     """
 
     def __init__(self):
-        """Initialization method of :class:`t_system.remote_ui.api.vision.VisionApi` class.
+        """Initialization method of :class:`t_system.remote_ui.api.job.JobApi` class.
         """
 
     def get(self):
-        """The API method to get request for flask.
+        """The API method to GET request for flask.
         """
 
         return {'status': 'ERROR', 'message': 'NOT VALID'}

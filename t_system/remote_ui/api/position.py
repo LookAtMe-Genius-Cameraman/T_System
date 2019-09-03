@@ -35,7 +35,7 @@ class PositionApi(Resource):
         """
 
     def get(self):
-        """The API method to get request for flask.
+        """The API method to GET request for flask.
         """
 
         db_name = request.args.get('db')
@@ -54,7 +54,7 @@ class PositionApi(Resource):
         return {'status': 'OK', 'data': positions}
 
     def post(self):
-        """The API method to post request for flask.
+        """The API method to POST request for flask.
         """
         db_name = request.args.get('db')
         admin_id = request.args.get('admin_id', None)
@@ -72,7 +72,7 @@ class PositionApi(Resource):
         return {'status': 'OK' if result else 'ERROR', 'id': position_id}
 
     def put(self):
-        """The API method to put request for flask.
+        """The API method to PUT request for flask.
         """
         db_name = request.args.get('db')
         position_id = request.args.get('id')
@@ -93,7 +93,7 @@ class PositionApi(Resource):
         return {'status': 'OK' if result else 'ERROR'}
 
     def delete(self):
-        """The API method to delete request for flask.
+        """The API method to DELETE request for flask.
         """
 
         db_name = request.args.get('db')

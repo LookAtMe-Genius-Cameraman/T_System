@@ -33,7 +33,7 @@ class SystemInfoApi(Resource):
         """
 
     def get(self):
-        """The API method to get request for flask.
+        """The API method to GET request for flask.
         """
 
         admin_id = request.args.get('admin_id', None)
@@ -42,19 +42,19 @@ class SystemInfoApi(Resource):
         return {'status': 'OK', 'data': system_info}
 
     def post(self):
-        """The API method to post request for flask.
+        """The API method to POST request for flask.
         """
 
         return {'status': 'ERROR', 'message': 'NOT VALID'}
 
     def put(self):
-        """The API method to get request for flask.
+        """The API method to GET request for flask.
         """
 
         return {'status': 'ERROR', 'message': 'NOT VALID'}
 
     def delete(self):
-        """The API method to delete request for flask.
+        """The API method to DELETE request for flask.
         """
 
         return {'status': 'ERROR', 'message': 'NOT VALID'}

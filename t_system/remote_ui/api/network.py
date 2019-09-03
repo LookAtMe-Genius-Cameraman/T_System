@@ -36,7 +36,7 @@ class NetworkApi(Resource):
         """
 
     def get(self):
-        """The API method to get request for flask.
+        """The API method to GET request for flask.
         """
 
         network_ssid = request.args.get('ssid', None)
@@ -51,7 +51,7 @@ class NetworkApi(Resource):
         return {'status': 'OK', 'data': networks}
 
     def post(self):
-        """The API method to post request for flask.
+        """The API method to POST request for flask.
         """
         admin_id = request.args.get('admin_id', None)
 
@@ -65,7 +65,7 @@ class NetworkApi(Resource):
         return {'status': 'OK' if result else 'ERROR', 'admin_id': admin_id if admin_id else False}
 
     def put(self):
-        """The API method to put request for flask.
+        """The API method to PUT request for flask.
         """
         network_ssid = request.args.get('ssid')
         admin_id = request.args.get('admin_id', None)
@@ -82,7 +82,7 @@ class NetworkApi(Resource):
         return {'status': 'OK' if result else 'ERROR'}
 
     def delete(self):
-        """The API method to delete request for flask.
+        """The API method to DELETE request for flask.
         """
         network_ssid = request.args.get('ssid')
         admin_id = request.args.get('admin_id', None)
