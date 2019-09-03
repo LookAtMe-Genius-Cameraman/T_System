@@ -77,9 +77,8 @@ class StreamManager:
         logger.debug("frame sending processes starting")
 
         while True:
-            seer.serve_frame_online()
             yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + open(f'{dot_t_system_dir}/online_stream.jpeg', 'rb').read() + b'\r\n')
+                   b'Content-Type: image/jpeg\r\n\r\n' + seer.serve_frame_online() + b'\r\n')
             if self.stop_thread:
                 logger.debug("Frame yielding process stopping...")  # this block is never triggered, but looks like no problem. Why?
                 break

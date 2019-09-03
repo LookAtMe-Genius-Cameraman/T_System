@@ -81,6 +81,7 @@ class Vision:
         self.camera = PiCamera()
         self.camera.resolution = resolution
         self.camera.framerate = args["framerate"]
+        # self.camera.rotation = 180
 
         self.recorder = Recorder(self.camera, self.hearer)
 
@@ -475,7 +476,8 @@ class Vision:
         """The top-level method to provide the serving video stream online for sending Flask framework based remote_ui.
         """
 
-        cv2.imwrite(f'{dot_t_system_dir}/online_stream.jpeg', self.current_frame)
+        is_success, im_buf_arr = cv2.imencode(".jpg", self.current_frame)
+        return im_buf_arr.tobytes()  # image in byte format.
 
     def track_focused_point(self):
         """Method to provide the tracking predetermined non-moving target according to with locking_system's current position for track mode of T_System.
