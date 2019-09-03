@@ -12,30 +12,48 @@ function dragElement(drag_element, header_element = null) {
     let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
     if (header_element !== null) {
         // if present, the header is where you move the DIV from:
-        header_element.onmousedown = dragMouseDown;
+        header_element.onmousedown = drag_mouse_down;
+        drag_element.ontouchstart = drag_touch_start;
+
     } else {
         // otherwise, move the DIV from anywhere inside the DIV:
-        drag_element.onmousedown = dragMouseDown;
+        drag_element.onmousedown = drag_mouse_down;
+        drag_element.ontouchstart = drag_touch_start;
     }
 
     let add_timeout;
 
-    function dragMouseDown(e) {
+    function drag_mouse_down(e) {
         e = e || window.event;
         e.preventDefault();
         // get the mouse cursor position at startup:
         pos3 = e.clientX;
         pos4 = e.clientY;
-        document.onmouseup = closeDragElement;
+        document.onmouseup = close_drag_element;
         // call a function whenever the cursor moves:
-        document.onmousemove = elementDrag;
+        document.onmousemove = mouse_element_drag;
 
         add_timeout = setTimeout(function () {
             job_btn.removeEventListener("click", toggle_job_modal)
         }, 100);
     }
 
-    function elementDrag(e) {
+    function drag_touch_start(e) {
+        e = e || window.event;
+        e.preventDefault();
+        // get the mouse cursor position at startup:
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        document.ontouchend = close_drag_element;
+        // call a function whenever the cursor moves:
+        document.ontouchmove = touch_element_drag;
+
+        add_timeout = setTimeout(function () {
+            job_btn.removeEventListener("click", toggle_job_modal)
+        }, 100);
+    }
+
+    function mouse_element_drag(e) {
         e = e || window.event;
         e.preventDefault();
         // calculate the new cursor position:
@@ -48,12 +66,30 @@ function dragElement(drag_element, header_element = null) {
         drag_element.style.left = (drag_element.offsetLeft - pos1) + "px";
     }
 
-    function closeDragElement() {
+    function touch_element_drag(e) {
+        e = e || window.event;
+        e.preventDefault();
+        // calculate the new cursor position:
+        pos1 = pos3 - e.clientX;
+        pos2 = pos4 - e.clientY;
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        // set the element's new position:
+
+        drag_element.style.top = (e.targetTouches[0].pageX - pos2) + "px";
+        drag_element.style.left = (e.targetTouches[0].pageY - pos1) + "px";
+    }
+
+    function close_drag_element() {
         clearTimeout(add_timeout);
 
         // stop moving when mouse button is released:
         document.onmouseup = null;
         document.onmousemove = null;
+
+        document.ontouchend = null;
+        document.ontouchmove = null;
+
         let timeout = setTimeout(function () {
             job_btn.addEventListener("click", toggle_job_modal)
         }, 100);
@@ -137,11 +173,6 @@ job_ready_btn.addEventListener("click", function () {
         job_simulate_btn.classList.toggle("inactive");
 
         monitor_area_div.classList.toggle("focused");
-
-    } else if (job_ready_btn.innerHTML === translate_text_item("RESUME")) {
-        job_ready_btn.innerHTML = translate_text_item("FINISH");
-        job_ready_btn.classList.toggle("btn-light");
-        job_ready_btn.classList.toggle("btn-dark");
     }
 });
 
@@ -159,9 +190,13 @@ job_cancel_btn.addEventListener("click", function () {
         job_ready_btn.classList.toggle("btn-warning");
 
     } else if (job_cancel_btn.innerText === translate_text_item("PAUSE")) {
-        job_ready_btn.innerHTML = translate_text_item("RESUME");
-        job_ready_btn.classList.toggle("btn-dark");
-        job_ready_btn.classList.toggle("btn-light");
+        job_cancel_btn.innerHTML = translate_text_item("RESUME");
+        job_cancel_btn.classList.toggle("btn-dark");
+        job_cancel_btn.classList.toggle("btn-light");
+    } else if (job_cancel_btn.innerHTML === translate_text_item("RESUME")) {
+        job_cancel_btn.innerHTML = translate_text_item("PAUSE");
+        job_cancel_btn.classList.toggle("btn-light");
+        job_cancel_btn.classList.toggle("btn-dark");
     }
 });
 
