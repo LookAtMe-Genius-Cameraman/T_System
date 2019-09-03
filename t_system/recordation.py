@@ -12,6 +12,10 @@ import os  # Miscellaneous operating system interfaces
 import datetime  # Basic date and time types
 import subprocess  # Subprocess managements
 
+from tinydb import Query  # TinyDB is a lightweight document oriented database
+
+from t_system.db_fetching import DBFetcher
+
 from t_system import dot_t_system_dir
 from t_system import log_manager
 
@@ -27,39 +31,43 @@ class Recorder:
     as entry point from vision ability for starting recording processes.
     """
 
-    def __init__(self, camera, hearer):
+    def __init__(self, record_formats, camera, hearer):
         """Initialization method of :class:`t_system.recordation.Recorder` class.
 
         Args:
+                record_formats (list):  Formats of the records for video, audio and merged.
                 camera:       	        Camera object from PiCamera.
                 hearer:       	        Hearer object.
         """
-        self.record_path = dot_t_system_dir + "/records"
+        self.records_folder = dot_t_system_dir + "/records"
 
-        if not os.path.exists(self.record_path):
-            os.mkdir(self.record_path)
+        self.db = DBFetcher(self.records_folder, "db").fetch()
 
-        self.record_video_name = ""
-        self.record_audio_name = ""
-        self.final_record_file = ""
+        if not os.path.exists(self.records_folder):
+            os.mkdir(self.records_folder)
+
+        self.current_video_file = ""
+        self.current_audio_file = ""
+        self.current_merged_file = ""
+
+        self.record_formats = {"video": record_formats[0], "audio": record_formats[1], "merged": record_formats[2]}
 
         self.camera = camera
         self.hearer = hearer
     
-    def start(self, mode="track", video_format="h264", audio_format="wav", final_format="mkv"):
+    def start(self, mode="track"):
         """Method to start audio and video recording asynchronously.
 
          Args:
                 mode:       	        The running mode which is wants to set video name.
-                video_format:       	The video output format either 'h264' or 'mjpeg'. Other options in library are for raw data.
-                audio_format:       	The video output format. Allowed format is 'wav'.
-                final_format:       	The final recording format after audio and video files merged.
         """
 
-        self.__set_record_name(mode, video_format, audio_format, final_format)
-        self.camera.start_recording(self.record_video_name, video_format)
+        record = Record(datetime.datetime.now().strftime("%d_%m_%Y"), datetime.datetime.now().strftime("%H_%M_%S"), mode, self.record_formats)
 
-        self.hearer.start_recording(self.record_audio_name, audio_format)
+        self.__set_record_params(record)
+
+        self.camera.start_recording(self.current_video_file, self.record_formats["video"])
+        self.hearer.start_recording(self.current_audio_file, self.record_formats["audio"])
 
     def stop(self):
         """Method to stop audio and video recording
@@ -68,24 +76,149 @@ class Recorder:
         self.camera.stop_recording()
         self.hearer.stop_recording()
 
+        self.merge_audio_and_video()
+
     def merge_audio_and_video(self):
         """Method to merge recorded audio and video files.
         """
-        merge_cmd = 'ffmpeg -y -i ' + self.record_audio_name + ' -r 24 -i ' + self.record_video_name + ' -filter:a aresample=async=1 -c:a flac -c:v copy av.mkv'
+
+        merge_cmd = f'ffmpeg -y -i {self.current_audio_file} -r 24 -i {self.current_video_file} -filter:a aresample=async=1 -c:a flac -c:v copy {self.current_merged_file}'
         subprocess.call(merge_cmd, shell=True)
         logger.info('Video and Audio Muxing Done')
 
-    def __set_record_name(self, mode, video_format="h264", audio_format="wav", final_format="mkv"):
-        """Method to prepare the name of recording video with its path.
-
-         Args:
-                mode:       	        The running mode which is wants to set video name.
-                video_format:       	The video output format either 'h264' or 'mjpeg'. Other options in library are for raw data.
-                audio_format:       	The audio output format. Allowed format is 'wav'.
-                final_format:       	The final recording format after audio and video files merged.
+    def __set_record_params(self, record):
+        """Method to setting current parameter by current recording.
         """
-        common = self.record_path + "/" + mode + "_" + datetime.datetime.now().strftime("%d-%m-%Y_%H:%M:%S") + "."
 
-        self.record_video_name = common + video_format  # name looks like: PATH/22-05-2019_19:08:12.h264
-        self.record_audio_name = common + audio_format  # name looks like: PATH/22-05-2019_19:08:12.wav
-        self.final_record_file = common + final_format  # name looks like: PATH/22-05-2019_19:08:12.mkv
+        self.current_video_file = record.video_file
+        self.current_audio_file = record.audio_file
+        self.current_merged_file = record.merged_file
+
+
+class RecordManager:
+    """Class to define records of t_systems vision.
+
+    This class provides necessary initiations and functions named :func:`t_system.audition.Audition.__listen_async`
+    as the loop for asynchronous collecting audio data to the vision ability, named :func:`t_system.audition.Audition.listen_sync`
+    for the synchronous collecting audio data to the vision ability and named :func:`t_system.audition.Audition.start_recording`
+    as entry point from vision ability for starting recording processes.
+    """
+
+    def __init__(self):
+        """Initialization method of :class:`t_system.recordation.Recorder` class.
+        Args:
+                d_m_y (str):            Date that is day_mount_year format.
+        """
+
+        self.records_folder = f'{dot_t_system_dir}/records'
+
+        self.table_names = list(DBFetcher(self.records_folder, "db").fetch().tables())
+        self.tables = []
+
+        self.records = []
+
+    def __set_tables(self):
+        """Method to set table of record database.
+        """
+
+        for table_name in self.table_names:
+            self.tables.append(DBFetcher(self.records_folder, "db", table_name).fetch())
+
+    def __set_records(self):
+        """Method to set existing records.
+        """
+
+        for table in self.tables:
+            for record in table.all():
+                self.records.append(Record(record["parent_name"], record["name"], record["scope"], record["record_formats"]))
+
+    def get_records(self, table_name):
+        """Method to get existing records in given table name. If table is None it returns all records.
+        """
+        records = []
+
+        if table_name:
+            for record in self.records:
+                if record.parent_name == table_name:
+                    records.append(record)
+            return records
+
+        return self.records
+
+
+class Record:
+    """Class to define records of t_systems vision.
+
+    This class provides necessary initiations and functions named :func:`t_system.audition.Audition.__listen_async`
+    as the loop for asynchronous collecting audio data to the vision ability, named :func:`t_system.audition.Audition.listen_sync`
+    for the synchronous collecting audio data to the vision ability and named :func:`t_system.audition.Audition.start_recording`
+    as entry point from vision ability for starting recording processes.
+    """
+
+    def __init__(self, d_m_y, h_m_s, scope, record_formats):
+        """Initialization method of :class:`t_system.recordation.Record` class.
+
+        Args:
+                d_m_y (str):            Date that is day_mount_year format.
+                h_m_s (str):            Date that is hour_minute_second format.
+                scope (str):            The working type during recording.
+                record_formats (dict):  Formats of the records for video, audio and merged.
+        """
+
+        self.parent_name = d_m_y  # table name at the same time
+        self.name = h_m_s
+        self.scope = scope
+        self.record_formats = record_formats
+        self.length = 0.0  # in seconds
+
+        self.records_folder = f'{dot_t_system_dir}/records'
+        self.parent_folder = f'{self.records_folder}/{self.parent_name}'
+        self.folder = f'{self.parent_folder}/{self.name}'
+        self.__check_folders()
+
+        self.table = DBFetcher(self.records_folder, "db", self.parent_name).fetch()
+
+        self.video_file = f'{self.folder}.{self.name}.{self.record_formats["video"]}'
+        self.audio_file = f'{self.folder}.{self.name}.{self.record_formats["audio"]}'
+        self.merged_file = f'{self.folder}.{self.name}.{self.record_formats["merged"]}'
+
+        self.__db_upsert()
+
+    def __db_upsert(self, force_insert=False):
+        """Function to insert(or update) the record to the database.
+
+        Args:
+            force_insert (bool):    Force insert flag.
+
+        Returns:
+            str:  Response.
+        """
+
+        if self.table.search((Query().name == self.name)):
+            if force_insert:
+                # self.already_exist = False
+                self.table.update({'name': self.name, 'parent_name': self.parent_name, 'scope': self.scope, 'record_formats': self.record_formats, 'length': self.length}, Query().name == self.name)
+
+            else:
+                # self.already_exist = True
+                return "Already Exist"
+        else:
+            self.table.insert({
+                'name': self.name,
+                'parent_name': self.parent_name,
+                'scope': self.scope,
+                'record_formats': self.record_formats,
+                'length': self.length
+            })  # insert the given data
+
+        return ""
+
+    def __check_folders(self):
+        """Method to checking the necessary folders created before. If not created creates them.
+        """
+
+        if not os.path.exists(self.parent_folder):
+            os.mkdir(self.parent_folder)
+
+        if not os.path.exists(self.folder):
+            os.mkdir(self.folder)
