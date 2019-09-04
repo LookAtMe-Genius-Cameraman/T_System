@@ -30,6 +30,29 @@ $.put = function (url, data, callback) {
     });
 };
 
+/**
+ * Method to handle of PATCH request of $.ajax query.
+ * @param {string} url: the route address of the flask
+ * @param data: posting data to route.
+ * @param {function} callback: the callback function.
+ * @return {ajax} Whether something occurred.
+ */
+$.patch = function (url, data, callback) {
+
+    if ($.isFunction(data)) {
+        callback = data;
+        data = {}
+    }
+
+    return $.ajax({
+        url: url,
+        type: 'PATCH',
+        success: callback,
+        data: data,
+        contentType: 'application/x-www-form-urlencoded; charset=UTF-8'  // Default one.
+    });
+};
+
 
 /**
  * Method to handle of DELETE request of $.ajax query.
@@ -104,24 +127,6 @@ class JQueryManager {
     }
 
     /**
-     * Method to send DELETE request to given route.
-     * The response of request assigns to `response_data` variable.
-     * @param {string} route: the route address of the flask
-     */
-    static delete_data(route) {
-        let success = "";
-
-        $.delete(route, function (req, err, resp) {
-
-            success = err;
-            if (success === "success") {
-                response_data = JSON.parse(resp.responseText);
-                success = err
-            }
-        });
-    }
-
-    /**
      * Method to send PUT request to given route.
      * The response of request assigns to `response_data` variable.
      * @param {string} route: the route address of the flask
@@ -138,5 +143,42 @@ class JQueryManager {
         // event.preventDefault();
 
         return success
+    }
+
+    /**
+     * Method to send PATCH request to given route.
+     * The response of request assigns to `response_data` variable.
+     * @param {string} route: the route address of the flask
+     * @param data: putting data to route.
+     * @return {string} Whether something occurred.
+     */
+    static patch_data(route, data) {
+        let success = "";
+        $.put(route, data, function (req, err, resp) {
+            response_data = JSON.parse(resp.responseText);
+            success = err
+        });
+        // stop link reloading the page
+        // event.preventDefault();
+
+        return success
+    }
+
+    /**
+     * Method to send DELETE request to given route.
+     * The response of request assigns to `response_data` variable.
+     * @param {string} route: the route address of the flask
+     */
+    static delete_data(route) {
+        let success = "";
+
+        $.delete(route, function (req, err, resp) {
+
+            success = err;
+            if (success === "success") {
+                response_data = JSON.parse(resp.responseText);
+                success = err
+            }
+        });
     }
 }
