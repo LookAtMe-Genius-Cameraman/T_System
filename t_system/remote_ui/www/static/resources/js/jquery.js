@@ -10,7 +10,7 @@
 /**
  * Method to handle of PUT request of $.ajax query.
  * @param {string} url: the route address of the flask
- * @param data: posting data to route.
+ * @param data: putting data to route.
  * @param {function} callback: the callback function.
  * @return {ajax} Whether something occurred.
  */
@@ -33,7 +33,7 @@ $.put = function (url, data, callback) {
 /**
  * Method to handle of PATCH request of $.ajax query.
  * @param {string} url: the route address of the flask
- * @param data: posting data to route.
+ * @param data: patching data to route.
  * @param {function} callback: the callback function.
  * @return {ajax} Whether something occurred.
  */
@@ -149,12 +149,12 @@ class JQueryManager {
      * Method to send PATCH request to given route.
      * The response of request assigns to `response_data` variable.
      * @param {string} route: the route address of the flask
-     * @param data: putting data to route.
+     * @param data: patching data to route.
      * @return {string} Whether something occurred.
      */
     static patch_data(route, data) {
         let success = "";
-        $.put(route, data, function (req, err, resp) {
+        $.patch(route, data, function (req, err, resp) {
             response_data = JSON.parse(resp.responseText);
             success = err
         });
