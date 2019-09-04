@@ -40,3 +40,7 @@ FACE_ENCODING_SCHEMA = Schema({
 UPDATE_SCHEMA = Schema({
     'auto_update': Use(bool),
 })
+
+RECORD_SCHEMA = Schema({
+    'name': Use(str),
+})
