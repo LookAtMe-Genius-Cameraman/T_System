@@ -44,7 +44,7 @@ def get_records(admin_id, records_date):
 
         if records:
             for record in records:
-                result.append({"id": record.id, "time": record.time, "length": record.length})
+                result.append({"id": record.id, "name": record.name, "time": record.time, "length": record.length})
 
     except Exception as e:
         logger.error(e)
