@@ -15,6 +15,7 @@ const turkishtrans = {
     "Audio Inputs": "Ses Girişleri",
     "Language": "Dil",
     "Facial Recognitions": "Yüz tanıma",
+    "Recorded On": "Kaydedilenler",
     "Upload Photo": "Fotoğraf Yükle",
     "Send": "Gönder",
     "Scenarios :": "Senaryolar :",
