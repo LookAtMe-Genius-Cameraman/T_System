@@ -11,7 +11,9 @@
 import os  # Miscellaneous operating system interfaces
 import datetime  # Basic date and time types
 import subprocess  # Subprocess managements
+import uuid  # The random id generator
 
+from shutil import rmtree
 from tinydb import Query  # TinyDB is a lightweight document oriented database
 
 from t_system.db_fetching import DBFetcher
@@ -107,41 +109,80 @@ class RecordManager:
 
         self.db = DBFetcher(self.records_folder, "db").fetch()
 
-        self.table_names = list(self.db.tables())
-        self.tables = []
-
         self.records = []
 
-        self.__set_tables()
         self.__set_records()
-
-    def __set_tables(self):
-        """Method to set table of record database.
-        """
-
-        for table_name in self.table_names:
-            self.tables.append(DBFetcher(self.records_folder, "db", table_name).fetch())
 
     def __set_records(self):
         """Method to set existing records.
         """
 
-        for table in self.tables:
-            for record in table.all():
-                self.records.append(Record(record["parent_name"], record["name"], record["scope"], record["record_formats"]))
+        for record in self.db.all():
+            self.records.append(Record(record["date"], record["time"], record["scope"], record["record_formats"], record["id"]))
 
-    def get_records(self, table_name):
-        """Method to get existing records in given table name. If table is None it returns all records.
+    def get_records(self, date=None):
+        """Method to get existing records in given date. If date is None it returns all records.
+
+         Args:
+                date (str):     Parent date of the record. In day_mount_year format.
         """
         records = []
 
-        if table_name:
+        if date:
             for record in self.records:
-                if record.parent_name == table_name:
+                if record.date == date:
                     records.append(record)
             return records
 
         return self.records
+
+    def get_record(self, id):
+        """Method to get existing record in given id.
+
+         Args:
+                id (str):               ID of the record.
+        """
+
+        for record in self.records:
+            if record.id == id:
+                return record
+
+    def get_record_dates(self):
+        """Method to get date list of existing records.
+        """
+        dates = []
+        for record in self.records:
+            dates.append(record.date)
+
+        return dates
+
+    def delete_record(self, id):
+        """Method to get date list of existing records.
+
+         Args:
+                id (str):               ID of the record.
+        """
+
+        for record in self.records:
+            if record.id == id:
+                record.remove_self()
+                self.records.remove(record)  # for removing object from list
+                return True
+        return False
+
+    def update_record(self, id, name):
+        """Method to updating record that has given id.
+
+        Args:
+            id (str):               ID of the record.
+            name (str):                 The name of the record.
+        """
+
+        for record in self.records:
+            if record.id == id:
+                record.update_name(name)
+                return True
+        return False
 
 
 class Record:
@@ -151,7 +192,7 @@ class Record:
     for saving records to the database safely.
     """
 
-    def __init__(self, d_m_y, h_m_s, scope, record_formats):
+    def __init__(self, d_m_y, h_m_s, scope, record_formats, id=None, name=None):
         """Initialization method of :class:`t_system.recordation.Record` class.
 
         Args:
@@ -159,24 +200,34 @@ class Record:
                 h_m_s (str):            Date that is hour_minute_second format.
                 scope (str):            The working type during recording.
                 record_formats (dict):  Formats of the records for video, audio and merged.
+                id (str):               The id of the record.
+                name (str):             The name of the record.
         """
 
-        self.parent_name = d_m_y  # table name at the same time
-        self.name = h_m_s
+        self.id = id
+        if not id:
+            self.id = str(uuid.uuid1())
+
+        self.name = name
+        if not name:
+            self.name = h_m_s
+
+        self.date = d_m_y  # table name at the same time
+        self.time = h_m_s
         self.scope = scope
         self.record_formats = record_formats
         self.length = 0.0  # in seconds
 
         self.records_folder = f'{dot_t_system_dir}/records'
-        self.parent_folder = f'{self.records_folder}/{self.parent_name}'
-        self.folder = f'{self.parent_folder}/{self.name}'
+        self.parent_folder = f'{self.records_folder}/{self.date}'
+        self.folder = f'{self.parent_folder}/{self.time}'
         self.__check_folders()
 
-        self.table = DBFetcher(self.records_folder, "db", self.parent_name).fetch()
+        self.db = DBFetcher(self.records_folder, "db").fetch()
 
-        self.video_file = f'{self.folder}.{self.name}.{self.record_formats["video"]}'
-        self.audio_file = f'{self.folder}.{self.name}.{self.record_formats["audio"]}'
-        self.merged_file = f'{self.folder}.{self.name}.{self.record_formats["merged"]}'
+        self.video_file = f'{self.folder}/{self.time}.{self.record_formats["video"]}'
+        self.audio_file = f'{self.folder}/{self.time}.{self.record_formats["audio"]}'
+        self.merged_file = f'{self.folder}/{self.time}.{self.record_formats["merged"]}'
 
         self.__db_upsert()
 
@@ -184,30 +235,50 @@ class Record:
         """Function to insert(or update) the record to the database.
 
         Args:
-            force_insert (bool):    Force insert flag.
+            force_insert (bool):        Force insert flag.
 
         Returns:
             str:  Response.
         """
 
-        if self.table.search((Query().name == self.name)):
+        if self.db.search((Query().id == self.id)):
             if force_insert:
                 # self.already_exist = False
-                self.table.update({'name': self.name, 'parent_name': self.parent_name, 'scope': self.scope, 'record_formats': self.record_formats, 'length': self.length}, Query().name == self.name)
+                self.db.update({'id': self.id, 'name': self.name, 'time': self.time, 'date': self.date, 'scope': self.scope, 'record_formats': self.record_formats, 'length': self.length}, Query().id == self.id)
 
             else:
                 # self.already_exist = True
                 return "Already Exist"
         else:
-            self.table.insert({
+            self.db.insert({
+                'id': self.id,
                 'name': self.name,
-                'parent_name': self.parent_name,
+                'time': self.time,
+                'date': self.date,
                 'scope': self.scope,
                 'record_formats': self.record_formats,
                 'length': self.length
             })  # insert the given data
 
         return ""
+
+    def update_name(self, name):
+        """Method to updating self name via by given parameter.
+
+        Args:
+            name (str):                 The name of the record.
+        """
+
+        self.name = name
+        self.__db_upsert(True)
+
+    def remove_self(self):
+        """Method to remove face itself.
+        """
+
+        rmtree(self.folder)
+
+        self.db.remove((Query().id == self.id))
 
     def __check_folders(self):
         """Method to checking the necessary folders created before. If not created creates them.
