@@ -149,6 +149,11 @@
     font-size: 75%;
 }
 
+/*RECORDS OPTION*/
+#record_control_div.higher {
+    top: -340% !important;
+}
+
 /*LANGUAGE OPTION*/
 #lang_select_div.higher {
     top: -340% !important;
