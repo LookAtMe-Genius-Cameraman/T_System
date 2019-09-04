@@ -154,6 +154,8 @@ class RecordManager:
         for record in self.records:
             dates.append(record.date)
 
+        dates = list(dict.fromkeys(dates))  # removes duplicated dates.
+
         return dates
 
     def delete_record(self, id):
