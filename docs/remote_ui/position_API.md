@@ -64,7 +64,7 @@ Host: domain
 ```
 
 # Updating Position
-Returns an error if the ID or DB is empty.
+Returns an error if the DB or ID is empty.
 
 ## Request
 ```http
@@ -90,7 +90,8 @@ Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 ### On Failure
 ```json
 {
-    "status": "ERROR"
+    "status": "ERROR",
+    "message": "DB/ID parameter is missing."
 }
 ```
 
@@ -116,6 +117,6 @@ Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 ```json
 {
     "status": "ERROR",
-    "message": "ID parameter is missing."
+    "message": "DB/ID parameter is missing."
 }
 ```

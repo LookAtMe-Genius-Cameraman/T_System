@@ -84,7 +84,8 @@ Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 ### On Failure
 ```json
 {
-    "status": "ERROR"
+    "status": "ERROR",
+    "message": "ID parameter is missing."
 }
 ```
 

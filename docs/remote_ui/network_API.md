@@ -30,7 +30,7 @@ Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 }
 ```
 
-# Getting Positions
+# Getting Networks
 - If a specific parameter SSID is given, its network are listed.
 
 ## Request
@@ -57,7 +57,7 @@ Host: domain
 }
 ```
 
-# Updating Position
+# Updating Network
 Returns an error if the ID is empty.
 
 ## Request
@@ -83,7 +83,8 @@ Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 ### On Failure
 ```json
 {
-    "status": "ERROR"
+    "status": "ERROR",
+    "message": "Missing or incorrect parameters"    
 }
 ```
 

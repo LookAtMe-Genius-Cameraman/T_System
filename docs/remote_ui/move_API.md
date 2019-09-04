@@ -25,7 +25,8 @@ Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 ### On Failure
 ```json
 {
-    "status": "ERROR"
+    "status": "ERROR",
+    "message": "Missing or incorrect parameters"
 }
 ```
 
