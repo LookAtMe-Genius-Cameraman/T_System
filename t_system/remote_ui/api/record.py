@@ -43,7 +43,7 @@ class RecordApi(Resource):
         admin_id = request.args.get('admin_id', None)
 
         if records_date and record_id:
-            return {'status': 'ERROR', 'message': '\'date\' and \'id\' parameter giving together'}
+            return {'status': 'ERROR', 'message': '\'date\' and \'id\' parameters giving together'}
 
         if not records_date and not record_id:
             record_dates = get_record_dates(admin_id)
