@@ -32,4 +32,4 @@ record_manager = None
 
 __author__ = 'Cem Baybars GÜÇLÜ'
 __email__ = 'cem.baybars@gmail.com'
-__version__ = '0.9-alpha2.63'
+__version__ = '0.9-alpha2.64'
