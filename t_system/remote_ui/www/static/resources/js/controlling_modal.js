@@ -337,7 +337,7 @@ create_pos_btn.addEventListener("click", function () {
     let name_dict = {"name": position_name_input.value};
     let data = Object.assign({}, name_dict, current_arm_position);
 
-    jquery_manager.post_data("/api/position&admin_id=" + admin_id, data);
+    jquery_manager.post_data("/api/position?db=" + "predicted_missions" + "&admin_id=" + admin_id, data);
 
     position_name_input.value = "";
     position_div_back_btn.click();
