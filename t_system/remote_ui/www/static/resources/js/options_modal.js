@@ -19,6 +19,11 @@ const face_encoding_div = document.getElementById("face_encoding_div");
 const face_encoding_btn = document.getElementById("face_encoding_btn");
 const face_encoding_io_div = document.getElementById("face_encoding_io_div");
 
+const record_control_div = document.getElementById("record_control_div");
+const record_control_btn = document.getElementById("record_control_btn");
+const record_control_io_div = document.getElementById("record_control_io_div");
+const record_list_ul = document.getElementById("record_list_ul");
+
 const lang_select_div = document.getElementById("lang_select_div");
 const lang_select_btn = document.getElementById("lang_select_btn");
 const language_dropdown_div = document.getElementById("language_dropdown_div");
@@ -47,15 +52,34 @@ function get_network_data(ssid = null) {
     }
 }
 
+/**
+ * Method of getting records, record lists and specified record information with their id, date or none.
+ * It is triggered via a click on record_control_btn, specified date of the records or specified record.
+ */
+function get_record_data(date=null, id = null) {
+
+    if (date && id) {
+        return false
+    }
+
+    if (!date && !id) {
+        jquery_manager.get_data("/api/record?admin_id=" + admin_id);
+    } else if (date) {
+        jquery_manager.get_data("/api/record?date=" + date + "&admin_id=" + admin_id);
+    } else if (id) {
+        jquery_manager.get_data("/api/record?id=" + id + "&admin_id=" + admin_id);
+    }
+}
+
 let update_control_btn_click_count = 0;
 update_control_btn.addEventListener("click", function () {
     update_control_btn_click_count++;
-
+    
     if (update_control_btn_click_count <= 1) {
 
         dark_deep_background_div.classList.toggle("focused");
         dark_overlay_active = true;
-        toggle_elements([wifi_control_div, audio_control_div, face_encoding_div, lang_select_div]);
+        toggle_elements([wifi_control_div, audio_control_div, face_encoding_div, record_control_div, lang_select_div]);
         update_control_div.classList.toggle("col");
         update_control_div.classList.toggle("focused");
         update_control_div.classList.toggle("higher");
@@ -64,7 +88,7 @@ update_control_btn.addEventListener("click", function () {
     } else {
         dark_deep_background_div.classList.toggle("focused");
         dark_overlay_active = false;
-        toggle_elements([wifi_control_div, audio_control_div, face_encoding_div, lang_select_div]);
+        toggle_elements([wifi_control_div, audio_control_div, face_encoding_div, record_control_div, lang_select_div]);
         update_control_div.classList.toggle("col");
         update_control_div.classList.toggle("focused");
         update_control_div.classList.toggle("higher");
@@ -112,7 +136,7 @@ wifi_connections_btn.addEventListener("click", function () {
                     dark_deep_background_div.classList.toggle("focused");
                     dark_overlay_active = true;
 
-                    toggle_elements([update_control_div, audio_control_div, face_encoding_div, lang_select_div]);
+                    toggle_elements([update_control_div, audio_control_div, face_encoding_div, record_control_div, lang_select_div]);
                     wifi_control_div.classList.toggle("col");
                     wifi_control_div.classList.toggle("focused");
                     wifi_control_div.classList.toggle("higher");
@@ -129,7 +153,7 @@ wifi_connections_btn.addEventListener("click", function () {
     } else {
         dark_deep_background_div.classList.toggle("focused");
         dark_overlay_active = false;
-        toggle_elements([update_control_div, face_encoding_div, lang_select_div]);
+        toggle_elements([update_control_div, audio_control_div, face_encoding_div, record_control_div, lang_select_div]);
         wifi_control_div.classList.toggle("col");
         wifi_control_div.classList.toggle("focused");
         wifi_control_div.classList.toggle("higher");
@@ -173,7 +197,7 @@ audio_control_btn.addEventListener("click", function () {
 
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
-    toggle_elements([update_control_div, wifi_control_div, face_encoding_div, lang_select_div]);
+    toggle_elements([update_control_div, wifi_control_div, face_encoding_div, record_control_div, lang_select_div]);
     audio_control_div.classList.toggle("col");
     audio_control_div.classList.toggle("focused");
     audio_control_div.classList.toggle("higher");
@@ -184,11 +208,121 @@ face_encoding_btn.addEventListener("click", function () {
 
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
-    toggle_elements([update_control_div, wifi_control_div, audio_control_div, lang_select_div]);
+    toggle_elements([update_control_div, wifi_control_div, audio_control_div, record_control_div, lang_select_div]);
     face_encoding_div.classList.toggle("col");
     face_encoding_div.classList.toggle("focused");
     face_encoding_div.classList.toggle("higher");
     face_encoding_io_div.classList.toggle("focused");
+});
+
+
+let record_control_btn_click_count = 0;
+
+record_control_btn.addEventListener("click", function () {
+
+    dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
+    dark_deep_background_div.classList.toggle("focused");
+
+    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, lang_select_div]);
+    record_control_div.classList.toggle("col");
+    record_control_div.classList.toggle("focused");
+    record_control_div.classList.toggle("higher");
+    record_control_io_div.classList.toggle("focused");
+
+    record_control_btn_click_count++;
+
+    if (record_control_btn_click_count <= 1) {
+        get_record_data();
+
+        let timer_settings_cont = setInterval(function () {
+
+            if (requested_data !== null) {
+
+                if (requested_data["status"] === "OK") {
+
+                    while (record_list_ul.firstChild) {
+                        record_list_ul.removeChild(record_list_ul.firstChild);
+                    }
+
+                    for (let c = 0; c < requested_data["data"].length; c++) {
+                        // console.log(event_db[c]["name"]);
+                        let li = document.createElement('li');
+                        let section = document.createElement('section');
+
+                        let date_dropdown_div = document.createElement('div');
+                        let date_a = document.createElement('a');
+                        let date_dropdown_container_div = document.createElement('div');
+
+                        date_dropdown_div.classList.add("dropdown show");
+
+                        date_a.classList.add("btn btn-secondary dropdown-toggle");
+                        date_a.href = "#";
+                        date_a.role = "button";
+                        date_a.id = requested_data["data"][c] + "_a";
+                        date_a.attr("data-toggle", "dropdown");
+                        date_a.attr("aria-haspopup", "true");
+                        date_a.attr("aria-expanded", "false");
+                        date_a.innerHTML = requested_data["data"][c];
+
+
+                        date_dropdown_container_div.classList.add("dropdown-menu");
+                        date_dropdown_container_div.attr("aria-labelledby", date_a.id);
+
+                                requested_data = null;
+
+                                get_record_data(date_a.innerHTML, null);
+
+                                let timer_settings_cont = setInterval(function () {
+
+                                    if (requested_data !== null) {
+
+                                        if (requested_data["status"] === "OK") {
+                                            for (let c = 0; c < requested_data["data"].length; c++) {
+                                                let record_div = document.createElement('div');
+                                                let record_a = document.createElement('a');
+                                                let record_time_span = document.createElement('span');
+                                                let record_length_span = document.createElement('span');
+
+                                                record_div.classList.add("dropdown-item");
+                                                record_div.id = requested_data["data"][c]["id"];
+
+                                                record_a.role = "button";
+                                                record_a.innerHTML = requested_data["data"][c]["name"];
+                                                record_time_span.innerHTML = requested_data["data"][c]["time"];
+                                                record_length_span.innerHTML = requested_data["data"][c]["length"];
+
+                                                record_a.addEventListener("click", function () {
+                                                    // Todo: Video getting, playing processes will be here.
+                                                    get_record_data(null, record_div.id);
+                                                });
+
+                                                record_div.appendChild(record_a);
+                                                record_div.appendChild(record_time_span);
+                                                record_div.appendChild(record_length_span);
+
+                                                date_dropdown_container_div.appendChild(record_div);
+                                            }
+                                        }
+                                        requested_data = null;
+                                        clearInterval(timer_settings_cont)
+                                    }
+                                }, 500);
+
+                        li.appendChild(section);
+                        section.appendChild(date_dropdown_div);
+                        date_dropdown_div.appendChild(date_a);
+                        date_dropdown_div.appendChild(date_dropdown_container_div);
+
+                        network_list_ul.appendChild(li);
+                    }
+                }
+                requested_data = null;
+                clearInterval(timer_settings_cont);
+            }
+        }, 500);
+    } else {
+        record_control_btn_click_count = 0;
+    }
 });
 
 lang_select_btn.addEventListener("click", function () {
@@ -196,7 +330,7 @@ lang_select_btn.addEventListener("click", function () {
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
 
-    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div]);
+    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div]);
     lang_select_div.classList.toggle("col");
     lang_select_div.classList.toggle("focused");
     lang_select_div.classList.toggle("higher");
