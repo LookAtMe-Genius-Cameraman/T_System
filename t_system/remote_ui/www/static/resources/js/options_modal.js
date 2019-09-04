@@ -1,7 +1,7 @@
-
 const update_control_div = document.getElementById("update_control_div");
 const update_control_btn = document.getElementById("update_control_btn");
 const update_control_io_div = document.getElementById("update_control_io_div");
+const auto_update_checkbox = document.getElementById("auto_update_checkbox");
 
 const wifi_control_div = document.getElementById("wifi_control_div");
 const wifi_connections_btn = document.getElementById("wifi_connections_btn");
@@ -29,7 +29,6 @@ const lang_select_btn = document.getElementById("lang_select_btn");
 const language_dropdown_div = document.getElementById("language_dropdown_div");
 
 
-
 // a_i_checkbox.addEventListener("change", function () {  // Checkbox onchange sample
 //
 //     if (a_i_checkbox.checked){
@@ -38,6 +37,21 @@ const language_dropdown_div = document.getElementById("language_dropdown_div");
 //     }
 //
 // });
+
+/**
+ * Method to updating `auto_update` status of UpdateManager of t_system.
+ */
+function put_update_data(data) {
+    jquery_manager.post_data("/api/update&admin_id=" + admin_id, data);
+}
+
+/**
+ * Method of getting specified network information with its ssid or the all existing network information.
+ * It is triggered via a click on settings_btn or clicked specified network on network list.
+ */
+function get_update_data(key) {
+    jquery_manager.get_data("/api/network?key=" + key + "&admin_id=" + admin_id);
+}
 
 /**
  * Method of getting specified network information with its ssid or the all existing network information.
@@ -56,7 +70,7 @@ function get_network_data(ssid = null) {
  * Method of getting records, record lists and specified record information with their id, date or none.
  * It is triggered via a click on record_control_btn, specified date of the records or specified record.
  */
-function get_record_data(date=null, id = null) {
+function get_record_data(date = null, id = null) {
 
     if (date && id) {
         return false
@@ -74,33 +88,55 @@ function get_record_data(date=null, id = null) {
 let update_control_btn_click_count = 0;
 update_control_btn.addEventListener("click", function () {
     update_control_btn_click_count++;
-    
-    if (update_control_btn_click_count <= 1) {
 
-        dark_deep_background_div.classList.toggle("focused");
-        dark_overlay_active = true;
-        toggle_elements([wifi_control_div, audio_control_div, face_encoding_div, record_control_div, lang_select_div]);
-        update_control_div.classList.toggle("col");
-        update_control_div.classList.toggle("focused");
-        update_control_div.classList.toggle("higher");
-        update_control_io_div.classList.toggle("focused");
+    dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
+    dark_deep_background_div.classList.toggle("focused");
+
+    toggle_elements([wifi_control_div, audio_control_div, face_encoding_div, record_control_div, lang_select_div]);
+    update_control_div.classList.toggle("col");
+    update_control_div.classList.toggle("focused");
+    update_control_div.classList.toggle("higher");
+    update_control_io_div.classList.toggle("focused");
+
+    if (update_control_btn_click_count <= 1) {
+        get_update_data("auto_update");
+
+        let timer_settings_cont = setInterval(function () {
+            if (requested_data !== null) {
+                if (requested_data["status"] === "OK") {
+                    auto_update_checkbox.checked = requested_data["data"] === true;
+                }
+                requested_data = null;
+                clearInterval(timer_settings_cont)
+            }
+        });
 
     } else {
-        dark_deep_background_div.classList.toggle("focused");
-        dark_overlay_active = false;
-        toggle_elements([wifi_control_div, audio_control_div, face_encoding_div, record_control_div, lang_select_div]);
-        update_control_div.classList.toggle("col");
-        update_control_div.classList.toggle("focused");
-        update_control_div.classList.toggle("higher");
-        update_control_io_div.classList.toggle("focused");
-
         update_control_btn_click_count = 0;
+    }
+});
+
+auto_update_checkbox.addEventListener("change", function () {
+    if (auto_update_checkbox.checked) {
+        let data = {"auto_update": true};
+        put_update_data(data);
+    } else {
+        let data = {"auto_update": false};
+        put_update_data(data);
     }
 });
 
 let wifi_connections_btn_click_count = 0;
 wifi_connections_btn.addEventListener("click", function () {
     wifi_connections_btn_click_count++;
+
+    dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
+    dark_deep_background_div.classList.toggle("focused");
+    toggle_elements([update_control_div, audio_control_div, face_encoding_div, record_control_div, lang_select_div]);
+    wifi_control_div.classList.toggle("col");
+    wifi_control_div.classList.toggle("focused");
+    wifi_control_div.classList.toggle("higher");
+    wifi_control_io_div.classList.toggle("focused");
 
     if (wifi_connections_btn_click_count <= 1) {
         get_network_data();
@@ -132,44 +168,23 @@ wifi_connections_btn.addEventListener("click", function () {
 
                         network_list_ul.appendChild(li);
                     }
-
-                    dark_deep_background_div.classList.toggle("focused");
-                    dark_overlay_active = true;
-
-                    toggle_elements([update_control_div, audio_control_div, face_encoding_div, record_control_div, lang_select_div]);
-                    wifi_control_div.classList.toggle("col");
-                    wifi_control_div.classList.toggle("focused");
-                    wifi_control_div.classList.toggle("higher");
-                    wifi_control_io_div.classList.toggle("focused");
-
                 }
                 requested_data = null;
                 clearInterval(timer_settings_cont)
             }
         }, 500);
-
         // jquery_manager.post_data("/try", {"bla": "bla"})
-
     } else {
-        dark_deep_background_div.classList.toggle("focused");
-        dark_overlay_active = false;
-        toggle_elements([update_control_div, audio_control_div, face_encoding_div, record_control_div, lang_select_div]);
-        wifi_control_div.classList.toggle("col");
-        wifi_control_div.classList.toggle("focused");
-        wifi_control_div.classList.toggle("higher");
-        wifi_control_io_div.classList.toggle("focused");
         wifi_connections_btn_click_count = 0;
     }
-
 });
 
 function show_create_new_wifi_button() {
-    if(network_ssid_input.value !== "" && network_password_input.value !== ""){
+    if (network_ssid_input.value !== "" && network_password_input.value !== "") {
         network_ssid_input.classList.add("new_network_input_transition");
         network_password_input.classList.add("new_network_input_transition");
         show_element(create_new_network_btn);
-    }
-    else {
+    } else {
         network_ssid_input.classList.remove("new_network_input_transition");
         network_password_input.classList.remove("new_network_input_transition");
         hide_element(create_new_network_btn);
@@ -245,7 +260,6 @@ record_control_btn.addEventListener("click", function () {
                     }
 
                     for (let c = 0; c < requested_data["data"].length; c++) {
-                        // console.log(event_db[c]["name"]);
                         let li = document.createElement('li');
                         let section = document.createElement('section');
 
@@ -268,45 +282,45 @@ record_control_btn.addEventListener("click", function () {
                         date_dropdown_container_div.classList.add("dropdown-menu");
                         date_dropdown_container_div.attr("aria-labelledby", date_a.id);
 
-                                requested_data = null;
+                        requested_data = null;
 
-                                get_record_data(date_a.innerHTML, null);
+                        get_record_data(date_a.innerHTML, null);
 
-                                let timer_settings_cont = setInterval(function () {
+                        let timer_settings_cont = setInterval(function () {
 
-                                    if (requested_data !== null) {
+                            if (requested_data !== null) {
 
-                                        if (requested_data["status"] === "OK") {
-                                            for (let c = 0; c < requested_data["data"].length; c++) {
-                                                let record_div = document.createElement('div');
-                                                let record_a = document.createElement('a');
-                                                let record_time_span = document.createElement('span');
-                                                let record_length_span = document.createElement('span');
+                                if (requested_data["status"] === "OK") {
+                                    for (let c = 0; c < requested_data["data"].length; c++) {
+                                        let record_div = document.createElement('div');
+                                        let record_a = document.createElement('a');
+                                        let record_time_span = document.createElement('span');
+                                        let record_length_span = document.createElement('span');
 
-                                                record_div.classList.add("dropdown-item");
-                                                record_div.id = requested_data["data"][c]["id"];
+                                        record_div.classList.add("dropdown-item");
+                                        record_div.id = requested_data["data"][c]["id"];
 
-                                                record_a.role = "button";
-                                                record_a.innerHTML = requested_data["data"][c]["name"];
-                                                record_time_span.innerHTML = requested_data["data"][c]["time"];
-                                                record_length_span.innerHTML = requested_data["data"][c]["length"];
+                                        record_a.role = "button";
+                                        record_a.innerHTML = requested_data["data"][c]["name"];
+                                        record_time_span.innerHTML = requested_data["data"][c]["time"];
+                                        record_length_span.innerHTML = requested_data["data"][c]["length"];
 
-                                                record_a.addEventListener("click", function () {
-                                                    // Todo: Video getting, playing processes will be here.
-                                                    get_record_data(null, record_div.id);
-                                                });
+                                        record_a.addEventListener("click", function () {
+                                            // Todo: Video getting, playing processes will be here.
+                                            get_record_data(null, record_div.id);
+                                        });
 
-                                                record_div.appendChild(record_a);
-                                                record_div.appendChild(record_time_span);
-                                                record_div.appendChild(record_length_span);
+                                        record_div.appendChild(record_a);
+                                        record_div.appendChild(record_time_span);
+                                        record_div.appendChild(record_length_span);
 
-                                                date_dropdown_container_div.appendChild(record_div);
-                                            }
-                                        }
-                                        requested_data = null;
-                                        clearInterval(timer_settings_cont)
+                                        date_dropdown_container_div.appendChild(record_div);
                                     }
-                                }, 500);
+                                }
+                                requested_data = null;
+                                clearInterval(timer_settings_cont)
+                            }
+                        }, 500);
 
                         li.appendChild(section);
                         section.appendChild(date_dropdown_div);
