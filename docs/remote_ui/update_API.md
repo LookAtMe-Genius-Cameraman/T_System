@@ -37,8 +37,9 @@ Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 }
 ```
 
-# Getting Positions
-- Returns an error if the ID is empty.
+# Getting Update Status
+- Returns an error if the KEY is empty.
+- Valid keys are "auto_update" and "up_to_date".
 
 ## Request
 ```http

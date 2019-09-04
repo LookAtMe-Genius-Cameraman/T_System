@@ -33,7 +33,13 @@ Host: domain
 ```json
 {
     "status": "OK",
-    "data":{"id": "b970138a-argb-11e9-b145-cc2f844671ed", "name": "record_name", "time": "12_27_54", "length": 180}
+    "data":[
+    {
+        "id": "b970138a-argb-11e9-b145-cc2f844671ed", 
+        "name": "record_name", 
+        "time": "12_27_54", 
+        "length": 180
+    }]
 }
 ```
 - İf ID parameter full
