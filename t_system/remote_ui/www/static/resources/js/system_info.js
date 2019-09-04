@@ -48,7 +48,7 @@ system_info_btn.addEventListener("click", function () {
             dark_overlay_active = true
         }
 
-        toggle_elements_if_necessary([settings_template_container, controlling_template_container, prepare_template_container, job_template_container], ["hidden_element", "hidden_element", "hidden_element", "hidden_element"], [false, false, false, false]);
+        toggle_elements_if_necessary([options_template_container, controlling_template_container, prepare_template_container, job_template_container], ["hidden_element", "hidden_element", "hidden_element", "hidden_element"], [false, false, false, false]);
 
         show_element(system_info_chart_div);
         show_element(versions_div);
@@ -56,7 +56,7 @@ system_info_btn.addEventListener("click", function () {
 
     } else {
         system_info_template_container.classList.toggle("focused");
-        settings_template_container.classList.toggle("hidden_element");
+        options_template_container.classList.toggle("hidden_element");
         controlling_template_container.classList.toggle("hidden_element");
         prepare_template_container.classList.toggle("hidden_element");
         job_template_container.classList.toggle("hidden_element");

@@ -20,7 +20,7 @@ const prepare_btn = document.getElementById("prepare_btn");
 /** @type {!Element} */
 // const swiper = document.querySelector(".swiper-container");
 const controlling_template_container = document.getElementById("controlling_template_container");
-const settings_template_container = document.getElementById("settings_template_container");
+const options_template_container = document.getElementById("options_template_container");
 const prepare_template_container = document.getElementById("prepare_template_container");
 
 

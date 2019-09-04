@@ -108,7 +108,7 @@ function toggle_job_modal() {
         dark_overlay_active = false
     }
 
-    settings_template_container.classList.toggle("hidden_element");
+    options_template_container.classList.toggle("hidden_element");
     controlling_template_container.classList.toggle("hidden_element");
     prepare_template_container.classList.toggle("hidden_element");
     system_info_template_container.classList.toggle("hidden_element");
