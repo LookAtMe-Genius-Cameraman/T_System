@@ -11,7 +11,7 @@ Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 ## Response
 ### On Success
 ```
-Flask.Response(stream, mimetype=mimetype)
+flask.Response(stream, mimetype=mimetype)
 ```
 
 ### On Failure
