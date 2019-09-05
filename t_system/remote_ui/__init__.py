@@ -16,13 +16,17 @@ import json
 import os
 import inspect
 
-from t_system.remote_ui.api.position import api_bp as position_api_bp
-from t_system.remote_ui.api.scenario import api_bp as scenario_api_bp
-from t_system.remote_ui.api.network import api_bp as network_api_bp
-from t_system.remote_ui.api.move import api_bp as move_api_bp
-from t_system.remote_ui.api.system_info import api_bp as system_info_api_bp
 from t_system.remote_ui.api.face_encoding import api_bp as face_encoding_api_bp
+from t_system.remote_ui.api.job import api_bp as job_api_bp
+from t_system.remote_ui.api.move import api_bp as move_api_bp
+from t_system.remote_ui.api.network import api_bp as network_api_bp
+from t_system.remote_ui.api.position import api_bp as position_api_bp
+from t_system.remote_ui.api.record import api_bp as record_api_bp
+from t_system.remote_ui.api.scenario import api_bp as scenario_api_bp
 from t_system.remote_ui.api.stream import api_bp as stream_api_bp
+from t_system.remote_ui.api.system_info import api_bp as system_info_api_bp
+from t_system.remote_ui.api.update import api_bp as update_api_bp
+
 from t_system import T_SYSTEM_PATH, dot_t_system_dir
 # dot_t_system_dir = "/home/baybars/.t_system"
 # T_SYSTEM_PATH = "/home/baybars/T_System/t_system"
@@ -69,13 +73,16 @@ class RemoteUI:
         """Method to setting flask API.
         """
 
-        self.app.register_blueprint(position_api_bp)
-        self.app.register_blueprint(scenario_api_bp)
-        self.app.register_blueprint(network_api_bp)
-        self.app.register_blueprint(move_api_bp)
-        self.app.register_blueprint(system_info_api_bp)
         self.app.register_blueprint(face_encoding_api_bp)
+        self.app.register_blueprint(job_api_bp)
+        self.app.register_blueprint(move_api_bp)
+        self.app.register_blueprint(network_api_bp)
+        self.app.register_blueprint(position_api_bp)
+        self.app.register_blueprint(record_api_bp)
+        self.app.register_blueprint(scenario_api_bp)
         self.app.register_blueprint(stream_api_bp)
+        self.app.register_blueprint(system_info_api_bp)
+        self.app.register_blueprint(update_api_bp)
 
         @self.app.route('/')
         def main():
@@ -117,6 +124,17 @@ class RemoteUI:
         if func is None:
             raise RuntimeError('Not running with the Werkzeug Server')
         func()
+
+
+def allowed_file(filename, allowed_extensions):
+    """The low-level method to check the given name compatibility that is for saving.
+
+    Args:
+        filename (string):          Name of file that will saved.
+        allowed_extensions (set):   Allowed extensions.
+    """
+
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
 
 
 if __name__ == "__main__":
