@@ -115,12 +115,14 @@ def prepare(args):
     from t_system.motion.arm import Arm
     from t_system.motion.action import MissionManager
     from t_system.recordation import RecordManager
+    from t_system.face_encoding import FaceEncodeManager
 
     t_system.administrator = Administrator()
     t_system.update_manager = UpdateManager()
     t_system.arm = Arm(args["robotic_arm"])
     t_system.mission_manager = MissionManager()
     t_system.record_manager = RecordManager()
+    t_system.face_encode_manager = FaceEncodeManager()
 
     if not args["no_emotion"]:
         from t_system.motion.action import EmotionManager
