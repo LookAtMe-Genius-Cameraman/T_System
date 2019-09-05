@@ -50,12 +50,11 @@ class StreamApi(Resource):
         if not stream_type:
             return {'status': 'ERROR', 'message': '\'id\' parameter is missing'}
 
-        stream, mimetype = stream_manager.start_stream(admin_id, stream_type)
+        get_stream, mimetype = stream_manager.start_stream(admin_id, stream_type)
 
-        if stream and mimetype:
+        if get_stream and mimetype:
             logger.debug("Response returning")
-            return Response(stream(), mimetype=mimetype)
-            # return {'status': 'OK', 'data': str(Response(stream(), mimetype=mimetype))}
+            return Response(get_stream(), mimetype=mimetype)
         else:
             return {'status': 'ERROR', 'message': "FAILED"}
 
