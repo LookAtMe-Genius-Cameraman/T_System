@@ -33,6 +33,16 @@
         <div class="swiper-wrapper">
             <!--        ======================================================OPTIONS MODAL======================================================        -->
             <div id="options_template_container" class="container swiper-slide">
+                <div id="options_player_div" class="position-absolute">
+                    <a id="close_options_player_btn" title="Close" class="close">X</a>
+                    <video id="options_video" class="position-absolute" controls>
+                        <source id="options_player_mkv_source" src="" type="video/x-matroska">
+                        <source id="options_player_mp4_source" src="" type="video/mp4">
+                        <source id="options_player_ogg_source" src="" type="video/ogg">
+                        <source id="options_player_webm_source" src="" type="video/webm">
+                        Your browser does not support HTML5 video.
+                    </video>
+                </div>
                 <div class="position-relative row mt-4">
                     <div id="update_control_div" class="position-relative col option_div">
                         <button id="update_control_btn" class="position-relative option_btn" translate>Updates</button>
@@ -71,16 +81,18 @@
                         <button id="face_encoding_btn" class="option_btn" translate>Facial Recognitions</button>
                         <div id="face_encoding_io_div" class="option_io_div">
                             <div id="encode_new_face_div">
-                                <input class="text_input" type="text" name="face_name" id="face_name_input" placeholder="name"/>
-                                <div class="input-group pt-3">
-                                    <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="f_enc_photo_input" accept="image/*" capture="camera">
-                                        <label id="f_enc_photo_label" class="custom-file-label" for="f_enc_photo_input" translate>Upload Photo</label>
+                                <form action="/api/face_encoding" method="POST" enctype="multipart/form-data">
+                                    <input class="text_input" type="text" name="face_name" id="face_name_input" placeholder="name"/>
+                                    <div class="input-group pt-3">
+                                        <div class="custom-file">
+                                            <input type="file" name="face_image" class="custom-file-input" id="f_enc_photo_input" accept="image/*" capture="camera" multiple>
+                                            <label id="f_enc_photo_label" class="custom-file-label" for="f_enc_photo_input" translate>Upload Photo</label>
+                                        </div>
+                                        <div class="input-group-append">
+                                            <button id="encode_new_face_btn" class="btn btn-dark" type="button" translate>Send</button>
+                                        </div>
                                     </div>
-                                    <div class="input-group-append">
-                                        <button id="encode_new_face_btn" class="btn btn-dark" type="button" translate>Send</button>
-                                    </div>
-                                </div>
+                                </form>
                             </div>
                             <ul class="network_list" id="encoded_face_list_ul"></ul>
                         </div>
@@ -91,7 +103,7 @@
                     <div id="record_control_div" class="position-relative col option_div">
                         <button id="record_control_btn" class="option_btn" translate>Recorded On</button>
                         <div id="record_control_io_div" class="option_io_div">
-                            <ul class="network_list" id="record_list_ul"></ul>
+                            <div id="record_list_ul" class="position-relative mt-1"></div>
                         </div>
                     </div>
                     <div id="lang_select_div" class="position-relative col option_div">
