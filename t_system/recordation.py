@@ -56,7 +56,7 @@ class Recorder:
          Args:
                 mode:       	        The running mode which is wants to set video name.
         """
-
+        logger.debug("Record starting...")
         record = Record(datetime.datetime.now().strftime("%d_%m_%Y"), datetime.datetime.now().strftime("%H_%M_%S"), mode, self.record_formats)
 
         self.__set_record_params(record)
