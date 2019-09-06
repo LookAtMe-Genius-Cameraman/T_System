@@ -377,7 +377,7 @@ record_control_btn.addEventListener("click", function () {
                             date_btn_click_count++;
 
                             if (date_btn_click_count <= 1) {
-                                get_record_data(date_a.innerHTML, null);
+                                get_record_data(date_btn.innerHTML, null);
                                 // requested_data = {"status": "OK", "data": [{"id": "b970138a-argb-11e9-b145-cc2f844671ed", "name": "record_name", "time": "12_27_54", "length": 180}]};
 
                                 let records;
