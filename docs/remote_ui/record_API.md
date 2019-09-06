@@ -22,14 +22,18 @@ Host: domain
 
 ## Response
 ### On Success
-- İf both ID and DATE parameters empty
+- If both ID and DATE parameters full
+```
+flask.send_file("record.merged_file")
+```
+- If both ID and DATE parameters empty
 ```json
 {
     "status": "OK",
-    "data":["22_05_2019", "23_05_2019","27_05-2019"]
+    "data":["22_05_2019", "23_05_2019", "27_05-2019"]
 }
 ```
-- İf DATE parameter full
+- If DATE parameter full
 ```json
 {
     "status": "OK",
@@ -42,12 +46,9 @@ Host: domain
     }]
 }
 ```
-- İf ID parameter full
-```json
-{
-    "status": "OK",
-    "data": "PATH_OF_VIDEO_FILE"
-}
+- If ID parameter full
+```
+flask.Response(record, mimetype=mimetype)
 ```
 ### On Failure
 ```json
