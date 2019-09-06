@@ -9,11 +9,11 @@
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
 
-from flask import Blueprint, Response, request
+from flask import Blueprint, Response, request, send_file
 from flask_restful import Api, Resource
 from schema import SchemaError
 
-from t_system.remote_ui.modules.record import get_record_dates, get_record, get_records, update_record, delete_record
+from t_system.remote_ui.modules.record import get_record_dates, get_records, get_record, download_record, update_record, delete_record
 from t_system.remote_ui.api.data_schema import RECORD_SCHEMA
 
 from t_system import log_manager
@@ -47,9 +47,13 @@ class RecordApi(Resource):
         admin_id = request.args.get('admin_id', None)
 
         if records_date and record_id:
-            return {'status': 'ERROR', 'message': '\'date\' and \'id\' parameters giving together'}
+            record = download_record(admin_id, record_id)
+            if not record:
+                return {'status': 'ERROR', 'message': 'parameter invalid'}
 
-        if not records_date and not record_id:
+            return send_file(record)
+
+        elif not records_date and not record_id:
             record_dates = get_record_dates(admin_id)
             return {'status': 'OK', 'data': record_dates}
 

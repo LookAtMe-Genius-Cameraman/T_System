@@ -60,23 +60,33 @@ def get_record(admin_id, record_id):
         admin_id (str):                 Root privileges flag.
         record_id (str):                The id of the record.
     """
-    try:
-        record = record_manager.get_record(record_id)
 
-        if not record:
-            result = ""
-        else:
-            result = record.merged_file
+    record = record_manager.get_record(record_id)
 
-    except Exception as e:
-        logger.error(e)
-        result = ""
+    if not record:
+        return None, None
 
     def get_video():
         yield (b'--frame\r\n'
-               b'Content-Type: video/x-matroska\r\n\r\n' + open(result, 'rb').read() + b'\r\n')
+               b'Content-Type: video/x-matroska\r\n\r\n' + open(record.merged_file, 'rb').read() + b'\r\n')
 
     return get_video, "video/x-matroska; boundary=frame"
+
+
+def download_record(admin_id, record_id):
+    """Method to return existing face and copying its images under the static folder with given id.
+
+    Args:
+        admin_id (str):                 Root privileges flag.
+        record_id (str):                The id of the record.
+    """
+
+    record = record_manager.get_record(record_id)
+
+    if record:
+        return record.merged_file
+
+    return None
 
 
 def update_record(admin_id, record_id, data):
