@@ -8,7 +8,7 @@
 
 let admin_id = false;
 
-let requested_data = null;
+let requested_data = {};
 let response_data = null;
 
 let interval = 0;

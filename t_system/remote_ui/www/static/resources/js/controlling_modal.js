@@ -103,7 +103,7 @@ sidebar_toggle_btn.addEventListener("click", function () {
 
     let timer_settings_cont = setInterval(function () {
 
-        if (requested_data !== null) {
+        if (requested_data !== {}) {
             if (requested_data["status"] === "OK") {
 
                 console.log(requested_data["data"]);
@@ -126,7 +126,7 @@ sidebar_toggle_btn.addEventListener("click", function () {
                 dark_deep_background_div.classList.toggle("focused");
                 hide_element(controlling_template_content)
             }
-            requested_data = null;
+            requested_data = {};
             clearInterval(timer_settings_cont)
         }
     }, 300);
@@ -135,7 +135,7 @@ sidebar_toggle_btn.addEventListener("click", function () {
 
     timer_settings_cont = setInterval(function () {
 
-        if (requested_data !== null) {
+        if (requested_data !== {}) {
             if (requested_data["status"] === "OK") {
 
                 console.log(requested_data["data"]);
@@ -158,7 +158,7 @@ sidebar_toggle_btn.addEventListener("click", function () {
                 dark_deep_background_div.classList.toggle("focused");
                 hide_element(controlling_template_content)
             }
-            requested_data = null;
+            requested_data = {};
             clearInterval(timer_settings_cont)
         }
     }, 300);
@@ -218,6 +218,7 @@ video_area_div.addEventListener("click", function () {
             stream_area_img_click_count = 0;
         }
     }, 300)
+    // Todo: click and dblclick have still conflict. Solve this.
 });
 
 
@@ -277,7 +278,7 @@ record_pos_sce_btn.addEventListener("click", function () {
         get_current_position();
         let timer_settings_cont = setInterval(function () {
 
-            if (requested_data !== null) {
+            if (requested_data !== {}) {
                 if (requested_data["status"] === "OK") {
 
                     current_arm_position = requested_data["data"];
@@ -289,7 +290,7 @@ record_pos_sce_btn.addEventListener("click", function () {
                     hide_element(controlling_template_sidebar);
                     hide_element(sidebar_toggle_btn);
                 }
-                requested_data = null;
+                requested_data = {};
                 clearInterval(timer_settings_cont)
             }
         }, 300);

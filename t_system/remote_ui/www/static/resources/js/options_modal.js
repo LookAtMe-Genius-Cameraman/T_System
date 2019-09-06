@@ -114,11 +114,11 @@ update_control_btn.addEventListener("click", function () {
         get_update_data("auto_update");
 
         let timer_settings_cont = setInterval(function () {
-            if (requested_data !== null) {
+            if (requested_data !== {}) {
                 if (requested_data["status"] === "OK") {
                     auto_update_checkbox.checked = requested_data["data"] === true;
                 }
-                requested_data = null;
+                requested_data = {};
                 clearInterval(timer_settings_cont)
             }
         });
@@ -155,7 +155,7 @@ wifi_connections_btn.addEventListener("click", function () {
 
         let timer_settings_cont = setInterval(function () {
 
-            if (requested_data !== null) {
+            if (requested_data !== {}) {
 
                 if (requested_data["status"] === "OK") {
 
@@ -181,7 +181,7 @@ wifi_connections_btn.addEventListener("click", function () {
                         network_list_ul.appendChild(li);
                     }
                 }
-                requested_data = null;
+                requested_data = {};
                 clearInterval(timer_settings_cont)
             }
         }, 500);
@@ -249,7 +249,7 @@ face_encoding_btn.addEventListener("click", function () {
 
         let face_encoding_interval = setInterval(function () {
 
-            if (requested_data !== null) {
+            if (requested_data !== {}) {
 
                 if (requested_data["status"] === "OK") {
 
@@ -311,7 +311,7 @@ face_encoding_btn.addEventListener("click", function () {
                     }
                 }
 
-                requested_data = null;
+                requested_data = {};
                 clearInterval(face_encoding_interval)
             }
 
@@ -382,7 +382,7 @@ record_control_btn.addEventListener("click", function () {
 
                                 let records;
                                 let records_interval = setInterval(function () {
-                                    if (requested_data !== {} && requested_data !== undefined) {
+                                    if (requested_data !== {}) {
 
                                         if (requested_data["status"] === "OK") {
                                             records = requested_data["data"];
