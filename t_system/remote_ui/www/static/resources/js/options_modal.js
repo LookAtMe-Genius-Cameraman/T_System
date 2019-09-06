@@ -1,3 +1,11 @@
+const options_player_div = document.getElementById("options_player_div");
+const options_video = document.getElementById("options_video");
+const close_options_player_btn = document.getElementById("close_options_player_btn");
+const options_player_mkv_source = document.getElementById("options_player_mkv_source");
+const options_player_mp4_source = document.getElementById("options_player_mp4_source");
+const options_player_ogg_source = document.getElementById("options_player_ogg_source");
+const options_player_webm_source = document.getElementById("options_player_webm_source");
+
 const update_control_div = document.getElementById("update_control_div");
 const update_control_btn = document.getElementById("update_control_btn");
 const update_control_io_div = document.getElementById("update_control_io_div");
@@ -18,6 +26,7 @@ const audio_control_io_div = document.getElementById("audio_control_io_div");
 const face_encoding_div = document.getElementById("face_encoding_div");
 const face_encoding_btn = document.getElementById("face_encoding_btn");
 const face_encoding_io_div = document.getElementById("face_encoding_io_div");
+const encoded_face_list_ul = document.getElementById("encoded_face_list_ul");
 
 const record_control_div = document.getElementById("record_control_div");
 const record_control_btn = document.getElementById("record_control_btn");
@@ -28,15 +37,6 @@ const lang_select_div = document.getElementById("lang_select_div");
 const lang_select_btn = document.getElementById("lang_select_btn");
 const language_dropdown_div = document.getElementById("language_dropdown_div");
 
-
-// a_i_checkbox.addEventListener("change", function () {  // Checkbox onchange sample
-//
-//     if (a_i_checkbox.checked){
-//     }
-//     else {
-//     }
-//
-// });
 
 /**
  * Method to updating `auto_update` status of UpdateManager of t_system.
@@ -67,6 +67,19 @@ function get_network_data(ssid = null) {
 }
 
 /**
+ * Method of getting specified network information with its ssid or the all existing network information.
+ * It is triggered via a click on settings_btn or clicked specified network on network list.
+ */
+function get_face_recognition_data(id = null) {
+
+    if (id) {
+        jquery_manager.get_data("/api/face_encoding?id=" + id + "&admin_id=" + admin_id);
+    } else {
+        jquery_manager.get_data("/api/face_encoding?admin_id=" + admin_id);
+    }
+}
+
+/**
  * Method of getting records, record lists and specified record information with their id, date or none.
  * It is triggered via a click on record_control_btn, specified date of the records or specified record.
  */
@@ -87,17 +100,16 @@ function get_record_data(date = null, id = null) {
 
 let update_control_btn_click_count = 0;
 update_control_btn.addEventListener("click", function () {
-    update_control_btn_click_count++;
 
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
-
     toggle_elements([wifi_control_div, audio_control_div, face_encoding_div, record_control_div, lang_select_div]);
     update_control_div.classList.toggle("col");
     update_control_div.classList.toggle("focused");
     update_control_div.classList.toggle("higher");
     update_control_io_div.classList.toggle("focused");
 
+    update_control_btn_click_count++;
     if (update_control_btn_click_count <= 1) {
         get_update_data("auto_update");
 
@@ -128,7 +140,6 @@ auto_update_checkbox.addEventListener("change", function () {
 
 let wifi_connections_btn_click_count = 0;
 wifi_connections_btn.addEventListener("click", function () {
-    wifi_connections_btn_click_count++;
 
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
@@ -138,6 +149,7 @@ wifi_connections_btn.addEventListener("click", function () {
     wifi_control_div.classList.toggle("higher");
     wifi_control_io_div.classList.toggle("focused");
 
+    wifi_connections_btn_click_count++;
     if (wifi_connections_btn_click_count <= 1) {
         get_network_data();
 
@@ -152,7 +164,7 @@ wifi_connections_btn.addEventListener("click", function () {
                     }
 
                     for (let c = 0; c < requested_data["data"].length; c++) {
-                        // console.log(event_db[c]["name"]);
+
                         let li = document.createElement('li');
                         let section = document.createElement('section');
 
@@ -219,6 +231,8 @@ audio_control_btn.addEventListener("click", function () {
     audio_control_io_div.classList.toggle("focused");
 });
 
+let face_encoding_btn_click_count = 0;
+
 face_encoding_btn.addEventListener("click", function () {
 
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
@@ -228,8 +242,89 @@ face_encoding_btn.addEventListener("click", function () {
     face_encoding_div.classList.toggle("focused");
     face_encoding_div.classList.toggle("higher");
     face_encoding_io_div.classList.toggle("focused");
-});
 
+    face_encoding_btn_click_count++;
+    if (face_encoding_btn_click_count <= 1) {
+        get_face_recognition_data();
+
+        let face_encoding_interval = setInterval(function () {
+
+            if (requested_data !== null) {
+
+                if (requested_data["status"] === "OK") {
+
+                    for (let c = 0; c < requested_data["data"].length; c++) {
+
+                        let li = document.createElement('li');
+                        let section = document.createElement('section');
+
+                        let face_dropdown_div = document.createElement('div');
+                        let face_pp_img = document.createElement('img');
+                        let face_a = document.createElement('a');
+                        let face_dropdown_container_div = document.createElement('div');
+
+                        face_dropdown_div.classList.add("dropdown", "show");
+
+                        face_pp_img.src = "/api/face_encoding?id=" + requested_data["data"][c]["id"] + "&image=" + requested_data["data"][c]["image_names"][0] + "&admin_id=" + admin_id;   // this url assigning creates a GET request.
+
+                        face_a.classList.add("btn", "btn-secondary", "dropdown-toggle");
+                        face_a.href = "#";
+                        face_a.role = "button";
+                        face_a.id = requested_data["data"][c]["name"] + "_a";
+                        face_a.setAttribute("data-toggle", "dropdown");
+                        face_a.setAttribute("aria-haspopup", "true");
+                        face_a.setAttribute("aria-expanded", "false");
+                        face_a.innerHTML = requested_data["data"][c]["name"];
+
+
+                        face_dropdown_container_div.classList.add("dropdown-menu");
+                        face_dropdown_container_div.classList.add("container");
+                        face_dropdown_container_div.setAttribute("aria-labelledby", face_a.id);
+
+                        let face_dropdown_row_div;
+                        for (let i = 0; i < requested_data["data"][c]["image_names"].length; i++) {
+                            if (i % 3 === 0) {
+                                face_dropdown_row_div = document.createElement('div');
+                                face_dropdown_row_div.classList.add("row");
+                                face_dropdown_container_div.appendChild(face_dropdown_row_div);
+
+                            }
+                            let face_dropdown_col_div = document.createElement('div');
+                            face_dropdown_col_div.classList.add("col");
+
+                            let face_img = document.createElement('img');
+                            // Todo: make bigger when clicked and download when hold on.
+                            face_img.src = "/api/face_encoding?id=" + requested_data["data"][c]["id"] + "&image=" + requested_data["data"][c]["image_names"][i] + "&admin_id=" + admin_id;   // this url assigning creates a GET request.
+
+                            face_dropdown_col_div.appendChild(face_img);
+                            face_dropdown_row_div.appendChild(face_dropdown_col_div);
+                        }
+
+
+                        li.appendChild(section);
+                        section.appendChild(face_dropdown_div);
+                        face_dropdown_div.appendChild(face_pp_img);
+                        face_dropdown_div.appendChild(face_a);
+                        face_dropdown_div.appendChild(face_dropdown_container_div);
+
+                        encoded_face_list_ul.appendChild(li);
+                    }
+                }
+
+                requested_data = null;
+                clearInterval(face_encoding_interval)
+            }
+
+        });
+    } else {
+        while (encoded_face_list_ul.firstChild) {
+            encoded_face_list_ul.removeChild(encoded_face_list_ul.firstChild);
+        }
+        face_encoding_btn_click_count = 0;
+    }
+
+
+});
 
 let record_control_btn_click_count = 0;
 
@@ -245,98 +340,122 @@ record_control_btn.addEventListener("click", function () {
     record_control_io_div.classList.toggle("focused");
 
     record_control_btn_click_count++;
-
     if (record_control_btn_click_count <= 1) {
+
         get_record_data();
+        // requested_data = {"status": "OK", "data": ["22_05_2019", "23_05_2019", "27_05-2019", "27_05-2019", "27_05-2019", "27_05-2019", "27_05-2019", "27_05-2019", "27_05-2019"]};
 
-        let timer_settings_cont = setInterval(function () {
+        let record_dates;
+        let record_dates_interval = setInterval(function () {
 
-            if (requested_data !== null) {
-
+            if (requested_data !== {}) {
                 if (requested_data["status"] === "OK") {
-
-                    while (record_list_ul.firstChild) {
-                        record_list_ul.removeChild(record_list_ul.firstChild);
-                    }
-
-                    for (let c = 0; c < requested_data["data"].length; c++) {
-                        let li = document.createElement('li');
-                        let section = document.createElement('section');
+                    record_dates = requested_data["data"];
+                    for (let c = 0; c < record_dates.length; c++) {
+                        // let li = document.createElement('li');
+                        // let section = document.createElement('section');
 
                         let date_dropdown_div = document.createElement('div');
-                        let date_a = document.createElement('a');
+                        let date_btn = document.createElement('button');
                         let date_dropdown_container_div = document.createElement('div');
 
-                        date_dropdown_div.classList.add("dropdown show");
-
-                        date_a.classList.add("btn btn-secondary dropdown-toggle");
-                        date_a.href = "#";
-                        date_a.role = "button";
-                        date_a.id = requested_data["data"][c] + "_a";
-                        date_a.attr("data-toggle", "dropdown");
-                        date_a.attr("aria-haspopup", "true");
-                        date_a.attr("aria-expanded", "false");
-                        date_a.innerHTML = requested_data["data"][c];
+                        date_btn.classList.add("btn", "btn-secondary", "dropdown-toggle");
+                        date_btn.type = "button";
+                        date_btn.id = record_dates[c] + "_btn";
+                        date_btn.setAttribute("data-toggle", "dropdown");
+                        date_btn.setAttribute("aria-haspopup", "true");
+                        date_btn.setAttribute("aria-expanded", "false");
+                        date_btn.innerHTML = record_dates[c];
 
 
                         date_dropdown_container_div.classList.add("dropdown-menu");
-                        date_dropdown_container_div.attr("aria-labelledby", date_a.id);
+                        date_dropdown_container_div.setAttribute("aria-labelledby", date_btn.id);
 
-                        requested_data = null;
+                        let date_btn_click_count = 0;
+                        date_btn.addEventListener("click", function () {
 
-                        get_record_data(date_a.innerHTML, null);
+                            date_btn_click_count++;
 
-                        let timer_settings_cont = setInterval(function () {
+                            if (date_btn_click_count <= 1) {
+                                get_record_data(date_a.innerHTML, null);
+                                // requested_data = {"status": "OK", "data": [{"id": "b970138a-argb-11e9-b145-cc2f844671ed", "name": "record_name", "time": "12_27_54", "length": 180}]};
 
-                            if (requested_data !== null) {
+                                let records;
+                                let records_interval = setInterval(function () {
+                                    if (requested_data !== {} && requested_data !== undefined) {
 
-                                if (requested_data["status"] === "OK") {
-                                    for (let c = 0; c < requested_data["data"].length; c++) {
-                                        let record_div = document.createElement('div');
-                                        let record_a = document.createElement('a');
-                                        let record_time_span = document.createElement('span');
-                                        let record_length_span = document.createElement('span');
+                                        if (requested_data["status"] === "OK") {
+                                            records = requested_data["data"];
 
-                                        record_div.classList.add("dropdown-item");
-                                        record_div.id = requested_data["data"][c]["id"];
+                                            for (let i = 0; i < records.length; i++) {
+                                                let record_div = document.createElement('div');
+                                                let record_a = document.createElement('a');
+                                                let record_time_span = document.createElement('span');
+                                                let record_length_span = document.createElement('span');
 
-                                        record_a.role = "button";
-                                        record_a.innerHTML = requested_data["data"][c]["name"];
-                                        record_time_span.innerHTML = requested_data["data"][c]["time"];
-                                        record_length_span.innerHTML = requested_data["data"][c]["length"];
+                                                record_div.classList.add("dropdown-item");
+                                                record_div.id = records[i]["id"];
 
-                                        record_a.addEventListener("click", function () {
-                                            // Todo: Video getting, playing processes will be here.
-                                            get_record_data(null, record_div.id);
-                                        });
+                                                record_a.role = "button";
+                                                record_a.innerHTML = records[i]["name"];
+                                                record_time_span.innerHTML = records[i]["time"];
+                                                record_length_span.innerHTML = records[i]["length"];
 
-                                        record_div.appendChild(record_a);
-                                        record_div.appendChild(record_time_span);
-                                        record_div.appendChild(record_length_span);
+                                                console.log("from inside of for");
+                                                record_a.addEventListener("click", function () {
+                                                    options_player_div.classList.toggle("focused");
+                                                    // Todo: Video getting, playing processes will be here.
 
-                                        date_dropdown_container_div.appendChild(record_div);
+                                                    options_player_mp4_source.src = "/api/record?id=" + record_div.id + "&admin_id=" + admin_id;
+
+                                                    // options_player_mkv_source.src = "static/resources/images/mov_bbb.mkv"+ "# " + new Date().getTime();
+                                                    // options_player_mp4_source.src = "static/resources/images/mov_bbb.mp4"+ "# " + new Date().getTime();
+                                                    // options_player_ogg_source.src = "static/resources/images/mov_bbb.ogg"+ "# " + new Date().getTime();
+                                                    // options_player_webm_source.src = "static/resources/images/mov_bbb.webm"+ "# " + new Date().getTime();
+                                                    options_video.load()
+                                                });
+
+                                                record_div.appendChild(record_a);
+                                                record_div.appendChild(record_time_span);
+                                                record_div.appendChild(record_length_span);
+
+                                                date_dropdown_container_div.appendChild(record_div);
+                                            }
+                                        }
+                                        requested_data = {};
+                                        clearInterval(records_interval)
                                     }
-                                }
-                                requested_data = null;
-                                clearInterval(timer_settings_cont)
-                            }
-                        }, 500);
+                                }, 300);
 
-                        li.appendChild(section);
-                        section.appendChild(date_dropdown_div);
-                        date_dropdown_div.appendChild(date_a);
+                            } else {
+                                while (date_dropdown_container_div.firstChild) {
+                                    date_dropdown_container_div.removeChild(date_dropdown_container_div.firstChild);
+                                }
+                                date_btn_click_count = 0;
+                            }
+                        });
+                        date_dropdown_div.appendChild(date_btn);
                         date_dropdown_div.appendChild(date_dropdown_container_div);
 
-                        network_list_ul.appendChild(li);
+                        record_list_ul.appendChild(date_dropdown_div);
                     }
                 }
-                requested_data = null;
-                clearInterval(timer_settings_cont);
+                requested_data = {};
+                clearInterval(record_dates_interval)
             }
-        }, 500);
+        }, 300);
+
     } else {
+        while (record_list_ul.firstChild) {
+            record_list_ul.removeChild(record_list_ul.firstChild);
+        }
         record_control_btn_click_count = 0;
     }
+});
+
+close_options_player_btn.addEventListener("click", function () {
+    options_player_div.classList.toggle("focused");
+    options_player_mp4_source.src = ""
 });
 
 lang_select_btn.addEventListener("click", function () {
