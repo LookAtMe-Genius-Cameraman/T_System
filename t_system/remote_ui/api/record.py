@@ -9,12 +9,16 @@
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
 
-from flask import Blueprint, request
+from flask import Blueprint, Response, request
 from flask_restful import Api, Resource
 from schema import SchemaError
 
 from t_system.remote_ui.modules.record import get_record_dates, get_record, get_records, update_record, delete_record
 from t_system.remote_ui.api.data_schema import RECORD_SCHEMA
+
+from t_system import log_manager
+
+logger = log_manager.get_logger(__name__, "DEBUG")
 
 api_bp = Blueprint('record_api', __name__)
 api = Api(api_bp)
@@ -54,8 +58,10 @@ class RecordApi(Resource):
             return {'status': 'OK', 'data': records}
 
         elif record_id:
-            record = get_record(admin_id, record_id)
-            return {'status': 'OK', 'data': record}
+            get_video, mimetype = get_record(admin_id, record_id)
+            if get_video and mimetype:
+                logger.debug("Response returning")
+                return Response(get_video(), mimetype=mimetype)
 
     def post(self):
         """The API method to POST request for flask.

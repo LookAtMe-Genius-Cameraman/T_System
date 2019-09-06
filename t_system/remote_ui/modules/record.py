@@ -61,20 +61,22 @@ def get_record(admin_id, record_id):
         record_id (str):                The id of the record.
     """
     try:
-
         record = record_manager.get_record(record_id)
 
         if not record:
             result = ""
         else:
-
             result = record.merged_file
 
     except Exception as e:
         logger.error(e)
         result = ""
 
-    return result
+    def get_video():
+        yield (b'--frame\r\n'
+               b'Content-Type: video/x-matroska\r\n\r\n' + open(result, 'rb').read() + b'\r\n')
+
+    return get_video, "video/x-matroska; boundary=frame"
 
 
 def update_record(admin_id, record_id, data):
