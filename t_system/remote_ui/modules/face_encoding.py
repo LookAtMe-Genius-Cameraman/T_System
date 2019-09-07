@@ -9,31 +9,27 @@
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
 
-from tinydb import Query  # TinyDB is a lightweight document oriented database
-
-from t_system.db_fetching import DBFetcher
-from t_system.face_encoding import FaceEncodeManager
-from t_system.administration import is_admin
-
-from t_system import dot_t_system_dir, T_SYSTEM_PATH
 from t_system import log_manager
+from t_system import face_encode_manager
 
 logger = log_manager.get_logger(__name__, "DEBUG")
 
 
-def create_face(admin_id, data):
+def create_face(admin_id, name, images):
     """Method to create new face with its encoding pickle data.
 
     Args:
         admin_id (str):                Root privileges flag.
-        data (dict):                    Position data structure.
+        name (str):                    Name of the images owner face.
+        images (list):                 list of FileStorage object.
     """
+    from t_system.remote_ui import allowed_file
 
-    # table = get_db_table(admin_id)
+    for image in images:
+        if not allowed_file(image.filename, {'png', 'jpg', 'jpeg'}):
+            images.remove(image)
 
-    face_encode_manager = FaceEncodeManager()
-
-    face_encode_manager.add_face(data['face_name'], data['photos'])
+    face_encode_manager.add_face(name, [image.read() for image in images])
 
     result = True
 
@@ -46,10 +42,15 @@ def get_faces(admin_id):
     Args:
         admin_id (str):                 Root privileges flag.
     """
-    try:
-        table = get_db_table(is_admin(admin_id))
 
-        result = table.all()  # result = faces
+    result = []
+    try:
+
+        faces = face_encode_manager.get_faces()
+
+        if faces:
+            for face in faces:
+                result.append({"id": face.id, "name": face.name, "image_names": face.image_names})
 
     except Exception as e:
         logger.error(e)
@@ -58,31 +59,54 @@ def get_faces(admin_id):
     return result
 
 
-def get_face(admin_id, face_id):
+def get_face_image(admin_id, face_id, image_name):
     """Method to return existing face and copying its images under the static folder with given id.
 
     Args:
         admin_id (str):                 Root privileges flag.
-        face_id (str):              The id of the position.
+        face_id (str):                  The id of the face.
+        image_name (str):               Name of the one of face images that is wanted.
     """
+    result = ""
     try:
-        table = get_db_table(is_admin(admin_id))
 
-        face = table.search((Query().id == face_id))
+        face = face_encode_manager.get_face(face_id)
 
-        if not face:
-            result = []
-        else:
-            # result = [b.to_dict() for b in record]
-            face_encode_manager = FaceEncodeManager()
-            for face in face_encode_manager.faces:
-                if face.id == face_id:
-                    face.copy_images_to(f'{T_SYSTEM_PATH}/remote_ui/www/static/images/face_encodings')
-            result = [face[0]]
+        if face:
+            if image_name in face.image_names:
+                result = f'{face.dataset_folder}/{image_name}'
 
     except Exception as e:
         logger.error(e)
-        result = []
+        result = ""
+
+    def get_image():
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + open(result, 'rb').read() + b'\r\n')
+
+    return get_image, "image/jpeg; boundary=frame"
+
+
+def download_face_image(admin_id, face_id, image_name):
+    """Method to return existing face and copying its images under the static folder with given id.
+
+    Args:
+        admin_id (str):                 Root privileges flag.
+        face_id (str):                  The id of the face.
+        image_name (str):               Name of the one of face images that is wanted.
+    """
+    result = ""
+    try:
+
+        face = face_encode_manager.get_face(face_id)
+
+        if face:
+            if image_name in face.image_names:
+                result = f'{face.dataset_folder}/{image_name}'
+
+    except Exception as e:
+        logger.error(e)
+        result = ""
 
     return result
 
@@ -96,8 +120,6 @@ def update_face(admin_id, face_id, data):
         data (dict):                    Position data structure.
     """
 
-    face_encode_manager = FaceEncodeManager()
-
     result = face_encode_manager.update_face(face_id, data["photos"])
 
     return result
@@ -110,19 +132,7 @@ def delete_face(admin_id, face_id):
         admin_id (str):                 Root privileges flag.
         face_id (str):              The id of the position.
     """
-    face_encode_manager = FaceEncodeManager()
 
     result = face_encode_manager.delete_face(face_id)
 
     return result
-
-
-def get_db_table(is_admin):
-    """Method to set work database.
-
-    Args:
-        is_admin (bool):                 Root privileges flag.
-    """
-
-    db_folder = f'{dot_t_system_dir}/recognition'
-    return DBFetcher(db_folder, "db", "faces").fetch()
