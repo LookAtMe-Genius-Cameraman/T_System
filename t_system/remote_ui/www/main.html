@@ -43,6 +43,10 @@
                         Your browser does not support HTML5 video.
                     </video>
                 </div>
+                <div id="options_image_viewer_div" class="position-absolute">
+                    <a id="close_options_image_viewer_btn" title="Close" class="close">X</a>
+                    <img id="options_image_viewer_img" class="position-relative" src="" alt="">
+                </div>
                 <div class="position-relative row mt-4">
                     <div id="update_control_div" class="position-relative col option_div">
                         <button id="update_control_btn" class="position-relative option_btn" translate>Updates</button>
@@ -83,7 +87,7 @@
                             <div id="encode_new_face_div">
                                 <form action="/api/face_encoding" method="POST" enctype="multipart/form-data">
                                     <input class="text_input" type="text" name="face_name" id="face_name_input" placeholder="name"/>
-                                    <div class="input-group pt-3">
+                                    <div id="face_encoding_input_div" class="input-group mb-2 mt-2">
                                         <div class="custom-file">
                                             <input type="file" name="face_image" class="custom-file-input" id="f_enc_photo_input" accept="image/*" capture="camera" multiple>
                                             <label id="f_enc_photo_label" class="custom-file-label" for="f_enc_photo_input" translate>Upload Photo</label>
@@ -103,7 +107,7 @@
                     <div id="record_control_div" class="position-relative col option_div">
                         <button id="record_control_btn" class="option_btn" translate>Recorded On</button>
                         <div id="record_control_io_div" class="option_io_div">
-                            <div id="record_list_ul" class="position-relative mt-1"></div>
+                            <ul id="record_list_ul" class="position-relative mt-1"></ul>
                         </div>
                     </div>
                     <div id="lang_select_div" class="position-relative col option_div">
