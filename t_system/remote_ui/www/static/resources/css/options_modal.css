@@ -77,8 +77,6 @@
 #options_player_div {
     visibility: hidden;
     opacity: 0;
-
-
 }
 
 #options_player_div.focused {
@@ -87,9 +85,6 @@
 
     width: 100%;
     height: 60%;
-
-    /*left: 50% !important;*/
-    /*transform: translate(-50%) !important;*/
 
     z-index: 61 !important;
 
@@ -103,7 +98,27 @@
 }
 
 #close_options_player_btn {
-    color: red;
+    z-index: 62;
+}
+
+#options_image_viewer_div {
+    visibility: hidden;
+    opacity: 0;
+}
+
+#options_image_viewer_div.focused {
+    visibility: visible !important;
+    opacity: 1 !important;
+
+    width: 100%;
+    height: 60%;
+
+    z-index: 61 !important;
+
+    border: #8a6d3b solid;
+}
+
+#close_options_image_viewer_btn {
     z-index: 62;
 }
 
@@ -177,6 +192,13 @@
 /*FACIAL RECOGNITIONS OPTION*/
 #face_encoding_div.higher {
     top: -200% !important;
+}
+
+#face_encoding_input_div {}
+
+#encode_new_face_btn {
+    font-size: 13px;
+    height: 2rem;
 }
 
 #f_enc_photo_label {
