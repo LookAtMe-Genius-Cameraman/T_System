@@ -44,6 +44,7 @@ class Recorder:
         self.current_video_file = ""
         self.current_audio_file = ""
         self.current_merged_file = ""
+        self.current_raw_merged_file = ""
 
         self.record_formats = {"video": record_formats[0], "audio": record_formats[1], "merged": record_formats[2]}
 
@@ -78,8 +79,13 @@ class Recorder:
         """Method to merge recorded audio and video files.
         """
 
-        merge_cmd = f'ffmpeg -y -i {self.current_audio_file} -r 24 -i {self.current_video_file} -filter:a aresample=async=1 -c:a flac -c:v copy {self.current_merged_file}'
-        subprocess.call(merge_cmd, shell=True)
+        merge_raw_cmd = f'ffmpeg -y -i {self.current_audio_file} -r 24 -i {self.current_video_file} -filter:a aresample=async=1 -c:a flac -c:v copy {self.current_raw_merged_file}'
+        merge_final_cmd = f'ffmpeg -i {self.current_raw_merged_file} -c:v copy -an {self.current_merged_file}'
+
+        # merge_cmd = f'ffmpeg -i {self.current_video_file} -i {self.current_audio_file} -map 0 -map 1:a -c:v copy -c:a:0 copy -c:a:1 aac {self.current_merged_file}'
+        subprocess.call(merge_raw_cmd, shell=True)
+        subprocess.call(merge_final_cmd, shell=True)
+
         logger.info('Video and Audio Muxing Done')
 
     def __set_record_params(self, record):
@@ -89,6 +95,7 @@ class Recorder:
         self.current_video_file = record.video_file
         self.current_audio_file = record.audio_file
         self.current_merged_file = record.merged_file
+        self.current_raw_merged_file = record.raw_merged_file
 
 
 class RecordManager:
@@ -229,6 +236,7 @@ class Record:
 
         self.video_file = f'{self.folder}/{self.time}.{self.record_formats["video"]}'
         self.audio_file = f'{self.folder}/{self.time}.{self.record_formats["audio"]}'
+        self.raw_merged_file = f'{self.folder}/{self.time}.mkv'
         self.merged_file = f'{self.folder}/{self.time}.{self.record_formats["merged"]}'
 
         self.__db_upsert()
