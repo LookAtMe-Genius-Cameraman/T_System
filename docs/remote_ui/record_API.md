@@ -42,7 +42,8 @@ flask.send_file("record.merged_file")
         "id": "b970138a-argb-11e9-b145-cc2f844671ed", 
         "name": "record_name", 
         "time": "12_27_54", 
-        "length": 180
+        "length": 180,
+        "extension": "mp4"
     }]
 }
 ```
