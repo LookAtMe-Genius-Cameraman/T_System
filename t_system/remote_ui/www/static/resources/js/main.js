@@ -81,9 +81,37 @@ function refresh_page() {
 }
 
 
-// window.onload = function () {
-//
-// };
+
+function resize_image(src, max_width, max_height, dest_element) {
+    let img = new Image();
+    img.src = src;
+
+    let canvas = document.createElement("canvas");
+    img.onload = function () {
+
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+            if (width > max_width) {
+                height *= max_width / width;
+                width = max_width;
+            }
+        } else {
+            if (height > max_height) {
+                width *= max_height / height;
+                height = max_height;
+            }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        let ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, width, height);
+        dest_element.src = canvas.toDataURL(img.type);
+    };
+}
+
 
 let swiper;
 $(document).ready(function () {

@@ -102,41 +102,6 @@ function get_record_data(date = null, id = null) {
     }
 }
 
-function resize_image(src, max_width, max_height, dest_element) {
-    let img = new Image();
-                        // img.src = "/api/face_encoding?id=" + requested_data["data"][c]["id"] + "&image=" + requested_data["data"][c]["image_names"][0] + "&admin_id=" + admin_id;   // this url assigning creates a GET request.
-                        img.src = src;
-
-                        let canvas = document.createElement("canvas");
-                        img.onload = function () {
-                            //var canvas = $("<canvas>", {"id":"testing"})[0];
-                            // let ctx = canvas.getContext("2d");
-                            // ctx.drawImage(img, 0, 0);
-
-                            let width = img.width;
-                            let height = img.height;
-
-                            if (width > height) {
-                                if (width > max_width) {
-                                    height *= max_width / width;
-                                    width = max_width;
-                                }
-                            } else {
-                                if (height > max_height) {
-                                    width *= max_height / height;
-                                    height = max_height;
-                                }
-                            }
-                            canvas.width = width;
-                            canvas.height = height;
-                            let ctx = canvas.getContext("2d");
-                            ctx.drawImage(img, 0, 0, width, height);
-                            dest_element.src = canvas.toDataURL(img.type);
-
-                        };
-
-
-}
 
 let update_control_btn_click_count = 0;
 update_control_btn.addEventListener("click", function () {
@@ -307,7 +272,7 @@ face_encoding_btn.addEventListener("click", function () {
                         face_dropdown_div.classList.add("dropdown", "show");
 
                         // let src = "/api/face_encoding?id=" + requested_data["data"][c]["id"] + "&image=" + requested_data["data"][c]["image_names"][0] + "&admin_id=" + admin_id;   // this url assigning creates a GET request.
-                        let src = "static/resources/images/favicon.png"+ "# " + new Date().getTime();
+                        let src = "static/resources/images/favicon.png" + "# " + new Date().getTime();
 
                         resize_image(src, 25, 40, face_pp_img);
 
