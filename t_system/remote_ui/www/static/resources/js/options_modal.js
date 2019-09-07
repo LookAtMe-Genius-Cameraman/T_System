@@ -365,8 +365,7 @@ record_control_btn.addEventListener("click", function () {
                         date_btn.setAttribute("data-toggle", "dropdown");
                         date_btn.setAttribute("aria-haspopup", "true");
                         date_btn.setAttribute("aria-expanded", "false");
-                        date_btn.innerHTML = record_dates[c];
-
+                        date_btn.innerHTML = record_dates[c].replace(/_/gi, "/"); // to replace all necessary characters.
 
                         date_dropdown_container_div.classList.add("dropdown-menu");
                         date_dropdown_container_div.setAttribute("aria-labelledby", date_btn.id);
@@ -400,7 +399,7 @@ record_control_btn.addEventListener("click", function () {
 
                                                 record_a.role = "button";
                                                 record_a.innerHTML = records[i]["name"];
-                                                record_time_span.innerHTML = records[i]["time"];
+                                                record_time_span.innerHTML = records[i]["time"].replace(/_/gi, ":");
                                                 record_length_span.innerHTML = records[i]["length"];
 
                                                 record_a.addEventListener("click", function () {
