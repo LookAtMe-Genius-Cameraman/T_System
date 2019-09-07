@@ -105,7 +105,11 @@ $(document).ready(function () {
         },
     });
 
-    control_btn.click()
+    control_btn.click();
+
+    document.addEventListener("contextmenu", function (e) {
+        e.preventDefault();
+    }, false);
 
 });
 
