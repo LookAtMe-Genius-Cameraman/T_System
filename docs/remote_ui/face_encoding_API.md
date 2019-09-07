@@ -31,16 +31,29 @@ Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 ```
 
 # Getting Faces
-- If a specific parameter ID is given, its face are listed.
+- If a specific parameter ID and IMAGE given, by the DOWNLOAD it faces image will sending.
 
 ## Request
 ```http
-GET /api/face_encoding?id=<ID>&admin_id=<ADMIN_ID>
+GET /api/face_encoding?id=<ID>&image=<IMAGE>&download=<DOWNLOAD>&admin_id=<ADMIN_ID>
 Host: domain
 ```
 
 ## Response
 ### On Success
+- If ID and IMAGE parameter full, DOWNLOAD parameter equals False or empty.
+```
+flask.Response(image, mimetype=mimetype)
+
+```
+
+- If ID and IMAGE parameter full, DOWNLOAD parameter equals True.
+```
+flask.send_file(image)
+
+```
+
+- If ID, IMAGE and DOWNLOAD parameters empty.
 ```json
 {
     "status": "OK",
@@ -54,7 +67,8 @@ Host: domain
 ### On Failure
 ```json
 {
-    "status": "ERROR"
+    "status": "ERROR",
+    "message": "Missing or incorrect parameters"
 }
 ```
 
