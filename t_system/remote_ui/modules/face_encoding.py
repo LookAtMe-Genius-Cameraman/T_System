@@ -67,18 +67,16 @@ def get_face_image(admin_id, face_id, image_name):
         face_id (str):                  The id of the face.
         image_name (str):               Name of the one of face images that is wanted.
     """
-    result = ""
-    try:
 
-        face = face_encode_manager.get_face(face_id)
+    face = face_encode_manager.get_face(face_id)
 
-        if face:
-            if image_name in face.image_names:
-                result = f'{face.dataset_folder}/{image_name}'
+    if not face:
+        return None, None
 
-    except Exception as e:
-        logger.error(e)
-        result = ""
+    if image_name in face.image_names:
+        result = f'{face.dataset_folder}/{image_name}'
+    else:
+        return None, None
 
     def get_image():
         yield (b'--frame\r\n'
