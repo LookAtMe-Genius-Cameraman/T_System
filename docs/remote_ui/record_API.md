@@ -49,7 +49,7 @@ flask.send_file("record.merged_file")
 ```
 - If ID parameter full
 ```
-flask.Response(record, mimetype=mimetype)
+flask.Response(bytes_of_record, mimetype=mimetype)
 ```
 ### On Failure
 ```json
