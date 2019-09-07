@@ -8,6 +8,8 @@
 
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
+import os
+import base64
 
 from t_system import log_manager
 from t_system import record_manager
@@ -44,7 +46,7 @@ def get_records(admin_id, records_date):
 
         if records:
             for record in records:
-                result.append({"id": record.id, "name": record.name, "time": record.time, "length": record.length})
+                result.append({"id": record.id, "name": record.name, "time": record.time, "length": record.length, "extension": record.record_formats["merged"]})
 
     except Exception as e:
         logger.error(e)
@@ -66,11 +68,7 @@ def get_record(admin_id, record_id):
     if not record:
         return None, None
 
-    def get_video():
-        yield (b'--frame\r\n'
-               b'Content-Type: video/x-matroska\r\n\r\n' + open(record.merged_file, 'rb').read() + b'\r\n')
-
-    return get_video, "video/x-matroska; boundary=frame"
+    return open(record.merged_file, 'rb'), f'video/{record.record_formats["merged"]};'
 
 
 def download_record(admin_id, record_id):
