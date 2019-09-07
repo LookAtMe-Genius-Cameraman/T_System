@@ -1,10 +1,7 @@
 const options_player_div = document.getElementById("options_player_div");
 const options_video = document.getElementById("options_video");
 const close_options_player_btn = document.getElementById("close_options_player_btn");
-const options_player_mkv_source = document.getElementById("options_player_mkv_source");
-const options_player_mp4_source = document.getElementById("options_player_mp4_source");
-const options_player_ogg_source = document.getElementById("options_player_ogg_source");
-const options_player_webm_source = document.getElementById("options_player_webm_source");
+const options_player_source = document.getElementById("options_player_source");
 
 const options_image_viewer_div = document.getElementById("options_image_viewer_div");
 const close_options_image_viewer_btn = document.getElementById("close_options_image_viewer_btn");
@@ -90,10 +87,8 @@ function get_face_recognition_data(id = null) {
 function get_record_data(date = null, id = null) {
 
     if (date && id) {
-        return false
-    }
-
-    if (!date && !id) {
+        jquery_manager.get_data("/api/record?date=" + date + "&id=" + id + "&admin_id=" + admin_id);
+    } else if (!date && !id) {
         jquery_manager.get_data("/api/record?admin_id=" + admin_id);
     } else if (date) {
         jquery_manager.get_data("/api/record?date=" + date + "&admin_id=" + admin_id);
@@ -250,8 +245,8 @@ face_encoding_btn.addEventListener("click", function () {
 
     face_encoding_btn_click_count++;
     if (face_encoding_btn_click_count <= 1) {
-        // get_face_recognition_data();
-        requested_data = {"status": "OK", "data": [{"id": "z970136a-aegb-15e9-b130-cy2f756671ed", "name": "face_name", "image_names": ["image_name1", "image_name2"]}]};
+        get_face_recognition_data();
+        // requested_data = {"status": "OK", "data": [{"id": "z970136a-aegb-15e9-b130-cy2f756671ed", "name": "face_name", "image_names": ["image_name1", "image_name2"]}]};
 
         let face_encoding_interval = setInterval(function () {
 
@@ -261,9 +256,6 @@ face_encoding_btn.addEventListener("click", function () {
 
                     for (let c = 0; c < requested_data["data"].length; c++) {
 
-                        // let li = document.createElement('li');
-                        // let section = document.createElement('section');
-
                         let face_dropdown_div = document.createElement('div');
                         let face_pp_img = document.createElement('img');
                         let face_a = document.createElement('a');
@@ -271,11 +263,10 @@ face_encoding_btn.addEventListener("click", function () {
 
                         face_dropdown_div.classList.add("dropdown", "show");
 
-                        // let src = "/api/face_encoding?id=" + requested_data["data"][c]["id"] + "&image=" + requested_data["data"][c]["image_names"][0] + "&admin_id=" + admin_id;   // this url assigning creates a GET request.
-                        let src = "static/resources/images/favicon.png" + "# " + new Date().getTime();
+                        let src = "/api/face_encoding?id=" + requested_data["data"][c]["id"] + "&image=" + requested_data["data"][c]["image_names"][0] + "&admin_id=" + admin_id;   // this url assigning creates a GET request.
+                        // let src = "static/resources/images/favicon.png" + "# " + new Date().getTime();
 
                         resize_image(src, 25, 40, face_pp_img);
-
 
                         face_a.classList.add("btn", "btn-secondary", "dropdown-toggle");
                         face_a.href = "#";
@@ -285,7 +276,6 @@ face_encoding_btn.addEventListener("click", function () {
                         face_a.setAttribute("aria-haspopup", "true");
                         face_a.setAttribute("aria-expanded", "false");
                         face_a.innerHTML = requested_data["data"][c]["name"];
-
 
                         face_dropdown_container_div.classList.add("dropdown-menu", "dropdown-menu-right");
                         face_dropdown_container_div.classList.add("container");
@@ -305,7 +295,7 @@ face_encoding_btn.addEventListener("click", function () {
                             let face_img = document.createElement('img');
                             // Todo: make bigger when clicked and download when hold on.
 
-                            // src = "/api/face_encoding?id=" + requested_data["data"][c]["id"] + "&image=" + requested_data["data"][c]["image_names"][i] + "&admin_id=" + admin_id;   // this url assigning creates a GET request.
+                            let src = "/api/face_encoding?id=" + requested_data["data"][c]["id"] + "&image=" + requested_data["data"][c]["image_names"][i] + "&admin_id=" + admin_id;   // this url assigning creates a GET request.
                             resize_image(src, 25, 40, face_img);
 
                             face_img.addEventListener("click", function () {
@@ -364,8 +354,6 @@ record_control_btn.addEventListener("click", function () {
                 if (requested_data["status"] === "OK") {
                     record_dates = requested_data["data"];
                     for (let c = 0; c < record_dates.length; c++) {
-                        // let li = document.createElement('li');
-                        // let section = document.createElement('section');
 
                         let date_dropdown_div = document.createElement('div');
                         let date_btn = document.createElement('button');
@@ -388,9 +376,11 @@ record_control_btn.addEventListener("click", function () {
 
                             date_btn_click_count++;
 
-                            if (date_btn_click_count <= 1) {
+                                while (date_dropdown_container_div.firstChild) {
+                                    date_dropdown_container_div.removeChild(date_dropdown_container_div.firstChild);
+                                }
                                 get_record_data(date_btn.innerHTML, null);
-                                // requested_data = {"status": "OK", "data": [{"id": "b970138a-argb-11e9-b145-cc2f844671ed", "name": "record_name", "time": "12_27_54", "length": 180}]};
+                                // requested_data = {"status": "OK", "data": [{"id": "b970138a-argb-11e9-b145-cc2f844671ed", "name": "record_name", "time": "12_27_54", "length": 180, "extension": "mp4"}]};
 
                                 let records;
                                 let records_interval = setInterval(function () {
@@ -413,17 +403,15 @@ record_control_btn.addEventListener("click", function () {
                                                 record_time_span.innerHTML = records[i]["time"];
                                                 record_length_span.innerHTML = records[i]["length"];
 
-                                                console.log("from inside of for");
                                                 record_a.addEventListener("click", function () {
+
+                                                    record_control_div.classList.toggle("hidden_element");
                                                     options_player_div.classList.toggle("focused");
-                                                    // Todo: Background will be hidden, close button will be usable.
 
-                                                    options_player_mp4_source.src = "/api/record?id=" + record_div.id + "&admin_id=" + admin_id;
+                                                    options_player_source.type = "video/" + records[i]["extension"];
+                                                    options_player_source.src = "/api/record?id=" + records[i]["id"] + "&admin_id=" + admin_id;
 
-                                                    // options_player_mkv_source.src = "static/resources/images/mov_bbb.mkv"+ "# " + new Date().getTime();
-                                                    // options_player_mp4_source.src = "static/resources/images/mov_bbb.mp4"+ "# " + new Date().getTime();
-                                                    // options_player_ogg_source.src = "static/resources/images/mov_bbb.ogg"+ "# " + new Date().getTime();
-                                                    // options_player_webm_source.src = "static/resources/images/mov_bbb.webm"+ "# " + new Date().getTime();
+                                                    // options_player_source.src = "static/resources/images/mov_bbb.mp4"+ "# " + new Date().getTime();
                                                     options_video.load()
                                                 });
 
@@ -438,13 +426,6 @@ record_control_btn.addEventListener("click", function () {
                                         clearInterval(records_interval)
                                     }
                                 }, 300);
-
-                            } else {
-                                while (date_dropdown_container_div.firstChild) {
-                                    date_dropdown_container_div.removeChild(date_dropdown_container_div.firstChild);
-                                }
-                                date_btn_click_count = 0;
-                            }
                         });
                         date_dropdown_div.appendChild(date_btn);
                         date_dropdown_div.appendChild(date_dropdown_container_div);
@@ -467,7 +448,8 @@ record_control_btn.addEventListener("click", function () {
 
 close_options_player_btn.addEventListener("click", function () {
     options_player_div.classList.toggle("focused");
-    options_player_mp4_source.src = ""
+    options_player_source.src = "";
+    record_control_div.classList.toggle("hidden_element");
 });
 
 lang_select_btn.addEventListener("click", function () {
