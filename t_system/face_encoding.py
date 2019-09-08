@@ -59,7 +59,7 @@ class FaceEncodeManager:
         self.face_encoder = FaceEncoder(detection_method)
 
         self.faces = []
-        self.__get_existing_faces()
+        self.__refresh_faces()
 
     @dispatch(str, str)
     def add_face(self, name, dataset_folder):
@@ -96,6 +96,20 @@ class FaceEncodeManager:
         self.face_encoder.encode(face.dataset_folder, face.pickle_file, face.name)
         self.faces.append(face)
 
+    @dispatch(str, set)
+    def add_face(self, name, photos):
+        """Method to creating image that will be dataset for recognizing person's face later from FileStorage object that is  coming from HTML input form element via Flask.
+
+        Args:
+            name (str):           The name of the man who has face in dataset.
+            photos (set):        The FileStorage object set. that is been converted to list for becoming its indexing.
+        """
+        face = Face(name)
+        face.create_dataset_from_file_storage_object(list(photos))
+
+        self.face_encoder.encode(face.dataset_folder, face.pickle_file, face.name)
+        self.faces.append(face)
+
     def update_face(self, id, photos):
         """Method to update face.
 
@@ -112,6 +126,23 @@ class FaceEncodeManager:
                 return True
         return False
 
+    def get_faces(self):
+        """Method to return all existing faces.
+        """
+
+        return self.faces
+
+    def get_face(self, id):
+        """Method to return face via given face id.
+
+        Args:
+            id (str):               The id of the face.
+        """
+
+        for face in self.faces:
+            if face.id == id:
+                return face
+
     def delete_face(self, id):
         """Method to delete face via given face id.
 
@@ -126,7 +157,7 @@ class FaceEncodeManager:
                 return True
         return False
 
-    def __get_existing_faces(self):
+    def __refresh_faces(self):
         """Method to get existing images from the database.
         """
         self.faces.clear()
@@ -201,7 +232,6 @@ class FaceEncoder:
 
                 known_encodings.clear()
                 known_names.clear()
-
             image = cv2.imread(image_path)
             rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
             boxes = face_recognition.face_locations(rgb, model=self.detection_method)
@@ -275,7 +305,7 @@ class FaceEncoder:
         """
 
         if os.path.exists(pickle_file):
-            data = pickle.loads(pickle_file)
+            data = pickle.loads(open(pickle_file, "rb").read())
             return data["encodings"], data["names"]
 
         return [], []
@@ -313,6 +343,8 @@ class Face:
         self.recognition_folder = f'{dot_t_system_dir}/recognition'
         self.dataset_folder = f'{self.recognition_folder}/dataset/{self.name}'
         self.pickle_file = f'{self.recognition_folder}/encodings/{self.name}_encoding.pickle'
+
+        self.__check_folders()
 
         self.table = DBFetcher(self.recognition_folder, "db", "faces").fetch()
 
@@ -373,7 +405,7 @@ class Face:
         """
 
         if use_db:
-            face = self.table.search((Query().id == self.id))
+            face = self.table.search((Query().id == self.id))[0]
 
             self.image_names = face["image_names"]
         else:
@@ -404,14 +436,40 @@ class Face:
         """
 
         for photo in photos:
-            with open(f'{self.dataset_folder}/{photo["name"]}.jpeg', "wb") as dataset_image:
+            with open(f'{self.dataset_folder}/{photo["name"]}', "wb") as dataset_image:
                 try:
                     dataset_image.write(b64decode(photo["base_sf"]))
                 except binascii.Error:
                     raise Exception("no correct base64")
 
-        self.refresh_image_names()
+        self.refresh_image_names(use_db=True)
         self.__db_upsert(force_insert=True)
+
+    def create_dataset_from_file_storage_object(self, photos):
+        """Method to creating image that will be dataset for recognizing person's face later from FileStorage object that is  coming from HTML input form element via Flask.
+
+        Args:
+            photos (list):             The FileStorage object list.
+
+        Returns:
+            str:  dataset.
+        """
+
+        for photo in photos:
+            photo.save(os.path.join(self.dataset_folder, photo.filename))
+
+        self.refresh_image_names(use_db=True)
+        self.__db_upsert(force_insert=True)
+
+    def __check_folders(self):
+        """The low-level method to checking the necessary folders created before. If not created creates them.
+        """
+
+        if not os.path.exists(self.recognition_folder):
+            os.mkdir(self.recognition_folder)
+
+        if not os.path.exists(self.dataset_folder):
+            os.mkdir(self.dataset_folder)
 
     def remove_self(self):
         """Method to remove face itself.
