@@ -150,7 +150,6 @@
     max-width: 100%;
     max-height: 100%;
 
-
     border-radius: 40%;
     width: 15%;
     height: 45%;
@@ -224,12 +223,29 @@
     overflow-x: hidden;
 
     /*alignment*/
-
     width: 96%;
     height: 310px;
 
     transition: opacity 300ms;
-    border: turquoise solid;
+}
+
+.record_a {
+    font-size: 14px;
+}
+.record_time_span {
+    position: absolute;
+    opacity: 0.8;
+    right: 2px;
+    top: 0;
+    font-size: 11px;
+}
+
+.record_length_span {
+    position: absolute;
+    opacity: 0.8;
+    right: 2px;
+    bottom: 0;
+    font-size: 11px;
 }
 
 /*LANGUAGE OPTION*/
