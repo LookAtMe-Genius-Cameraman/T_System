@@ -27,6 +27,8 @@ const audio_control_io_div = document.getElementById("audio_control_io_div");
 const face_encoding_div = document.getElementById("face_encoding_div");
 const face_encoding_btn = document.getElementById("face_encoding_btn");
 const face_encoding_io_div = document.getElementById("face_encoding_io_div");
+const f_enc_photo_input = document.getElementById("f_enc_photo_input");
+const f_enc_photo_label = document.getElementById("f_enc_photo_label");
 const encoded_face_list_ul = document.getElementById("encoded_face_list_ul");
 
 const record_control_div = document.getElementById("record_control_div");
@@ -328,6 +330,21 @@ face_encoding_btn.addEventListener("click", function () {
 
 });
 
+// $('#f_enc_photo_input').on('change',function(){
+//                 //get the file name
+//                 let fileName = $(this).val();
+//                 //replace the "Choose a file" label
+//                 $(this).next('.custom-file-label').html(fileName);
+//             });
+
+f_enc_photo_input.addEventListener("change", function (event) {
+    if (event.target.files.length > 1) {
+        f_enc_photo_label.innerHTML = event.target.files.length + " images uploaded";
+    } else {
+        f_enc_photo_label.innerHTML = event.target.files[0].name;
+    }
+});
+
 let record_control_btn_click_count = 0;
 
 record_control_btn.addEventListener("click", function () {
@@ -345,7 +362,7 @@ record_control_btn.addEventListener("click", function () {
     if (record_control_btn_click_count <= 1) {
 
         get_record_data();
-        // requested_data = {"status": "OK", "data": ["22_05_2019", "23_05_2019", "27_05-2019", "27_05-2019", "27_05-2019", "27_05-2019", "27_05-2019", "27_05-2019", "27_05-2019"]};
+        // requested_data = {"status": "OK", "data": ["22_05_2019", "23_05_2019", "27_05_2019", "27_05_2019", "27_05_2019", "27_05_2019", "27_05_2019", "27_05_2019", "27_05_2019"]};
 
         let record_dates;
         let record_dates_interval = setInterval(function () {
@@ -359,6 +376,8 @@ record_control_btn.addEventListener("click", function () {
                         let date_btn = document.createElement('button');
                         let date_dropdown_container_div = document.createElement('div');
 
+                        date_dropdown_div.classList.add("dropdown", "btn-group", "mt-1");
+
                         date_btn.classList.add("btn", "btn-secondary", "dropdown-toggle");
                         date_btn.type = "button";
                         date_btn.id = record_dates[c] + "_btn";
@@ -367,7 +386,7 @@ record_control_btn.addEventListener("click", function () {
                         date_btn.setAttribute("aria-expanded", "false");
                         date_btn.innerHTML = record_dates[c].replace(/_/gi, "/"); // to replace all necessary characters.
 
-                        date_dropdown_container_div.classList.add("dropdown-menu");
+                        date_dropdown_container_div.classList.add("dropdown-menu", "dropdown-menu-right", "dropdown-menu-center");
                         date_dropdown_container_div.setAttribute("aria-labelledby", date_btn.id);
 
                         let date_btn_click_count = 0;
@@ -378,7 +397,7 @@ record_control_btn.addEventListener("click", function () {
                                 while (date_dropdown_container_div.firstChild) {
                                     date_dropdown_container_div.removeChild(date_dropdown_container_div.firstChild);
                                 }
-                                get_record_data(date_btn.innerHTML, null);
+                                get_record_data(record_dates[c], null);
                                 // requested_data = {"status": "OK", "data": [{"id": "b970138a-argb-11e9-b145-cc2f844671ed", "name": "record_name", "time": "12_27_54", "length": 180, "extension": "mp4"}]};
 
                                 let records;
@@ -399,8 +418,13 @@ record_control_btn.addEventListener("click", function () {
 
                                                 record_a.role = "button";
                                                 record_a.innerHTML = records[i]["name"];
+                                                record_a.classList.add("record_a");
+
                                                 record_time_span.innerHTML = records[i]["time"].replace(/_/gi, ":");
-                                                record_length_span.innerHTML = records[i]["length"];
+                                                record_time_span.classList.add("record_time_span");
+
+                                                record_length_span.innerHTML = records[i]["length"] + " min.";
+                                                record_length_span.classList.add("record_length_span");
 
                                                 record_a.addEventListener("click", function () {
 
