@@ -77,11 +77,8 @@ class FaceEncodingApi(Resource):
         admin_id = request.args.get('admin_id', None)
 
         try:
-            name = request.form.getstring("face_name")
+            name = request.form.to_dict(flat=True).get("face_name")
             images = request.files.getlist("face_images")
-
-            # form = request.form.to_dict(flat=True)
-            # data = FACE_ENCODING_SCHEMA.validate(form)
         except SchemaError as e:
             return {'status': 'ERROR', 'message': e.code}
         result = create_face(admin_id, name, images)

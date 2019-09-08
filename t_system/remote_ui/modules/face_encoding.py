@@ -29,7 +29,7 @@ def create_face(admin_id, name, images):
         if not allowed_file(image.filename, {'png', 'jpg', 'jpeg'}):
             images.remove(image)
 
-    face_encode_manager.add_face(name, [image.read() for image in images])
+    face_encode_manager.add_face(name, set(images))
 
     result = True
 
