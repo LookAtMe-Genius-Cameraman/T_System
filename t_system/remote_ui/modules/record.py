@@ -41,17 +41,14 @@ def get_records(admin_id, records_date):
     """
     result = []
 
-    try:
-        records = record_manager.get_records(records_date)
+    records = record_manager.get_records(records_date)
 
-        if records:
-            for record in records:
-                result.append({"id": record.id, "name": record.name, "time": record.time, "length": record.length, "extension": record.record_formats["merged"]})
+    if records:
+        for record in records:
+            result.append({"id": record.id, "name": record.name, "time": record.time, "length": record.length, "extension": record.record_formats["merged"]})
 
-    except Exception as e:
-        logger.error(e)
-        result = []
-
+        return result
+        
     return result
 
 
