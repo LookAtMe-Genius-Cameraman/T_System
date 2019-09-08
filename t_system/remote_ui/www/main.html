@@ -82,15 +82,16 @@
                         <button id="face_encoding_btn" class="option_btn" translate>Facial Recognitions</button>
                         <div id="face_encoding_io_div" class="option_io_div">
                             <div id="encode_new_face_div">
-                                <form action="/api/face_encoding" method="POST" enctype="multipart/form-data">
+                                <form action="/api/face_encoding" method="post" enctype="multipart/form-data">
                                     <input class="text_input" type="text" name="face_name" id="face_name_input" placeholder="name"/>
                                     <div id="face_encoding_input_div" class="input-group mb-2 mt-2">
                                         <div class="custom-file">
-                                            <input id="f_enc_photo_input" class="custom-file-input" type="file" name="face_image" accept="image/*" capture="camera" multiple>
+                                            <input id="f_enc_photo_input" class="custom-file-input" type="file" name="face_images" accept="image/*" capture="camera" multiple/>
                                             <label id="f_enc_photo_label" class="custom-file-label" for="f_enc_photo_input" translate>Upload Photo</label>
+                                            <!--<input type="submit" value="Upload"/>-->
                                         </div>
                                         <div class="input-group-append">
-                                            <button id="encode_new_face_btn" class="btn btn-dark" type="button" translate>Send</button>
+                                            <button id="encode_new_face_btn" class="btn btn-dark" type="submit" translate>Send</button>
                                         </div>
                                     </div>
                                 </form>
