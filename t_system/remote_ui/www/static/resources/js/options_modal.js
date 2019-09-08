@@ -27,8 +27,10 @@ const audio_control_io_div = document.getElementById("audio_control_io_div");
 const face_encoding_div = document.getElementById("face_encoding_div");
 const face_encoding_btn = document.getElementById("face_encoding_btn");
 const face_encoding_io_div = document.getElementById("face_encoding_io_div");
+const face_name_input = document.getElementById("face_name_input");
 const f_enc_photo_input = document.getElementById("f_enc_photo_input");
 const f_enc_photo_label = document.getElementById("f_enc_photo_label");
+const encode_new_face_btn = document.getElementById("encode_new_face_btn");
 const encoded_face_list_ul = document.getElementById("encoded_face_list_ul");
 
 const record_control_div = document.getElementById("record_control_div");
@@ -277,7 +279,7 @@ face_encoding_btn.addEventListener("click", function () {
                         face_a.setAttribute("data-toggle", "dropdown");
                         face_a.setAttribute("aria-haspopup", "true");
                         face_a.setAttribute("aria-expanded", "false");
-                        face_a.innerHTML = requested_data["data"][c]["name"];
+                        face_a.innerHTML = requested_data["data"][c]["name"].replace(/_/gi, " ");
 
                         face_dropdown_container_div.classList.add("dropdown-menu", "dropdown-menu-right");
                         face_dropdown_container_div.classList.add("container");
@@ -330,19 +332,21 @@ face_encoding_btn.addEventListener("click", function () {
 
 });
 
-// $('#f_enc_photo_input').on('change',function(){
-//                 //get the file name
-//                 let fileName = $(this).val();
-//                 //replace the "Choose a file" label
-//                 $(this).next('.custom-file-label').html(fileName);
-//             });
-
 f_enc_photo_input.addEventListener("change", function (event) {
     if (event.target.files.length > 1) {
         f_enc_photo_label.innerHTML = event.target.files.length + " images uploaded";
     } else {
         f_enc_photo_label.innerHTML = event.target.files[0].name;
     }
+});
+
+encode_new_face_btn.addEventListener("click", function () {
+
+    face_name_input.value = face_name_input.value.replace(/ /gi, "_");
+
+    setTimeout(function () {
+        face_name_input.value = "";
+    }, 300)
 });
 
 let record_control_btn_click_count = 0;
