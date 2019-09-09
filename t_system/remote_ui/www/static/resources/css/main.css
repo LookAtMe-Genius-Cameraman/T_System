@@ -3,6 +3,14 @@ body {
     background-color: #fff0eb; /*Default white tone*/
 }
 
+.body_background {
+    background-color: #fff0eb; /*Default white tone*/
+}
+
+.no-border {
+    border: none !important;
+}
+
 .hidden_element {
     visibility: hidden !important;
     opacity: 0 !important;
@@ -14,16 +22,16 @@ body {
     visibility: hidden !important;
 }
 
-.text_input {
+.modal_input {
     /*alignment*/
     position: relative;
-    width: 98%;
+    width: 85% !important;
 
     transition: all 300ms;
-    background-color: #fff0eb;
-    border: 2px #008CBA;
-    border-style: none none solid none;
-    border-radius: 5px;
+    background-color: #fff0eb !important;
+    border: 2px #008CBA !important;
+    border-style: none none solid none !important;
+    border-radius: 5px !important;
 }
 
 .close {
@@ -57,6 +65,13 @@ body {
     -webkit-transform: translateX(-50%) !important;
     -o-transform: translateX(-50%) !important;
     transform: translateX(-50%) !important;
+}
+
+.cut-text {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 150px;
+  white-space: nowrap;
 }
 
 #main_container {
@@ -166,8 +181,8 @@ body {
     max-height: 580px;
 
     /*alignment*/
-    top: 25%;
-    left: 70%;
+    top: 5%;
+    left: 5%;
 
     width: 55px; /*goes to 85%*/
     height: 45px; /* goes to 68%*/
