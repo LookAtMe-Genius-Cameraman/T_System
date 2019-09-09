@@ -47,12 +47,12 @@
                 <div class="position-relative row mt-4">
                     <div id="update_control_div" class="position-relative col option_div">
                         <button id="update_control_btn" class="position-relative option_btn" translate>Updates</button>
-                        <div id="update_control_io_div" class="position-relative form-group row option_io_div">
-                            <div class="form-check">
+                        <div id="update_control_io_div" class="option_io_div">
+                            <div id="update_from_check_div" class="form-check position-relative mt-5">
                                 <input id="auto_update_checkbox" class="form-check-input" type="checkbox" value="">
-                                <label class="form-check-label" for="auto_update_checkbox"translate>Auto Update</label>
+                                <label class="form-check-label" for="auto_update_checkbox" translate>Auto Update</label>
                             </div>
-                            <button id="update_btn" class="btn btn-info" translate>Up To Date</button>
+                            <button id="update_btn" class="position-relative btn btn-info mt-1" translate>Up To Date</button>
                         </div>
                     </div>
 
@@ -61,7 +61,7 @@
                         <div id="wifi_control_io_div" class="option_io_div">
                             <div id="create_new_network">
                                 <input class="text_input" type="text" name="network_ssid" id="network_ssid_input" placeholder="ssid"/>
-                                <input class="text_input" type="text" name="network_password" id="network_password_input" placeholder="password"/>
+                                <input class="text_input" type="password" name="network_password" id="network_password_input" placeholder="password"/>
                                 <button id="create_new_network_btn" translate>&#187;</button>
                             </div>
                             <ul class="network_list" id="network_list_ul"></ul>
@@ -83,7 +83,7 @@
                         <div id="face_encoding_io_div" class="option_io_div">
                             <div id="encode_new_face_div">
                                 <form action="/api/face_encoding" method="post" enctype="multipart/form-data">
-                                    <input class="text_input" type="text" name="face_name" id="face_name_input" placeholder="name"/>
+                                    <input id="face_name_input" class="text_input" type="text" name="face_name" placeholder="name"/>
                                     <div id="face_encoding_input_div" class="input-group mb-2 mt-2">
                                         <div class="custom-file">
                                             <input id="f_enc_photo_input" class="custom-file-input" type="file" name="face_images" accept="image/*" capture="camera" multiple/>
@@ -281,29 +281,29 @@
 <script type="text/javascript" src="static/vendors/popper.min.js"></script>
 <script type="text/javascript" src="static/vendors/bootstrap/js/bootstrap.min.js"></script>
 
-<script src="static/resources/js/__init__.js"></script>
+<script type="text/javascript" charset="UTF-8" src="static/resources/js/__init__.js"></script>
 
-<script src="static/resources/js/language/en.js"></script>
-<script src="static/resources/js/language/de.js"></script>
-<script src="static/resources/js/language/tr.js"></script>
-<script src="static/resources/js/language/es.js"></script>
-<script src="static/resources/js/language/it.js"></script>
-<script src="static/resources/js/language/fr.js"></script>
+<script type="text/javascript" charset="UTF-8" src="static/resources/js/language/en.js"></script>
+<script type="text/javascript" charset="UTF-8" src="static/resources/js/language/de.js"></script>
+<script type="text/javascript" charset="UTF-8" src="static/resources/js/language/tr.js"></script>
+<script type="text/javascript" charset="UTF-8" src="static/resources/js/language/es.js"></script>
+<script type="text/javascript" charset="UTF-8" src="static/resources/js/language/it.js"></script>
+<script type="text/javascript" charset="UTF-8" src="static/resources/js/language/fr.js"></script>
 
-<script src="static/resources/js/jquery.js"></script>
-<script src="static/resources/js/jsalert.js"></script>
-<script src="static/resources/js/settings.js"></script>
-<script src="static/resources/js/connectdlg.js"></script>
-<script src="static/resources/js/translate.js"></script>
-<script src="static/resources/js/localstorage.js"></script>
-<script src="static/resources/js/managing_bar.js"></script>
-<script src="static/resources/js/prepare_modal.js"></script>4
-<script src="static/resources/js/controlling_modal.js"></script>
-<script src="static/resources/js/prismatic_arm_control.js"></script>
-<script src="static/resources/js/rotational_arm_control.js"></script>
-<script src="static/resources/js/options_modal.js"></script>
-<script src="static/resources/js/job_modal.js"></script>
-<script src="static/resources/js/system_info.js"></script>
+<script type="text/javascript" charset="UTF-8" src="static/resources/js/jquery.js"></script>
+<script type="text/javascript" charset="UTF-8" src="static/resources/js/jsalert.js"></script>
+<script type="text/javascript" charset="UTF-8" src="static/resources/js/settings.js"></script>
+<script type="text/javascript" charset="UTF-8" src="static/resources/js/connectdlg.js"></script>
+<script type="text/javascript" charset="UTF-8" src="static/resources/js/translate.js"></script>
+<script type="text/javascript" charset="UTF-8" src="static/resources/js/localstorage.js"></script>
+<script type="text/javascript" charset="UTF-8" src="static/resources/js/managing_bar.js"></script>
+<script type="text/javascript" charset="UTF-8" src="static/resources/js/prepare_modal.js"></script>4
+<script type="text/javascript" charset="UTF-8" src="static/resources/js/controlling_modal.js"></script>
+<script type="text/javascript" charset="UTF-8" src="static/resources/js/prismatic_arm_control.js"></script>
+<script type="text/javascript" charset="UTF-8" src="static/resources/js/rotational_arm_control.js"></script>
+<script type="text/javascript" charset="UTF-8" src="static/resources/js/options_modal.js"></script>
+<script type="text/javascript" charset="UTF-8" src="static/resources/js/job_modal.js"></script>
+<script type="text/javascript" charset="UTF-8" src="static/resources/js/system_info.js"></script>
 
 <script src="static/resources/js/main.js"></script>
 
