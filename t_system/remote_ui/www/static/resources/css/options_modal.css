@@ -124,72 +124,93 @@
 }
 
 
-/*UPDATE CONTROL OPTION*/
+/**********************************UPDATE CONTROL OPTION**********************************/
 #update_control_div.higher {
     top: -60% !important;
 }
 
-/*WIFI CONNECTIONS OPTION*/
+#update_from_check_div {
+    width: 60%;
+    margin: auto;
+    border: #8a6d3b solid;
+
+}
+
+#update_btn {
+    left: 50%;
+    transform: translate(-50%);
+    margin: auto;
+    border: #8a6d3b solid;
+}
+
+/**********************************WIFI CONNECTIONS OPTION**********************************/
 #wifi_control_div.higher {
     top: -60% !important;
 }
 
 .new_network_input_transition {
-    width: 70%;
+    width: 70% !important;
 }
 
-#create_new_network_btn {
+.send_network_data_btn {
     /*alignment*/
-    position: absolute;
-    top: 40%;
+    top: 2%;
+    /*transform: translate(0, -50%);*/
     left: 75%;
 
     visibility: hidden;
     opacity: 0;
 
-    max-width: 100%;
-    max-height: 100%;
+    max-width: 100px;
+    max-height: 100px;
 
     border-radius: 40%;
-    width: 15%;
-    height: 45%;
+    width: 40px;
+    height: 25px;
 
     transition: all 300ms;
-    background-color: #fff0eb;
+    background-color: #fff;
     color: #008CBA;
 }
 
 #network_list_ul {
-    position: absolute;
-
     visibility: visible;
     opacity: 1;
 
     max-width: 100%;
-    max-height: 170px;
-    margin: 0 auto;
+    max-height: 260px;
+    margin: auto;
 
     overflow: auto;
     overflow-y: scroll;
     overflow-x: hidden;
 
-    /*alignment*/
-    top: 120%;
-
     width: 96%;
-    height: 550%;
+    height: 250px;
 
     transition: opacity 300ms;
-    /*border: turquoise solid;*/
+}
+
+.existing_network_password {
+    width: 110%;
+    opacity: 0.6;
+}
+
+.existing_network_password.focused {
+    opacity: 1;
+}
+
+.existing_network_password.changed {
+    width: 80% !important;
 }
 
 
-/*AUDIO INPUTS OPTION*/
+/**********************************AUDIO INPUTS OPTION**********************************/
 #audio_control_div.higher {
     top: -200% !important;
 }
 
-/*FACIAL RECOGNITIONS OPTION*/
+/**********************************FACIAL RECOGNITIONS OPTION**********************************/
 #face_encoding_div.higher {
     top: -200% !important;
 }
@@ -205,7 +226,11 @@
     font-size: 75%;
 }
 
-/*RECORDS OPTION*/
+.face_a {
+    font-size: 14px;
+}
+
+/**********************************RECORDS OPTION**********************************/
 #record_control_div.higher {
     top: -340% !important;
 }
@@ -222,7 +247,6 @@
     overflow-y: scroll;
     overflow-x: hidden;
 
-    /*alignment*/
     width: 96%;
     height: 310px;
 
@@ -248,7 +272,7 @@
     font-size: 11px;
 }
 
-/*LANGUAGE OPTION*/
+/**********************************LANGUAGE OPTION**********************************/
 #lang_select_div.higher {
     top: -340% !important;
 }
