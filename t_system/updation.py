@@ -65,7 +65,7 @@ class UpdateManager:
         return self.auto_update
 
     def is_update_available(self):
-        """Method to getting auto-update status from the database.
+        """Method to getting availability of the update from remote software repository.
         """
 
         return self.updater.is_update_available()
