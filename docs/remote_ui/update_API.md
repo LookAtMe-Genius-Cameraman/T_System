@@ -26,20 +26,31 @@ Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 }
 ```
 
-## POST Request
-
+## Up-To-Date T_System
+```http
+POST /api/update?admin_id=<ADMIN_ID>
+Host: domain
+```
 ## Response
 
+### On Success
+```json
+{
+  "status": "OK"
+}
+```
+
+### On failure
 ```json
 {
     "status": "ERROR",
-    "message": "NOT VALID"
+    "message": "Missing or incorrect parameters"
 }
 ```
 
 # Getting Update Status
 - Returns an error if the KEY is empty.
-- Valid keys are "auto_update" and "up_to_date".
+- Valid key is "auto_update".
 
 ## Request
 ```http
