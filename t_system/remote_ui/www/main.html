@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="static/vendors/bootstrap/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="static/vendors/chart.js/css/Chart.min.css">
     <link rel="stylesheet" href="static/vendors/swiper/css/swiper.min.css">
+    <link rel="stylesheet" href="static/vendors/fontawesome/css/all.min.css">
     <link rel="stylesheet" media="all" type="text/css" href="static/resources/css/master.css">
     <script>
         let event_db = null;
@@ -46,7 +47,7 @@
                 </div>
                 <div class="position-relative row mt-4">
                     <div id="update_control_div" class="position-relative col option_div">
-                        <button id="update_control_btn" class="position-relative option_btn" translate>Updates</button>
+                        <button id="update_control_btn" class="option_btn" translate>Updates</button>
                         <div id="update_control_io_div" class="option_io_div">
                             <div id="update_from_check_div" class="form-check position-relative mt-5">
                                 <input id="auto_update_checkbox" class="form-check-input" type="checkbox" value="">
@@ -60,11 +61,14 @@
                         <button id="wifi_connections_btn" class="option_btn" translate>Wi-Fi Connections</button>
                         <div id="wifi_control_io_div" class="option_io_div">
                             <div id="create_new_network">
-                                <input class="text_input" type="text" name="network_ssid" id="network_ssid_input" placeholder="ssid"/>
-                                <input class="text_input" type="password" name="network_password" id="network_password_input" placeholder="password"/>
-                                <button id="create_new_network_btn" translate>&#187;</button>
+                                <div class="form-group">
+                                    <input id="network_ssid_input" class=" modal_input" type="text" name="network_ssid" placeholder="ssid"/>
+                                    <input id="network_password_input" class=" modal_input" type="password" name="network_password" placeholder="password" data-toggle="password"/>
+                                    <span id="network_pass_eye_span" title="Click here to show/hide password" class="input-group-append fa fa-fw fa-eye field-icon toggle-password"></span>
+                                </div>
+                                <button id="create_new_network_btn" class="position-absolute send_network_data_btn" translate><i class="fas fa-angle-double-right"></i></button>
                             </div>
-                            <ul class="network_list" id="network_list_ul"></ul>
+                            <ul id="network_list_ul" class="mt-2"></ul>
                         </div>
                     </div>
                 </div>
@@ -83,7 +87,7 @@
                         <div id="face_encoding_io_div" class="option_io_div">
                             <div id="encode_new_face_div">
                                 <form action="/api/face_encoding" method="post" enctype="multipart/form-data">
-                                    <input id="face_name_input" class="text_input" type="text" name="face_name" placeholder="name"/>
+                                    <input id="face_name_input" class="modal_input" type="text" name="face_name" placeholder="name"/>
                                     <div id="face_encoding_input_div" class="input-group mb-2 mt-2">
                                         <div class="custom-file">
                                             <input id="f_enc_photo_input" class="custom-file-input" type="file" name="face_images" accept="image/*" capture="camera" multiple/>
@@ -178,12 +182,12 @@
                         </div>
                         <div id="record_as_position_div" class="position-absolute">
                             <button id="position_div_back_btn" class="position-relative btn _button" translate>Back</button>
-                            <input class="text_input" type="text" name="position_name" id="position_name_input" placeholder="name"/>
+                            <input class="modal_input" type="text" name="position_name" id="position_name_input" placeholder="name"/>
                             <button id="create_pos_btn" class="position-relative btn btn-dark" translate>save</button>
                         </div>
                         <div id="record_in_scenario_div" class="position-absolute">
                             <button id="scenario_div_back_btn" class="position-relative btn" translate>Back</button>
-                            <input class="text_input" type="text" name="scenario_name" id="scenario_name_input" placeholder="name"/>
+                            <input class="modal_input" type="text" name="scenario_name" id="scenario_name_input" placeholder="name"/>
                         </div>
                     </div>
                 </div>
@@ -307,5 +311,8 @@
 
 <script src="static/resources/js/main.js"></script>
 
+<script>
+
+</script>
 </body>
 </html>
