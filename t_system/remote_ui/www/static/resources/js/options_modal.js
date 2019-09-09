@@ -11,12 +11,14 @@ const update_control_div = document.getElementById("update_control_div");
 const update_control_btn = document.getElementById("update_control_btn");
 const update_control_io_div = document.getElementById("update_control_io_div");
 const auto_update_checkbox = document.getElementById("auto_update_checkbox");
+const update_btn = document.getElementById("update_btn");
 
 const wifi_control_div = document.getElementById("wifi_control_div");
 const wifi_connections_btn = document.getElementById("wifi_connections_btn");
 const wifi_control_io_div = document.getElementById("wifi_control_io_div");
 const network_ssid_input = document.getElementById("network_ssid_input");
 const network_password_input = document.getElementById("network_password_input");
+const network_pass_eye_span = document.getElementById("network_pass_eye_span");
 const create_new_network_btn = document.getElementById("create_new_network_btn");
 const network_list_ul = document.getElementById("network_list_ul");
 
@@ -101,12 +103,12 @@ function get_record_data(date = null, id = null) {
     }
 }
 
-
 let update_control_btn_click_count = 0;
 update_control_btn.addEventListener("click", function () {
 
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
+
     toggle_elements([wifi_control_div, audio_control_div, face_encoding_div, record_control_div, lang_select_div]);
     update_control_div.classList.toggle("col");
     update_control_div.classList.toggle("focused");
@@ -126,7 +128,6 @@ update_control_btn.addEventListener("click", function () {
                 clearInterval(timer_settings_cont)
             }
         });
-
     } else {
         update_control_btn_click_count = 0;
     }
@@ -142,11 +143,17 @@ auto_update_checkbox.addEventListener("change", function () {
     }
 });
 
+update_btn.addEventListener("click", function () {
+    // Todo: Response will handled. for response arrive, button will be disabled. and maybe for update completed, Remote UI will sleep, shutdown or locked. decide that.
+    jquery_manager.post_data("/api/update?admin_id=" + admin_id, {})
+});
+
 let wifi_connections_btn_click_count = 0;
 wifi_connections_btn.addEventListener("click", function () {
 
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
+
     toggle_elements([update_control_div, audio_control_div, face_encoding_div, record_control_div, lang_select_div]);
     wifi_control_div.classList.toggle("col");
     wifi_control_div.classList.toggle("focused");
@@ -156,33 +163,86 @@ wifi_connections_btn.addEventListener("click", function () {
     wifi_connections_btn_click_count++;
     if (wifi_connections_btn_click_count <= 1) {
         get_network_data();
+        // requested_data = {"status": "OK", "data": [{"ssid": "Beyaz", "password": "arge"}, {"ssid": "new_wifi", "password": "1234"}, {"ssid": "demo", "password": "bla"}]};
 
         let timer_settings_cont = setInterval(function () {
 
             if (requested_data !== {}) {
 
                 if (requested_data["status"] === "OK") {
+                    let network_connections = requested_data["data"];
 
-                    while (network_list_ul.firstChild) {
-                        network_list_ul.removeChild(network_list_ul.firstChild);
-                    }
+                    for (let c = 0; c < network_connections.length; c++) {
 
-                    for (let c = 0; c < requested_data["data"].length; c++) {
+                        let wifi_dropdown_div = document.createElement('div');
+                        let wifi_btn = document.createElement('button');
+                        let wifi_dropdown_container_div = document.createElement('div');
 
-                        let li = document.createElement('li');
-                        let section = document.createElement('section');
+                        wifi_dropdown_div.classList.add("dropdown", "btn-group", "mt-1");
 
-                        let ssid_output = document.createElement('output');
-                        let password_output = document.createElement('output');
+                        wifi_btn.classList.add("btn", "btn-secondary", "dropdown-toggle", "cut-text");
+                        wifi_btn.type = "button";
+                        wifi_btn.id = network_connections[c]["ssid"] + "_btn";
+                        wifi_btn.setAttribute("data-toggle", "dropdown");
+                        wifi_btn.setAttribute("aria-haspopup", "true");
+                        wifi_btn.setAttribute("aria-expanded", "false");
+                        wifi_btn.innerHTML = network_connections[c]["ssid"];
 
-                        ssid_output.value = requested_data["data"][c]["ssid"];
-                        password_output.value = requested_data["data"][c]["password"];
+                        wifi_dropdown_container_div.classList.add("dropdown-menu", "dropdown-menu-right", "dropdown-menu-center", "body_background", "no-border");
+                        wifi_dropdown_container_div.setAttribute("aria-labelledby", wifi_btn.id);
 
-                        li.appendChild(section);
-                        section.appendChild(ssid_output);
-                        section.appendChild(password_output);
+                        // let ssid_output = document.createElement('output');
+                        let password_div = document.createElement('div');
+                        let password_input = document.createElement('input');
+                        let password_update_btn = document.createElement('button');
 
-                        network_list_ul.appendChild(li);
+                        password_div.classList.add("dropdown-item");
+
+                        password_input.type = "password";
+                        password_input.classList.add("modal_input", "existing_network_password");
+                        password_input.value = network_connections[c]["password"];
+
+                        let password_last_value = password_input.value;
+
+                        password_input.addEventListener("focus", function () {
+                            password_input.classList.add("focused");
+                        });
+
+                        password_input.addEventListener("blur", function () {
+                            password_input.classList.remove("focused");
+                        });
+
+                        password_input.addEventListener("mousemove", function () {
+                            if (password_input.value !== "" && password_input.value !== password_last_value) {
+                                password_input.classList.add("changed");
+                                show_element(password_update_btn);
+                            } else {
+                                password_input.classList.remove("changed");
+                                hide_element(password_update_btn);
+                            }
+                        });
+
+
+                        password_update_btn.classList.add("send_network_data_btn");
+                        password_update_btn.innerHTML = "&#187;";
+
+                        password_update_btn.addEventListener("click", function () {
+                            let data = {"ssid": network_connections[c]["ssid"], "password": password_input.value};
+                            jquery_manager.put_data("/api/network?ssid=" + network_connections[c]["ssid"] + "&admin_id=" + admin_id, data);
+
+                            wifi_connections_btn.click();
+                            wifi_connections_btn.click();
+                        });
+
+                        password_div.appendChild(password_input);
+                        password_div.appendChild(password_update_btn);
+
+                        wifi_dropdown_container_div.appendChild(password_div);
+
+                        wifi_dropdown_div.appendChild(wifi_btn);
+                        wifi_dropdown_div.appendChild(wifi_dropdown_container_div);
+
+                        network_list_ul.appendChild(wifi_dropdown_div);
                     }
                 }
                 requested_data = {};
@@ -191,8 +251,21 @@ wifi_connections_btn.addEventListener("click", function () {
         }, 500);
         // jquery_manager.post_data("/try", {"bla": "bla"})
     } else {
+        while (network_list_ul.firstChild) {
+                        network_list_ul.removeChild(network_list_ul.firstChild);
+                    }
         wifi_connections_btn_click_count = 0;
     }
+});
+
+network_pass_eye_span.addEventListener("click", function () {
+    network_pass_eye_span.classList.toggle("fa-eye fa-eye-slash");
+    if (network_password_input.type === 'password') {
+        network_password_input.setAttribute('type', 'text');
+  }
+  else {
+        network_password_input.setAttribute('type', 'password');
+  }
 });
 
 function show_create_new_wifi_button() {
@@ -253,10 +326,13 @@ face_encoding_btn.addEventListener("click", function () {
         // requested_data = {"status": "OK", "data": [{"id": "z970136a-aegb-15e9-b130-cy2f756671ed", "name": "face_name", "image_names": ["image_name1", "image_name2"]}]};
 
         let face_encoding_interval = setInterval(function () {
+                    console.log(requested_data);
 
             if (requested_data !== {}) {
+                    console.log(requested_data);
 
                 if (requested_data["status"] === "OK") {
+                    console.log(requested_data);
 
                     for (let c = 0; c < requested_data["data"].length; c++) {
 
@@ -270,9 +346,9 @@ face_encoding_btn.addEventListener("click", function () {
                         let src = "/api/face_encoding?id=" + requested_data["data"][c]["id"] + "&image=" + requested_data["data"][c]["image_names"][0] + "&admin_id=" + admin_id;   // this url assigning creates a GET request.
                         // let src = "static/resources/images/favicon.png" + "# " + new Date().getTime();
 
-                        resize_image(src, 25, 40, face_pp_img);
+                        resize_image(src, 30, 40, face_pp_img);
 
-                        face_a.classList.add("btn", "btn-secondary", "dropdown-toggle");
+                        face_a.classList.add("btn", "btn-secondary", "dropdown-toggle", "cut-text", "face_a", "ml-1");
                         face_a.href = "#";
                         face_a.role = "button";
                         face_a.id = requested_data["data"][c]["name"] + "_a";
