@@ -13,7 +13,7 @@ from t_system import update_manager
 
 
 def get_status(admin_id, update_key):
-    """Method to return existing positions.
+    """Method to return status of the self-update statement.
 
     Args:
         admin_id (str):                 Root privileges flag.
@@ -22,8 +22,6 @@ def get_status(admin_id, update_key):
 
     if update_key == "auto_update":
         status = update_manager.is_update_auto()
-    elif update_key == "up_to_date":
-        status = update_manager.update()
     else:
         status = None
 
@@ -31,7 +29,7 @@ def get_status(admin_id, update_key):
 
 
 def update_status(admin_id, data):
-    """Method to update the position that is recorded in database with given parameters.
+    """Method to update the self-update statement.
 
     Args:
         admin_id (str):                 Root privileges flag.
@@ -40,3 +38,13 @@ def update_status(admin_id, data):
     update_manager.change_members(data["auto_update"])
     result = True
     return result
+
+
+def up_to_date(admin_id):
+    """Method to trig update processes of T_System itself.
+
+    Args:
+        admin_id (str):                 Root privileges flag.
+    """
+
+    return update_manager.update()

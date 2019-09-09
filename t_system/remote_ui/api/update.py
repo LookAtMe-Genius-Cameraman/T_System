@@ -13,7 +13,7 @@ from flask import Blueprint, request
 from flask_restful import Api, Resource
 from schema import SchemaError
 
-from t_system.remote_ui.modules.update import get_status, update_status
+from t_system.remote_ui.modules.update import get_status, update_status, up_to_date
 from t_system.remote_ui.api.data_schema import UPDATE_SCHEMA
 
 api_bp = Blueprint('update_api', __name__)
@@ -25,7 +25,7 @@ class UpdateApi(Resource):
 
         This class provides necessary initiations and functions named;
          :func:`t_system.remote_ui.api.update.UpdateApi.get`for the provide get auto-update status and start update with getting finished status,
-         :func:`t_system.remote_ui.api.update.UpdateApi.post` INVALID,
+         :func:`t_system.remote_ui.api.update.UpdateApi.post` for up-to-date of the T_System software,
          :func:`t_system.remote_uia.api.update.UpdateApi.put` for provide updating the auto-update status,
          :func:`t_system.remote_ui.api.update.UpdateApi.delete` INVALID
     """
@@ -51,8 +51,15 @@ class UpdateApi(Resource):
     def post(self):
         """The API method to POST request for flask.
         """
+        admin_id = request.args.get('admin_id', None)
 
-        return {'status': 'ERROR', 'message': 'NOT VALID'}
+        try:
+            result = up_to_date(admin_id)
+
+        except Exception as e:
+            return {'status': 'ERROR', 'message': e}
+
+        return {'status': 'OK' if result else 'ERROR'}
 
     def put(self):
         """The API method to PUT request for flask.
