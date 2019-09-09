@@ -46,7 +46,7 @@ def get_records(admin_id, records_date):
     if records:
         for record in records:
             result.append({"id": record.id, "name": record.name, "time": record.time, "length": record.length, "extension": record.record_formats["merged"]})
-
+                
         return result
         
     return result
