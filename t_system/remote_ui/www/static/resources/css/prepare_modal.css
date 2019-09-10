@@ -8,20 +8,68 @@
 }
 
 #main_specify_div {
-    top: 25%;
+    top: 10%;
+
+    width: 100%;
+    height: 80%;
+    border-radius: 25px;
+
+    transition: all 300ms;
+}
+
+#main_specify_div.center {
+    width: auto;
+
     left: 50%;
     transform: translate(-50%);
 }
 
+#main_specify_div.right {
+    right: 0;
+}
+
+#main_specify_div.left {
+    left: 0;
+}
+
+.specify_div {
+    width: 20px;
+    border-radius: 15px;
+    background: rgba(0, 0, 0, 0.3);
+    transition: all 300ms;
+}
+
+.specify_div.focused {
+    width: 100%
+}
+
+.specify_span {
+    pointer-events: visible;
+    transition: all 300ms;
+}
+
+.specify_select_div {
+    visibility: hidden;
+    opacity: 0;
+}
+
+.specify_select_div.focused {
+    visibility: visible;
+    opacity: 1;
+
+    max-width: 225px;
+}
+
+.specify_checkbox_div {
+    max-width: 220px;
+}
+
 #specify_sce_div {
-    border: #20c997 solid;
-    width: 170px;
+
 }
 
 #specify_param_div {
 
-    border: #20c997 solid;
-    width: 170px;
     margin: 0 auto;
 
     left: 55%;
