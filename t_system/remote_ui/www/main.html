@@ -195,31 +195,58 @@
             <!--        ======================================================CONTROLLING MODAL======================================================        -->
             <!--        ======================================================PREPARE MODAL======================================================        -->
             <div id="prepare_template_container" class="swiper-slide template_container swiping_template_container">
-                <div id="main_specify_div" class="position-absolute d-flex justify-content-center">
-                    <div id="specify_sce_div" class="pl-1 mr-1">
-                        <span id="specify_sce_span" translate>Specify Scenarios</span>
-                        <div id="available_sce_div">
+                <div id="main_specify_div" class="position-absolute d-flex justify-content-center center">
+                    <div id="specify_sce_div" class="pl-1 specify_div">
+                        <span id="specify_sce_span" class="mb-3 fas fa-chevron-left specify_span" title="Open scenario selection" translate></span>
+                        <div id="available_sce_div" class="specify_select_div">
                             <ul class="network_list" id="available_sce_ul"></ul>
                         </div>
                     </div>
-                    <div id="specify_param_div" class="pl-1 ml-1">
-                        <span id="specify_param_span" translate>Specify Parameters</span>
-                        <div id="select_param_cb_div">
-                            <div class="form-check mt-1">
-                                <input id="ai_select_checkbox" class="form-check-input" type="checkbox" value="">
-                                <label id="ai_select_cb_label" class="form-check-label" for="ai_select_checkbox" translate>AI</label>
+                    <div id="specify_param_div" class="pl-1 ml-1 specify_div">
+                        <span id="specify_param_span" class="mb-3 fas fa-chevron-right specify_span" title="Open parameter selection" translate></span>
+                        <div id="select_param_cb_div" class="specify_select_div">
+                            <div class="form-check mb-1 specify_checkbox_div">
+                                <input id="recognize_checkbox" class="form-check-input" type="checkbox" value="">
+                                <div id="recognize_select_dd_div" class="form-check-label btn-group dropright" for="recognize_checkbox">
+                                    <button id="recognize_select_dd_btn" type="button" class="btn btn-outline-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" translate>Recognize</button>
+                                    <div class="dropdown-menu">
+                                        <div class="dropdown-item form-check mb-1">
+                                            <div class="form-check mb-1">
+                                                <input id="recognize-all_select_checkbox" class="form-check-input" type="checkbox" value="">
+                                                <label id="recognize-all_select_cb_label" class="form-check-label" for="recognize-all_select_checkbox" translate>Them all</label>
+                                            </div>
+                                            <ul id="recognize_person_list_ul"></ul>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="form-check mt-1">
+                            <div class="form-check mb-1 specify_checkbox_div">
+                                <input id="ai_checkbox" class="form-check-input" type="checkbox" value="">
+                                <div id="ai_select_dd_div" class="form-check-label btn-group dropright" for="ai_checkbox">
+                                    <button id="ai_select_dd_btn" type="button" class="btn btn-outline-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" translate>AI</button>
+                                    <div class="dropdown-menu">
+                                        <div class="dropdown-item form-check mb-1">
+                                            <input id="ai_select_checkbox" class="form-check-input" type="checkbox" value="">
+                                            <label id="ai_select_cb_label" class="form-check-label" for="ai_select_checkbox" translate>Official AI</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-check mb-1 specify_checkbox_div">
                                 <input id="security_mode_checkbox" class="form-check-input" type="checkbox" value="">
-                                <label id="security_mode_cb_label" class="form-check-label" for="security_mode_checkbox" translate>Security Mode</label>
+                                <label id="security_mode_cb_label" class="form-check-label btn btn-outline-dark" for="security_mode_checkbox" translate>Secure</label>
                             </div>
-                            <div class="form-check mt-1">
+                            <div class="form-check mb-1 specify_checkbox_div">
+                                <input id="learn_mode_checkbox" class="form-check-input" type="checkbox" value="">
+                                <label id="learn_mode_cb_label" class="form-check-label btn btn-outline-dark" for="learn_mode_checkbox" translate>Learn</label>
+                            </div>
+                            <div class="form-check mb-1 specify_checkbox_div">
                                 <input id="non_moving_target_checkbox" class="form-check-input" type="checkbox" value="">
-                                <label id="non_moving_target_cb_label" class="form-check-label" for="non_moving_target_checkbox" translate>Target is not-moving</label>
+                                <label id="non_moving_target_cb_label" class="form-check-label btn btn-outline-dark" for="non_moving_target_checkbox" translate>Target is not-moving</label>
                             </div>
-                            <div class="form-check mt-1">
+                            <div class="form-check mb-1 specify_checkbox_div">
                                 <input id="time_laps_checkbox" class="form-check-input" type="checkbox" value="">
-                                <label id="time_laps_cb_label" class="form-check-label" for="time_laps_checkbox" translate>Time-lapse</label>
+                                <label id="time_laps_cb_label" class="form-check-label btn btn-outline-dark" for="time_laps_checkbox" translate>Time-lapse</label>
                             </div>
                         </div>
                     </div>
