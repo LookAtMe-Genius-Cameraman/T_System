@@ -29,7 +29,7 @@ body {
 
     transition: all 300ms;
     background-color: #fff0eb !important;
-    border: 2px #008CBA !important;
+    border: #008CBA !important;
     border-style: none none solid none !important;
     border-radius: 5px !important;
 }
@@ -57,11 +57,10 @@ body {
     background: black;
 }
 
-.dropdown-menu-center {
+.dropdown_menu {
     position: relative !important;
 
     right: auto !important;
-    left: 37% !important;
     -webkit-transform: translateX(-50%) !important;
     -o-transform: translateX(-50%) !important;
     transform: translateX(-50%) !important;
@@ -70,7 +69,7 @@ body {
 .cut-text {
   text-overflow: ellipsis;
   overflow: hidden;
-  width: 150px;
+  width: 120px;
   white-space: nowrap;
 }
 
