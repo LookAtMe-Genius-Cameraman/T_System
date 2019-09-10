@@ -1,6 +1,6 @@
 let language = 'en';
 
-const language_list = [['tr', 'Türkçe', 'turkishtrans'], ['de', 'Deutsch', 'germantrans'], ['en', 'English', 'englishtrans'], ['es', 'Espa&ntilde;ol', 'spanishtrans'], ['fr', 'Fran&ccedil;ais', 'frenchtrans'], ['it', 'Italiano', 'italiantrans']];
+const language_list = [['de', 'Deutsch', 'germantrans'], ['en', 'English', 'englishtrans'], ['es', 'Espa&ntilde;ol', 'spanishtrans'], ['fr', 'Fran&ccedil;ais', 'frenchtrans'], ['it', 'Italiano', 'italiantrans'], ['tr', 'Türkçe', 'turkishtrans']];
 // tr version added in the list.
 //removeIf(production)
 let translated_list = [];
