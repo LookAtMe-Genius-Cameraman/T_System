@@ -323,11 +323,9 @@
 }
 
 #language_dropdown_ul {
-
-    /*width: 185px;*/
-    /*height: 185px;*/
+    max-height: 320px;
+    height: 310px;
 
     margin: auto 5px 5px auto;
-
     /*border: turquoise solid;*/
 }
