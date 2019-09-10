@@ -62,10 +62,10 @@ class FaceEncodingApi(Resource):
 
                 return send_file(image)
             else:
-                get_image, mimetype = get_face_image(admin_id, face_id, face_image)
-                if get_image and mimetype:
+                image, mimetype = get_face_image(admin_id, face_id, face_image)
+                if image and mimetype:
                     logger.debug("Response returning")
-                    return Response(get_image(), mimetype=mimetype)
+                    return Response(image, mimetype=mimetype)
 
         faces = get_faces(admin_id)
 
