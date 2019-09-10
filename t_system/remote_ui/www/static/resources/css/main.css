@@ -137,45 +137,27 @@ body {
     background-size: cover;
 }
 
-#options_template_container {
+.template_container {
     visibility: visible;
     opacity: 1;
 
     transition: opacity 300ms;
     margin: auto;
-
-    border-radius: 25px;
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 }
 
-#controlling_template_container {
-    visibility: visible;
-    opacity: 1;
-
-    transition: opacity 300ms;
-    margin: auto;
-
+.swiping_template_container {
     border-radius: 25px;
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
-
     z-index: 61;
 }
 
-#prepare_template_container {
-    visibility: visible;
-    opacity: 1;
+#options_template_container {}
 
-    transition: opacity 300ms;
-    margin: auto;
+#controlling_template_container {}
 
-    border-radius: 25px;
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
-}
+#prepare_template_container {}
 
 #job_template_container {
-    visibility: visible;
-    opacity: 1;
-
     max-width: 500px;
     max-height: 580px;
 
@@ -186,9 +168,6 @@ body {
     width: 55px; /*goes to 85%*/
     height: 45px; /* goes to 68%*/
 
-    transition: opacity 300ms;
-
-    margin: auto;
     z-index: 62;
 }
 
@@ -202,23 +181,17 @@ body {
 }
 
 #system_info_template_container {
-    visibility: visible;
-    opacity: 1;
-
     max-width: 500px;
     max-height: 580px;
 
     /*alignment*/
     top: 95%;
     left: 50%;
+    transform: translate(-50%);
 
     width: 120px; /*goes to 85%*/
     height: 30px; /* goes to 68%*/
 
-    transition: all 300ms;
-    transform: translate(-50%);
-
-    margin: auto;
     z-index: 61;
 }
 
