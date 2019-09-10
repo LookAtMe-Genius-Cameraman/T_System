@@ -74,6 +74,21 @@
     height: 320px;
 }
 
+.option_list_ul {
+    visibility: visible;
+    opacity: 1;
+
+    max-width: 100%;
+    margin: auto;
+
+    overflow: auto;
+    overflow-y: scroll;
+    overflow-x: hidden;
+
+    width: 96%;
+    transition: opacity 300ms;
+}
+
 #options_player_div {
     visibility: hidden;
     opacity: 0;
@@ -84,19 +99,44 @@
     visibility: visible !important;
     opacity: 1 !important;
 
-    width: 100%;
-    height: 60%;
+    width: 100% !important;
+    /*height: 60% !important;*/
+
+    left: 50% ;
+    transform: translate(-50%);
 
     z-index: 61 !important;
-
-    border: #8a6d3b solid;
-
 }
 
 #options_video {
     width: 100%;
+    /*height: 100%;*/
+}
+
+#options_image_viewer_div {
+    visibility: hidden;
+    opacity: 0;
+    transition: all 300ms;
+}
+
+#options_image_viewer_div.focused {
+    visibility: visible !important;
+    opacity: 1 !important;
+
+    width: 100% !important;
+    height: 100% !important;
+
+    left: 50% ;
+    transform: translate(-50%);
+
+    z-index: 61 !important;
+}
+
+#options_image_viewer_img {
+    width: 100%;
     height: 100%;
 }
+
 
 #close_options_player_btn {
     z-index: 62;
@@ -132,7 +172,6 @@
 #update_from_check_div {
     width: 60%;
     margin: auto;
-    border: #8a6d3b solid;
 
 }
 
@@ -140,7 +179,6 @@
     left: 50%;
     transform: translate(-50%);
     margin: auto;
-    border: #8a6d3b solid;
 }
 
 /**********************************WIFI CONNECTIONS OPTION**********************************/
@@ -174,21 +212,8 @@
 }
 
 #network_list_ul {
-    visibility: visible;
-    opacity: 1;
-
-    max-width: 100%;
-    max-height: 260px;
-    margin: auto;
-
-    overflow: auto;
-    overflow-y: scroll;
-    overflow-x: hidden;
-
-    width: 96%;
-    height: 250px;
-
-    transition: opacity 300ms;
+    max-height: 245px;
+    height: 235px;
 }
 
 .existing_network_password {
@@ -217,6 +242,11 @@
 
 #face_encoding_input_div {}
 
+#face_name_input {
+    left: 50%;
+    transform: translate(-50%);
+}
+
 #encode_new_face_btn {
     font-size: 13px;
     height: 2rem;
@@ -224,6 +254,30 @@
 
 #f_enc_photo_label {
     font-size: 75%;
+}
+
+#encoded_face_list_ul {
+    max-height: 240px;
+    height: 230px;
+}
+
+.face_encoding_dropdown_menu {
+    left: 44% !important;
+}
+
+.face_row {
+    width: 85%;
+    margin: auto;
+}
+
+.face_div {
+    border: black;
+    border-style: none none solid none;
+    border-radius: 3px;
+}
+
+.face_div:hover {
+    opacity: 0.8;
 }
 
 .face_a {
@@ -236,21 +290,12 @@
 }
 
 #record_list_ul {
-    visibility: visible;
-    opacity: 1;
-
-    max-width: 100%;
     max-height: 320px;
-    margin: auto;
-
-    overflow: auto;
-    overflow-y: scroll;
-    overflow-x: hidden;
-
-    width: 96%;
     height: 310px;
+}
 
-    transition: opacity 300ms;
+.record_dropdown_menu {
+    left: 37% !important;
 }
 
 .record_a {
