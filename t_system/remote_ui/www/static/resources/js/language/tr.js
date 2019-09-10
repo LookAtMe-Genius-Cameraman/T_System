@@ -62,5 +62,5 @@ const turkishtrans = {
     "System Info": "Sistem bilgisi",
     "Available:": "Kullanılabilir:",
     "min": "dk",
-    "job": "iş"
+    " job": " iş"
 };

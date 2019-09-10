@@ -62,5 +62,5 @@ const italiantrans = {
     "System Info": "Informazioni di Sistema",
     "Available:": "a disposizione:",
     "min": "min",
-    "job": "lavoro"
+    " job": " lavoro"
 };

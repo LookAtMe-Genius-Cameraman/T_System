@@ -1,5 +1,6 @@
 const job_template_container = document.getElementById("job_template_container");
 const job_btn = document.getElementById("job_btn");
+const job_btn_i = document.getElementById("job_btn_i");
 const job_div = document.getElementById("job_div");
 
 const job_simulate_btn = document.getElementById("job_simulate_btn");
@@ -13,7 +14,7 @@ function dragElement(drag_element, header_element = null) {
     if (header_element !== null) {
         // if present, the header is where you move the DIV from:
         header_element.onmousedown = drag_mouse_down;
-        drag_element.ontouchstart = drag_touch_start;
+        header_element.ontouchstart = drag_touch_start;
 
     } else {
         // otherwise, move the DIV from anywhere inside the DIV:
@@ -25,7 +26,7 @@ function dragElement(drag_element, header_element = null) {
 
     function drag_mouse_down(e) {
         e = e || window.event;
-        e.preventDefault();
+        // e.preventDefault();
         // get the mouse cursor position at startup:
         pos3 = e.clientX;
         pos4 = e.clientY;
@@ -55,7 +56,7 @@ function dragElement(drag_element, header_element = null) {
 
     function mouse_element_drag(e) {
         e = e || window.event;
-        e.preventDefault();
+        // e.preventDefault();
         // calculate the new cursor position:
         pos1 = pos3 - e.clientX;
         pos2 = pos4 - e.clientY;
@@ -108,6 +109,12 @@ function toggle_job_modal() {
         dark_overlay_active = false
     }
 
+    if (job_div.classList.contains("focused")) {
+        job_btn_i.innerHTML = translate_text_item(" job");
+    } else {
+        job_btn_i.innerHTML = "";
+    }
+
     options_template_container.classList.toggle("hidden_element");
     controlling_template_container.classList.toggle("hidden_element");
     prepare_template_container.classList.toggle("hidden_element");
@@ -123,9 +130,7 @@ job_div.addEventListener("click", function (event) {
         toggle_job_modal()
 
     } else {
-        // alert('Child element clicked!');
     }
-
 });
 
 job_btn.addEventListener("click", toggle_job_modal);
@@ -225,6 +230,4 @@ job_simulate_btn.addEventListener("click", function () {
 
         monitor_area_div.classList.toggle("focused");
     }
-
-
 });
