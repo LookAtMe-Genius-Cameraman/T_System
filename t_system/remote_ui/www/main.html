@@ -36,7 +36,7 @@
             <div id="options_template_container" class="container swiper-slide">
                 <div id="options_player_div" class="position-absolute">
                     <a id="close_options_player_btn" class="close" title="Close">X</a>
-                    <video id="options_video" class="position-absolute" controls>
+                    <video id="options_video" class="position-relative" controls>
                         <source id="options_player_source" src="" type="">
                         Your browser does not support HTML5 video.
                     </video>
@@ -68,7 +68,7 @@
                                 </div>
                                 <button id="create_new_network_btn" class="position-absolute send_network_data_btn" translate><i class="fas fa-angle-double-right"></i></button>
                             </div>
-                            <ul id="network_list_ul" class="mt-2"></ul>
+                            <ul id="network_list_ul" class="mt-2 option_list_ul"></ul>
                         </div>
                     </div>
                 </div>
@@ -78,7 +78,7 @@
                         <button id="audio_control_btn" class="option_btn" translate>Audio Inputs</button>
                         <div id="audio_control_io_div" class="option_io_div">
                             <span id="using_audio_input"></span>
-                            <ul class="network_list" id="available_audio_inputs"></ul>
+                            <ul id="available_audio_inputs" class="option_list_ul"></ul>
                         </div>
                     </div>
 
@@ -100,7 +100,7 @@
                                     </div>
                                 </form>
                             </div>
-                            <ul class="network_list" id="encoded_face_list_ul"></ul>
+                            <ul id="encoded_face_list_ul" class="option_list_ul"></ul>
                         </div>
                     </div>
                 </div>
@@ -109,13 +109,13 @@
                     <div id="record_control_div" class="position-relative col option_div">
                         <button id="record_control_btn" class="option_btn" translate>Recorded On</button>
                         <div id="record_control_io_div" class="option_io_div">
-                            <ul id="record_list_ul" class="position-relative mt-1"></ul>
+                            <ul id="record_list_ul" class="position-relative mt-1 option_list_ul"></ul>
                         </div>
                     </div>
                     <div id="lang_select_div" class="position-relative col option_div">
                         <button id="lang_select_btn" class="option_btn" translate>Language</button>
                         <div id="language_dropdown_div" class="option_io_div">
-                            <ul id="language_dropdown_ul">
+                            <ul id="language_dropdown_ul" class="option_list_ul">
                                 <li class="dropdown">
                                     <a href="#">
                                         <span class="dropbtn text-info" id="translate_menu"></span>
