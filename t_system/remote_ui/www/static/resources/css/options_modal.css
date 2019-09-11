@@ -159,10 +159,6 @@
     border: #8a6d3b solid;
 }
 
-#close_options_image_viewer_btn {
-    z-index: 62;
-}
-
 
 /**********************************UPDATE CONTROL OPTION**********************************/
 #update_control_div.higher {
