@@ -9,94 +9,6 @@ const job_cancel_btn = document.getElementById("job_cancel_btn");
 
 const monitor_area_div = document.getElementById("monitor_area_div");
 
-function dragElement(drag_element, header_element = null) {
-    let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-    if (header_element !== null) {
-        // if present, the header is where you move the DIV from:
-        header_element.onmousedown = drag_mouse_down;
-        header_element.ontouchstart = drag_touch_start;
-
-    } else {
-        // otherwise, move the DIV from anywhere inside the DIV:
-        drag_element.onmousedown = drag_mouse_down;
-        drag_element.ontouchstart = drag_touch_start;
-    }
-
-    let add_timeout;
-
-    function drag_mouse_down(e) {
-        e = e || window.event;
-        // e.preventDefault();
-        // get the mouse cursor position at startup:
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-        document.onmouseup = close_drag_element;
-        // call a function whenever the cursor moves:
-        document.onmousemove = mouse_element_drag;
-
-        add_timeout = setTimeout(function () {
-            job_btn.removeEventListener("click", toggle_job_modal)
-        }, 100);
-    }
-
-    function drag_touch_start(e) {
-        e = e || window.event;
-        e.preventDefault();
-        // get the mouse cursor position at startup:
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-        document.ontouchend = close_drag_element;
-        // call a function whenever the cursor moves:
-        document.ontouchmove = touch_element_drag;
-
-        add_timeout = setTimeout(function () {
-            job_btn.removeEventListener("click", toggle_job_modal)
-        }, 100);
-    }
-
-    function mouse_element_drag(e) {
-        e = e || window.event;
-        // e.preventDefault();
-        // calculate the new cursor position:
-        pos1 = pos3 - e.clientX;
-        pos2 = pos4 - e.clientY;
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-        // set the element's new position:
-        drag_element.style.top = (drag_element.offsetTop - pos2) + "px";
-        drag_element.style.left = (drag_element.offsetLeft - pos1) + "px";
-    }
-
-    function touch_element_drag(e) {
-        e = e || window.event;
-        e.preventDefault();
-        // calculate the new cursor position:
-        pos1 = pos3 - e.clientX;
-        pos2 = pos4 - e.clientY;
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-        // set the element's new position:
-
-        drag_element.style.top = (e.targetTouches[0].pageX - pos2) + "px";
-        drag_element.style.left = (e.targetTouches[0].pageY - pos1) + "px";
-    }
-
-    function close_drag_element() {
-        clearTimeout(add_timeout);
-
-        // stop moving when mouse button is released:
-        document.onmouseup = null;
-        document.onmousemove = null;
-
-        document.ontouchend = null;
-        document.ontouchmove = null;
-
-        let timeout = setTimeout(function () {
-            job_btn.addEventListener("click", toggle_job_modal)
-        }, 100);
-    }
-}
-
 function toggle_job_modal() {
     job_template_container.classList.toggle("focused");
     job_div.classList.toggle("focused");
@@ -122,8 +34,24 @@ function toggle_job_modal() {
 
 }
 
-// Make the DIV element draggable:
-dragElement(job_template_container, job_btn);
+function dragMoveListener(event) {
+    let target = event.target;
+    // keep the dragged position in the data-x/data-y attributes
+    let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+    let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+    // translate the element
+  target.style.webkitTransform =
+    target.style.transform =
+      'translate(' + x + 'px, ' + y + 'px)';
+
+  // update the posiion attributes
+  target.setAttribute('data-x', x);
+  target.setAttribute('data-y', y);
+}
+
+// this is used later in the resizing and gesture demos
+window.dragMoveListener = dragMoveListener;
 
 job_div.addEventListener("click", function (event) {
     if (event.target === event.currentTarget) {
@@ -134,6 +62,35 @@ job_div.addEventListener("click", function (event) {
 });
 
 job_btn.addEventListener("click", toggle_job_modal);
+
+interact('#job_btn')
+  .draggable({
+    // enable inertial throwing
+    inertia: true,
+    // keep the element within the area of it's parent
+    modifiers: [
+        interact.modifiers.restrictRect({
+            restriction: 'parent',
+            endOnly: true
+        })
+    ],
+      // enable autoScroll
+      autoScroll: false,
+
+      // call this function on every dragmove event
+      onmove: function (event) {
+          setTimeout(function () {
+              job_btn.removeEventListener("click", toggle_job_modal)
+          }, 100);
+          dragMoveListener(event);
+      },
+      // call this function on every dragend event
+      onend: function (event) {
+          setTimeout(function () {
+              job_btn.addEventListener("click", toggle_job_modal)
+          }, 100);
+      }
+  });
 
 job_ready_btn.addEventListener("click", function () {
     if (job_ready_btn.innerHTML === translate_text_item("READY")) {
