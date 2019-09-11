@@ -4,7 +4,6 @@ const close_options_player_btn = document.getElementById("close_options_player_b
 const options_player_source = document.getElementById("options_player_source");
 
 const options_image_viewer_div = document.getElementById("options_image_viewer_div");
-const close_options_image_viewer_btn = document.getElementById("close_options_image_viewer_btn");
 const options_image_viewer_img = document.getElementById("options_image_viewer_img");
 
 const update_control_div = document.getElementById("update_control_div");
@@ -29,6 +28,7 @@ const audio_control_io_div = document.getElementById("audio_control_io_div");
 const face_encoding_div = document.getElementById("face_encoding_div");
 const face_encoding_btn = document.getElementById("face_encoding_btn");
 const face_encoding_io_div = document.getElementById("face_encoding_io_div");
+const face_encoding_form = document.getElementById("face_encoding_form");
 const face_name_input = document.getElementById("face_name_input");
 const f_enc_photo_input = document.getElementById("f_enc_photo_input");
 const f_enc_photo_label = document.getElementById("f_enc_photo_label");
@@ -323,16 +323,13 @@ face_encoding_btn.addEventListener("click", function () {
     face_encoding_btn_click_count++;
     if (face_encoding_btn_click_count <= 1) {
         get_face_recognition_data();
-        // requested_data = {"status": "OK", "data": [{"id": "z970136a-aegb-15e9-b130-cy2f756671ed", "name": "face_name", "image_names": ["image_name1", "image_name2"]}]};
+        // requested_data = {"status": "OK", "data": [{"id": "z970136a-aegb-15e9-b130-cy2f756671ed", "name": "face_name", "image_names": ["im-n1", "im-n2", "im-n3", "im-n4", "im-n5"]}]};
 
         let face_encoding_interval = setInterval(function () {
-                    console.log(requested_data);
 
             if (requested_data !== {}) {
-                    console.log(requested_data);
 
                 if (requested_data["status"] === "OK") {
-                    console.log(requested_data);
 
                     for (let c = 0; c < requested_data["data"].length; c++) {
 
@@ -357,34 +354,55 @@ face_encoding_btn.addEventListener("click", function () {
                         face_a.setAttribute("aria-expanded", "false");
                         face_a.innerHTML = requested_data["data"][c]["name"].replace(/_/gi, " ");
 
-                        face_dropdown_container_div.classList.add("dropdown-menu", "dropdown-menu-right");
+                        face_dropdown_container_div.classList.add("dropdown-menu", "dropdown-menu-right", "dropdown_menu", "face_encoding_dropdown_menu");
                         face_dropdown_container_div.classList.add("container");
                         face_dropdown_container_div.setAttribute("aria-labelledby", face_a.id);
 
                         let face_dropdown_row_div;
                         for (let i = 0; i < requested_data["data"][c]["image_names"].length; i++) {
+
                             if (i % 3 === 0) {
                                 face_dropdown_row_div = document.createElement('div');
-                                face_dropdown_row_div.classList.add("row");
-                                face_dropdown_container_div.appendChild(face_dropdown_row_div);
-
+                                face_dropdown_row_div.classList.add("row", "mb-1", "face_row");
                             }
-                            let face_dropdown_col_div = document.createElement('div');
-                            face_dropdown_col_div.classList.add("col");
 
+                            let face_dropdown_col_div = document.createElement('div');
+                            face_dropdown_col_div.classList.add("col-*", "ml-2");
+
+                            let face_div = document.createElement('div');
                             let face_img = document.createElement('img');
-                            // Todo: make bigger when clicked and download when hold on.
+
+                            face_div.id = requested_data["data"][c]["image_names"][i];
+                            face_div.classList.add("face_div");
 
                             let src = "/api/face_encoding?id=" + requested_data["data"][c]["id"] + "&image=" + requested_data["data"][c]["image_names"][i] + "&admin_id=" + admin_id;   // this url assigning creates a GET request.
                             resize_image(src, 25, 40, face_img);
 
-                            face_img.addEventListener("click", function () {
+                            interact('#' + face_div.id)
+                                .on('tap', function (event) {
+                                })
+                                .on('doubletap', function (event) {
+                                    let route = "/api/face_encoding?id=" + requested_data["data"][c]["id"] + "&image=" + requested_data["data"][c]["image_names"][0] + "&download=" + true + "&admin_id=" + admin_id;
+                                    jquery_manager.get_data(route);
+                                })
+                                .on('hold', function (event) {
+                                    face_encoding_div.classList.add("hidden_element");
+                                    options_image_viewer_div.classList.add("focused");
+                                    options_image_viewer_img.src = src;
+                                })
+                                .on('up', function (event) {
+                                    options_image_viewer_div.classList.remove("focused");
+                                    options_image_viewer_img.src = "";
+                                    face_encoding_div.classList.remove("hidden_element");
+                                });
 
-                            });
-
-                            face_dropdown_col_div.appendChild(face_img);
+                            face_div.appendChild(face_img);
+                            face_dropdown_col_div.appendChild(face_div);
                             face_dropdown_row_div.appendChild(face_dropdown_col_div);
+                            face_dropdown_container_div.appendChild(face_dropdown_row_div);
+
                         }
+
                         face_dropdown_div.appendChild(face_pp_img);
                         face_dropdown_div.appendChild(face_a);
                         face_dropdown_div.appendChild(face_dropdown_container_div);
@@ -396,7 +414,6 @@ face_encoding_btn.addEventListener("click", function () {
                 requested_data = {};
                 clearInterval(face_encoding_interval)
             }
-
         });
     } else {
         while (encoded_face_list_ul.firstChild) {
@@ -423,6 +440,12 @@ encode_new_face_btn.addEventListener("click", function () {
     setTimeout(function () {
         face_name_input.value = "";
     }, 300)
+});
+
+encode_new_face_btn.addEventListener("click", function () {
+   face_encoding_form.submit(function () {
+    let form_data = face_encoding_form.serialize();
+    jquery_manager.post_data("/api/face_encoding", form_data)});
 });
 
 let record_control_btn_click_count = 0;
@@ -456,7 +479,7 @@ record_control_btn.addEventListener("click", function () {
                         let date_btn = document.createElement('button');
                         let date_dropdown_container_div = document.createElement('div');
 
-                        date_dropdown_div.classList.add("dropdown", "btn-group", "mt-1");
+                        date_dropdown_div.classList.add("dropdown", "mt-1");
 
                         date_btn.classList.add("btn", "btn-secondary", "dropdown-toggle");
                         date_btn.type = "button";
@@ -466,7 +489,7 @@ record_control_btn.addEventListener("click", function () {
                         date_btn.setAttribute("aria-expanded", "false");
                         date_btn.innerHTML = record_dates[c].replace(/_/gi, "/"); // to replace all necessary characters.
 
-                        date_dropdown_container_div.classList.add("dropdown-menu", "dropdown-menu-right", "dropdown-menu-center");
+                        date_dropdown_container_div.classList.add("dropdown-menu", "dropdown-menu-right", "dropdown_menu", "record_dropdown_menu");
                         date_dropdown_container_div.setAttribute("aria-labelledby", date_btn.id);
 
                         let date_btn_click_count = 0;
