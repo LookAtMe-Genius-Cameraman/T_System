@@ -86,7 +86,7 @@
                         <button id="face_encoding_btn" class="option_btn" translate>Facial Recognitions</button>
                         <div id="face_encoding_io_div" class="option_io_div">
                             <div id="encode_new_face_div">
-                                <form action="/api/face_encoding" method="post" enctype="multipart/form-data">
+                                <form id="face_encoding_form" action="/api/face_encoding" method="post" enctype="multipart/form-data">
                                     <input id="face_name_input" class="modal_input" type="text" name="face_name" placeholder="name"/>
                                     <div id="face_encoding_input_div" class="input-group mb-2 mt-2">
                                         <div class="custom-file">
@@ -95,7 +95,7 @@
                                             <!--<input type="submit" value="Upload"/>-->
                                         </div>
                                         <div class="input-group-append">
-                                            <button id="encode_new_face_btn" class="btn btn-dark" type="submit" translate>Send</button>
+                                            <button id="encode_new_face_btn" class="btn btn-dark" type="button" translate>Send</button>
                                         </div>
                                     </div>
                                 </form>
@@ -226,8 +226,8 @@
                                     <button id="ai_select_dd_btn" type="button" class="btn btn-outline-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" translate>AI</button>
                                     <div class="dropdown-menu">
                                         <div class="dropdown-item form-check mb-1">
-                                            <input id="ai_select_checkbox" class="form-check-input" type="checkbox" value="">
-                                            <label id="ai_select_cb_label" class="form-check-label" for="ai_select_checkbox" translate>Official AI</label>
+                                            <input id="official_ai_checkbox" class="form-check-input" type="checkbox" value="">
+                                            <label id="official_ai_cb_label" class="form-check-label" for="official_ai_checkbox" translate>Official AI</label>
                                         </div>
                                     </div>
                                 </div>
@@ -236,7 +236,7 @@
                                 <input id="security_mode_checkbox" class="form-check-input" type="checkbox" value="">
                                 <label id="security_mode_cb_label" class="form-check-label btn btn-outline-dark" for="security_mode_checkbox" translate>Secure</label>
                             </div>
-                            <div class="form-check mb-1 specify_checkbox_div">
+                            <div id="learn_mode_check_div" class="form-check mb-1 specify_checkbox_div">
                                 <input id="learn_mode_checkbox" class="form-check-input" type="checkbox" value="">
                                 <label id="learn_mode_cb_label" class="form-check-label btn btn-outline-dark" for="learn_mode_checkbox" translate>Learn</label>
                             </div>
@@ -259,7 +259,7 @@
 
 <!--        ======================================================JOB MODAL======================================================        -->
 <div id="job_template_container" class="position-absolute template_container">
-    <button id="job_btn" class="position-relative btn btn-dark" translate>job</button>
+    <button id="job_btn" class="position-relative btn btn-dark"><i id="job_btn_i" class="fas fa-compact-disc"></i></button>
     <div id="job_div" class="position-relative">
         <div id="monitor_area_div" class="position-relative">
             <span id="monitor_job_span" class="position-absolute" translate>Click to monitoring job</span>
@@ -311,6 +311,7 @@
 <script src="static/vendors/jquery/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <script type="text/javascript" src="static/vendors/popper.min.js"></script>
 <script type="text/javascript" src="static/vendors/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="static/vendors/interact.min.js"></script>
 
 <script type="text/javascript" charset="UTF-8" src="static/resources/js/__init__.js"></script>
 
