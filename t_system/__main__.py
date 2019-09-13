@@ -173,7 +173,7 @@ def initiate():
 
     remote_ui_gr = ap.add_argument_group('remote_ui')
     remote_ui_gr.add_argument("--host", help="Specify host address.", action="store", type=str, default="192.168.1.24")
-    remote_ui_gr.add_argument("--port", help="Specify the port.", action="store", type=str, default="3000")
+    remote_ui_gr.add_argument("--port", help="Specify the port.", action="store", type=str, default="5000")
     remote_ui_gr.add_argument("--debug", help="Activate debug mode.", action="store_true")
 
     r_mode_gr = ap.add_argument_group('running modes')
