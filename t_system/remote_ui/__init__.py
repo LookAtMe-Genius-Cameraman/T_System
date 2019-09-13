@@ -92,15 +92,6 @@ class RemoteUI:
             db_json = json.dumps("something")
             return render_template('main.html', db_json=db_json)
 
-        @self.app.route('/try', methods=['POST'])
-        def tryer():
-            """Method to set working parameter of t_system.
-            """
-            cmd = request.form
-
-            print(str(cmd))
-            return str(json.dumps({"vfdv": True}))  # it drops the resp.responseText.
-
     def run(self, host=None, port=None, debug=None):
         """Method to running flask with given parameters.
 
@@ -144,5 +135,5 @@ if __name__ == "__main__":
     _static_folder = _template_folder + "/static"
 
     app = RemoteUI(args={"host": "localhost", "port": "5000", "debug": True, "environment": "development"})
-    app.run(host="172.22.9.40", port="5000",  debug=True)
+    app.run(host="0.0.0.0", port="5000",  debug=True)  # 0.0.0.0 means "all IPv4 addresses on the local machine"
     # app.debug = True
