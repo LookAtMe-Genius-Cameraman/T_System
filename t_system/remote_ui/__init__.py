@@ -90,9 +90,8 @@ class RemoteUI:
         def main():
             """Method to routing main.html .
             """
-            # db_json = json.dumps(self.db.all())
-            db_json = json.dumps("something")
-            return render_template('main.html', db_json=db_json)
+
+            return render_template('main.html')
 
     def run(self, host=None, port=None, debug=None):
         """Method to running flask with given parameters.
