@@ -16,6 +16,7 @@ import json
 import os
 import inspect
 
+from t_system.remote_ui.api.access import api_bp as access_api_bp
 from t_system.remote_ui.api.face_encoding import api_bp as face_encoding_api_bp
 from t_system.remote_ui.api.job import api_bp as job_api_bp
 from t_system.remote_ui.api.move import api_bp as move_api_bp
@@ -73,6 +74,7 @@ class RemoteUI:
         """Method to setting flask API.
         """
 
+        self.app.register_blueprint(access_api_bp)
         self.app.register_blueprint(face_encoding_api_bp)
         self.app.register_blueprint(job_api_bp)
         self.app.register_blueprint(move_api_bp)
