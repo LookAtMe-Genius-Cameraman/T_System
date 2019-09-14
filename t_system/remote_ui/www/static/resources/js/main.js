@@ -9,6 +9,10 @@
 /** @type {!Object} */
 const jquery_manager = JQueryManager;
 
+
+const initial_loading_div = document.getElementById("initial_loading_div");
+const loading_animation_div = document.getElementById("loading_animation_div");
+
 const title_footer = document.getElementById("title_footer");
 
 /** @type {!Element} */
@@ -115,8 +119,9 @@ function resize_image(src, max_width, max_height, dest_element) {
 
 let swiper;
 $(document).ready(function () {
-    //to check if javascript is disabled like in anroid preview
-    // document.getElementById('warningmsg').style.display = 'none';
+    initial_loading_div.classList.add("inactive");
+    loading_animation_div.classList.remove("lds-dual-ring");
+
     connectdlg();
 
     swiper = new Swiper('.swiper-container', {
