@@ -8,13 +8,11 @@
 
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
+import os
+import inspect
 
 from flask import Flask, render_template, request, redirect, Response
 from flask_session import Session
-
-import json
-import os
-import inspect
 
 from t_system.remote_ui.api.access import api_bp as access_api_bp
 from t_system.remote_ui.api.face_encoding import api_bp as face_encoding_api_bp
@@ -31,7 +29,7 @@ from t_system.remote_ui.api.update import api_bp as update_api_bp
 from t_system import T_SYSTEM_PATH, dot_t_system_dir
 # dot_t_system_dir = "/home/baybars/.t_system"
 # T_SYSTEM_PATH = "/home/baybars/T_System/t_system"
-__version__ = '0.6.5'
+__version__ = '0.6.6'
 
 
 REMOTE_UI_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
