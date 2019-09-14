@@ -153,7 +153,8 @@ class NetworkConnector:
         self.current_available_networks = []
         self.known_networks = []
 
-        set_local_ip_address(args["wlan"], args["static_ip"])
+        if args["static_ip"]:
+            set_local_ip_address(args["wlan"], args["static_ip"])
 
         self.scan()
         self.__set_available_networks()
@@ -221,16 +222,15 @@ class NetworkConnector:
         """Method to try to connect to one of the available networks using wpa_supplicant.conf file that is restarted by subprocess.
         """
 
-        result = False
-        # self.wpa_supplicant.restart_ws_service()
+        if self.are_networks_accessible():
+            self.wpa_supplicant.restart_ws_service()
+            time.sleep(5)
 
-        # time.__sleep(5)
-        # TODO: External network may not be able to access the internet. So create a difference here as 'is there any connected network?' and 'is network online'
-        if self.is_network_online():
-            logger.info("Network is online!")
-            result = True
+        if self.is_connected_to_network():
+            logger.info("Connected to a network.")
+            return True
 
-        return result
+        return False
 
     @dispatch(str, str)
     def connect(self, ssid, password):
@@ -324,6 +324,32 @@ class NetworkConnector:
             pass
         return False
 
+    @staticmethod
+    def is_connected_to_network():
+        """The top-level method to check network connection status using `hostname` command via subprocess.
+
+        Returns:
+            bool:  status.
+        """
+        wifi_ip = check_output(['hostname', '-I'])
+
+        if wifi_ip:
+            return True
+
+        return False
+
+    def are_networks_accessible(self):
+        """The top-level method to check if T_System has the necessary information to connect to surrounding networks.
+
+        Returns:
+            bool:  status.
+        """
+
+        for known_network in self.known_networks:
+            if known_network["ssid"] in self.current_available_networks:
+                return True
+        return False
+
 
 class WpaSupplicant:
     """Class to define a wpa supplicant handler to managing wpa_supplicant.conf file for its headers and networks.
@@ -343,6 +369,7 @@ class WpaSupplicant:
 
         self.wpa_supp_conf_file = "/etc/wpa_supplicant/wpa_supplicant.conf"
         self.country_code = args["country_code"]
+        self.wlan = args["wlan"]
 
         self.conf_headers = ["ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev", "update_config=1", f'country={self.country_code}']
 
@@ -374,13 +401,12 @@ class WpaSupplicant:
         else:
             self.create_wsc()
 
-    @staticmethod
-    def restart_ws_service():
+    def restart_ws_service(self):
         """Method to restart wpa_supplicant service with reconfigured wpa_supplicant.conf file.
         """
 
         # call("rm -f /var/run/wpa_supplicant/wlan0", shell=True)
-        call("wpa_supplicant -i wlan0 -c /etc/wpa_supplicant/wpa_supplicant.conf", shell=True)
+        call(f'wpa_supplicant -i {self.wlan} -c /etc/wpa_supplicant/wpa_supplicant.conf', shell=True)
 
     def create_wsc(self):
         """The high(and low)-level method to create initialization wpa_supplicant.conf file.
