@@ -157,10 +157,14 @@ class Stand:
     def run(self):
         """The top-level method to managing members of stand interface.
         """
-        if self.network_connector.connect():
-            pass
-        else:
+        is_connected_to_network = self.network_connector.is_connected_to_network()
+
+        if not is_connected_to_network:
+            is_connected_to_network = self.network_connector.connect()
+
+        if not is_connected_to_network:
             self.access_point.start()
+
         try:
             self.remote_ui.run(host="t_system")
         except KeyboardInterrupt:
