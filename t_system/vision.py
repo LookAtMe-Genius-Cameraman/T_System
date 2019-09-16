@@ -17,6 +17,7 @@ import numpy as np
 import threading
 
 from math import sqrt
+from multipledispatch import dispatch
 from picamera import PiCamera
 from picamera.array import PiRGBArray
 
@@ -730,36 +731,52 @@ class Vision:
         pass
 
     @staticmethod
-    def __get_recognition_data(encoding_file_name):
+    def __get_recognition_data(encoding_file):
         """Method to get encoded recognition data from pickle file.
 
          Args:
-                encoding_file_name (str):  The file that is keep faces's encoded data.
+                encoding_file (str):  The file that is keep faces's encoded data.
         """
-        if encoding_file_name == "main_encoding":
-            encoding_pickle_file = f'{dot_t_system_dir}/recognition/{encoding_file_name}.pickle'
-        else:
-            encoding_pickle_file = f'{dot_t_system_dir}/recognition/encodings/{encoding_file_name}.pickle'
 
-        return pickle.loads(open(encoding_pickle_file, "rb").read())  # this is recognition_data
+        return pickle.loads(open(encoding_file, "rb").read())  # this is recognition_data
 
-    def set_recognizing(self, encoding_file_name=None):
+    @dispatch(str)
+    def set_recognizing(self, encoding_file):
         """The top-level method to set recognition status and parameters of Vision.
 
          Args:
-                encoding_file_name (str):  The file that is keep faces's encoded data.
+                encoding_file (str):  The file that is keep faces's encoded data.
         """
-        if encoding_file_name is None:
+        if not encoding_file:
             self.no_recognize = True
             self.track = self.__track_without_recognizing
             return True
 
         self.no_recognize = False
-        self.recognition_data = self.__get_recognition_data(encoding_file_name)
+        self.recognition_data = self.__get_recognition_data(encoding_file)
+        self.track = self.__track_with_recognizing
+
+    @dispatch(list)
+    def set_recognizing(self, encoding_files):
+        """The top-level method to set recognition status and parameters of Vision.
+
+         Args:
+                encoding_files (list):  The file that is keep faces's encoded data.
+        """
+
+        self.no_recognize = False
+
+        self.recognition_data = {"encodings": [], "names": []}
+
+        for file in encoding_files:
+            recognition_data = self.__get_recognition_data(file)
+            self.recognition_data["encodings"].extend(recognition_data["encodings"])
+            self.recognition_data["names"].extend(recognition_data["names"])
+
         self.track = self.__track_with_recognizing
 
     def __get_mark_object(self, mark_found_object):
-        """Method to set mqtt_receimitter object for publishing and subscribing data echos.
+        """Method to get mark type for using when object detected.
 
          Args:
                 mark_found_object (str):   The mark type of the detected object.
@@ -833,8 +850,8 @@ class Vision:
     def release_members(self):
         """Method to close all streaming and terminate vision processes.
         """
-        self.terminate_active_threads()
         self.stop_recording()
+        self.terminate_active_threads()
         self.__release_hearer()
         self.__release_camera()
         self.__release_servos()
