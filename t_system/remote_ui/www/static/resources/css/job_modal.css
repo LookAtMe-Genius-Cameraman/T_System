@@ -1,3 +1,12 @@
+.shine_in_dark {
+    visibility: visible !important;
+    opacity: 1 !important;
+
+    color: #fff !important;
+
+    z-index: 200 !important;
+}
+
 #job_btn {
     border-radius: 50%;
     cursor: move;
@@ -182,7 +191,8 @@
 }
 
 #main_selected_div {
-    top: 25%;
+    max-height: 300px;
+    top: 15%;
     left: 50%;
     transform: translate(-50%);
 }
@@ -194,12 +204,19 @@
 #selected_sce_div {
     /*border: #20c997 solid;*/
     width: 170px;
+    text-align: center;
+}
+
+#selected_sce_span {
+    text-decoration: underline;
 }
 
 #selected_param_div {
     /*border: #20c997 solid;*/
     width: 170px;
-    margin: 0 auto;
+    text-align: center;
+}
 
-    left: 55%;
+#selected_param_span {
+    text-decoration: underline;
 }

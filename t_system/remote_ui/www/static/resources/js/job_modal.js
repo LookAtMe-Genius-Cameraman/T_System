@@ -3,11 +3,81 @@ const job_btn = document.getElementById("job_btn");
 const job_btn_i = document.getElementById("job_btn_i");
 const job_div = document.getElementById("job_div");
 
+const selected_scenarios_div = document.getElementById("selected_scenarios_div");
+const selected_params_div = document.getElementById("selected_params_div");
+
 const job_simulate_btn = document.getElementById("job_simulate_btn");
 const job_ready_btn = document.getElementById("job_ready_btn");
 const job_cancel_btn = document.getElementById("job_cancel_btn");
 
 const monitor_area_div = document.getElementById("monitor_area_div");
+
+function post_job_data() {
+    let data = {
+        "job_type": "track",
+        "scenario": "scenario_1",
+        "predicted_mission": false,
+        "recognized_person": [],
+        "non_moving_target": null,
+        "ai": null
+    };
+
+    if (security_mode_checkbox.checked) {
+        data["job_type"] = "secure"
+    } else if (learn_mode_checkbox.checked) {
+        data["job_type"] = "learn"
+    }
+
+    if (recognize_all_select_checkbox.checked) {
+        data["recognized_person"] = ["all"]
+    } else {
+        for (let i = 0; i < recognize_checkboxes.length; i++) {
+            if (recognize_checkboxes[i].checked) {
+                data["recognized_person"].push(recognize_checkboxes[i].id)
+            }
+        }
+    }
+
+    if (non_moving_target_checkbox.checked) {
+        data["non_moving_target"] = true;
+    }
+
+    if (ai_checkbox.checked) {
+        data["ai"] = "official_ai"
+
+    }
+
+    jquery_manager.post_data("/api/job&admin_id=" + admin_id, data);
+
+}
+
+function show_checked_boxes(elements, dest) {
+    while (dest.firstChild) {
+        dest.removeChild(dest.firstChild);
+    }
+
+    let labels = document.getElementsByTagName('label');
+
+    for (let i = 0; i < elements.length; i++) {
+        if (elements[i].checked) {
+            for (let a = 0; a < labels.length; a++) {
+                if (labels[a].htmlFor === elements[i].id) {
+
+                    let selected_div = document.createElement('div');
+                    let selected_span = document.createElement('span');
+
+                    selected_div.classList.add("position-relative");
+
+                    selected_span.innerHTML = labels[a].innerHTML;
+                    selected_span.classList.toggle("shine_in_dark");
+
+                    selected_div.appendChild(selected_span);
+                    dest.appendChild(selected_div);
+                }
+            }
+        }
+    }
+}
 
 function toggle_job_modal() {
     job_template_container.classList.toggle("focused");
@@ -21,9 +91,11 @@ function toggle_job_modal() {
         dark_overlay_active = false
     }
 
-    if (job_div.classList.contains("focused")) {
+    if (job_div.classList.contains("focused")) {  // 1. click
         job_btn_i.innerHTML = translate_text_item(" job");
-    } else {
+        post_job_data();
+        show_checked_boxes([security_mode_checkbox, learn_mode_checkbox, non_moving_target_checkbox, time_laps_checkbox].concat(recognize_checkboxes).concat(ai_checkboxes), selected_params_div)
+    } else {  // 2. click
         job_btn_i.innerHTML = "";
     }
 
@@ -47,7 +119,7 @@ function dragMoveListener(event) {
 
   // update the posiion attributes
   target.setAttribute('data-x', x);
-  target.setAttribute('data-y', y);
+    target.setAttribute('data-y', y);
 }
 
 // this is used later in the resizing and gesture demos
@@ -64,33 +136,36 @@ job_div.addEventListener("click", function (event) {
 job_btn.addEventListener("click", toggle_job_modal);
 
 interact('#job_btn')
-  .draggable({
-    // enable inertial throwing
-    inertia: true,
-    // keep the element within the area of it's parent
-    modifiers: [
-        interact.modifiers.restrictRect({
-            restriction: 'parent',
-            endOnly: true
-        })
-    ],
-      // enable autoScroll
-      autoScroll: false,
+    .draggable({
+        // enable inertial throwing
+        inertia: true,
+        // keep the element within the area of it's parent
+        modifiers: [
+            interact.modifiers.restrictRect({
+                restriction: 'parent',
+                endOnly: true
+            })
+        ],
+        // enable autoScroll
+        autoScroll: false,
 
-      // call this function on every dragmove event
-      onmove: function (event) {
-          setTimeout(function () {
-              job_btn.removeEventListener("click", toggle_job_modal)
-          }, 100);
-          dragMoveListener(event);
-      },
-      // call this function on every dragend event
-      onend: function (event) {
-          setTimeout(function () {
-              job_btn.addEventListener("click", toggle_job_modal)
-          }, 100);
-      }
-  });
+        // call this function on every dragmove event
+        onmove: function (event) {
+            setTimeout(function () {
+                job_btn.removeEventListener("click", toggle_job_modal)
+            }, 100);
+            dragMoveListener(event);
+        },
+        // call this function on every dragend event
+        onend: function (event) {
+            setTimeout(function () {
+                job_btn.addEventListener("click", toggle_job_modal)
+            }, 100);
+        }
+    })
+    .on('tap', function (event) {
+
+    });
 
 job_ready_btn.addEventListener("click", function () {
     if (job_ready_btn.innerHTML === translate_text_item("READY")) {
@@ -116,8 +191,6 @@ job_ready_btn.addEventListener("click", function () {
         job_cancel_btn.innerHTML = translate_text_item("PAUSE");
 
         monitor_area_div.classList.toggle("focused");
-
-        // shine_checked_boxes([ai_select_checkbox, security_mode_checkbox, non_moving_target_checkbox, time_laps_checkbox])
 
     } else if (job_ready_btn.innerHTML === translate_text_item("FINISH")) {
         job_ready_btn.innerHTML = translate_text_item("READY");
