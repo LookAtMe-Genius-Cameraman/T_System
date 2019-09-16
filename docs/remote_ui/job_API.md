@@ -12,7 +12,7 @@ Content-Type: application/x-www-form-urlencoded; charset=UTF-8
     "job_type": "track" / "learn" / "secure",
     "scenario": "scenario_1",
     "predicted_mission": False,
-    "recognized_person": None / "all" / "person_name",
+    "recognized_persons": None / ["all"] / [o953417h-aegb-21e6-b537-ct2g614671ed", "b970538v-aecb-11r6-b130-fc2f713571ed"],
     "non_moving_target": None / False,
     "ai": None / "official_ai"
 }
