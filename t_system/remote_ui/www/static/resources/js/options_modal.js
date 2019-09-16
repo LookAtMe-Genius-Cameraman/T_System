@@ -49,7 +49,7 @@ const language_dropdown_div = document.getElementById("language_dropdown_div");
  * Method to updating `auto_update` status of UpdateManager of t_system.
  */
 function put_update_data(data) {
-    jquery_manager.post_data("/api/update&admin_id=" + admin_id, data);
+    jquery_manager.put_data("/api/update&admin_id=" + admin_id, data);
 }
 
 /**
@@ -249,11 +249,10 @@ wifi_connections_btn.addEventListener("click", function () {
                 clearInterval(timer_settings_cont)
             }
         }, 500);
-        // jquery_manager.post_data("/try", {"bla": "bla"})
     } else {
         while (network_list_ul.firstChild) {
-                        network_list_ul.removeChild(network_list_ul.firstChild);
-                    }
+            network_list_ul.removeChild(network_list_ul.firstChild);
+        }
         wifi_connections_btn_click_count = 0;
     }
 });
@@ -535,9 +534,9 @@ record_control_btn.addEventListener("click", function () {
                                                     options_player_div.classList.toggle("focused");
 
                                                     options_player_source.type = "video/" + records[i]["extension"];
-                                                    options_player_source.src = "/api/record?id=" + records[i]["id"] + "&admin_id=" + admin_id;
+                                                    // options_player_source.src = "/api/record?id=" + records[i]["id"] + "&admin_id=" + admin_id;
 
-                                                    // options_player_source.src = "static/resources/images/mov_bbb.mp4"+ "# " + new Date().getTime();
+                                                    options_player_source.src = "static/resources/images/mov_bbb.mp4"+ "# " + new Date().getTime();
                                                     options_video.load()
                                                 });
 
