@@ -1,12 +1,3 @@
-.shine_in_dark {
-    visibility: visible !important;
-    opacity: 1 !important;
-
-    color: #fff !important;
-
-    z-index: 200 !important;
-}
-
 #main_specify_div {
     top: 10%;
 

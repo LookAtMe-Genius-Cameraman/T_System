@@ -111,7 +111,7 @@ function is_recognition_be_used() {
 }
 
 recognize_checkbox.addEventListener("change", function () {
-    console.log("main recognize changed");
+
     if (is_recognition_be_used()) {
         time_laps_cb_label.disabled = time_laps_checkbox.disabled =
             non_moving_target_cb_label.disabled = non_moving_target_checkbox.disabled = true;
@@ -185,6 +185,8 @@ recognize_select_dd_btn.addEventListener("click", function () {
                         }
 
                         recognize_select_checkbox.addEventListener("change", function () {
+                            recognize_all_select_checkbox.checked = !recognize_select_checkbox.checked === false;
+
                             recognize_checkbox.click();
                         });
 
@@ -220,7 +222,7 @@ function is_ai_be_used() {
 }
 
 ai_checkbox.addEventListener("change", function () {
-    console.log("main AI changed");
+
     if (is_ai_be_used()) {
         time_laps_cb_label.disabled = time_laps_checkbox.disabled =
             non_moving_target_cb_label.disabled = non_moving_target_checkbox.disabled =
