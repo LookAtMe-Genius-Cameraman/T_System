@@ -29,6 +29,7 @@ def create_face(admin_id, name, images):
         if not allowed_file(image.filename, {'png', 'jpg', 'jpeg'}):
             images.remove(image)
 
+    # name = str(name.encode("iso-8859-1"))[2:-1]  # name coming as `iso-8859-1` decoded data. but when converted with the encode/decode methods, it is becoming 'readable'. so in this line only taken phrase between " b'' ".
     face_encode_manager.add_face(name, set(images))
 
     result = True
@@ -55,7 +56,7 @@ def get_faces(admin_id):
     except Exception as e:
         logger.error(e)
         result = []
-
+    logger.debug(str(result))
     return result
 
 
@@ -74,15 +75,12 @@ def get_face_image(admin_id, face_id, image_name):
         return None, None
 
     if image_name in face.image_names:
-        result = f'{face.dataset_folder}/{image_name}'
+        image_path = f'{face.dataset_folder}/{image_name}'
+        image_extension = image_name.rsplit('.', 1)[1].lower()
     else:
         return None, None
 
-    def get_image():
-        yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + open(result, 'rb').read() + b'\r\n')
-
-    return get_image, "image/jpeg; boundary=frame"
+    return open(image_path, 'rb'), f'image/{image_extension};'
 
 
 def download_face_image(admin_id, face_id, image_name):
