@@ -246,30 +246,36 @@ others:
 
 #### Official Stand
 
-Portable usage interface v0.3.1
+Portable usage interface v0.4
 
-<img align="left" width="420" height="430" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.3.1/back_render.jpg">
-<img align="center" width="420" height="430" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.3.1/front_render.jpg">
+<img align="left" width="420" height="430" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.4/back_render.jpg">
+<img align="center" width="420" height="430" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.4/front_render.jpg">
 
 <br>
 
 - Dependencies
     -
-    - Raspberry pi 3 model B/B+ or Asus Tinker board.
-    - 5 piece sg90 or mg90s servo motors.   
+    - Raspberry pi 4 model B/B+ or Asus Tinker board.
+    - 5 piece mg90s servo motors.   
                    
 - Properties
-    -   
+    -
+    - Tiny Camera
+        -
+            8x8mm dimensions 8MP resolution micro camera.
+    - IR led
+        -
+            Automatically activatable IR led for advanced night vision. 
     - 1 switch key for on/off
         -
-            Cut the electiric current directly
+            Cut the electiric current directly.
     - 4 pieces 18650 li-ion batteries
         -
             Parallel connected sources.
-    - Internal cooler
+    - Internal Cooler
         -
             A micro fan for falling down the cpu temperature.
-    - Local network Management
+    - Local Network Management
         -
             Scan the around networks. If there is no network connection become an Access Point and serve Remote UI ınternally.
     - Remote UI accessing
