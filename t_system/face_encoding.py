@@ -110,48 +110,65 @@ class FaceEncodeManager:
         self.face_encoder.encode(face.dataset_folder, face.pickle_file, face.name)
         self.faces.append(face)
 
-    def update_face(self, id, photos):
+    def update_face(self, face_id, photos):
         """Method to update face.
 
         Args:
-            id (str):               The id of the face.
+            face_id (str):                  The id of the face.
             photos (list):             The person's raw photo data list. Contains list of {"name": "photo_name", "base_sf": "Base64_encoded_data"}.
         """
 
         for face in self.faces:
-            if face.id == id:
+            if face.id == face_id:
                 # ELIMINATION OF EXISTING PHOTOS WILL BE HERE
                 face.create_dataset_from_base_sf_photos(photos)
                 self.face_encoder.encode(face.dataset_folder, face.pickle_file, face.name)
                 return True
         return False
 
+    @dispatch()
     def get_faces(self):
         """Method to return all existing faces.
         """
 
         return self.faces
 
-    def get_face(self, id):
+    @dispatch(list)
+    def get_faces(self, ids):
+        """Method to return all existing faces.
+
+        Args:
+            ids (list):             The id list of faces.
+        """
+
+        faces = []
+
+        for face in self.faces:
+            if face.id in ids:
+                faces.append(face)
+
+        return faces
+
+    def get_face(self, face_id):
         """Method to return face via given face id.
 
         Args:
-            id (str):               The id of the face.
+            face_id (str):               The id of the face.
         """
 
         for face in self.faces:
-            if face.id == id:
+            if face.id == face_id:
                 return face
 
-    def delete_face(self, id):
+    def delete_face(self, face_id):
         """Method to delete face via given face id.
 
         Args:
-            id (str):               The id of the face.
+            face_id (str):               The id of the face.
         """
 
         for face in self.faces:
-            if face.id == id:
+            if face.id == face_id:
                 face.remove_self()
                 self.faces.remove(face)  # for removing object from list
                 return True
@@ -458,7 +475,7 @@ class Face:
         for photo in photos:
             photo.save(os.path.join(self.dataset_folder, photo.filename))
 
-        self.refresh_image_names(use_db=True)
+        self.refresh_image_names()
         self.__db_upsert(force_insert=True)
 
     def __check_folders(self):
