@@ -16,6 +16,7 @@ from t_system import seer
 from t_system import mission_manager
 
 from t_system import dot_t_system_dir, T_SYSTEM_PATH
+from t_system import face_encode_manager
 from t_system import log_manager
 
 logger = log_manager.get_logger(__name__, "DEBUG")
@@ -112,19 +113,20 @@ class JobManager:
         return True
 
     @staticmethod
-    def __set_recognition(recognized_person):
+    def __set_recognition(recognized_persons):
         """Method to set seer's recognition status.
 
         Args:
-            recognized_person (str):        The name it's owner will recognized by seer.
+            recognized_persons (list):        The name it's owner will recognized by seer.
         """
 
-        if recognized_person is None:
-            seer.set_recognizing()
-        elif recognized_person == "all":
-            seer.set_recognizing("main_encoding")
+        if not recognized_persons:
+            seer.set_recognizing("")
+        elif recognized_persons[0] == "all":
+            seer.set_recognizing(face_encode_manager.main_encoding_file)
         else:
-            seer.set_recognizing(recognized_person)
+            faces = face_encode_manager.get_faces(recognized_persons)
+            seer.set_recognizing([face.pickle_file for face in faces])
 
     @staticmethod
     def __set_track_approach(ai, non_moving_target):
