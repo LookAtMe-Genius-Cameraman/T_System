@@ -246,20 +246,22 @@ others:
 
 #### Official Stand
 
-Portable usage interface v0.4
+Portable usage interface v0.5
 
-<img align="left" width="420" height="430" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.4/back_render.jpg">
-<img align="center" width="420" height="430" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.4/front_render.jpg">
+<img align="left" width="420" height="430" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.5/back_render.jpg">
+<img align="center" width="420" height="430" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.5/front_render.jpg">
 
 <br>
 
 - Dependencies
     -
-    - Raspberry pi 4 model B/B+ or Asus Tinker board.
-    - 5 piece mg90s servo motors.   
+    - Raspberry pi 4 model B/B+.
+    - 2 pieces mg995 3 pieces sg90 or mg90s servo motors.   
                    
 - Properties
     -
+    1.25 times bigger than the previous version.
+    
     - Tiny Camera
         -
             8x8mm dimensions 8MP resolution micro camera.
@@ -274,7 +276,7 @@ Portable usage interface v0.4
             Parallel connected sources.
     - Internal Cooler
         -
-            A micro fan for falling down the cpu temperature.
+            2 pieces 30x30x10mm micro fan and the aluminyum block for falling down the cpu temperature.
     - Local Network Management
         -
             Scan the around networks. If there is no network connection become an Access Point and serve Remote UI ınternally.
@@ -290,7 +292,7 @@ The remotely controlling interface v0.6.8
 
 - Properties
     -             
-    - Motion control
+    - Motion Control
         -
             2 kind control type for the arm. 
                 
