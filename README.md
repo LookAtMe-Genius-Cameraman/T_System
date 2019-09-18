@@ -304,6 +304,15 @@ The remotely controlling interface v0.6.8
     - Previewing / Monitoring
         -
             watch the live video stream during creating scenarios and monitor what is it recording on working.
+    - Network Control
+        -
+            Add, update or delete Wi-Fi connection info.
+    - Recognize People
+        -
+            Add, update and delete the photos of the people for recognizing them. Choose one, more or all and recognize during the job.
+    - Control the Records
+        -
+            Get preview or download the video records with the date based sorting system.
 
 <sup><i>Powered by "flask" as an embedded framework. Available on mobile and desktop.</i></sup> 
 
