@@ -4,9 +4,7 @@ the portable usage interface
 
 ## v0.0
 
-<img align="right" width="400" height="400" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.0/prototype.jpeg">
-
-<br>
+<img align="center" width="400" height="400" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.0/prototype.jpeg">
 
 ## v0.1
 
