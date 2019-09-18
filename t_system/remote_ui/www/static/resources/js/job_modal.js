@@ -3,7 +3,10 @@ const job_btn = document.getElementById("job_btn");
 const job_btn_i = document.getElementById("job_btn_i");
 const job_div = document.getElementById("job_div");
 
+const selected_sce_span = document.getElementById("selected_sce_span");
 const selected_scenarios_div = document.getElementById("selected_scenarios_div");
+
+const selected_param_span = document.getElementById("selected_param_span");
 const selected_params_div = document.getElementById("selected_params_div");
 
 const job_simulate_btn = document.getElementById("job_simulate_btn");
@@ -11,12 +14,13 @@ const job_ready_btn = document.getElementById("job_ready_btn");
 const job_cancel_btn = document.getElementById("job_cancel_btn");
 
 const monitor_area_div = document.getElementById("monitor_area_div");
+const monitor_stream_area_img = document.getElementById("monitor_stream_area_img");
 
 function post_job_data() {
     let data = {
         "job_type": "track",
         "scenario": "scenario_1",
-        "predicted_mission": false,
+        "predicted_mission": false,  // Todo: With the administration authenticate, predicted missions will be editable and this key true.
         "recognized_person": [],
         "non_moving_target": null,
         "ai": null
@@ -51,7 +55,10 @@ function post_job_data() {
 
 }
 
+let selected_spans = [];
+
 function show_checked_boxes(elements, dest) {
+    selected_spans = [];
     while (dest.firstChild) {
         dest.removeChild(dest.firstChild);
     }
@@ -73,6 +80,8 @@ function show_checked_boxes(elements, dest) {
 
                     selected_div.appendChild(selected_span);
                     dest.appendChild(selected_div);
+
+                    selected_spans.push(selected_span);
                 }
             }
         }
@@ -113,12 +122,12 @@ function dragMoveListener(event) {
     let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
 
     // translate the element
-  target.style.webkitTransform =
-    target.style.transform =
-      'translate(' + x + 'px, ' + y + 'px)';
+    target.style.webkitTransform =
+        target.style.transform =
+            'translate(' + x + 'px, ' + y + 'px)';
 
-  // update the posiion attributes
-  target.setAttribute('data-x', x);
+    // update the posiion attributes
+    target.setAttribute('data-x', x);
     target.setAttribute('data-y', y);
 }
 
@@ -170,44 +179,67 @@ interact('#job_btn')
 job_ready_btn.addEventListener("click", function () {
     if (job_ready_btn.innerHTML === translate_text_item("READY")) {
         job_ready_btn.innerHTML = translate_text_item("START");
-        job_ready_btn.classList.toggle("ready");
-        job_ready_btn.classList.toggle("btn-warning");
-        job_ready_btn.classList.toggle("btn-danger");
+        job_ready_btn.classList.add("ready");
+        job_ready_btn.classList.remove("btn-warning");
+        job_ready_btn.classList.add("btn-danger");
 
-        job_cancel_btn.classList.toggle("active");
+        job_cancel_btn.classList.add("active");
 
-        job_simulate_btn.classList.toggle("inactive")
+        job_simulate_btn.classList.add("inactive");
+
+        selected_sce_span.classList.add("hidden_element");
+        selected_param_span.classList.add("hidden_element");
+
+        for (let i = 0; i < selected_spans.length; i++) {
+            selected_spans[i].classList.remove("shine_in_dark");
+            selected_spans[i].classList.add("shine_as_red_in_dark");
+        }
 
     } else if (job_ready_btn.innerHTML === translate_text_item("START")) {
         job_ready_btn.innerHTML = translate_text_item("FINISH");
-        job_ready_btn.classList.toggle("ready");
-        job_ready_btn.classList.toggle("start");
-        job_ready_btn.classList.toggle("btn-danger");
-        job_ready_btn.classList.toggle("btn-dark");
+        job_ready_btn.classList.remove("ready");
+        job_ready_btn.classList.add("start");
+        job_ready_btn.classList.remove("btn-danger");
+        job_ready_btn.classList.add("btn-dark");
 
-        job_cancel_btn.classList.toggle("pause_job");
-        job_cancel_btn.classList.toggle("btn-warning");
-        job_cancel_btn.classList.toggle("btn-dark");
+        job_cancel_btn.classList.add("pause_job");
+        job_cancel_btn.classList.remove("btn-warning");
+        job_cancel_btn.classList.add("btn-dark");
         job_cancel_btn.innerHTML = translate_text_item("PAUSE");
 
-        monitor_area_div.classList.toggle("focused");
+        monitor_area_div.classList.add("focused");
+
+        for (let i = 0; i < selected_spans.length; i++) {
+            selected_spans[i].classList.remove("shine_as_red_in_dark");
+            selected_spans[i].classList.add("hidden_element");
+        }
 
     } else if (job_ready_btn.innerHTML === translate_text_item("FINISH")) {
         job_ready_btn.innerHTML = translate_text_item("READY");
-        job_ready_btn.classList.toggle("start");
-        job_ready_btn.classList.toggle("btn-dark");
-        job_ready_btn.classList.toggle("btn-warning");
-        // dark_deep_background_div.classList.toggle("focused");
+        job_ready_btn.classList.remove("start");
+        job_ready_btn.classList.remove("btn-dark");
+        job_ready_btn.classList.add("btn-warning");
 
-        job_cancel_btn.classList.toggle("active");
-        job_cancel_btn.classList.toggle("pause_job");
-        job_cancel_btn.classList.toggle("btn-dark");
-        job_cancel_btn.classList.toggle("btn-warning");
+        job_cancel_btn.classList.remove("active");
+        job_cancel_btn.classList.remove("pause_job");
+        job_cancel_btn.classList.remove("btn-dark");
+        job_cancel_btn.classList.remove("btn-light");
+        job_cancel_btn.classList.add("btn-warning");
         job_cancel_btn.innerHTML = translate_text_item("CANCEL");
 
-        job_simulate_btn.classList.toggle("inactive");
+        job_simulate_btn.classList.remove("inactive");
 
-        monitor_area_div.classList.toggle("focused");
+        monitor_area_div.classList.remove("focused");
+        monitor_area_div.classList.remove("active");
+
+        monitor_stream_area_img.classList.remove("focused");
+
+        selected_sce_span.classList.remove("hidden_element");
+        selected_param_span.classList.remove("hidden_element");
+
+        for (let i = 0; i < selected_spans.length; i++) {
+            selected_spans[i].classList.add("shine_in_dark");
+        }
     }
 });
 
@@ -215,23 +247,31 @@ job_ready_btn.addEventListener("click", function () {
 job_cancel_btn.addEventListener("click", function () {
     if (job_cancel_btn.innerText === translate_text_item("CANCEL")) {
 
-        job_simulate_btn.classList.toggle("inactive");
+        job_simulate_btn.classList.remove("inactive");
 
-        job_cancel_btn.classList.toggle("active");
+        job_cancel_btn.classList.remove("active");
 
         job_ready_btn.innerHTML = translate_text_item("READY");
-        job_ready_btn.classList.toggle("ready");
-        job_ready_btn.classList.toggle("btn-danger");
-        job_ready_btn.classList.toggle("btn-warning");
+        job_ready_btn.classList.remove("ready");
+        job_ready_btn.classList.remove("btn-danger");
+        job_ready_btn.classList.add("btn-warning");
+
+        selected_sce_span.classList.remove("hidden_element");
+        selected_param_span.classList.remove("hidden_element");
+
+        for (let i = 0; i < selected_spans.length; i++) {
+            selected_spans[i].classList.remove("shine_as_red_in_dark");
+            selected_spans[i].classList.add("shine_in_dark");
+        }
 
     } else if (job_cancel_btn.innerText === translate_text_item("PAUSE")) {
         job_cancel_btn.innerHTML = translate_text_item("RESUME");
-        job_cancel_btn.classList.toggle("btn-dark");
-        job_cancel_btn.classList.toggle("btn-light");
+        job_cancel_btn.classList.remove("btn-dark");
+        job_cancel_btn.classList.add("btn-light");
     } else if (job_cancel_btn.innerHTML === translate_text_item("RESUME")) {
         job_cancel_btn.innerHTML = translate_text_item("PAUSE");
-        job_cancel_btn.classList.toggle("btn-light");
-        job_cancel_btn.classList.toggle("btn-dark");
+        job_cancel_btn.classList.remove("btn-light");
+        job_cancel_btn.classList.add("btn-dark");
     }
 });
 
@@ -240,24 +280,62 @@ job_simulate_btn.addEventListener("click", function () {
     if (job_simulate_btn.innerText === translate_text_item("SIMULATE")) {
 
         job_simulate_btn.innerHTML = translate_text_item("HOLD TO PAUSE");
-        job_simulate_btn.classList.toggle("active");
-        job_ready_btn.classList.toggle("btn-dark");
+        job_simulate_btn.classList.add("active");
 
-        job_cancel_btn.classList.toggle("hidden_element");
+        job_cancel_btn.classList.add("hidden_element");
 
-        job_ready_btn.classList.toggle("hidden_element");
+        job_ready_btn.classList.add("hidden_element");
 
-        monitor_area_div.classList.toggle("focused");
+        monitor_area_div.classList.add("focused");
+
+        selected_sce_span.classList.add("hidden_element");
+        selected_param_span.classList.add("hidden_element");
+
+        for (let i = 0; i < selected_spans.length; i++) {
+            selected_spans[i].classList.remove("shine_in_dark");
+            selected_spans[i].classList.add("shine_as_red_in_dark");
+        }
 
     } else if (job_simulate_btn.innerText === translate_text_item("HOLD TO PAUSE")) {
         job_simulate_btn.innerHTML = translate_text_item("SIMULATE");
-        job_simulate_btn.classList.toggle("active");
-        job_ready_btn.classList.toggle("btn-dark");
+        job_simulate_btn.classList.remove("active");
 
-        job_cancel_btn.classList.toggle("hidden_element");
+        job_cancel_btn.classList.remove("hidden_element");
 
-        job_ready_btn.classList.toggle("hidden_element");
+        job_ready_btn.classList.remove("hidden_element");
 
-        monitor_area_div.classList.toggle("focused");
+        monitor_area_div.classList.remove("focused");
+        monitor_area_div.classList.remove("active");
+
+        monitor_stream_area_img.classList.remove("focused");
+
+        selected_sce_span.classList.remove("hidden_element");
+        selected_param_span.classList.remove("hidden_element");
+
+        for (let i = 0; i < selected_spans.length; i++) {
+            selected_spans[i].classList.remove("shine_as_red_in_dark");
+            selected_spans[i].classList.add("shine_in_dark");
+        }
     }
+});
+
+let monitor_area_div_click_count = 0;
+
+monitor_area_div.addEventListener("click", function () {
+    monitor_area_div_click_count++;
+    if (monitor_area_div_click_count <= 1) {
+            monitor_stream_area_img.src = "/api/stream?type=preview&admin_id=" + admin_id;   // this url assigning creates a GET request.
+            monitor_stream_area_img.classList.add("focused");
+
+            monitor_area_div.classList.add("active");
+
+        } else {
+            stop_stream("monitoring");
+            monitor_stream_area_img.src = "";
+            monitor_stream_area_img.classList.remove("focused");
+
+            monitor_area_div.classList.remove("active");
+
+            monitor_area_div_click_count = 0;
+        }
 });

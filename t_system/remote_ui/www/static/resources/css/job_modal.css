@@ -7,6 +7,15 @@
     z-index: 200 !important;
 }
 
+.shine_as_red_in_dark {
+    visibility: visible !important;
+    opacity: 1 !important;
+
+    color: red !important;
+
+    z-index: 200 !important;
+}
+
 #job_btn {
     border-radius: 50%;
     cursor: move;
@@ -137,9 +146,14 @@
     width: 85% !important;
 
     top: 40% !important;
-
-
 }
+
+#monitor_area_div.active {
+    width: 90% !important;
+    height: 70% !important;
+    top: 10% !important;
+
+ }
 
 #monitor_job_span {
     visibility: visible;
@@ -192,7 +206,7 @@
 
 #main_selected_div {
     max-height: 300px;
-    top: 15%;
+    top: 20%;
     left: 50%;
     transform: translate(-50%);
 }
