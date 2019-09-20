@@ -21,8 +21,8 @@ dot_t_system_dir = f'{home}/.t_system'
 
 recognition_folder = f'{dot_t_system_dir}/recognition'
 
-if os.path.exists(dot_t_system_dir + '/db.json'):
-    os.remove(dot_t_system_dir + '/db.json')  # This is where we store the database; /home/USERNAME/.t_system/recognition/db.json
+if os.path.exists(f'{dot_t_system_dir}/db.json'):
+    os.remove(f'{dot_t_system_dir}/db.json')  # This is where we store the database; /home/USERNAME/.t_system/recognition/db.json
 
 
 @pytest.fixture

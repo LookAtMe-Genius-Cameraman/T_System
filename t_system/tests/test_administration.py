@@ -17,10 +17,10 @@ import pytest
 
 
 home = expanduser("~")
-dot_t_system_dir = home + "/.t_system"
+dot_t_system_dir = f'{home}/.t_system'
 
-if os.path.exists(dot_t_system_dir + '/db.json'):
-    os.remove(dot_t_system_dir + '/db.json')  # This is where we store the database; /home/USERNAME/.t_system/db.json
+if os.path.exists(f'{dot_t_system_dir}/db.json'):
+    os.remove(f'{dot_t_system_dir}/db.json')  # This is where we store the database; /home/USERNAME/.t_system/db.json
 
 
 @pytest.fixture

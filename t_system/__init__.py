@@ -17,7 +17,7 @@ from os.path import expanduser  # Common pathname manipulations
 T_SYSTEM_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
 home = expanduser("~")
-dot_t_system_dir = home + "/.t_system"
+dot_t_system_dir = f'{home}/.t_system'
 
 log_manager = None
 seer = None

@@ -182,7 +182,7 @@ class FaceEncodeManager:
         faces = self.table.all()
 
         for face in faces:
-            # face = {"id": face_id, "name": face_name, "image_names": []}
+            # face is {"id": face_id, "name": face_name, "image_names": []}
             self.faces.append(Face(face["name"], face["id"]))
 
     def __check_folders(self):

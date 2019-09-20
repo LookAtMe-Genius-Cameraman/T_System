@@ -59,7 +59,7 @@ class RemoteUI:
         static_folder = template_folder + "/static"
         self.app = Flask(__name__, template_folder=template_folder, static_folder=static_folder)
 
-        self.remote_ui_dir = dot_t_system_dir + '/remote_ui'
+        self.remote_ui_dir = f'{dot_t_system_dir}/remote_ui'
 
         config_file = f'{REMOTE_UI_PATH}/config/{args["environment"]}.cfg'
         self.app.config.from_pyfile(config_file)
