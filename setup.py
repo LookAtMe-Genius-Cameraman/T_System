@@ -108,7 +108,8 @@ setup(
         'gpiozero',
         'pyaudio',
         'requests',
-        'pyroute2>=0.5.6'
+        'pyroute2>=0.5.6',
+        'pexpect'
         # 'opencv-python>=4.0.0.21'
     ],
 
