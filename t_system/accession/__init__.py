@@ -15,7 +15,7 @@ import requests
 
 from PyAccessPoint import pyaccesspoint
 from wifi import Cell, Scheme
-from tinydb import TinyDB, Query  # TinyDB is a lightweight document oriented database
+from tinydb import Query  # TinyDB is a lightweight document oriented database
 from subprocess import call, check_output # Subprocess managements
 from multipledispatch import dispatch
 from elevate import elevate  # partial root authentication interface
@@ -126,20 +126,18 @@ class AccessPoint:
 class NetworkConnector:
     """Class to define an accessing to the around networks ability of tracking system.
 
-    This class provides necessary initiations and functions named :func:`t_system.audition.Audition.__listen_async`
-    as the loop for asynchronous collecting audio data to the vision ability, named :func:`t_system.audition.Audition.listen_sync`
-    for the synchronous collecting audio data to the vision ability and named :func:`t_system.audition.Audition.start_recording`
-    as entry point from vision ability for starting recording processes.
+    This class provides necessary initiations and functions named :func:`t_system.accession.NetworkConnector.connect`
+    for the connecting with wpa_supplicant.conf or wifi.Scheme.
     """
 
     def __init__(self, args):
-        """Initialization method of :class:`t_system.accession.NetworkManager` class.
+        """Initialization method of :class:`t_system.accession.NetworkConnector` class.
 
         Args:
             args:                   Command-line arguments.
         """
 
-        self.folder = dot_t_system_dir + "/network"
+        self.folder = f'{dot_t_system_dir}/network'
         if not os.path.exists(self.folder):
             os.mkdir(self.folder)
 
@@ -354,14 +352,13 @@ class NetworkConnector:
 class WpaSupplicant:
     """Class to define a wpa supplicant handler to managing wpa_supplicant.conf file for its headers and networks.
 
-    This class provides necessary initiations and functions named :func:`t_system.audition.Audition.__listen_async`
-    as the loop for asynchronous collecting audio data to the vision ability, named :func:`t_system.audition.Audition.listen_sync`
-    for the synchronous collecting audio data to the vision ability and named :func:`t_system.audition.Audition.start_recording`
-    as entry point from vision ability for starting recording processes.
+    This class provides necessary initiations and functions named :func:`t_system.accession.WpaSupplicant.add_network_to_wsc`
+    as the record point the new network connection to the wpa_supplicant.conf file and named :func:`t_system.accession.WpaSupplicant.create_wsc`
+    for creating wpa_supplicant.conf file with necessary headers.
     """
 
     def __init__(self, args):
-        """Initialization method of :class:`t_system.accession.NetworkManager` class.
+        """Initialization method of :class:`t_system.accession.WpaSupplicant` class.
 
         Args:
             args:                   Command-line arguments.
@@ -446,7 +443,3 @@ class WpaSupplicant:
                 f.write(f'\tpriority={priority}\n')
             f.write(f'{line}\n')
         f.close()
-
-
-
-
