@@ -256,7 +256,7 @@ Portable usage interface v0.5
 - Dependencies
     -
     - Raspberry pi 4 model B/B+.
-    - 2 pieces mg995 3 pieces sg90 or mg90s servo motors.   
+    - 2 pieces mg995, 3 pieces sg90 or mg90s servo motors.   
                    
 - Properties
     -
@@ -310,7 +310,7 @@ The remotely controlling interface v0.6.9
     - Recognize People
         -
             Add, update and delete the photos of the people for recognizing them. Choose one, more or all and recognize during the job.
-    - Control the Records
+    - Record Control
         -
             Get preview or download the video records with the date based sorting system.
 
