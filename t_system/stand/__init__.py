@@ -13,7 +13,7 @@ import RPi.GPIO as GPIO
 import threading
 import time  # Time access and conversions
 
-from t_system.accession import NetworkConnector, AccessPoint
+from t_system.accession.__init__ import NetworkConnector, AccessPoint
 from t_system import log_manager
 
 logger = log_manager.get_logger(__name__, "DEBUG")
@@ -166,7 +166,7 @@ class Stand:
             self.access_point.start()
 
         try:
-            self.remote_ui.run(host="t_system")
+            self.remote_ui.run()
         except KeyboardInterrupt:
             # TODO: After keyboard interrupt access point still active. so restarting the t_system is being corrupted. Following solution is not working. Fix this.
             if self.access_point.is_working():
