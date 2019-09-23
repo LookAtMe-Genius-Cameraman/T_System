@@ -1,6 +1,17 @@
+html, body {
+  height: 100%;
+}
+
 body {
     overflow: hidden;
     background-color: #fff0eb; /*Default white tone*/
+    transform: translateZ(0);
+}
+
+footer {
+  text-align: center;
+  font-size: 8pt;
+  color: gray;
 }
 
 .body_background {
@@ -126,6 +137,7 @@ body {
 }
 
 #title_footer{ /* Powered by*/
+    bottom: 1%;
     left: 65%;
 }
 
