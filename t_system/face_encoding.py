@@ -69,7 +69,11 @@ class FaceEncodeManager:
             name (str):           The name of the man who has face in dataset.
             dataset_folder (str):          The path of the dataset that will be encoded.
         """
-        face = Face(name)
+
+        face = self.__get_face_of(name)
+
+        if not face:
+            face = Face(name)
 
         src_files = os.listdir(dataset_folder)
         for file_name in src_files:
@@ -90,7 +94,11 @@ class FaceEncodeManager:
             name (str):           The name of the man who has face in dataset.
             photos (list):        The person's raw photo data list. Contains list of {"name": "photo_name", "base_sf": "Base64_encoded_data"}.
         """
-        face = Face(name)
+        face = self.__get_face_of(name)
+
+        if not face:
+            face = Face(name)
+
         face.create_dataset_from_base_sf_photos(photos)
 
         self.face_encoder.encode(face.dataset_folder, face.pickle_file, face.name)
@@ -104,7 +112,11 @@ class FaceEncodeManager:
             name (str):           The name of the man who has face in dataset.
             photos (set):        The FileStorage object set. that is been converted to list for becoming its indexing.
         """
-        face = Face(name)
+        face = self.__get_face_of(name)
+
+        if not face:
+            face = Face(name)
+
         face.create_dataset_from_file_storage_object(list(photos))
 
         self.face_encoder.encode(face.dataset_folder, face.pickle_file, face.name)
@@ -197,6 +209,19 @@ class FaceEncodeManager:
 
         if not os.path.exists(self.dataset_folder):
             os.mkdir(self.dataset_folder)
+
+    def __get_face_of(self, name):
+        """Method to checking name of uploaded photo's face is recorded before.
+
+        Args:
+            name (str):           The name of the man who has face in dataset.
+        """
+
+        for face in self.faces:
+            if face.name == name:
+                return face
+
+        return None
 
 
 class FaceEncoder:
@@ -473,7 +498,7 @@ class Face:
         """
 
         for photo in photos:
-            photo.save(os.path.join(self.dataset_folder, photo.filename))
+            photo.save(f'{self.dataset_folder}/{photo.filename}')
 
         self.refresh_image_names()
         self.__db_upsert(force_insert=True)
