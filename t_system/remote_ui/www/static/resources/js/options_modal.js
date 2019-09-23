@@ -34,6 +34,8 @@ const f_enc_photo_input = document.getElementById("f_enc_photo_input");
 const f_enc_photo_label = document.getElementById("f_enc_photo_label");
 const encode_new_face_btn = document.getElementById("encode_new_face_btn");
 const encoded_face_list_ul = document.getElementById("encoded_face_list_ul");
+const processing_animation_div = document.getElementById("processing_animation_div");
+const processing_animation = document.getElementById("processing_animation");
 
 const record_control_div = document.getElementById("record_control_div");
 const record_control_btn = document.getElementById("record_control_btn");
@@ -54,7 +56,7 @@ function put_update_data(data) {
 
 /**
  * Method of getting specified network information with its ssid or the all existing network information.
- * It is triggered via a click on settings_btn or clicked specified network on network list.
+ * It is triggered via a click on options_btn or clicked specified network on network list.
  */
 function get_update_data(key) {
     jquery_manager.get_data("/api/network?key=" + key + "&admin_id=" + admin_id);
@@ -62,7 +64,7 @@ function get_update_data(key) {
 
 /**
  * Method of getting specified network information with its ssid or the all existing network information.
- * It is triggered via a click on settings_btn or clicked specified network on network list.
+ * It is triggered via a click on options_btn or clicked specified network on network list.
  */
 function get_network_data(ssid = null) {
 
@@ -75,7 +77,7 @@ function get_network_data(ssid = null) {
 
 /**
  * Method of getting specified network information with its ssid or the all existing network information.
- * It is triggered via a click on settings_btn or clicked specified network on network list.
+ * It is triggered via a click on options_btn or clicked specified network on network list.
  */
 function get_face_recognition_data(id = null) {
 
@@ -287,13 +289,26 @@ create_new_network_btn.addEventListener("click", function () {
     let data = {"ssid": network_ssid_input.value, "password": network_password_input.value};
     jquery_manager.post_data("/api/network", data);
 
-    network_ssid_input.value = "";
+
+
+    let new_network_interval = setInterval(function () {
+
+            if (response_data !== {}) {
+                if (response_data["status"] === "OK") {
+                    network_ssid_input.value = "";
     network_password_input.value = "";
     wifi_connections_btn.click();
     wifi_connections_btn.click();
 
     admin_id = response_data["admin_id"];
     console.log(admin_id)
+                }
+                response_data = {};
+                clearInterval(new_network_interval);
+            }
+            }, 500);
+
+
 });
 
 audio_control_btn.addEventListener("click", function () {
@@ -327,9 +342,7 @@ face_encoding_btn.addEventListener("click", function () {
         let face_encoding_interval = setInterval(function () {
 
             if (requested_data !== {}) {
-
                 if (requested_data["status"] === "OK") {
-
                     for (let c = 0; c < requested_data["data"].length; c++) {
 
                         let face_dropdown_div = document.createElement('div');
@@ -352,6 +365,7 @@ face_encoding_btn.addEventListener("click", function () {
                         face_a.setAttribute("aria-haspopup", "true");
                         face_a.setAttribute("aria-expanded", "false");
                         face_a.innerHTML = requested_data["data"][c]["name"].replace(/_/gi, " ");
+                        face_a.title = face_a.innerHTML;
 
                         face_dropdown_container_div.classList.add("dropdown-menu", "dropdown-menu-right", "dropdown_menu", "face_encoding_dropdown_menu");
                         face_dropdown_container_div.classList.add("container");
@@ -385,9 +399,11 @@ face_encoding_btn.addEventListener("click", function () {
                                     jquery_manager.get_data(route);
                                 })
                                 .on('hold', function (event) {
+                                    console.log("triggered haaa?");
                                     face_encoding_div.classList.add("hidden_element");
                                     options_image_viewer_div.classList.add("focused");
                                     options_image_viewer_img.src = src;
+                                    
                                 })
                                 .on('up', function (event) {
                                     options_image_viewer_div.classList.remove("focused");
@@ -413,7 +429,7 @@ face_encoding_btn.addEventListener("click", function () {
                 requested_data = {};
                 clearInterval(face_encoding_interval)
             }
-        });
+        }, 500);
     } else {
         while (encoded_face_list_ul.firstChild) {
             encoded_face_list_ul.removeChild(encoded_face_list_ul.firstChild);
@@ -436,16 +452,37 @@ encode_new_face_btn.addEventListener("click", function () {
 
     face_name_input.value = face_name_input.value.replace(/ /gi, "_");
 
-    setTimeout(function () {
-        face_name_input.value = "";
-    }, 300)
-});
-
-encode_new_face_btn.addEventListener("click", function () {
-   face_encoding_form.submit(function () {
+    face_encoding_form.submit(function () {
     let form_data = face_encoding_form.serialize();
     jquery_manager.post_data("/api/face_encoding", form_data)});
+
+    body.classList.add("disabled");
+    processing_animation.classList.add("lds-hourglass");
+    processing_animation_div.classList.add("focused");
+
+    setTimeout(function () {
+        face_name_input.value = "";
+    }, 300);
+
+    let encode_face_interval = setInterval(function () {
+
+        if (response_data !== {}) {
+            if (response_data["status"] === "OK") {
+                body.classList.remove("disable_pointer");
+                swiper_wrapper.classList.remove("disabled");
+                processing_animation_div.classList.remove("focused");
+                processing_animation.classList.remove("lds-hourglass");
+
+                window.open("/");
+                options_btn.click();
+                face_encoding_btn.click();
+            }
+            response_data = {};
+            clearInterval(encode_face_interval);
+        }
+    }, 500);
 });
+
 
 let record_control_btn_click_count = 0;
 
@@ -470,6 +507,8 @@ record_control_btn.addEventListener("click", function () {
         let record_dates_interval = setInterval(function () {
 
             if (requested_data !== {}) {
+                                    console.log(requested_data);
+
                 if (requested_data["status"] === "OK") {
                     record_dates = requested_data["data"];
                     for (let c = 0; c < record_dates.length; c++) {
@@ -534,9 +573,9 @@ record_control_btn.addEventListener("click", function () {
                                                     options_player_div.classList.toggle("focused");
 
                                                     options_player_source.type = "video/" + records[i]["extension"];
-                                                    // options_player_source.src = "/api/record?id=" + records[i]["id"] + "&admin_id=" + admin_id;
+                                                    options_player_source.src = "/api/record?id=" + records[i]["id"] + "&admin_id=" + admin_id;
 
-                                                    options_player_source.src = "static/resources/images/mov_bbb.mp4"+ "# " + new Date().getTime();
+                                                    // options_player_source.src = "static/resources/images/mov_bbb.mp4"+ "# " + new Date().getTime();
                                                     options_video.load()
                                                 });
 
