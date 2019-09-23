@@ -120,7 +120,7 @@ class RecordManager:
         """
 
         for record in self.db.all():
-            self.records.append(Record(record["date"], record["time"], record["scope"], record["record_formats"], record["id"]))
+            self.records.append(Record(record["date"], record["time"], record["scope"], record["record_formats"], record["id"], record["name"], record["length"]))
 
     def get_records(self, date=None):
         """Method to get existing records in given date. If date is None it returns all records.
@@ -196,7 +196,7 @@ class Record:
     for saving records to the database safely.
     """
 
-    def __init__(self, d_m_y, h_m_s, scope, record_formats, id=None, name=None):
+    def __init__(self, d_m_y, h_m_s, scope, record_formats, id=None, name=None, length=None):
         """Initialization method of :class:`t_system.recordation.Record` class.
 
         Args:
@@ -206,6 +206,7 @@ class Record:
                 record_formats (dict):  Formats of the records for video, audio and merged.
                 id (str):               The id of the record.
                 name (str):             The name of the record.
+                length (str):           The length of the record as m:s.
         """
 
         self.id = id
@@ -220,18 +221,22 @@ class Record:
         self.time = h_m_s
         self.scope = scope
         self.record_formats = record_formats
-        self.length = 0.0  # in seconds
+        self.length = length
 
         self.records_folder = f'{dot_t_system_dir}/records'
         self.parent_folder = f'{self.records_folder}/{self.date}'
         self.folder = f'{self.parent_folder}/{self.time}'
-        self.__check_folders()
-
-        self.db = DBFetcher(self.records_folder, "db").fetch()
 
         self.video_file = f'{self.folder}/{self.time}.{self.record_formats["video"]}'
         self.audio_file = f'{self.folder}/{self.time}.{self.record_formats["audio"]}'
         self.merged_file = f'{self.folder}/{self.time}.{self.record_formats["merged"]}'
+
+        self.db = DBFetcher(self.records_folder, "db").fetch()
+
+        self.__check_folders()
+
+        if length is None:
+            self.length = self.__calc_length()
 
         self.__db_upsert()
 
@@ -283,6 +288,30 @@ class Record:
         rmtree(self.folder)
 
         self.db.remove((Query().id == self.id))
+
+    def __calc_length(self):
+        """Method to calculating length of record with using OpenCV.
+        """
+        if os.path.exists(self.merged_file):
+            import cv2
+
+            cap = cv2.VideoCapture(self.merged_file)
+
+            fps = cap.get(cv2.CAP_PROP_FPS)  # OpenCV2 version 2 used "CV_CAP_PROP_FPS"
+            frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+            duration = frame_count / fps
+
+            minutes = int(duration / 60)
+            seconds = duration % 60
+            length = f'{minutes}:{seconds}'
+
+            logger.debug(length)
+
+            cap.release()
+
+            return length
+
+        return None
 
     def __check_folders(self):
         """Method to checking the necessary folders created before. If not created creates them.
