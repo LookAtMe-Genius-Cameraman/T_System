@@ -257,6 +257,30 @@
     height: 230px;
 }
 
+#processing_animation_div {
+    visibility: hidden;
+    opacity: 0;
+
+    top: 0;
+    width: 100%;
+    height: 100%;
+
+    background: rgba(0, 0, 0, 0.5);
+    transition: all 300ms;
+}
+
+#processing_animation_div.focused {
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+#processing_animation {
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+}
+
 .face_encoding_dropdown_menu {
     left: 44% !important;
 }
