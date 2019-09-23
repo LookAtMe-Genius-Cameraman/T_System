@@ -22,7 +22,7 @@
 <div id="main_container" class="container align-content-center">
     <div id="title_div" class="text-center">
         <div id="page_control_div" class="btn-group justify-content-center">
-            <button id="settings_btn" class="btn btn-dark" translate>Options</button>
+            <button id="options_btn" class="btn btn-dark" translate>Options</button>
             <button id="control_btn" class="btn btn-dark" translate>Control</button>
             <button id="prepare_btn" class="btn btn-dark" translate>Prepare</button>
         </div>
@@ -30,7 +30,7 @@
 
     <!-- Swiper -->
     <div class="swiper-container mt-2">
-        <div class="swiper-wrapper">
+        <div id="swiper_wrapper" class="swiper-wrapper">
             <!--        ======================================================OPTIONS MODAL======================================================        -->
             <div id="options_template_container" class="container swiper-slide template_container swiping_template_container">
                 <div id="options_player_div" class="position-absolute">
@@ -90,7 +90,6 @@
                                         <div class="custom-file">
                                             <input id="f_enc_photo_input" class="custom-file-input" type="file" name="face_images" accept="image/*" capture="camera" multiple/>
                                             <label id="f_enc_photo_label" class="custom-file-label" for="f_enc_photo_input" translate>Upload Photo</label>
-                                            <!--<input type="submit" value="Upload"/>-->
                                         </div>
                                         <div class="input-group-append">
                                             <button id="encode_new_face_btn" class="btn btn-dark" type="button" translate>Send</button>
@@ -99,6 +98,9 @@
                                 </form>
                             </div>
                             <ul id="encoded_face_list_ul" class="option_list_ul"></ul>
+                        </div>
+                        <div id="processing_animation_div" class="position-absolute">
+                            <div id="processing_animation" class="position-absolute"></div>
                         </div>
                     </div>
                 </div>

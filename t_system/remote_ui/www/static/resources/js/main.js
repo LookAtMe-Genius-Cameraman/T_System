@@ -6,6 +6,9 @@
  * @author cem.baybars@gmail.com (Cem Baybars GÜÇLÜ)
  */
 
+/** @type {!Element} */
+const body = document.getElementsByTagName("BODY")[0];
+
 /** @type {!Object} */
 const jquery_manager = JQueryManager;
 
@@ -13,11 +16,13 @@ const jquery_manager = JQueryManager;
 const initial_loading_div = document.getElementById("initial_loading_div");
 const loading_animation_div = document.getElementById("loading_animation_div");
 
+const swiper_wrapper = document.getElementById("swiper_wrapper");
+
 const title_footer = document.getElementById("title_footer");
 
 /** @type {!Element} */
 const control_btn = document.getElementById("control_btn");
-const settings_btn = document.getElementById("settings_btn");
+const options_btn = document.getElementById("options_btn");
 const prepare_btn = document.getElementById("prepare_btn");
 
 
@@ -151,7 +156,7 @@ title_footer.addEventListener("click", function () {
 });
 
 
-settings_btn.addEventListener("click", function () {
+options_btn.addEventListener("click", function () {
     swiper.slideTo(0)
 });
 

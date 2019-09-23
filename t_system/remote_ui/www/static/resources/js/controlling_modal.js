@@ -62,10 +62,6 @@ const create_pos_btn = document.getElementById("create_pos_btn");
 const record_in_scenario_div = document.getElementById("record_in_scenario_div");
 const scenario_div_back_btn = document.getElementById("scenario_div_back_btn");
 
-/** @type {!Element} */
-const body = document.getElementsByTagName("BODY")[0];
-
-
 function stop_stream(type) {
     jquery_manager.delete_data("/api/stream?type=" + type + "&admin_id=" + admin_id);
 
