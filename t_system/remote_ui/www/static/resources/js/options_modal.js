@@ -403,7 +403,7 @@ face_encoding_btn.addEventListener("click", function () {
                                     face_encoding_div.classList.add("hidden_element");
                                     options_image_viewer_div.classList.add("focused");
                                     options_image_viewer_img.src = src;
-                                    
+
                                 })
                                 .on('up', function (event) {
                                     options_image_viewer_div.classList.remove("focused");
@@ -456,7 +456,8 @@ encode_new_face_btn.addEventListener("click", function () {
     let form_data = face_encoding_form.serialize();
     jquery_manager.post_data("/api/face_encoding", form_data)});
 
-    body.classList.add("disabled");
+    body.classList.add("disable_pointer");
+    swiper_wrapper.classList.add("disabled");
     processing_animation.classList.add("lds-hourglass");
     processing_animation_div.classList.add("focused");
 
