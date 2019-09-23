@@ -224,7 +224,7 @@ def initiate():
     ext_network_gr.add_argument("--country-code", help="Wifi country code for the wpa_supplicant.conf. To use look at: https://github.com/recalbox/recalbox-os/wiki/Wifi-country-code-(EN). Default is `TR`", action="store", default="TR", type=str)
 
     other_gr = ap.add_argument_group('Others')
-    other_gr.add_argument("--environment", help="The running environment. It specify the configuration files and logs. To use: either `production`, `development` or `testing`. Default is production", action="store", type=str, default="development")
+    other_gr.add_argument("--environment", help="The running environment. It specify the configuration files and logs. To use: either `production`, `development` or `testing`. Default is production", action="store", type=str,  choices=["production", "development", "testing"], default="development")
     other_gr.add_argument("--no-emotion", help="Do not mak feelings with using motion mechanisms.(Arm and Locking System.)", action="store_true")
     other_gr.add_argument("-S", "--show-stream", help="Display the camera stream. Enable the stream window.(Require gui environment.)", action="store_true")
     other_gr.add_argument("-m", "--found-object-mark", help="Specify the mark type of the found object.  To use: either `single_rect`, `rotating_arcs`, `partial_rect` or None. Default is `single_rect`", action="store", default="single_rect", type=str)
