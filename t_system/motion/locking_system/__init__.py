@@ -13,6 +13,8 @@ from math import pi
 
 from t_system.motion.locking_system.collimator import Collimator
 
+from t_system import arm
+
 
 class LockingSystem:
     """Class to define a target locking system of the t_system's motion ability.
@@ -51,14 +53,15 @@ class LockingSystem:
         self.check_error = None
         self.get_physically_distance = None
 
-        self.load_locker(args["AI"], args["non_moving_target"])
+        self.load_locker(args["AI"], args["non_moving_target"], args["arm_expansion"])
 
-    def load_locker(self, ai, non_moving_target):
+    def load_locker(self, ai, non_moving_target, arm_expansion):
         """Method to set locking system's locker as given AI and target object status parameters.
 
         Args:
             ai (str):                       AI type that will using during locking the target.
             non_moving_target (bool):       Non-moving target flag.
+            arm_expansion (bool):           Flag for the loading locker as expansion of the T_System's robotic arm.
         """
 
         if ai == "official_ai":
@@ -66,8 +69,8 @@ class LockingSystem:
             self.lock = self.locker.lock
             self.check_error = self.locker.check_error
             self.get_physically_distance = self.locker.get_physically_distance
-        elif non_moving_target:
-            self.locker = self.NonMovingTargetLocker(self)
+        elif non_moving_target or arm_expansion:
+            self.locker = self.ArmExpansionLocker(self)
             self.lock = self.locker.lock
             self.get_physically_distance = self.locker.get_physically_distance
         else:
@@ -92,10 +95,14 @@ class LockingSystem:
             """
 
             self.root_system = locking_system
-            self.decider = locking_system.decider
+            self.decider = self.root_system.decider
 
             self.current_k_fact = 0.01
             self.current_target_obj_width = 0
+
+            if arm.is_expanded():
+                self.root_system.pan.restart()
+                self.root_system.tilt.restart()
 
         def lock(self, x, y, w, h):
             """Method for locking to the target in the frame.
@@ -163,6 +170,10 @@ class LockingSystem:
 
             self.root_system = locking_system
 
+            if arm.is_expanded():
+                self.root_system.pan.restart()
+                self.root_system.tilt.restart()
+
         def lock(self, x, y, w, h):
             """Method for locking to the target in the frame.
 
@@ -198,22 +209,26 @@ class LockingSystem:
             kp = 28.5823  # gain rate with the width of object and physically distance.
             return obj_width * kp  # physically distance is equal to obj_width * kp in px unit. 1 px length is equal to 0.164 mm
 
-    class NonMovingTargetLocker:
-        """Class to define a focused point tracking method of the t_system's motion ability.
+    class ArmExpansionLocker:
+        """Class to define a locker as an extension of robotic arm of the t_system's motion ability. For focused non-moving point tracking or emotion showing.
 
             This class provides necessary initiations and a function named
-            :func:`t_system.motion.LockingSystem.NonMovingTargetLocker.lock`
+            :func:`t_system.motion.LockingSystem.ArmExpansionLocker.lock`
             for the provide move of servo motor during locking to the target.
         """
 
         def __init__(self, locking_system):
-            """Initialization method of :class:`t_system.motion.LockingSystem.NonMovingTargetLocker` class.
+            """Initialization method of :class:`t_system.motion.LockingSystem.ArmExpansionLocker` class.
 
             Args:
                 locking_system:         The LockingSystem Object.
             """
 
             self.root_system = locking_system
+
+            if not arm.is_expanded():
+                self.root_system.stop()
+                self.root_system.gpio_cleanup()
 
         def lock(self, x, y, w, h):
             """Method for locking to the target in the frame.
