@@ -463,15 +463,16 @@ class Vision:
                 self.target_locker.tilt.move(angle_for_ellipse_move, 75.0)  # last parameter not used for both funcs
                 time.sleep(0.1)
 
-    def reload_target_locker(self, ai, non_moving_target):
+    def reload_target_locker(self, ai=None, non_moving_target=None, arm_expansion=None):
         """The top-level method to set locking system's locker of Vision as given AI and target object status parameters.
 
         Args:
             ai (str):                       AI type that will using during locking the target.
             non_moving_target (bool):       Non-moving target flag.
+            arm_expansion (bool):           Flag for the loading locker as expansion of the T_System's robotic arm.
         """
 
-        self.target_locker.load_locker(ai, non_moving_target)
+        self.target_locker.load_locker(ai, non_moving_target, arm_expansion)
 
     def serve_frame_online(self):
         """The top-level method to provide the serving video stream online for sending Flask framework based remote_ui.
