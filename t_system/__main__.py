@@ -206,6 +206,7 @@ def initiate():
     lock_sys_usage_gr = lock_sys_gr.add_mutually_exclusive_group()
     lock_sys_usage_gr.add_argument("--AI", help="Specify the learning method of how to move to the target position from the current. When the nothing chosen, learn mode and decision mechanisms will be deprecated. to use: either `official_ai`", action="store", type=str, default=None)
     lock_sys_usage_gr.add_argument("--non-moving-target", help="Track the non-moving objects. Don't use AI or OpenCv's object detection methods. Just try to stay focused on the current focus point with changing axis angles by own position.", action="store_true")
+    lock_sys_usage_gr.add_argument("--arm-expansion", help="Use the Target Locking System as the extension of the Robotic Arm. Don't use AI or OpenCv's object detection methods. Add 2 more joints to the Robotic Arm", action="store_true")
 
     access_p_gr = ap.add_argument_group('Access Point Options')
     access_p_gr.add_argument("-p", "--access-point", help="Become access point for serving remote UI inside the internal network.", action="store_true")
