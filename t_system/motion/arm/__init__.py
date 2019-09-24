@@ -105,6 +105,16 @@ class Joint:
                 return self.current_angle
             return self.current_angle + delta_angle
 
+    def stop(self):
+        """Method to provide stop the GPIO.PWM services that are reserved for the joint's servo motor.
+        """
+        self.motor.stop()
+
+    def gpio_cleanup(self):
+        """Method to provide clean the GPIO pins that are reserved for the collimator's servo motor.
+        """
+        self.motor.gpio_cleanup()
+
 
 class Arm:
     """Class to define a N-axis arm for motion ability of tracking system.
@@ -121,7 +131,13 @@ class Arm:
             arm_name (str):         Name of the arm. From config file or user choice.
         """
         self.name = arm_name
+        self.expansion_name = f'{self.name}-Expansion'
+
+        self.is_expanded = False
+
         self.joints = []
+
+        self.config_file = f'{T_SYSTEM_PATH}/motion/arm/arm_config.json'
 
         self.joint_count = 0
         self.alpha = None
@@ -136,13 +152,52 @@ class Arm:
         self.current_pos_as_coord = []
         self.current_pos_as_theta = []
 
-        with open(f'{T_SYSTEM_PATH}/motion/arm/arm_config.json') as conf_file:
-            joints = json.load(conf_file)[arm_name]  # config file returns the arms.
+        with open(self.config_file) as conf_file:
+            joints = json.load(conf_file)[self.name]  # config file returns the arms.
 
         self.__set_joints(joints)
         self.__set_dh_params(self.joints)
 
         logger.info(f'{self.name} arm started successfully.')
+
+    def expand(self):
+        """Method to expand arm with using target_locker of t_system's vision.
+        """
+        self.joints.pop(-1)
+
+        with open(self.config_file) as conf_file:
+            joints = json.load(conf_file)[self.expansion_name]  # config file returns the arms.
+
+            for joint in joints:
+                joint['joint_number'] = len(self.joints) + joint['joint_number']
+                self.joints.append(Joint(joint))
+
+        self.__prepare_dh_params()
+        self.__set_dh_params(self.joints)
+
+        self.is_expanded = True
+
+    def revert_the_expand(self):
+        """Method to revert back the expansion.
+        """
+
+        with open(self.config_file) as conf_file:
+            joints = json.load(conf_file)[self.expansion_name]  # config file returns the arms.
+
+            for joint in joints:
+                self.joints[-1].stop()
+                self.joints[-1].gpio_cleanup()
+                del self.joints[-1]
+
+        with open(self.config_file) as conf_file:
+            joints = json.load(conf_file)[self.name]  # config file returns the arms.
+
+            self.joints.append(Joint(joints[-1]))
+
+        self.__prepare_dh_params()
+        self.__set_dh_params(self.joints)
+
+        self.is_expanded = False
 
     def __set_joints(self, joints):
         """Method to setting joints with D-H parameters.
