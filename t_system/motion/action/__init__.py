@@ -118,6 +118,18 @@ class MissionManager:
 
         return result
 
+    def expand_actor(self):
+        """Method to expand actor with using axes and motors of target_locker of t_system's vision.
+        """
+
+        self.actor.expand()
+
+    def revert_the_expand_actor(self):
+        """Method to revert back the expansion.
+        """
+
+        self.actor.revert_the_expand()
+
 
 class EmotionManager:
     """Class to define emotion manager to managing movements of Arm and Locking System(when it is using independent from seer during tracking non-moving objects) for creating emotion effects.
@@ -154,25 +166,34 @@ class EmotionManager:
         for position in positions:
             self.positions.append(Position(position["name"], position["id"], position["cartesian_coords"], position["polar_coords"], root=True, db_name=self.db_name))
 
-    def make_feel(self, emotion, type):
+    def make_feel(self, emotion, e_type):
         """The top-level method to generating emotion with using position or scenarios their names specified with given parameter.
 
         Args:
             emotion (str):                  Name of the position or scenario that is created for emotion.
-            type (str):                     Type of the emotion. Either `position` or `scenario`.
+            e_type (str):                   Type of the emotion. Either `position` or `scenario`.
         """
+        self.expand()
 
-        if type == "position":
+        if e_type == "position":
             for position in self.positions:
                 if position.name == emotion:
                     self.actor.act(position)
                     break
 
-        elif type == "scenario":
+        elif e_type == "scenario":
             for scenario in self.scenarios:
                 if scenario.name == emotion:
                     self.actor.act([scenario])
                     break
+
+    def expand(self):
+        """Method to expand actor with using axes and motors of target_locker of t_system's vision.
+        """
+        from t_system import seer
+        seer.reload_target_locker(arm_expansion=True)
+
+        self.actor.expand()
 
 
 class Actor:
@@ -186,6 +207,7 @@ class Actor:
     def __init__(self):
         """Initialization method of :class:`t_system.motion.action.Actor` class.
         """
+        pass
 
     @dispatch(object)
     def act(self, position):
@@ -202,12 +224,26 @@ class Actor:
         """Method to acting by given scenarios object.
 
         Args:
-            scenarios (list):"              Scenario object list
+            scenarios (list):               Scenario object list
         """
 
         for scenario in scenarios:
             for position in scenario.positions:
                 arm.goto_position(pos_thetas=position.polar_coords, pos_coords=position.cartesian_coords)
+
+    def expand(self):
+        """Method to expand arm with using axes and motors of target_locker of t_system's vision.
+        """
+
+        if not arm.is_expanded():
+            arm.expand()
+
+    def revert_the_expand(self):
+        """Method to revert back the expansion.
+        """
+
+        if arm.is_expanded():
+            arm.revert_the_expand()
 
 
 class Scenario:
