@@ -165,6 +165,20 @@ class Collimator:
 
         return self.previous_dis_to_des
 
+    def restart(self, angle=None):
+        """Method to provide stop the GPIO.PWM services that are reserved for the collimator's servo motor.
+
+        Args:
+            angle:              	 Restarting angle value for servo motor as radian unit.
+        """
+
+        self.motor.__init__(self.motor.gpio_pin)
+
+        if angle:
+            self.motor.start(angle)
+        else:
+            self.motor.start(self.current_angle)
+
     def stop(self):
         """Method to provide stop the GPIO.PWM services that are reserved for the collimator's servo motor.
         """
