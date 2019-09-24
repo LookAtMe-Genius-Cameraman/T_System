@@ -28,7 +28,7 @@ from t_system.audition import Hearer
 from t_system.recordation import Recorder
 
 from t_system.high_tech_aim import Aimer
-from t_system import dot_t_system_dir, T_SYSTEM_PATH
+from t_system import T_SYSTEM_PATH
 from t_system import log_manager
 
 logger = log_manager.get_logger(__name__, "DEBUG")
@@ -715,6 +715,23 @@ class Vision:
 
         self.aimer.mark_rotating_arcs(frame, (int(x + w / 2), int(y + h / 2)), radius, physically_distance)
 
+    def __mark_as_vendor_animation(self, frame, x, y, w, h, radius, physically_distance, color, thickness):
+        """Method to set mark_object method as drawing method with aimer's rotating arcs.
+
+         Args:
+                frame:       	        Frame matrix.
+                x           :       	the column number of the top left point of found object from the detection method.
+                y           :       	the row number of the top left point of found object from the detection method.
+                w           :       	the width of found object from the detection method.
+                h           :       	the height of found object from the detection method.
+                radius:                 Radius of the aim.
+                physically_distance:    Physically distance of the targeted object as pixel count.
+                color (tuple):          Color of the drawing shape. In RGB Space.
+                thickness (int):        Thickness of the drawing shape.
+        """
+
+        self.aimer.mark_vendor_animation(frame, (int(x + w / 2), int(y + h / 2)), radius, physically_distance)
+
     def __mark_as_none(self, frame, x, y, w, h, radius, physically_distance, color, thickness):
         """Method to set mark_object method for draw nothing.
 
@@ -789,8 +806,11 @@ class Vision:
             return self.__mark_as_partial_rect
         elif mark_found_object == "rotating_arcs":
             return self.__mark_as_rotation_arcs
-        else:
+        elif mark_found_object is None:
             return self.__mark_as_none
+        else:
+            self.aimer.set_vendor_animation(mark_found_object)
+            return self.__mark_as_vendor_animation
 
     def get_current_frame(self):
         """Method to get current working camera frame.
