@@ -13,6 +13,7 @@ from tinydb import TinyDB, Query  # TinyDB is a lightweight document oriented da
 
 from t_system.administration import is_admin
 from t_system import seer
+from t_system import arm
 from t_system import mission_manager
 
 from t_system import dot_t_system_dir, T_SYSTEM_PATH
@@ -137,7 +138,13 @@ class JobManager:
             non_moving_target (bool):       Non-moving target flag.
         """
 
+        if ai:
+            mission_manager.revert_the_expand_actor()
+
         seer.reload_target_locker(ai, non_moving_target)
+
+        if non_moving_target:
+            mission_manager.expand_actor()
 
     def __stop_mission_thread(self):
         """Method to stop the mission_thread.
