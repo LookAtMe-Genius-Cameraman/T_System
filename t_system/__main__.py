@@ -228,7 +228,7 @@ def initiate():
     other_gr.add_argument("--environment", help="The running environment. It specify the configuration files and logs. To use: either `production`, `development` or `testing`. Default is production", action="store", type=str,  choices=["production", "development", "testing"], default="development")
     other_gr.add_argument("--no-emotion", help="Do not mak feelings with using motion mechanisms.(Arm and Locking System.)", action="store_true")
     other_gr.add_argument("-S", "--show-stream", help="Display the camera stream. Enable the stream window.(Require gui environment.)", action="store_true")
-    other_gr.add_argument("-m", "--found-object-mark", help="Specify the mark type of the found object.  To use: either `single_rect`, `rotating_arcs`, `partial_rect` or None. Default is `single_rect`", action="store", default="single_rect", type=str)
+    other_gr.add_argument("-m", "--found-object-mark", help="Specify the mark type of the found object.  To use: either `single_rect`, `rotating_arcs`, `partial_rect` or None. Default is `single_rect`", action="store", choices=["single_rect", "rotating_arcs", "partial_rect", "animation_1", None], default="single_rect", type=str)
     other_gr.add_argument("-r", "--record", help="Record the video stream. Files are named by the date.", action="store_true")
     other_gr.add_argument("-v", "--verbose", help="Print various debugging logs to console for debug problems", action="store_true")
     other_gr.add_argument("--version", help="Display the version number of T_System.", action="store_true")

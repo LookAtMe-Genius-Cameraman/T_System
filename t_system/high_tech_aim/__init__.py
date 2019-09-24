@@ -13,6 +13,8 @@ import cv2
 
 from math import sqrt, radians, cos, sin
 
+from t_system import T_SYSTEM_PATH
+
 
 class Aimer:
     """Class to draw a high tech aim mark.
@@ -40,6 +42,8 @@ class Aimer:
         self.thick_arc_end_angle = 300
 
         self.rect_diagonal_rate = 0.9
+
+        self.vendor_animation_capture = None
 
     def mark_rotating_arcs(self, image, center, radius, physically_distance, color='red'):
         """The top-level method to draw target mark with rotating arcs like high tech.
@@ -84,6 +88,7 @@ class Aimer:
                 center:       	        Center point of the aimed object.
                 radius:                 Radius of the aim.
                 physically_distance:    Physically distance of the targeted object as pixel count.
+                color:                  The dominant color of the targeting mark.
         """
 
         self.image = image
@@ -109,6 +114,72 @@ class Aimer:
         #     self.rect_diagonal_rate = 0.9
 
         return self.image
+
+    def mark_vendor_animation(self, image, center, radius, physically_distance, color='red'):
+        """The top-level method to draw target mark with previously prepared HUD animation.
+
+        Args:
+                image:       	        Image matrix.
+                center:       	        Center point of the aimed object.
+                radius:                 Radius of the aim.
+                physically_distance:    Physically distance of the targeted object as pixel count.
+                color:                  The dominant color of the targeting mark.
+        """
+
+        ret, frame = self.vendor_animation_capture.read()
+        frame_count = self.vendor_animation_capture.get(cv2.CAP_PROP_FRAME_COUNT)
+
+        if ret:
+            if frame is None:
+                self.vendor_animation_capture.set(cv2.CAP_PROP_POS_FRAMES, int(frame_count / 2.5))
+                ret, frame = self.vendor_animation_capture.read()
+
+            frame = cv2.resize(frame, (radius,  radius), interpolation=cv2.INTER_AREA)
+
+            self.__overlay_image_alpha(image, frame[:, :, 0:3], (center[0], center[1]), frame[:, :, 3] / 255.0)
+
+    def set_vendor_animation(self, animation_name):
+        """The top-level method to set previously prepared HUD animation.
+        """
+
+        animation_file = f'{T_SYSTEM_PATH}/high_tech_aim/mark_animations/{animation_name}.mov'
+
+        self.vendor_animation_capture = cv2.VideoCapture(animation_file, 0)
+
+    def __overlay_image_alpha(self, img, img_overlay, pos, alpha_mask):
+        """Method to overlay img_overlay on top of img at the position specified by pos and blend using alpha_mask.
+
+        Alpha mask must contain values within the range [0, 1] and be the same size as img_overlay.
+
+        Args:
+                img:           	        Bottom layer image matrix.
+                img_overlay:       	    Top layer image matrix.
+                pos:         	        Position of the overlay image matrix.
+                alpha_mask:         	The alpha mask of the overlay image matrix for eliminating the background of this image.
+        """
+
+        x, y = pos
+
+        # Image ranges
+        y1, y2 = max(0, y), min(img.shape[0], y + img_overlay.shape[0])
+        x1, x2 = max(0, x), min(img.shape[1], x + img_overlay.shape[1])
+
+        # Overlay ranges
+        y1o, y2o = max(0, -y), min(img_overlay.shape[0], img.shape[0] - y)
+        x1o, x2o = max(0, -x), min(img_overlay.shape[1], img.shape[1] - x)
+
+        # Exit if nothing to do
+        if y1 >= y2 or x1 >= x2 or y1o >= y2o or x1o >= x2o:
+            return
+
+        channels = img.shape[2]
+
+        alpha = alpha_mask[y1o:y2o, x1o:x2o]
+        alpha_inv = 1.0 - alpha
+
+        for c in range(channels):
+            img[y1:y2, x1:x2, c] = (alpha * img_overlay[y1o:y2o, x1o:x2o, c] +
+                                    alpha_inv * img[y1:y2, x1:x2, c])
 
     def __draw_arc(self, center_x, center_y, radius, thickness, start_angle, end_angle, edge_shine=False):
         """Method to draw arcs of the mark.
