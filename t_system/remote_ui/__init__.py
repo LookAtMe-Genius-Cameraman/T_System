@@ -55,8 +55,8 @@ class RemoteUI:
         self.port = args["port"]
         self.debug = args["debug"]
 
-        template_folder = T_SYSTEM_PATH + "/remote_ui/www"
-        static_folder = template_folder + "/static"
+        template_folder = f'{T_SYSTEM_PATH}/remote_ui/www'
+        static_folder = f'{template_folder}/static'
         self.app = Flask(__name__, template_folder=template_folder, static_folder=static_folder)
 
         self.remote_ui_dir = f'{dot_t_system_dir}/remote_ui'
