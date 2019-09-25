@@ -46,6 +46,15 @@ const lang_select_div = document.getElementById("lang_select_div");
 const lang_select_btn = document.getElementById("lang_select_btn");
 const language_dropdown_div = document.getElementById("language_dropdown_div");
 
+const help_control_div = document.getElementById("help_control_div");
+const help_control_btn = document.getElementById("help_control_btn");
+const help_control_io_div = document.getElementById("help_control_io_div");
+
+const empty_option_div = document.getElementById("empty_option_div");
+const empty_option_btn = document.getElementById("empty_option_btn");
+const empty_option_io_div = document.getElementById("empty_option_io_div");
+
+
 
 /**
  * Method to updating `auto_update` status of UpdateManager of t_system.
@@ -111,7 +120,7 @@ update_control_btn.addEventListener("click", function () {
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
 
-    toggle_elements([wifi_control_div, audio_control_div, face_encoding_div, record_control_div, lang_select_div]);
+    toggle_elements([wifi_control_div, audio_control_div, face_encoding_div, record_control_div, empty_option_div, lang_select_div, help_control_div]);
     update_control_div.classList.toggle("col");
     update_control_div.classList.toggle("focused");
     update_control_div.classList.toggle("higher");
@@ -156,7 +165,7 @@ wifi_connections_btn.addEventListener("click", function () {
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
 
-    toggle_elements([update_control_div, audio_control_div, face_encoding_div, record_control_div, lang_select_div]);
+    toggle_elements([update_control_div, audio_control_div, face_encoding_div, record_control_div, empty_option_div, lang_select_div, help_control_div]);
     wifi_control_div.classList.toggle("col");
     wifi_control_div.classList.toggle("focused");
     wifi_control_div.classList.toggle("higher");
@@ -328,7 +337,7 @@ face_encoding_btn.addEventListener("click", function () {
 
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
-    toggle_elements([update_control_div, wifi_control_div, audio_control_div, record_control_div, lang_select_div]);
+    toggle_elements([update_control_div, wifi_control_div, audio_control_div, record_control_div, empty_option_div, lang_select_div, help_control_div]);
     face_encoding_div.classList.toggle("col");
     face_encoding_div.classList.toggle("focused");
     face_encoding_div.classList.toggle("higher");
@@ -492,7 +501,7 @@ record_control_btn.addEventListener("click", function () {
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
 
-    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, lang_select_div]);
+    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, empty_option_div, lang_select_div, help_control_div]);
     record_control_div.classList.toggle("col");
     record_control_div.classList.toggle("focused");
     record_control_div.classList.toggle("higher");
@@ -617,14 +626,38 @@ close_options_player_btn.addEventListener("click", function () {
     record_control_div.classList.toggle("hidden_element");
 });
 
+empty_option_btn.addEventListener("click", function () {
+
+    dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
+    dark_deep_background_div.classList.toggle("focused");
+
+    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, lang_select_div, help_control_div]);
+    empty_option_div.classList.toggle("col");
+    empty_option_div.classList.toggle("focused");
+    empty_option_div.classList.toggle("higher");
+    empty_option_io_div.classList.toggle("focused");
+});
+
 lang_select_btn.addEventListener("click", function () {
 
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
 
-    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div]);
+    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, empty_option_div, help_control_div]);
     lang_select_div.classList.toggle("col");
     lang_select_div.classList.toggle("focused");
     lang_select_div.classList.toggle("higher");
     language_dropdown_div.classList.toggle("focused");
+});
+
+help_control_btn.addEventListener("click", function () {
+
+    dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
+    dark_deep_background_div.classList.toggle("focused");
+
+    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, empty_option_div, lang_select_div]);
+    help_control_div.classList.toggle("col");
+    help_control_div.classList.toggle("focused");
+    help_control_div.classList.toggle("higher");
+    help_control_io_div.classList.toggle("focused");
 });

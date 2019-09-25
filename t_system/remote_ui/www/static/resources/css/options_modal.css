@@ -11,10 +11,10 @@
     float: left;
 
     /*width: 55%;*/
-    height: 40px; /*when activate goes to 70%*/
+    height: 45px; /*when activate goes to 70%*/
 
     transition: all 300ms;
-    border: tan solid;
+    /*border: tan solid;*/
     border-radius: 5px;
     background-color: #fff0eb;
     /*margin: auto 5px auto auto;*/
