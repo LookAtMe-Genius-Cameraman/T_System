@@ -27,7 +27,10 @@ const stream_area_img = document.getElementById("stream_area_img");
 
 /** @type {!Element} */
 const motion_control_div = document.getElementById("motion_control_div");
-const motion_control_btn = document.getElementById("motion_control_btn");
+const prismatic_menu_control_input = document.getElementById("prismatic_menu_control_input");
+const prismatic_menu_control_label = document.getElementById("prismatic_menu_control_label");
+const rotational_menu_control_input = document.getElementById("rotational_menu_control_input");
+const rotational_menu_control_label = document.getElementById("rotational_menu_control_label");
 
 /** @type {!Element} */
 const prismatic_control_div = document.getElementById("prismatic_control_div");
@@ -229,41 +232,33 @@ video_area_div.addEventListener("dblclick", function () {
     }
 });
 
-let motion_control_btn_click_count = 0;
+
+prismatic_menu_control_input.addEventListener("change", function () {
+    prismatic_control_div.classList.toggle("focused");
+    rotational_control_div.classList.toggle("hidden_element");
+
+    prismatic_menu_control_label.classList.toggle("fa-arrows-alt");
+    prismatic_menu_control_label.classList.toggle("fa-times");
+
+    if (prismatic_menu_control_input.checked) {
 
 
-motion_control_btn.addEventListener("click", function () {
-    motion_control_btn_click_count++;
-    if (motion_control_btn_click_count <= 1) {
-
-        motion_control_btn.classList.toggle("first_clicked");
-
-        show_element(rotational_control_div);
-        rotational_control_div.style.top = "-225px";
-        hide_element(prismatic_control_div);
-        prismatic_control_div.style.top = "75%";
-
-    } else if (motion_control_btn_click_count <= 2) {
-
-        motion_control_btn.classList.toggle("first_clicked");
-        motion_control_btn.classList.toggle("second_clicked");
-
-        hide_element(rotational_control_div); // when prismatic button clicked rotational modal showing because rotational modal's button become visible via prismatic's hover.
-        rotational_control_div.style.top = "-20%";
-        show_element(prismatic_control_div);
-        prismatic_control_div.style.top = "-20%";
-
-    } else {
-
-        motion_control_btn.classList.toggle("second_clicked");
-
-        hide_element(rotational_control_div); // when prismatic button clicked rotational modal showing because rotational modal's button become visible via prismatic's hover.
-        hide_element(prismatic_control_div);
-        prismatic_control_div.style.top = "75%";
-
-        motion_control_btn_click_count = 0;
     }
 });
+
+
+rotational_menu_control_input.addEventListener("change", function () {
+    rotational_control_div.classList.toggle("focused");
+    prismatic_control_div.classList.toggle("hidden_element");
+
+    rotational_menu_control_label.classList.toggle("fa-sync-alt");
+    rotational_menu_control_label.classList.toggle("fa-times");
+
+    if (rotational_menu_control_input.checked) {
+
+    }
+});
+
 
 let record_pos_sce_btn_click_count = 0;
 
