@@ -148,31 +148,55 @@
                         <img id="stream_area_img" class="position-relative" src="" alt="">
                     </div>
                     <div id="motion_control_div" class="position-absolute">
-                        <button id="motion_control_btn" class=""></button>
-                        <div id="prismatic_control_div" class="position-relative align-content-center prismatic_control_div">
-                            <button id="z_up_btn" class="btn-info" translate>up</button>
-                            <button id="z_down_btn" class="btn-info" translate>down</button>
-                            <button id="x_up_btn" class="btn-info" translate>left</button>
-                            <button id="x_down_btn" class="btn-info" translate>right</button>
-                            <button id="y_up_btn" class="btn-info" translate>forward</button>
-                            <button id="y_down_btn" class="btn-info" translate>backward</button>
+                        <div id="prismatic_control_div" class="position-relative align-content-center">
+                            <nav class="menu">
+                                <input id="prismatic_menu_control_input" type="checkbox" class="menu-open" name="menu-open"/>
+                                <label id="prismatic_menu_control_label" class="menu-open-button fas fa-arrows-alt" for="prismatic_menu_control_input"></label>
+                                <button id="y_up_btn" class="menu-item"><i class="fas fa-chevron-circle-up"></i></button>
+                                <button id="y_down_btn" class="menu-item"><i class="fas fa-chevron-circle-down"></i></button>
+                                <button id="x_up_btn" class="menu-item" type="button"><i class="fas fa-chevron-circle-right"></i></button>
+                                <button id="x_down_btn" class="menu-item"><i class="fas fa-chevron-circle-left"></i></button>
+                                <button id="z_down_btn" class="menu-item"><i class="fas fa-chevron-down"></i></button>
+                                <button id="z_up_btn" class="menu-item"><i class="fas fa-chevron-up"></i></button>
+                            </nav>
                         </div>
-                        <div id="rotational_control_div" class="position-relative rotational_control_div">
+                        <div id="rotational_control_div" class="position-relative">
+                            <nav class="rotational-menu">
+                                <input id="rotational_menu_control_input" type="checkbox" class="rotational-menu-open" name="rotational-menu-open"/>
+                                <label id="rotational_menu_control_label" class="rotational-menu-open-button fas fa-sync-alt" for="rotational_menu_control_input"></label>
 
-                            <div class="btn-group p-1">
-                                <button id="joint_1_cw_btn" class="btn btn-info" translate>joint1 right</button>
-                                <button id="joint_1_ccw_btn" class="btn btn-info" translate>joint1 left</button>
-                            </div>
-                            <div class="btn-group p-1">
-                                <button id="joint_2_cw_btn" class="btn btn-info" translate>joint2 right</button>
-                                <button id="joint_2_ccw_btn" class="btn btn-info" translate>joint2 left</button>
-                            </div>
-                            <div class="btn-group p-1">
-                                <button id="joint_3_cw_btn" class="btn btn-info" translate>joint3 right</button>
-                                <button id="joint_3_ccw_btn" class="btn btn-info" translate>joint3 left</button>
-                            </div>
-
+                                <button id="joint_1_cw_btn" class="rotational-menu-item">j-1 <i class="fas fa-redo"></i></button>
+                                <button id="joint_1_ccw_btn" class="rotational-menu-item">j-1 <i class="fa fa-undo"></i></button>
+                                <button id="joint_2_cw_btn" class="rotational-menu-item">j-2 <i class="fas fa-redo"></i></button>
+                                <button id="joint_2_ccw_btn" class="rotational-menu-item">j-2 <i class="fas fa-undo"></i></button>
+                                <button id="joint_3_cw_btn" class="rotational-menu-item">j-3 <i class="fas fa-redo"></i></button>
+                                <button id="joint_3_ccw_btn" class="rotational-menu-item">j-3 <i class="fas fa-undo"></i></button>
+                                <!--<a href="#" class="menu-item"> <i class="fas fa-redo"></i> </a>-->
+                                <!--<a href="#" class="menu-item"> <i class="fa fa-undo"></i> </a>-->
+                                <!--<a href="#" class="menu-item"> <i class="fas fa-redo"></i> </a>-->
+                                <!--<a href="#" class="menu-item"> <i class="fa fa-undo"></i> </a>-->
+                            </nav>
                         </div>
+                        <!-- filters -->
+                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+                            <defs>
+                                <filter id="shadowed-goo">
+
+                                    <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation="10"></feGaussianBlur>
+                                    <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="goo"></feColorMatrix>
+                                    <feGaussianBlur in="goo" stdDeviation="3" result="shadow"></feGaussianBlur>
+                                    <feColorMatrix in="shadow" mode="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 -0.2" result="shadow"></feColorMatrix>
+                                    <feOffset in="shadow" dx="1" dy="1" result="shadow"></feOffset>
+                                    <feBlend in2="shadow" in="goo" result="goo"></feBlend>
+                                    <feBlend in2="goo" in="SourceGraphic" result="mix"></feBlend>
+                                </filter>
+                                <filter id="goo">
+                                    <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation="10"></feGaussianBlur>
+                                    <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="goo"></feColorMatrix>
+                                    <feBlend in2="goo" in="SourceGraphic" result="mix"></feBlend>
+                                </filter>
+                            </defs>
+                        </svg>
                     </div>
                     <button id="record_pos_sce_btn" class="position-absolute" translate>save</button>
                     <div id="record_pos_sce_div" class="position-absolute">
