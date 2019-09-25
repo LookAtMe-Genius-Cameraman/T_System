@@ -29,20 +29,21 @@ const stream_area_img = document.getElementById("stream_area_img");
 const motion_control_div = document.getElementById("motion_control_div");
 const prismatic_menu_control_input = document.getElementById("prismatic_menu_control_input");
 const prismatic_menu_control_label = document.getElementById("prismatic_menu_control_label");
+
+const rotational_control_nav = document.getElementById("rotational_control_nav");
+const rotational_ccw_control_nav = document.getElementById("rotational_ccw_control_nav");
+
 const rotational_menu_control_input = document.getElementById("rotational_menu_control_input");
 const rotational_menu_control_label = document.getElementById("rotational_menu_control_label");
 
-/** @type {!Element} */
-const prismatic_control_div = document.getElementById("prismatic_control_div");
-const joint_1_cw_btn = document.getElementById("joint_1_cw_btn");
-const joint_2_cw_btn = document.getElementById("joint_2_cw_btn");
-const joint_3_cw_btn = document.getElementById("joint_3_cw_btn");
-const joint_1_ccw_btn = document.getElementById("joint_1_ccw_btn");
-const joint_2_ccw_btn = document.getElementById("joint_2_ccw_btn");
-const joint_3_ccw_btn = document.getElementById("joint_3_ccw_btn");
+const rotational_ccw_menu_control_input = document.getElementById("rotational_ccw_menu_control_input");
+const rotational_ccw_menu_control_label = document.getElementById("rotational_ccw_menu_control_label");
 
 /** @type {!Element} */
 const rotational_control_div = document.getElementById("rotational_control_div");
+
+/** @type {!Element} */
+const prismatic_control_div = document.getElementById("prismatic_control_div");
 const x_up_btn = document.getElementById("x_up_btn");
 const y_up_btn = document.getElementById("y_up_btn");
 const z_up_btn = document.getElementById("z_up_btn");
@@ -70,8 +71,8 @@ function stop_stream(type) {
 
 }
 
-function get_current_position() {
-    jquery_manager.get_data("/api/move?admin_id=" + admin_id);
+function get_move_info(cause=null) {
+    jquery_manager.get_data("/api/move?cause=" + cause + "&admin_id=" + admin_id);
 }
 
 function get_position_s(id = null) {
@@ -248,13 +249,96 @@ prismatic_menu_control_input.addEventListener("change", function () {
 
 
 rotational_menu_control_input.addEventListener("change", function () {
+    console.log("clicked_rotational");
+    rotational_ccw_menu_control_label.click();
+    // rotational_ccw_menu_control_label.classList.toggle("hidden_element");
+
     rotational_control_div.classList.toggle("focused");
     prismatic_control_div.classList.toggle("hidden_element");
+
+    rotational_ccw_control_nav.classList.toggle("focused");
 
     rotational_menu_control_label.classList.toggle("fa-sync-alt");
     rotational_menu_control_label.classList.toggle("fa-times");
 
     if (rotational_menu_control_input.checked) {
+        // get_move_info("joint_count");
+        requested_data = {"status": "OK", "data": "5"};
+
+        let timer_settings_cont = setInterval(function () {
+
+            if (requested_data !== {}) {
+                if (requested_data["status"] === "OK") {
+
+                    $("#rotational_control_nav button").remove();
+                    $("#rotational_ccw_control_nav button").remove();
+
+                    let joint_count = requested_data["data"];
+                    // console.log(requested_data["data"]);
+
+                    for (let i = 0; i < joint_count; i++) {
+                        let joint_number = i + 1;
+
+                        let arm_joint_right_btn = document.createElement('button');
+                        let arm_joint_right_i = document.createElement('i');
+
+                        let arm_joint_left_btn = document.createElement('button');
+                        let arm_joint_left_i = document.createElement('i');
+
+                        arm_joint_right_btn.classList.add("rotational-menu-item", "joint_btn");
+                        arm_joint_right_btn.id = "joint_" + joint_number + "cw_btn";
+                        arm_joint_right_btn.innerHTML = translate_text_item("j-" + joint_number + " ");
+
+                        arm_joint_right_btn.addEventListener("mousedown", function () {
+
+                            let route = "/api/move?id=" + joint_number + "&admin_id=" + admin_id;
+                            let data = {"type": "joint", "id": joint_number.toString(), "quantity": 5};
+
+                            interval = setInterval(function () {
+                                // console.log("gönderdi");
+                                jquery_manager.put_data(route, data);
+                            }, 300);
+                        });
+
+                        arm_joint_right_btn.addEventListener("mouseup", function () {
+                            clearInterval(interval);
+                        });
+
+
+                        arm_joint_right_i.classList.add("fas", "fa-redo");
+
+                        arm_joint_left_btn.classList.add("rotational-menu-item", "joint_btn");
+                        arm_joint_left_btn.id = "joint_" + joint_number + "ccw_btn";
+                        arm_joint_left_btn.innerHTML = translate_text_item("j-" + joint_number + " ");
+
+                        arm_joint_left_btn.addEventListener("mousedown", function () {
+
+                            let route = "/api/move?id=" + joint_number + "&admin_id=" + admin_id;
+                            let data = {"type": "joint", "id": joint_number.toString(), "quantity": -5};
+
+                            interval = setInterval(function () {
+                                // console.log("gönderdi");
+                                jquery_manager.put_data(route, data);
+                            }, 300);
+                        });
+
+                        arm_joint_left_btn.addEventListener("mouseup", function () {
+                            clearInterval(interval);
+                        });
+
+                        arm_joint_left_i.classList.add("fas", "fa-undo");
+
+                        arm_joint_right_btn.appendChild(arm_joint_right_i);
+                        arm_joint_left_btn.appendChild(arm_joint_left_i);
+
+                        rotational_control_nav.appendChild(arm_joint_right_btn);
+                        rotational_ccw_control_nav.appendChild(arm_joint_left_btn);
+                    }
+                }
+                requested_data = {};
+                clearInterval(timer_settings_cont)
+            }
+        }, 300);
 
     }
 });
@@ -266,7 +350,7 @@ record_pos_sce_btn.addEventListener("click", function () {
     record_pos_sce_btn_click_count++;
     if (record_pos_sce_btn_click_count <= 1) {
 
-        get_current_position();
+        get_move_info();
         let timer_settings_cont = setInterval(function () {
 
             if (requested_data !== {}) {

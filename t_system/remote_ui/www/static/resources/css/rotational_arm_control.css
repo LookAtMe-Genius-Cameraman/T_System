@@ -20,6 +20,23 @@
     left: 1% !important;
 }
 
+#rotational_control_nav {
+    /*border: #8a6d3b dashed;*/
+    width: 80px;
+    height: 80px;
+    z-index: 200;
+}
+
+#rotational_ccw_control_nav.focused {
+    top: 50px;
+    left: 25px;
+}
+
+#rotational_ccw_menu_control_label {
+    visibility: hidden;
+    opacity: 0;
+}
+
 .rotational-menu {
     -webkit-filter: url("#shadowed-goo");
     filter: url("#shadowed-goo");
@@ -244,26 +261,6 @@
     transform: translate3d(500px, 0, 0);
 }
 
-#joint_1_cw_btn {
-    font-size: 10px;
-}
-
-#joint_1_ccw_btn {
-    font-size: 10px;
-}
-
-#joint_2_cw_btn {
-    font-size: 10px;
-}
-
-#joint_2_ccw_btn {
-    font-size: 10px;
-}
-
-#joint_3_cw_btn {
-    font-size: 10px;
-}
-
-#joint_3_ccw_btn {
+.joint_btn {
     font-size: 10px;
 }

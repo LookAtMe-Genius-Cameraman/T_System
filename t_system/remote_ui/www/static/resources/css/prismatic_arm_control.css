@@ -19,6 +19,12 @@
     left: 49%;
 }
 
+#prismatic_control_nav {
+    /*border: #8a6d3b dashed;*/
+    width: 80px;
+    height: 80px;
+}
+
 .menu {
   -webkit-filter: url("#shadowed-goo");
           filter: url("#shadowed-goo");

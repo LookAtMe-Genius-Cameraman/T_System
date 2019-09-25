@@ -112,6 +112,14 @@
                             <ul id="record_list_ul" class="position-relative mt-1 option_list_ul"></ul>
                         </div>
                     </div>
+                    <div id="empty_option_div" class="position-relative col option_div">
+                        <button id="empty_option_btn" class="option_btn" translate>Empty</button>
+                        <div id="empty_option_io_div" class="option_io_div">
+                            <ul class="option_list_ul"></ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="position-relative row mt-3">
                     <div id="lang_select_div" class="position-relative col option_div">
                         <button id="lang_select_btn" class="option_btn" translate>Language</button>
                         <div id="language_dropdown_div" class="option_io_div">
@@ -126,7 +134,13 @@
                             </ul>
                         </div>
                     </div>
+                    <div id="help_control_div" class="position-relative col option_div">
+                        <button id="help_control_btn" class="option_btn" translate>Help</button>
+                        <div id="help_control_io_div" class="option_io_div">
+                        </div>
+                    </div>
                 </div>
+
             </div>
             <!--        ======================================================OPTIONS MODAL======================================================        -->
             <!--        ======================================================CONTROLLING MODAL======================================================        -->
@@ -149,7 +163,7 @@
                     </div>
                     <div id="motion_control_div" class="position-absolute">
                         <div id="prismatic_control_div" class="position-relative align-content-center">
-                            <nav class="menu">
+                            <nav id="prismatic_control_nav" class="menu">
                                 <input id="prismatic_menu_control_input" type="checkbox" class="menu-open" name="menu-open"/>
                                 <label id="prismatic_menu_control_label" class="menu-open-button fas fa-arrows-alt" for="prismatic_menu_control_input"></label>
                                 <button id="y_up_btn" class="menu-item"><i class="fas fa-chevron-circle-up"></i></button>
@@ -161,20 +175,13 @@
                             </nav>
                         </div>
                         <div id="rotational_control_div" class="position-relative">
-                            <nav class="rotational-menu">
+                            <nav id="rotational_control_nav" class="rotational-menu">
                                 <input id="rotational_menu_control_input" type="checkbox" class="rotational-menu-open" name="rotational-menu-open"/>
                                 <label id="rotational_menu_control_label" class="rotational-menu-open-button fas fa-sync-alt" for="rotational_menu_control_input"></label>
-
-                                <button id="joint_1_cw_btn" class="rotational-menu-item">j-1 <i class="fas fa-redo"></i></button>
-                                <button id="joint_1_ccw_btn" class="rotational-menu-item">j-1 <i class="fa fa-undo"></i></button>
-                                <button id="joint_2_cw_btn" class="rotational-menu-item">j-2 <i class="fas fa-redo"></i></button>
-                                <button id="joint_2_ccw_btn" class="rotational-menu-item">j-2 <i class="fas fa-undo"></i></button>
-                                <button id="joint_3_cw_btn" class="rotational-menu-item">j-3 <i class="fas fa-redo"></i></button>
-                                <button id="joint_3_ccw_btn" class="rotational-menu-item">j-3 <i class="fas fa-undo"></i></button>
-                                <!--<a href="#" class="menu-item"> <i class="fas fa-redo"></i> </a>-->
-                                <!--<a href="#" class="menu-item"> <i class="fa fa-undo"></i> </a>-->
-                                <!--<a href="#" class="menu-item"> <i class="fas fa-redo"></i> </a>-->
-                                <!--<a href="#" class="menu-item"> <i class="fa fa-undo"></i> </a>-->
+                            </nav>
+                            <nav id="rotational_ccw_control_nav" class="rotational-menu">
+                                <input id="rotational_ccw_menu_control_input" type="checkbox" class="rotational-menu-open" name="rotational-ccw-menu-open"/>
+                                <label id="rotational_ccw_menu_control_label" class="rotational-menu-open-button fas fa-sync-alt" for="rotational_ccw_menu_control_input"></label>
                             </nav>
                         </div>
                         <!-- filters -->
