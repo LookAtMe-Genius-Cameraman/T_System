@@ -31,12 +31,22 @@ def move_arm(admin_id, move_id, data):
     return result
 
 
-def get_current_position(admin_id):
-    """Method to get coordinates of T_System's arm current position  as polar and cartesian.
+def get_arm_current_position(admin_id):
+    """Method to get coordinates of T_System's arm current position as polar and cartesian.
 
     Args:
         admin_id (str):                Admin privileges flag.
     """
 
     return arm.get_current_positions()
+
+
+def get_arm_joint_count(admin_id):
+    """Method to get joint count of the Robotic Arm for handling expansion of it.
+
+    Args:
+        admin_id (str):                Admin privileges flag.
+    """
+
+    return len(arm.joints) - 1
 

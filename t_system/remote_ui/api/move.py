@@ -13,7 +13,7 @@ from flask import Blueprint, request
 from flask_restful import Api, Resource
 from schema import SchemaError
 
-from t_system.remote_ui.modules.move import move_arm, get_current_position
+from t_system.remote_ui.modules.move import move_arm, get_arm_current_position, get_arm_joint_count
 from t_system.remote_ui.api.data_schema import MOVE_SCHEMA
 
 api_bp = Blueprint('move_api', __name__)
@@ -38,10 +38,14 @@ class MoveApi(Resource):
         """The API method to GET request for flask.
         """
 
-        # move_id = request.args.get('id', None)
+        cause = request.args.get('cause', None)
         admin_id = request.args.get('admin_id', None)
 
-        current_position = get_current_position(admin_id)
+        if cause == "joint_count":
+            joint_count = get_arm_joint_count(admin_id)
+            return {'status': 'OK', 'data': joint_count}
+
+        current_position = get_arm_current_position(admin_id)
 
         return {'status': 'OK', 'data': current_position}
 
