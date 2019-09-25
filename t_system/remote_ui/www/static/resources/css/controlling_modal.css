@@ -149,10 +149,9 @@
 
     transition: all 500ms;
 
-    border: mediumvioletred solid;
+    /*border: mediumvioletred solid;*/
 
     z-index: 200;
-
 }
 
 #record_pos_sce_btn {
@@ -167,6 +166,8 @@
     transition: all 300ms;
     background-color: #fff;
     color: #008CBA;
+
+    z-index: 201;
 }
 
 #record_pos_sce_div {
