@@ -42,16 +42,26 @@ Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 ```
 
 # Getting Current Position
+- If a specific parameter CAUSE is given as 'joint_count', Robotic Arm's joint count returns.
 - Returns T_System's arm current position info as cartesian and polar coordinates.
 
 ## Request
 ```http
-GET /api/move?admin_id=<ADMIN_ID>
+GET /api/move?cause=<CAUSE>&admin_id=<ADMIN_ID>
 Host: domain
 ```
 
 ## Response
 ### On Success
+- If CAUSE is 'joint_count'
+```json
+{
+    "status": "OK",
+    "data": 5
+}
+```
+- If CAUSE is empty
+
 ```json
 {
     "status": "OK",
