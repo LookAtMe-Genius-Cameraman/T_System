@@ -47,7 +47,7 @@ class ScenarioApi(Resource):
             scenario = get_scenario(admin_id, db_name, scenario_id)
             return {'status': 'OK', 'data': scenario}
 
-        scenarios = get_scenarios(admin_id)
+        scenarios = get_scenarios(admin_id, db_name)
 
         return {'status': 'OK', 'data': scenarios}
 
