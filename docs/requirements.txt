@@ -25,5 +25,5 @@ requests==2.22.0
 pyroute2==0.5.6
 pexpect==4.7.0
 opencv-python==4.1.1.26
-opencv-contrib-python
+opencv-contrib-python==4.1.1.26
 dlib
