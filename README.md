@@ -47,8 +47,7 @@ the (non-)moving objects tracking system via two axis camera motion and n joint 
 
 ##### Software
 
-- OpenCV. Install via [here](https://www.pyimagesearch.com/2018/09/26/install-opencv-4-on-your-raspberry-pi/) or any other place you want.
-- Dlib and face_recognition module via [here](https://gist.github.com/ageitgey/1ac8dbe8572f3f533df6269dab35df65) or any other place you want.
+- All requirement libraries automatically installing via installation scripts. To see these libraries look at [here](https://github.com/connected-life/T_System/blob/master/docs/requirements.txt)
 
 ### Installation
 
