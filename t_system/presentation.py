@@ -9,6 +9,7 @@
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
 
+import os  # Miscellaneous operating system interfaces
 import shutil  # High-level file operations
 import pkg_resources
 
@@ -32,6 +33,10 @@ def versions_banner():
     """
 
     import t_system.__init__
+
+    if not os.path.exists(t_system.dot_t_system_dir):
+        os.mkdir(t_system.dot_t_system_dir)
+
     from t_system.logging import LogManager
 
     t_system.log_manager = LogManager(args={"verbose": False, "environment": None})
