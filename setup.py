@@ -109,8 +109,10 @@ setup(
         'pyaudio',
         'requests',
         'pyroute2>=0.5.6',
-        'pexpect'
-        # 'opencv-python>=4.0.0.21'
+        'pexpect',
+        'opencv-python',
+        'opencv-contrib-python',
+        'dlib'
     ],
 
     # List additional groups of dependencies here (e.g. development
