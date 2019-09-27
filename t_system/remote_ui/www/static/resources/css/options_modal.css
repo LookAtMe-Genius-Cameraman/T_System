@@ -337,9 +337,15 @@
     font-size: 11px;
 }
 
+/**********************************EMPTY OPTION**********************************/
+#empty_option_div.higher {
+    top: -340% !important;
+
+}
+
 /**********************************LANGUAGE OPTION**********************************/
 #lang_select_div.higher {
-    top: -340% !important;
+    top: -480% !important;
 }
 
 #language_dropdown_ul {
@@ -348,4 +354,9 @@
 
     margin: auto 5px 5px auto;
     /*border: turquoise solid;*/
+}
+
+/**********************************HELP OPTION**********************************/
+#help_control_div {
+    top: -480% !important;
 }
