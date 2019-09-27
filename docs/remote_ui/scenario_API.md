@@ -98,7 +98,7 @@ Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 
 {
     "name": "scenario_name",
-    "scenarios": [
+    "positions": [
     {
         "id": "b970138a-aecb-11e9-b130-cc2f714671ed",
         "name": "position1_name",
