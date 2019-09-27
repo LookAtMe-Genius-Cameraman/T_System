@@ -65,6 +65,9 @@ const create_pos_btn = document.getElementById("create_pos_btn");
 
 const record_in_scenario_div = document.getElementById("record_in_scenario_div");
 const scenario_div_back_btn = document.getElementById("scenario_div_back_btn");
+const scenario_name_input = document.getElementById("scenario_name_input");
+const create_sce_btn = document.getElementById("create_sce_btn");
+const record_in_scenario_list_ul = document.getElementById("record_in_scenario_list_ul");
 
 function stop_stream(type) {
     jquery_manager.delete_data("/api/stream?type=" + type + "&admin_id=" + admin_id);
@@ -347,8 +350,20 @@ rotational_menu_control_input.addEventListener("change", function () {
 let record_pos_sce_btn_click_count = 0;
 
 record_pos_sce_btn.addEventListener("click", function () {
+
+    dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
+    dark_deep_background_div.classList.toggle("focused");
+
+    record_pos_sce_div.classList.toggle("focused");
+    motion_control_div.classList.toggle("hidden_element");
+    video_area_div.classList.toggle("hidden_element");
+    controlling_template_sidebar.classList.toggle("hidden_element");
+    sidebar_toggle_btn.classList.toggle("hidden_element");
+
     record_pos_sce_btn_click_count++;
     if (record_pos_sce_btn_click_count <= 1) {
+
+        record_pos_sce_btn.innerHTML = translate_text_item("cancel");
 
         get_move_info();
         let timer_settings_cont = setInterval(function () {
@@ -358,12 +373,6 @@ record_pos_sce_btn.addEventListener("click", function () {
 
                     current_arm_position = requested_data["data"];
                     // console.log(requested_data["data"]);
-                    record_pos_sce_btn.innerHTML = translate_text_item("cancel");
-
-                    hide_element(motion_control_div);
-                    hide_element(video_area_div);
-                    hide_element(controlling_template_sidebar);
-                    hide_element(sidebar_toggle_btn);
                 }
                 requested_data = {};
                 clearInterval(timer_settings_cont)
@@ -372,33 +381,28 @@ record_pos_sce_btn.addEventListener("click", function () {
 
     } else {
         record_pos_sce_btn.innerHTML = translate_text_item("save");
+        position_div_back_btn.click();
+        scenario_div_back_btn.click();
 
-        show_element(motion_control_div);
-        show_element(video_area_div);
-        show_element(controlling_template_sidebar);
-        show_element(sidebar_toggle_btn);
         record_pos_sce_btn_click_count = 0
     }
-    dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
-    dark_deep_background_div.classList.toggle("focused");
-    record_pos_sce_div.classList.toggle("focused");
 });
 
 
 record_as_pos_btn.addEventListener("click", function () {
-    pos_sce_select_div.classList.toggle("inactive");
+    pos_sce_select_div.classList.add("inactive");
     create_pos_btn.disabled = true;
 
     setTimeout(function () {
-        record_as_position_div.classList.toggle("focused");
+        record_as_position_div.classList.add("focused");
         }, 175)
 });
 
 
 position_div_back_btn.addEventListener("click", function () {
-    record_as_position_div.classList.toggle("focused");
+    record_as_position_div.classList.remove("focused");
     setTimeout(function () {
-        pos_sce_select_div.classList.toggle("inactive");
+        pos_sce_select_div.classList.remove("inactive");
         }, 175)
 });
 
@@ -423,18 +427,92 @@ create_pos_btn.addEventListener("click", function () {
 });
 
 record_in_sce_btn.addEventListener("click", function () {
-    pos_sce_select_div.classList.toggle("inactive");
+    pos_sce_select_div.classList.add("inactive");
+    create_sce_btn.disabled = true;
 
     setTimeout(function () {
-        record_in_scenario_div.classList.toggle("focused");
-        }, 175)
+        record_in_scenario_div.classList.add("focused");
+    }, 175);
+
+    // get_scenario_s();
+    requested_data = {
+        "status": "OK", "data": [
+            {
+                "id": "b97tr40a-alcb-31w9-b150-ce2f6156l1ed",
+                "name": "scenario_name1",
+                "positions": [{}, {}]
+            }, {
+                "id": "b97dr48a-aecb-11e9-b130-cc2f7156l1ed",
+                "name": "scenario_name2_name2",
+                "positions": [{}, {}]
+            }
+        ]
+    };
+
+    while (record_in_scenario_list_ul.firstChild) {
+            record_in_scenario_list_ul.removeChild(record_in_scenario_list_ul.firstChild);
+        }
+
+    let timer_settings_cont = setInterval(function () {
+        if (requested_data !== {}) {
+            if (requested_data["status"] === "OK") {
+                    let scenarios = requested_data["data"];
+
+                    for (let i = 0; i < scenarios.length; i++) {
+                        let scenario_div = document.createElement('div');
+                        let scenario_btn = document.createElement('button');
+
+                        scenario_div.classList.add("mt-1", "border_try", "select_existing_scenario_div", "text-center");
+                        scenario_div.id = scenarios[i]["id"];
+
+                        scenario_btn.classList.add("btn", "btn-info");
+                        scenario_btn.innerHTML = scenarios[i]["name"];
+
+                        scenario_btn.addEventListener("click", function () {
+                            let position_init = {"id": null, "name": "position_of_" + scenarios[i]["name"]};
+
+                            let position = Object.assign({}, position_init, current_arm_position);
+
+                            scenarios[i]["positions"].push(position);
+
+                            jquery_manager.put_data("/api/scenario?db=" + db_name + "&id=" + id + "&admin_id=" + admin_id, scenarios[i])
+                        });
+
+                        scenario_div.appendChild(scenario_btn);
+                        record_in_scenario_list_ul.appendChild(scenario_div);
+                    }
+                }
+                requested_data = {};
+                clearInterval(timer_settings_cont)
+            }
+        });
 });
 
 scenario_div_back_btn.addEventListener("click", function () {
-    record_in_scenario_div.classList.toggle("focused");
+    record_in_scenario_div.classList.remove("focused");
     setTimeout(function () {
-        pos_sce_select_div.classList.toggle("inactive");
+        pos_sce_select_div.classList.remove("inactive");
         }, 175)
+});
+
+scenario_name_input.addEventListener("mousemove", function () {
+    create_sce_btn.disabled = scenario_name_input.value === "";
+});
+
+create_sce_btn.addEventListener("click", function () {
+
+    // let name_dict = {"name": position_name_input.value};
+    // let data = Object.assign({}, name_dict, current_arm_position);
+
+    // jquery_manager.post_data("/api/position?db=" + "predicted_missions" + "&admin_id=" + admin_id, data);
+
+    //Todo: Handle the scenario creating and adding position new scenario processes.
+
+    scenario_name_input.value = "";
+    scenario_div_back_btn.click();
+    record_pos_sce_btn.click();
+
+    swal(translate_text_item("Position Added in New Scenario!"), "", "success");
 });
 
 

@@ -88,7 +88,7 @@
                                     <input id="face_name_input" class="modal_input" type="text" name="face_name" placeholder="name"/>
                                     <div id="face_encoding_input_div" class="input-group mb-2 mt-2">
                                         <div class="custom-file">
-                                            <input id="f_enc_photo_input" class="custom-file-input" type="file" name="face_images" accept="image/*" capture="camera" multiple/>
+                                            <input id="f_enc_photo_input" class="custom-file-input" type="file" name="face_images" accept="*" capture="camera" multiple/>
                                             <label id="f_enc_photo_label" class="custom-file-label" for="f_enc_photo_input" translate>Upload Photo</label>
                                         </div>
                                         <div class="input-group-append">
@@ -150,9 +150,9 @@
                 <div id="controlling_template_sidebar" class="sidenav">
                     <a href="javascript:void(0)" id="controlling_template_sidebar_close_btn" class="close_btn">&times;</a>
                     <h6 id="scenarios_title" style="max-width: 150px" translate>Scenarios :</h6>
-                    <ul class="list-unstyled components network_list" id="scenario_list_ul"></ul>
+                    <ul class="list-unstyled components" id="scenario_list_ul"></ul>
                     <h6 id="positions_title" style="max-width: 150px" translate>Positions :</h6>
-                    <ul class="list-unstyled components network_list" id="position_list_ul"></ul>
+                    <ul class="list-unstyled components" id="position_list_ul"></ul>
                 </div>
 
                 <div id="controlling_template_content">
@@ -217,8 +217,10 @@
                             <button id="create_pos_btn" class="position-relative btn btn-dark" translate>save</button>
                         </div>
                         <div id="record_in_scenario_div" class="position-absolute">
-                            <button id="scenario_div_back_btn" class="position-relative btn" translate>Back</button>
-                            <input class="modal_input" type="text" name="scenario_name" id="scenario_name_input" placeholder="name"/>
+                            <button id="scenario_div_back_btn" class="position-relative btn _button" translate>Back</button>
+                            <input id="scenario_name_input" class="modal_input" type="text" name="scenario_name" placeholder="name"/>
+                            <button id="create_sce_btn" class="position-relative btn btn-dark" translate>save in new scenario</button>
+                            <div id="record_in_scenario_list_ul" class=""></div>
                         </div>
                     </div>
                 </div>
@@ -311,6 +313,27 @@
 </div>
 <!--        ======================================================JOB MODAL======================================================        -->
 
+<!--        ======================================================ADMINISTRATION MODAL======================================================        -->
+<div id="administration_template_container" class="position-absolute template_container">
+    <div id="administration_header_div" class="position-relative">
+        <div id="administration_selected_task_div" class="position-relative mr-2"></div>
+        <button id="administration_btn" class="position-relative btn btn-dark ml-2"><i id="administration_btn_i" class="fas fa-mask"></i></button>
+    </div>
+    <div id="administration_div" class="position-relative mt-4">
+        <div id="administration_selections_div" class="position-absolute mt-2">
+            <div class="form-check mb-1 specify_checkbox_div">
+                <input id="create_emotion_checkbox" class="form-check-input" type="checkbox" value="">
+                <label id="create_emotion_cb_label" class="form-check-label btn btn-outline-warning" for="create_emotion_checkbox" translate>Create Emotion</label>
+            </div>
+            <div id="predict_mission_check_div" class="form-check mb-1 specify_checkbox_div">
+                <input id="predict_mission_checkbox" class="form-check-input" type="checkbox" value="">
+                <label id="predict_mission_cb_label" class="form-check-label btn btn-outline-warning" for="predict_mission_checkbox" translate>Predict Mission</label>
+            </div>
+        </div>
+    </div>
+</div>
+<!--        ======================================================ADMINISTRATION MODAL======================================================        -->
+
 <!--        ======================================================SYSTEM INFO MODAL======================================================        -->
 <div id="system_info_template_container" class="position-absolute template_container">
     <button id="system_info_btn" class="position-relative btn btn-dark" translate>System Info</button>
@@ -328,10 +351,28 @@
     </div>
 </div>
 <!--        ======================================================SYSTEM INFO MODAL======================================================        -->
+
+<div id="dark_deep_background_div" class="position-fixed"></div>
+
 <footer id="title_footer" class="position-absolute page-footer font-small blue pull-right text-right" translate>Powered By <a>
     <mark translate>T_System</mark>
 </a></footer>
-<div id="dark_deep_background_div" class="position-fixed"></div>
+
+<div id="title_footer_url_modal" class="modal fade">
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <!--<h4 class="modal-title">T_System Home Page</h4>-->
+        </div>
+        <div class="modal-body">
+            <p>Loading...</p>
+        </div>
+        <!--<div class="modal-footer">-->
+        <!--<button type="button" class="btn btn-default" data-dismiss="modal" translate>Close</button>-->
+        <!--</div>-->
+    </div>
+</div>
 
 <!-- inserting these scripts at the end to be able to use all the elements in the DOM -->
 <script src="static/vendors/swiper/js/swiper.min.js"></script>
@@ -364,6 +405,7 @@
 <script type="text/javascript" charset="UTF-8" src="static/resources/js/options_modal.js"></script>
 <script type="text/javascript" charset="UTF-8" src="static/resources/js/job_modal.js"></script>
 <script type="text/javascript" charset="UTF-8" src="static/resources/js/system_info.js"></script>
+<script type="text/javascript" charset="UTF-8" src="static/resources/js/administration_modal.js"></script>
 
 <script src="static/resources/js/main.js"></script>
 </body>
