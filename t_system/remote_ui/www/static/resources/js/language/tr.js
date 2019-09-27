@@ -71,5 +71,8 @@ const turkishtrans = {
     "System Info": "Sistem bilgisi",
     "Available:": "Kullanılabilir:",
     "min": "dk",
-    " job": " iş"
+    " job": " iş",
+    " administration": " özel yetki",
+    "Create Emotion": "Duygu Yarat",
+    "Predict Mission": "Görev öngör"
 };
