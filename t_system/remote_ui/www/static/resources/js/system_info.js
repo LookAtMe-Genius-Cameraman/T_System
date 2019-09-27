@@ -42,9 +42,10 @@ system_info_btn.addEventListener("click", function () {
         system_info_template_container.classList.toggle("focused");
 
 
-        if (dark_deep_background_div.classList.contains("focused") === false) {
-            dark_deep_background_div.classList.toggle("focused");
+        if (dark_overlay_active) {
+            dark_overlay_active = false
         } else {
+            dark_deep_background_div.classList.toggle("focused");
             dark_overlay_active = true
         }
 
@@ -63,9 +64,10 @@ system_info_btn.addEventListener("click", function () {
 
 
         if (dark_overlay_active === false) {
-            dark_deep_background_div.classList.toggle("focused");
+            dark_overlay_active = true
 
         } else {
+            dark_deep_background_div.classList.toggle("focused");
             dark_overlay_active = false
         }
 
