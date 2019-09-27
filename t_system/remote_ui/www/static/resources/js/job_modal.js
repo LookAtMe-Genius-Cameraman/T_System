@@ -93,18 +93,26 @@ function toggle_job_modal() {
     job_div.classList.toggle("focused");
     job_btn.classList.toggle("clicked");
 
-    if (dark_overlay_active) {
-
-    } else {
-        dark_deep_background_div.classList.toggle("focused");
-        dark_overlay_active = false
-    }
 
     if (job_div.classList.contains("focused")) {  // 1. click
+        if (dark_overlay_active) {
+            dark_overlay_active = false
+        } else {
+            dark_deep_background_div.classList.toggle("focused");
+            dark_overlay_active = true
+        }
+
         job_btn_i.innerHTML = translate_text_item(" job");
         post_job_data();
         show_checked_boxes([security_mode_checkbox, learn_mode_checkbox, non_moving_target_checkbox, time_laps_checkbox].concat(recognize_checkboxes).concat(ai_checkboxes), selected_params_div)
     } else {  // 2. click
+        if (dark_overlay_active === false) {
+            dark_overlay_active = true
+
+        } else {
+            dark_deep_background_div.classList.toggle("focused");
+            dark_overlay_active = false
+        }
         job_btn_i.innerHTML = "";
     }
 
