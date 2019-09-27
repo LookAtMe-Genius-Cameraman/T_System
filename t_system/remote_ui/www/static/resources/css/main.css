@@ -241,6 +241,34 @@ footer {
     height: 68% !important;
 }
 
+#administration_template_container {
+    max-width: 500px;
+    max-height: 580px;
+
+    /*alignment*/
+    top: 6%;
+    right: 8%;
+
+    width: auto; /*goes to 85%*/
+    height: auto; /* goes to 85%*/
+
+    z-index: 205;
+    /*border: #8a6d3b solid;*/
+
+    display: inline-block !important;
+}
+
+#administration_template_container.focused {
+    top: 5% !important;
+    left: 50% !important;
+    transform: translate(-50%) !important;
+
+    width: 85% !important;
+    height: 85% !important;
+
+    display: inherit !important;
+}
+
 #dark_deep_background_div {
     font-family: Arial, Helvetica, sans-serif;
     top: 0;
