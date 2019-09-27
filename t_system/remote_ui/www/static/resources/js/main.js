@@ -21,6 +21,7 @@ const swiper_wrapper = document.getElementById("swiper_wrapper");
 const title_footer = document.getElementById("title_footer");
 
 /** @type {!Element} */
+const page_control_div = document.getElementById("page_control_div");
 const control_btn = document.getElementById("control_btn");
 const options_btn = document.getElementById("options_btn");
 const prepare_btn = document.getElementById("prepare_btn");
@@ -151,8 +152,11 @@ $(document).ready(function () {
 
 });
 
-title_footer.addEventListener("click", function () {
-   window.open('https://github.com/connected-life/T_System', '_system');
+title_footer.addEventListener("click", function (e) {
+   // window.open('https://github.com/connected-life/T_System', '_system');
+
+   e.preventDefault();
+  $('#title_footer_url_modal').modal('show').find('.modal-body').load('https://github.com/connected-life/T_System');
 });
 
 

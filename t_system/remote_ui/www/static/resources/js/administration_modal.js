@@ -78,6 +78,7 @@ function toggle_administration_modal() {
     prepare_template_container.classList.toggle("hidden_element");
     system_info_template_container.classList.toggle("hidden_element");
     job_template_container.classList.toggle("hidden_element");
+    page_control_div.classList.toggle("hidden_element");
 
 }
 
