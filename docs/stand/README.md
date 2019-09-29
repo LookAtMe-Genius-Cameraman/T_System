@@ -103,6 +103,7 @@ the portable usage interface
 
 <img align="left" width="420" height="430" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.3.1/back_render.jpg">
 <img align="center" width="420" height="430" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.3.1/front_render.jpg">
+<img align="right" width="400" height="600" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.3.1/prototype.jpeg">
 
 <br>
 
