@@ -169,7 +169,7 @@ def initiate():
                                              "The default value is None.", action="store", type=str, default="None")
 
     official_stand_gr = ap.add_argument_group('official_stand')
-    official_stand_gr.add_argument("--stand-gpios", help="GPIO pin numbers of official stand's LEDs. 5(as red led) and 6(as green led) GPIO pins are default.", nargs=2, default=[5, 6], type=int, metavar=('RED-LED', 'GREEN-LED'))
+    official_stand_gr.add_argument("--stand-gpios", help="GPIO pin numbers of official stand's LEDs and fans. 5(as red led), 6(as green led) and 14(as fan) GPIO pins are default.", nargs=3, default=[5, 6, 14], type=int, metavar=('RED-LED', 'GREEN-LED', 'FAN'))
 
     remote_ui_gr = ap.add_argument_group('remote_ui')
     remote_ui_gr.add_argument("--host", help="Specify host address.", action="store", type=str, default="0.0.0.0")
