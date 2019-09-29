@@ -207,6 +207,12 @@ class Arm:
 
         self.__is_expanded = False
 
+    def is_expanded(self):
+        """Method to return expansion flag of the arm.
+        """
+
+        return self.__is_expanded
+
     def __set_joints(self, joints):
         """Method to setting joints with D-H parameters.
 
