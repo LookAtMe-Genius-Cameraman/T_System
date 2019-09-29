@@ -89,6 +89,7 @@ setup(
         'RPi.GPIO>=0.6.5',
         'tinydb==3.9.0.post1',
         'numpy',
+        'sympy',
         'paho-mqtt>=1.4.0',
         'face_recognition',
         'multipledispatch',
