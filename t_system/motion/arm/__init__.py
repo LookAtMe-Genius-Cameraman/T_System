@@ -60,6 +60,8 @@ class Joint:
         self.alpha = joint['alpha']
 
         self.current_angle = degree_to_radian(self.q)
+        if self.is_reverse:
+            self.current_angle = pi - self.current_angle
 
         if self.structure != 'constant':
             self.motor = ServoMotor(joint['motor_gpio_pin'])
@@ -75,7 +77,7 @@ class Joint:
         """
         if self.is_reverse:
             target_angle = pi - target_angle
-            
+
         logger.debug(f' Motor of Joint {self.number} is moving...')
         self.motor.directly_goto_position(target_angle)
         self.current_angle = target_angle
@@ -139,7 +141,7 @@ class Arm:
         self.name = arm_name
         self.expansion_name = f'{self.name}-Expansion'
 
-        self.is_expanded = False
+        self.__is_expanded = False
 
         self.joints = []
 
@@ -181,7 +183,7 @@ class Arm:
         self.__prepare_dh_params()
         self.__set_dh_params(self.joints)
 
-        self.is_expanded = True
+        self.__is_expanded = True
 
     def revert_the_expand(self):
         """Method to revert back the expansion.
@@ -203,7 +205,7 @@ class Arm:
         self.__prepare_dh_params()
         self.__set_dh_params(self.joints)
 
-        self.is_expanded = False
+        self.__is_expanded = False
 
     def __set_joints(self, joints):
         """Method to setting joints with D-H parameters.
