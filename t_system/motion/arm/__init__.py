@@ -39,6 +39,7 @@ class Joint:
             joint (dict):          The requested_data that is contain joint's properties from the config file.
         """
         self.number = joint['joint_number']
+        self.is_reverse = joint['reverse']
 
         self.motor = None
 
@@ -72,6 +73,9 @@ class Joint:
         Args:
             target_angle:       	        The target angle of servo motors. In radian Unit.
         """
+        if self.is_reverse:
+            target_angle = pi - target_angle
+            
         logger.debug(f' Motor of Joint {self.number} is moving...')
         self.motor.directly_goto_position(target_angle)
         self.current_angle = target_angle
@@ -95,6 +99,8 @@ class Joint:
             delta_angle (float):            Calculated theta angle for going to object position. In radian type.
             direction (bool):               Rotate direction. True means CW, otherwise CCW.
         """
+        if self.is_reverse:
+            direction = not direction
 
         if direction:
             if self.current_angle - delta_angle < 0 or self.current_angle - delta_angle > pi:
