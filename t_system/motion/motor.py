@@ -56,7 +56,7 @@ class ServoMotor:
             init_angel (float):     Initialization angle value for servo motor in radian unit.
         """
         init_duty_cy = self.__angle_to_duty_cy(init_angel)
-
+        logger.debug(f'motor started at {init_duty_cy}')
         self.servo.start(init_duty_cy)
         self.current_duty_cy = init_duty_cy
 
@@ -76,15 +76,14 @@ class ServoMotor:
         self.servo.start(init_duty_cy)
         self.current_duty_cy = init_duty_cy
 
-    @staticmethod
-    def __angle_to_duty_cy(theta_radian):
+    def __angle_to_duty_cy(self, theta_radian):
         """Method to convert theta angle to the duty cycle.
 
         Args:
             theta_radian (float):     The position angle of servo motor. In radian type.
         """
 
-        return (theta_radian * 180 / pi) / 18
+        return (theta_radian / pi) * (self.max_duty_cy - self.min_duty_cy) + self.min_duty_cy
 
     def directly_goto_position(self, target_angle):
         """Method to changing position to the target angle.
