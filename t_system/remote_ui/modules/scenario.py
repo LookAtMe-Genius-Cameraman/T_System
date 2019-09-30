@@ -139,7 +139,7 @@ def get_db_table(is_admin, db_name):
     """Method to set work database by root.
 
     Args:
-        is_admin (bool):                 Root privileges flag.
+        is_admin (bool):                Root privileges flag.
         db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
     """
     table = "scenarios"
