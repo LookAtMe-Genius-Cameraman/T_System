@@ -95,8 +95,6 @@ def prepare(args):
     Args:
         args:       Command-line arguments.
     """
-    from t_system.presentation import startup_banner
-    startup_banner()
 
     if args["interface"] == "official_stand" or args["interface"] == "remote_ui":
         elevate(show_console=False, graphical=False)
@@ -104,6 +102,9 @@ def prepare(args):
     if not os.path.exists(dot_t_system_dir):
         os.mkdir(dot_t_system_dir)
 
+    from t_system.presentation import startup_banner
+    startup_banner()
+        
     t_system.log_manager = LogManager(args)
 
     global logger
