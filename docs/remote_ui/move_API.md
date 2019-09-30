@@ -1,3 +1,29 @@
+# Setting the Arm 
+Returns an error if the EXPAND is empty.
+
+## Request
+```http
+POST /api/move?expand=<EXPAND>&admin_id=<ADMIN_ID>
+Host: domain
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+```
+## Response
+
+### On Success
+```json
+{
+  "status": "OK"
+}
+```
+
+### On failure
+```json
+{
+    "status": "ERROR",
+    "message": "Missing or incorrect parameters"
+}
+```
+
 # Moving the Arm.
 Returns an error if the ID is empty.
 
@@ -27,17 +53,6 @@ Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 {
     "status": "ERROR",
     "message": "Missing or incorrect parameters"
-}
-```
-
-## POST Request
-
-## Response
-
-```json
-{
-    "status": "ERROR",
-    "message": "NOT VALID"
 }
 ```
 
