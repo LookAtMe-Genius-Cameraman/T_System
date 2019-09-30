@@ -10,6 +10,25 @@
 """
 
 from t_system import arm
+from t_system import seer
+
+
+def set_arm(admin_id, expand):
+    """Method to set expansion of T_System's arm.
+
+    Args:
+        admin_id (str):                Admin privileges flag.
+        expand (bool):                 Expansion flag of the arm.
+    """
+
+    if expand:
+        if not arm.is_expanded():
+            seer.reload_target_locker(arm_expansion=True)
+            arm.expand()
+    else:
+        if not arm.is_expanded():
+            arm.revert_the_expand()
+            seer.reload_target_locker(arm_expansion=False)
 
 
 def move_arm(admin_id, move_id, data):

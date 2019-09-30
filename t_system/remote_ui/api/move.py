@@ -13,7 +13,7 @@ from flask import Blueprint, request
 from flask_restful import Api, Resource
 from schema import SchemaError
 
-from t_system.remote_ui.modules.move import move_arm, get_arm_current_position, get_arm_joint_count
+from t_system.remote_ui.modules.move import set_arm, move_arm, get_arm_current_position, get_arm_joint_count
 from t_system.remote_ui.api.data_schema import MOVE_SCHEMA
 
 api_bp = Blueprint('move_api', __name__)
@@ -53,7 +53,15 @@ class MoveApi(Resource):
         """The API method to POST request for flask.
         """
 
-        return {'status': 'ERROR', 'message': 'NOT VALID'}
+        expand = request.args.get('expand')
+        admin_id = request.args.get('admin_id', None)
+
+        if not expand:
+            return {'status': 'ERROR', 'message': '\'id\' parameter is missing'}
+
+        set_arm(admin_id, expand)
+
+        return {'status': 'OK'}
 
     def put(self):
         """The API method to PUT request for flask.
