@@ -74,19 +74,24 @@ function stop_stream(type) {
 
 }
 
-function get_move_info(cause=null) {
+function get_move_info(cause = null) {
     jquery_manager.get_data("/api/move?cause=" + cause + "&admin_id=" + admin_id);
 }
 
 function get_position_s(id = null) {
 
     if (id == null) {
-        jquery_manager.get_data("/api/position?admin_id=" + admin_id);
+        jquery_manager.get_data("/api/position?db=" + action_db_name + "&admin_id=" + admin_id);
 
     } else {
-        jquery_manager.get_data("/api/position?id=" + id + "&admin_id=" + admin_id);
+        jquery_manager.get_data("/api/position?db=" + action_db_name + "&id=" + id + "&admin_id=" + admin_id);
 
     }
+}
+
+function update_position(id, data) {
+
+    jquery_manager.put_data("/api/position?db=" + action_db_name + "&id=" + id + "&admin_id=" + admin_id, data);
 }
 
 function get_scenario_s(id = null) {
@@ -100,76 +105,270 @@ function get_scenario_s(id = null) {
 }
 
 
+function update_scenario(id, data) {
+
+    jquery_manager.put_data("/api/scenario?db=" + action_db_name + "&id=" + id + "&admin_id=" + admin_id, data);
+}
+
+
 sidebar_toggle_btn.addEventListener("click", function () {
 
+    while (position_list_ul.firstChild) {
+        position_list_ul.removeChild(position_list_ul.firstChild);
+    }
+
+    while (scenario_list_ul.firstChild) {
+        scenario_list_ul.removeChild(scenario_list_ul.firstChild);
+    }
+
+    dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
+    dark_deep_background_div.classList.toggle("focused");
+    controlling_template_sidebar.classList.toggle("active");
+    hide_element(controlling_template_content);
+
+    let positions = [];
+    let scenarios = [];
+
     get_position_s();
+    // requested_data = {"status": "OK", "data": [{"id": "j470138f-agcb-11e9-b130-ce4f744661fd", "name": "position_name", "cartesian_coords": [30, 25, 42], "polar_coords": [1.5, 1.02, 0.5]}]};
 
-    let timer_settings_cont = setInterval(function () {
-
-        if (requested_data !== {}) {
-            if (requested_data["status"] === "OK") {
-
-                console.log(requested_data["data"]);
-
-                for (let c = 0; c < requested_data["data"].length; c++) {
-                    let li = document.createElement('li');
-                    let section = document.createElement('section');
-
-                    let name_output = document.createElement('output');
-
-                    name_output.value = requested_data["data"][c]["name"];
-
-                    li.appendChild(section);
-                    section.appendChild(name_output);
-
-                    position_list_ul.appendChild(li);
-                }
-
-                controlling_template_sidebar.classList.toggle("active");
-                dark_deep_background_div.classList.toggle("focused");
-                hide_element(controlling_template_content)
-            }
-            requested_data = {};
-            clearInterval(timer_settings_cont)
-        }
-    }, 300);
-
-    get_scenario_s();
-
-    timer_settings_cont = setInterval(function () {
+    let sidebar_positions_count = setInterval(function () {
 
         if (requested_data !== {}) {
             if (requested_data["status"] === "OK") {
 
-                console.log(requested_data["data"]);
+                positions = requested_data["data"];
+                // console.log(positions);
+                requested_data = {};
 
-                for (let c = 0; c < requested_data["data"].length; c++) {
-                    let li = document.createElement('li');
-                    let section = document.createElement('section');
+                get_scenario_s();
+                // requested_data = {"status": "OK", "data": [{"id": "b97tr40a-alcb-31w9-b150-ce2f6156l1ed", "name": "scenario_name1", "positions": [{"name": "pos1"}, {"name": "pos2"}]}, {"id": "b97dr48a-aecb-11e9-b130-cc2f7156l1ed", "name": "scenario_name2", "positions": [{}, {}]}]};
 
-                    let name_output = document.createElement('output');
+                let sidebar_scenarios_count = setInterval(function () {
+                    if (requested_data !== {}) {
+                        if (requested_data["status"] === "OK") {
 
-                    name_output.value = requested_data["data"][c]["name"];
+                            scenarios = requested_data["data"];
+                            // console.log(scenarios);
 
-                    li.appendChild(section);
-                    section.appendChild(name_output);
+                            for (let c = 0; c < positions.length; c++) {
+                                let position_div = document.createElement('div');
+                                let position_span = document.createElement('span');
 
-                    position_list_ul.appendChild(li);
-                }
+                                position_div.classList.add("draggable_position", "drag-drop", "ml-1", "mr-1", "position_div");
+                                position_div.setAttribute("data-position-name", positions[c]["name"]);
+                                position_div.setAttribute("data-cartesian-coords", positions[c]["cartesian_coords"]);
+                                position_div.setAttribute("data-polar-coords", positions[c]["polar_coords"]);
 
-                controlling_template_sidebar.classList.toggle("active");
-                dark_deep_background_div.classList.toggle("focused");
-                hide_element(controlling_template_content)
+                                position_span.classList.add("shine_in_dark");
+                                position_span.innerHTML = positions[c]["name"];
+
+                                position_span.addEventListener("click", function () {
+
+                                    position_div.removeChild(position_span);
+
+                                    let position_input = document.createElement('input');
+
+                                    position_input.type = "text";
+                                    position_input.placeholder = position_span.innerHTML;
+                                    position_input.classList.add("action_name_input");
+
+                                    position_input.addEventListener("focusout", function () {
+                                        if (position_input.value !== position_span.innerHTML && position_input.value !== "") {
+                                            let data = {"name": position_input.value, "cartesian_coords": positions[c]["cartesian_coords"], "polar_coords": positions[c]["polar_coords"]};
+                                            update_position(positions[c]["id"], data);
+                                            position_span.innerHTML = position_input.value
+                                        }
+
+                                        position_div.removeChild(position_input);
+                                        position_div.appendChild(position_span);
+
+                                    });
+                                    position_div.appendChild(position_input);
+                                });
+
+                                position_div.appendChild(position_span);
+                                position_list_ul.appendChild(position_div);
+                            }
+
+                            for (let c = 0; c < scenarios.length; c++) {
+
+                                let scenario_dropdown_div = document.createElement('div');
+                                let scenario_btn = document.createElement('button');
+                                let scenario_dd_btn = document.createElement('button');
+                                let scenario_dd_span = document.createElement('span');
+                                let scenario_dropdown_container_div = document.createElement('div');
+
+                                scenario_dropdown_div.classList.add("dropdown", "mt-1", "ml-1", "mr-1", "scenario_name_btn");
+                                scenario_dropdown_div.id = scenarios[c]["id"] + "_dropdown_div";
+
+                                scenario_btn.classList.add("btn", "btn-dark");
+                                scenario_btn.type = "button";
+                                scenario_btn.id = scenarios[c]["id"] + "_btn";
+                                scenario_btn.innerHTML = scenarios[c]["name"];
+
+                                scenario_btn.addEventListener("click", function () {
+
+                                    scenario_dropdown_div.removeChild(scenario_btn);
+                                    scenario_dropdown_div.removeChild(scenario_dd_btn);
+                                    scenario_dropdown_div.removeChild(scenario_dropdown_container_div);
+
+
+                                    let scenario_input = document.createElement('input');
+
+                                    scenario_input.type = "text";
+                                    scenario_input.placeholder = scenario_btn.innerHTML;
+                                    scenario_input.classList.add("action_name_input");
+
+                                    scenario_input.addEventListener("focusout", function () {
+                                        if (scenario_input.value !== scenario_btn.innerHTML && scenario_input.value !== "") {
+                                            let data = {"name": scenario_input.value, "positions": scenarios[c]["positions"]};
+                                            update_scenario(scenarios[c]["id"], data);
+                                            scenario_btn.innerHTML = scenario_input.value
+                                        }
+
+                                        scenario_dropdown_div.removeChild(scenario_input);
+
+                                        scenario_dropdown_div.appendChild(scenario_btn);
+                                        scenario_dropdown_div.appendChild(scenario_dd_btn);
+                                        scenario_dropdown_div.appendChild(scenario_dropdown_container_div);
+
+                                    });
+                                    scenario_dropdown_div.appendChild(scenario_input);
+                                });
+
+                                interact('#' + scenario_btn.id).dropzone({
+                                    // only accept elements matching this CSS selector
+                                    accept: '.draggable_position',
+                                    // Require a 75% element overlap for a drop to be possible
+                                    overlap: 0.75,
+
+                                    // listen for drop related events:
+
+                                    ondropactivate: function (event) {},
+                                    ondragenter: function (event) {
+                                        scenario_dd_btn.click();
+                                        event.target.classList.add('actions-drop-target');
+
+                                    },
+                                    ondragleave: function (event) {
+                                        event.target.classList.remove('actions-drop-target');
+
+                                    },
+                                    ondrop: function (event) {},
+
+                                    ondropdeactivate: function (event) {
+                                        // scenario_dd_btn.click()
+                                    }
+                                });
+
+                                scenario_dd_btn.classList.add("btn", "btn-dark", "dropdown-toggle", "dropdown-toggle-split");
+                                scenario_dd_btn.type = "button";
+                                scenario_dd_btn.setAttribute("data-toggle", "dropdown");
+                                scenario_dd_btn.setAttribute("aria-haspopup", "true");
+                                scenario_dd_btn.setAttribute("aria-expanded", "false");
+                                // scenario_dd_btn.innerHTML = "";
+
+                                scenario_dd_span.classList.add("sr-only");
+
+                                scenario_dropdown_container_div.classList.add("dropdown-menu", "dropdown-menu-right", "dropdown_menu", "scenario_dropdown_menu");
+                                scenario_dropdown_container_div.id = scenarios[c]["id"] + "_container_div";
+                                // scenario_dropdown_container_div.setAttribute("aria-labelledby", date_btn.id);
+                                let drop_timeout;
+                                interact('#' + scenario_dropdown_container_div.id).dropzone({
+                                    // only accept elements matching this CSS selector
+                                    accept: '.draggable_position',
+                                    // Require a 75% element overlap for a drop to be possible
+                                    overlap: 0.01,
+
+                                    // listen for drop related events:
+
+                                    ondropactivate: function (event) {
+                                        // add active dropzone feedback
+                                        event.target.classList.add('actions-drop-active');
+                                    },
+                                    ondragenter: function (event) {
+                                        let draggableElement = event.relatedTarget;
+                                        let dropzoneElement = event.target;
+
+                                        // feedback the possibility of a drop
+                                        dropzoneElement.classList.add('actions-drop-target');
+                                        draggableElement.classList.add('action-can-drop');
+
+                                        drop_timeout = setTimeout(function () {
+
+                                            let position = event.relatedTarget;
+                                            let position_info = {"name": position.getAttribute("data-position-name"), "cartesian_coords": position.getAttribute("data-cartesian-coords"), "polar_coords": position.getAttribute("data-polar-coords")};
+
+                                            let existing_positions = scenarios[c]["positions"];
+                                            existing_positions.push(position_info);
+
+                                            response_data = null;
+                                            let data = {"name": scenario_btn.innerHTML, "positions": existing_positions};
+                                            update_scenario(scenarios[c]["id"], data);
+
+                                            let scenario_interval = setInterval(function () {
+                                                if (response_data !== null) {
+                                                    if (response_data["status"] === "OK") {
+                                                        controlling_template_sidebar_close_btn.click();
+                                                        sidebar_toggle_btn.click();
+                                                        scenario_dd_btn.click();
+                                                    }
+                                                    response_data = {};
+                                                    clearInterval(scenario_interval);
+                                                }
+                                            }, 300);
+                                        }, 1000);
+                                    },
+                                    ondragleave: function (event) {
+                                        // remove the drop feedback style
+                                        event.target.classList.remove('actions-drop-target');
+                                        event.relatedTarget.classList.remove('action-can-drop');
+                                        clearTimeout(drop_timeout);
+                                    },
+                                    ondrop: function (event) {
+                                        // event.preventDefault();
+                                        event.relatedTarget.textContent = 'Dropped';
+                                    },
+
+                                    ondropdeactivate: function (event) {
+                                        // remove active dropzone feedback
+                                        event.target.classList.remove('actions-drop-active');
+                                        event.target.classList.remove('actions-drop-target');
+
+                                    }
+                                });
+
+                                for (let i = 0; i < scenarios[c]["positions"].length; i++) {
+                                    let position_div = document.createElement('div');
+                                    let position_span = document.createElement('span');
+
+                                    position_div.classList.add("dropdown-item", "draggable_position", "drag-drop", "position_of_scenario");
+
+                                    position_span.classList.add("cut-text");
+                                    position_span.innerHTML = scenarios[c]["positions"][i]["name"];
+
+                                    position_div.appendChild(position_span);
+                                    scenario_dropdown_container_div.appendChild(position_div);
+                                }
+
+                                scenario_dd_btn.appendChild(scenario_dd_span);
+
+                                scenario_dropdown_div.appendChild(scenario_btn);
+                                scenario_dropdown_div.appendChild(scenario_dd_btn);
+                                scenario_dropdown_div.appendChild(scenario_dropdown_container_div);
+
+                                scenario_list_ul.appendChild(scenario_dropdown_div);
+                            }
+                        }
+                        requested_data = {};
+                        clearInterval(sidebar_scenarios_count)
+                    }
+                }, 300);
             }
-            requested_data = {};
-            clearInterval(timer_settings_cont)
+            clearInterval(sidebar_positions_count)
         }
     }, 300);
-
-
-    // controlling_template_sidebar.classList.toggle("active");
-    // dark_deep_background_div.classList.toggle("focused");
-    // hide_element(controlling_template_content)
 });
 
 controlling_template_sidebar_close_btn.addEventListener("click", function () {
@@ -179,6 +378,92 @@ controlling_template_sidebar_close_btn.addEventListener("click", function () {
     show_element(controlling_template_content)
 });
 
+let position_drop_timeout;
+interact('#position_list_ul').dropzone({
+    // only accept elements matching this CSS selector
+    accept: '.draggable_position',
+    // Require a 75% element overlap for a drop to be possible
+    overlap: 0.75,
+
+    // listen for drop related events:
+
+    ondropactivate: function (event) {
+        // add active dropzone feedback
+        event.target.classList.add('actions-drop-active')
+    },
+    ondragenter: function (event) {
+        let draggableElement = event.relatedTarget;
+        let dropzoneElement = event.target;
+
+        // feedback the possibility of a drop
+        dropzoneElement.classList.add('actions-drop-target');
+        draggableElement.classList.add('action-can-drop');
+
+        position_drop_timeout = setTimeout(function () {
+
+            let position = event.relatedTarget;
+
+            let single_positions = document.getElementsByClassName("position_div");
+
+            let is_position_exist = false;
+            for (let i = 0; i < single_positions.length; i++) {
+                if (single_positions[i].getAttribute("data-position-name") === position.getAttribute("data-position-name")) {
+                    is_position_exist = true;
+                }
+            }
+            if (!is_position_exist) {
+                let data = {};
+                data = {"name": position.getAttribute("data-position-name"), "cartesian_coords": position.getAttribute("data-cartesian-coords"), "polar_coords": position.getAttribute("data-polar-coords")};
+
+                response_data = null;
+                jquery_manager.post_data("/api/position?db=" + action_db_name + "&admin_id=" + admin_id, data);
+
+
+                let position_interval = setInterval(function () {
+                    if (response_data !== null) {
+                        if (response_data["status"] === "OK") {
+                            controlling_template_sidebar_close_btn.click();
+                            sidebar_toggle_btn.click();
+                        }
+                        response_data = {};
+                        clearInterval(position_interval);
+                    }
+                }, 300);
+
+            }
+        }, 1000);
+    },
+    ondragleave: function (event) {
+        // remove the drop feedback style
+        event.target.classList.remove('actions-drop-target');
+        event.relatedTarget.classList.remove('action-can-drop');
+        clearTimeout(position_drop_timeout);
+    },
+    ondrop: function (event) {
+        event.relatedTarget.textContent = 'Dropped';
+    },
+    ondropdeactivate: function (event) {
+        // remove active dropzone feedback
+        event.target.classList.remove('drop-active');
+        event.target.classList.remove('drop-target')
+    }
+});
+
+interact('.drag-drop')
+  .draggable({
+    inertia: true,
+    modifiers: [
+      interact.modifiers.restrictRect({
+        restriction: 'parent',
+        endOnly: true
+      })
+    ],
+    autoScroll: true,
+    // dragMoveListener from the dragging demo above
+    onmove: function (event) {
+            dragMoveListener(event);
+        }
+  });
 
 
 stream_area_img.addEventListener("mouseover", function () {
@@ -395,7 +680,7 @@ record_as_pos_btn.addEventListener("click", function () {
 
     setTimeout(function () {
         record_as_position_div.classList.add("focused");
-        }, 175)
+    }, 175)
 });
 
 
@@ -403,7 +688,7 @@ position_div_back_btn.addEventListener("click", function () {
     record_as_position_div.classList.remove("focused");
     setTimeout(function () {
         pos_sce_select_div.classList.remove("inactive");
-        }, 175)
+    }, 175)
 });
 
 
@@ -415,9 +700,10 @@ position_name_input.addEventListener("mousemove", function () {
 create_pos_btn.addEventListener("click", function () {
 
     let name_dict = {"name": position_name_input.value};
-    let data = Object.assign({}, name_dict, current_arm_position);
+    let data = {};
+    data = Object.assign({}, name_dict, current_arm_position);
 
-    jquery_manager.post_data("/api/position?db=" + "predicted_missions" + "&admin_id=" + admin_id, data);
+    jquery_manager.post_data("/api/position?db=" + action_db_name + "&admin_id=" + admin_id, data);
 
     position_name_input.value = "";
     position_div_back_btn.click();
@@ -434,65 +720,53 @@ record_in_sce_btn.addEventListener("click", function () {
         record_in_scenario_div.classList.add("focused");
     }, 175);
 
-    // get_scenario_s();
-    requested_data = {
-        "status": "OK", "data": [
-            {
-                "id": "b97tr40a-alcb-31w9-b150-ce2f6156l1ed",
-                "name": "scenario_name1",
-                "positions": [{}, {}]
-            }, {
-                "id": "b97dr48a-aecb-11e9-b130-cc2f7156l1ed",
-                "name": "scenario_name2_name2",
-                "positions": [{}, {}]
-            }
-        ]
-    };
+    get_scenario_s();
+    // requested_data = {"status": "OK", "data": [{"id": "b97tr40a-alcb-31w9-b150-ce2f6156l1ed", "name": "scenario_name1", "positions": [{}, {}]}, {"id": "b97dr48a-aecb-11e9-b130-cc2f7156l1ed", "name": "scenario_name2_name2", "positions": [{}, {}]}]};
 
     while (record_in_scenario_list_ul.firstChild) {
-            record_in_scenario_list_ul.removeChild(record_in_scenario_list_ul.firstChild);
-        }
+        record_in_scenario_list_ul.removeChild(record_in_scenario_list_ul.firstChild);
+    }
 
     let timer_settings_cont = setInterval(function () {
         if (requested_data !== {}) {
             if (requested_data["status"] === "OK") {
-                    let scenarios = requested_data["data"];
+                let scenarios = requested_data["data"];
 
-                    for (let i = 0; i < scenarios.length; i++) {
-                        let scenario_div = document.createElement('div');
-                        let scenario_btn = document.createElement('button');
+                for (let i = 0; i < scenarios.length; i++) {
+                    let scenario_div = document.createElement('div');
+                    let scenario_btn = document.createElement('button');
 
-                        scenario_div.classList.add("mt-1", "border_try", "select_existing_scenario_div", "text-center");
-                        scenario_div.id = scenarios[i]["id"];
+                    scenario_div.classList.add("mt-1", "border_try", "select_existing_scenario_div", "text-center");
+                    scenario_div.id = scenarios[i]["id"];
 
-                        scenario_btn.classList.add("btn", "btn-info");
-                        scenario_btn.innerHTML = scenarios[i]["name"];
+                    scenario_btn.classList.add("btn", "btn-info");
+                    scenario_btn.innerHTML = scenarios[i]["name"];
 
-                        scenario_btn.addEventListener("click", function () {
-                            let position_init = {"id": null, "name": "position_of_" + scenarios[i]["name"]};
+                    scenario_btn.addEventListener("click", function () {
+                        let position_init = {"id": null, "name": "position_of_" + scenarios[i]["name"]};
 
-                            let position = Object.assign({}, position_init, current_arm_position);
+                        let position = Object.assign({}, position_init, current_arm_position);
 
-                            scenarios[i]["positions"].push(position);
+                        scenarios[i]["positions"].push(position);
 
-                            jquery_manager.put_data("/api/scenario?db=" + db_name + "&id=" + id + "&admin_id=" + admin_id, scenarios[i])
-                        });
+                        jquery_manager.put_data("/api/scenario?db=" + action_db_name + "&id=" + id + "&admin_id=" + admin_id, scenarios[i])
+                    });
 
-                        scenario_div.appendChild(scenario_btn);
-                        record_in_scenario_list_ul.appendChild(scenario_div);
-                    }
+                    scenario_div.appendChild(scenario_btn);
+                    record_in_scenario_list_ul.appendChild(scenario_div);
                 }
-                requested_data = {};
-                clearInterval(timer_settings_cont)
             }
-        });
+            requested_data = {};
+            clearInterval(timer_settings_cont)
+        }
+    });
 });
 
 scenario_div_back_btn.addEventListener("click", function () {
     record_in_scenario_div.classList.remove("focused");
     setTimeout(function () {
         pos_sce_select_div.classList.remove("inactive");
-        }, 175)
+    }, 175)
 });
 
 scenario_name_input.addEventListener("mousemove", function () {
@@ -514,6 +788,3 @@ create_sce_btn.addEventListener("click", function () {
 
     swal(translate_text_item("Position Added in New Scenario!"), "", "success");
 });
-
-
-
