@@ -82,7 +82,7 @@ class Vision:
         self.camera = PiCamera()
         self.camera.resolution = resolution
         self.camera.framerate = args["framerate"]
-        # self.camera.rotation = 180
+        self.camera.rotation = 240
 
         self.recorder = Recorder(args["record_formats"], self.camera, self.hearer)
 
@@ -866,7 +866,8 @@ class Vision:
     def __release_hearer(self):
         """Method to stop sending signals to servo motors pins and clean up the gpio pins.
         """
-        self.hearer.release_members()
+        if self.hearer:
+            self.hearer.release_members()
 
     def release_members(self):
         """Method to close all streaming and terminate vision processes.
