@@ -23,15 +23,14 @@ def create_face(admin_id, name, images):
         name (str):                    Name of the images owner face.
         images (list):                 list of FileStorage object.
     """
+
     from t_system.remote_ui import allowed_file
 
     for image in images:
         if not allowed_file(image.filename, {'png', 'jpg', 'jpeg'}):
             images.remove(image)
 
-    # name = str(name.encode("iso-8859-1"))[2:-1]  # name coming as `iso-8859-1` decoded data. but when converted with the encode/decode methods, it is becoming 'readable'. so in this line only taken phrase between " b'' ".
     face_encode_manager.add_face(name, set(images))
-
     result = True
 
     return result
@@ -91,6 +90,7 @@ def download_face_image(admin_id, face_id, image_name):
         face_id (str):                  The id of the face.
         image_name (str):               Name of the one of face images that is wanted.
     """
+
     result = ""
     try:
 
