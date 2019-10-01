@@ -138,7 +138,7 @@ update_control_btn.addEventListener("click", function () {
                 requested_data = {};
                 clearInterval(timer_settings_cont)
             }
-        });
+        }, 300);
     } else {
         update_control_btn_click_count = 0;
     }
@@ -259,7 +259,7 @@ wifi_connections_btn.addEventListener("click", function () {
                 requested_data = {};
                 clearInterval(timer_settings_cont)
             }
-        }, 500);
+        }, 300);
     } else {
         while (network_list_ul.firstChild) {
             network_list_ul.removeChild(network_list_ul.firstChild);
@@ -295,27 +295,27 @@ network_password_input.addEventListener("mousemove", show_create_new_wifi_button
 
 create_new_network_btn.addEventListener("click", function () {
 
-    let data = {"ssid": network_ssid_input.value, "password": network_password_input.value};
+    let data = {};
+    data = {"ssid": network_ssid_input.value, "password": network_password_input.value};
     jquery_manager.post_data("/api/network", data);
 
-
+    network_ssid_input.value = "";
+    network_password_input.value = "";
 
     let new_network_interval = setInterval(function () {
 
-            if (response_data !== {}) {
-                if (response_data["status"] === "OK") {
-                    network_ssid_input.value = "";
-    network_password_input.value = "";
-    wifi_connections_btn.click();
-    wifi_connections_btn.click();
+        if (response_data !== {}) {
+            if (response_data["status"] === "OK") {
+                wifi_connections_btn.click();
+                wifi_connections_btn.click();
 
-    admin_id = response_data["admin_id"];
-    console.log(admin_id)
-                }
-                response_data = {};
-                clearInterval(new_network_interval);
+                admin_id = response_data["admin_id"];
+                console.log(admin_id)
             }
-            }, 500);
+            response_data = {};
+            clearInterval(new_network_interval);
+        }
+    }, 300);
 
 
 });
@@ -359,7 +359,7 @@ face_encoding_btn.addEventListener("click", function () {
                         let face_a = document.createElement('a');
                         let face_dropdown_container_div = document.createElement('div');
 
-                        face_dropdown_div.classList.add("dropdown", "show");
+                        face_dropdown_div.classList.add("dropdown", "show", "mb-1");
 
                         let src = "/api/face_encoding?id=" + requested_data["data"][c]["id"] + "&image=" + requested_data["data"][c]["image_names"][0] + "&admin_id=" + admin_id;   // this url assigning creates a GET request.
                         // let src = "static/resources/images/favicon.png" + "# " + new Date().getTime();
@@ -438,7 +438,7 @@ face_encoding_btn.addEventListener("click", function () {
                 requested_data = {};
                 clearInterval(face_encoding_interval)
             }
-        }, 500);
+        }, 300);
     } else {
         while (encoded_face_list_ul.firstChild) {
             encoded_face_list_ul.removeChild(encoded_face_list_ul.firstChild);
@@ -459,38 +459,38 @@ f_enc_photo_input.addEventListener("change", function (event) {
 
 encode_new_face_btn.addEventListener("click", function () {
 
-    face_name_input.value = face_name_input.value.replace(/ /gi, "_");
-
-    face_encoding_form.submit(function () {
-    let form_data = face_encoding_form.serialize();
-    jquery_manager.post_data("/api/face_encoding", form_data)});
-
     body.classList.add("disable_pointer");
     swiper_wrapper.classList.add("disabled");
     processing_animation.classList.add("lds-hourglass");
     processing_animation_div.classList.add("focused");
 
-    setTimeout(function () {
-        face_name_input.value = "";
-    }, 300);
+    face_name_input.value = face_name_input.value.replace(/ /gi, "_");
+
+    // face_encoding_form.submit(function () {});
+
+    response_data = null;
+    jquery_manager.post_data("/api/face_encoding", $("#face_encoding_form").serialize());  // .serialize returns the dictionary form data.
+
+    face_name_input.value = "";
 
     let encode_face_interval = setInterval(function () {
+                            console.log(typeof response_data);
 
-        if (response_data !== {}) {
+        if (response_data !== null) {
             if (response_data["status"] === "OK") {
+                console.log(response_data);
                 body.classList.remove("disable_pointer");
                 swiper_wrapper.classList.remove("disabled");
                 processing_animation_div.classList.remove("focused");
                 processing_animation.classList.remove("lds-hourglass");
 
-                window.open("/");
-                options_btn.click();
+                face_encoding_btn.click();
                 face_encoding_btn.click();
             }
             response_data = {};
             clearInterval(encode_face_interval);
         }
-    }, 500);
+    }, 300);
 });
 
 
