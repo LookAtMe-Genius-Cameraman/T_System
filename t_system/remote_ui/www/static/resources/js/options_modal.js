@@ -294,6 +294,7 @@ network_ssid_input.addEventListener("mousemove", show_create_new_wifi_button);
 network_password_input.addEventListener("mousemove", show_create_new_wifi_button);
 
 create_new_network_btn.addEventListener("click", function () {
+    response_data = null;
 
     let data = {};
     data = {"ssid": network_ssid_input.value, "password": network_password_input.value};
@@ -304,7 +305,7 @@ create_new_network_btn.addEventListener("click", function () {
 
     let new_network_interval = setInterval(function () {
 
-        if (response_data !== {}) {
+        if (response_data !== null) {
             if (response_data["status"] === "OK") {
                 wifi_connections_btn.click();
                 wifi_connections_btn.click();
