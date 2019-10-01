@@ -65,9 +65,9 @@ class Joint:
 
         if self.structure != 'constant':
             self.motor = ServoMotor(joint['motor_gpio_pin'])
-            self.motor.start(self.current_angle)
+            self.motor.start(round(self.current_angle, 4))
 
-        logger.info(f'Joint{self.number} started successfully. As {self.structure}, in {self.rotation_type} rotation type.')
+        logger.info(f'Joint{self.number} started successfully. As {self.structure}, in {self.rotation_type} rotation type, on {round(self.current_angle,4)} radian.')
 
     def move_to_angle(self, target_angle):
         """The top-level method to provide servo motors moving.
@@ -456,13 +456,15 @@ class Arm:
             delta_angle = abs(delta_angle)
             logger.debug(f'Joint {joint_number} will change angle by {delta_angle} degree.')
 
+        self.current_pos_as_theta.clear()
+
         for joint in self.joints:
             if joint.structure != "constant":
                 if joint.number == joint_number:
                     logger.debug(f'Joint {joint_number} moving...')
                     joint.change_angle_by(delta_angle, direction)
 
-                    self.current_pos_as_theta[joint_number - 1] = joint.current_angle
+                    self.current_pos_as_theta.append(joint.current_angle)
 
         self.current_pos_as_coord = self.__forward_kinematics(self.current_pos_as_theta)[-1]
 
