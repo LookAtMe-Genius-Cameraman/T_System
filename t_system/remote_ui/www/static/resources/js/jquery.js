@@ -99,7 +99,7 @@ class JQueryManager {
         // console.log(data);
         $.post(route, data, function (req, err, resp) {
             response_data = JSON.parse(resp.responseText);
-            // console.log(response_datavfdv);
+            // console.log(response_data);
 
             success = err
         });
