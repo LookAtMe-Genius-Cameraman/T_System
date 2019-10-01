@@ -50,7 +50,7 @@
     {
       "joint_number": 1,
       "motor_gpio_pin": 17,
-      "reverse": true,
+      "reverse": false,
       "max_d": 8.05,
       "min_d": 8.05,
       "init_d": 8.05,
@@ -66,7 +66,7 @@
     {
       "joint_number": 2,
       "motor_gpio_pin": 27,
-      "reverse": true,
+      "reverse": false,
       "max_d": 0,
       "min_d": 0,
       "init_d": 0,
@@ -116,7 +116,7 @@
     {
       "joint_number": 1,
       "motor_gpio_pin": 24,
-      "reverse": false,
+      "reverse": true,
       "max_d": 8.05,
       "min_d": 8.05,
       "init_d": 8.05,
