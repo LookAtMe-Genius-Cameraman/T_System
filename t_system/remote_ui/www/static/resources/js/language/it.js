@@ -33,6 +33,13 @@ const italiantrans = {
     "joint2 left": "nocca2 sinistro",
     "joint3 right": "nocca3 destro",
     "joint3 left": "nocca3 sinistro",
+    "j-1 ": "n-1 ",
+    "j-2 ": "n-2 ",
+    "j-3 ": "n-3 ",
+    "j-4 ": "n-4 ",
+    "j-5 ": "n-5 ",
+    "j-6 ": "n-6 ",
+    "j-7 ": "n-7 ",
     "save": "salvare",
     "As position": "Come posizione",
     "In scenario": "Nello scenario",
@@ -62,5 +69,8 @@ const italiantrans = {
     "System Info": "Informazioni di Sistema",
     "Available:": "a disposizione:",
     "min": "min",
-    " job": " lavoro"
+    " job": " lavoro",
+    "administration" : "amministrazione",
+    "Create Emotion" : "Crea emozione",
+    "Predict Mission" : "Prevedi la missione"
 };
