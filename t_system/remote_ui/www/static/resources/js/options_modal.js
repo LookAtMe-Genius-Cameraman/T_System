@@ -66,11 +66,11 @@ function build_language_menu() {
         let lang_div = document.createElement('div');
         let lang_btn = document.createElement('button');
 
-        lang_btn.classList.add("btn","btn-light", "mb-2");
+        lang_btn.classList.add("btn", "btn-light", "mb-2");
         lang_btn.innerHTML = language_list[i][1];
 
         lang_btn.addEventListener("click", function () {
-           translate_text(language_list[i][0].toString(), lang_select_dd_btn);
+            translate_text(language_list[i][0].toString(), lang_select_dd_btn);
         });
 
         lang_div.appendChild(lang_btn);
@@ -80,7 +80,13 @@ function build_language_menu() {
             lang_select_dd_btn.innerHTML = language_list[i][1];
         }
     }
+}
 
+function close_opened_option(option_btn) {
+    if (event.target === event.currentTarget) {
+        option_btn.click();
+    } else {
+    }
 }
 
 /**
@@ -142,6 +148,8 @@ function get_record_data(date = null, id = null) {
 }
 
 let update_control_btn_click_count = 0;
+let update_control_btn_lis_bind = close_opened_option.bind(null, update_control_btn);
+
 update_control_btn.addEventListener("click", function () {
 
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
@@ -155,6 +163,10 @@ update_control_btn.addEventListener("click", function () {
 
     update_control_btn_click_count++;
     if (update_control_btn_click_count <= 1) {
+
+        dark_deep_background_div.addEventListener("click", update_control_btn_lis_bind);
+        options_template_container.addEventListener("click", update_control_btn_lis_bind);
+
         get_update_data("auto_update");
 
         let timer_settings_cont = setInterval(function () {
@@ -167,6 +179,9 @@ update_control_btn.addEventListener("click", function () {
             }
         }, 300);
     } else {
+        dark_deep_background_div.removeEventListener("click", update_control_btn_lis_bind);
+        options_template_container.removeEventListener("click", update_control_btn_lis_bind);
+
         update_control_btn_click_count = 0;
     }
 });
@@ -187,6 +202,8 @@ update_btn.addEventListener("click", function () {
 });
 
 let wifi_connections_btn_click_count = 0;
+let wifi_connections_btn_lis_bind = close_opened_option.bind(null, wifi_connections_btn);
+
 wifi_connections_btn.addEventListener("click", function () {
 
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
@@ -200,6 +217,9 @@ wifi_connections_btn.addEventListener("click", function () {
 
     wifi_connections_btn_click_count++;
     if (wifi_connections_btn_click_count <= 1) {
+
+        dark_deep_background_div.addEventListener("click", wifi_connections_btn_lis_bind);
+        options_template_container.addEventListener("click", wifi_connections_btn_lis_bind);
         // get_network_data();
         requested_data = {"status": "OK", "data": [{"ssid": "Beyaz", "password": "arge"}, {"ssid": "new_wifi", "password": "1234"}, {"ssid": "demo", "password": "bla"}]};
 
@@ -288,6 +308,9 @@ wifi_connections_btn.addEventListener("click", function () {
             }
         }, 300);
     } else {
+        dark_deep_background_div.removeEventListener("click", wifi_connections_btn_lis_bind);
+        options_template_container.removeEventListener("click", wifi_connections_btn_lis_bind);
+
         while (network_list_ul.firstChild) {
             network_list_ul.removeChild(network_list_ul.firstChild);
         }
@@ -299,10 +322,9 @@ network_pass_eye_span.addEventListener("click", function () {
     network_pass_eye_span.classList.toggle("fa-eye fa-eye-slash");
     if (network_password_input.type === 'password') {
         network_password_input.setAttribute('type', 'text');
-  }
-  else {
+    } else {
         network_password_input.setAttribute('type', 'password');
-  }
+    }
 });
 
 function show_create_new_wifi_button() {
@@ -348,6 +370,9 @@ create_new_network_btn.addEventListener("click", function () {
 
 });
 
+let audio_control_btn_click_count = 0;
+let audio_control_btn_lis_bind = close_opened_option.bind(null, audio_control_btn);
+
 audio_control_btn.addEventListener("click", function () {
 
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
@@ -357,9 +382,21 @@ audio_control_btn.addEventListener("click", function () {
     audio_control_div.classList.toggle("focused");
     audio_control_div.classList.toggle("higher");
     audio_control_io_div.classList.toggle("focused");
+
+    audio_control_btn_click_count++;
+    if (audio_control_btn_click_count <= 1) {
+        dark_deep_background_div.addEventListener("click", audio_control_btn_lis_bind);
+        options_template_container.addEventListener("click", audio_control_btn_lis_bind);
+    } else {
+        dark_deep_background_div.removeEventListener("click", audio_control_btn_lis_bind);
+        options_template_container.removeEventListener("click", audio_control_btn_lis_bind);
+
+        audio_control_btn_click_count = 0;
+    }
 });
 
 let face_encoding_btn_click_count = 0;
+let face_encoding_btn_lis_bind = close_opened_option.bind(null, face_encoding_btn);
 
 face_encoding_btn.addEventListener("click", function () {
 
@@ -373,6 +410,10 @@ face_encoding_btn.addEventListener("click", function () {
 
     face_encoding_btn_click_count++;
     if (face_encoding_btn_click_count <= 1) {
+
+        dark_deep_background_div.addEventListener("click", face_encoding_btn_lis_bind);
+        options_template_container.addEventListener("click", face_encoding_btn_lis_bind);
+
         get_face_recognition_data();
         // requested_data = {"status": "OK", "data": [{"id": "z970136a-aegb-15e9-b130-cy2f756671ed", "name": "face_name", "image_names": ["im-n1", "im-n2", "im-n3", "im-n4", "im-n5"]}]};
 
@@ -468,6 +509,10 @@ face_encoding_btn.addEventListener("click", function () {
             }
         }, 300);
     } else {
+
+        dark_deep_background_div.removeEventListener("click", face_encoding_btn_lis_bind);
+        options_template_container.removeEventListener("click", face_encoding_btn_lis_bind);
+
         while (encoded_face_list_ul.firstChild) {
             encoded_face_list_ul.removeChild(encoded_face_list_ul.firstChild);
         }
@@ -502,7 +547,7 @@ encode_new_face_btn.addEventListener("click", function () {
     face_name_input.value = "";
 
     let encode_face_interval = setInterval(function () {
-                            console.log(typeof response_data);
+        console.log(typeof response_data);
 
         if (response_data !== null) {
             if (response_data["status"] === "OK") {
@@ -523,6 +568,7 @@ encode_new_face_btn.addEventListener("click", function () {
 
 
 let record_control_btn_click_count = 0;
+let record_control_btn_lis_bind = close_opened_option.bind(null, record_control_btn);
 
 record_control_btn.addEventListener("click", function () {
 
@@ -538,6 +584,9 @@ record_control_btn.addEventListener("click", function () {
     record_control_btn_click_count++;
     if (record_control_btn_click_count <= 1) {
 
+        dark_deep_background_div.addEventListener("click", record_control_btn_lis_bind);
+        options_template_container.addEventListener("click", record_control_btn_lis_bind);
+
         get_record_data();
         // requested_data = {"status": "OK", "data": ["22_05_2019", "23_05_2019", "27_05_2019", "27_05_2019", "27_05_2019", "27_05_2019", "27_05_2019", "27_05_2019", "27_05_2019"]};
 
@@ -545,7 +594,7 @@ record_control_btn.addEventListener("click", function () {
         let record_dates_interval = setInterval(function () {
 
             if (requested_data !== {}) {
-                                    console.log(requested_data);
+                console.log(requested_data);
 
                 if (requested_data["status"] === "OK") {
                     record_dates = requested_data["data"];
@@ -573,61 +622,61 @@ record_control_btn.addEventListener("click", function () {
 
                             date_btn_click_count++;
 
-                                while (date_dropdown_container_div.firstChild) {
-                                    date_dropdown_container_div.removeChild(date_dropdown_container_div.firstChild);
-                                }
-                                get_record_data(record_dates[c], null);
-                                // requested_data = {"status": "OK", "data": [{"id": "b970138a-argb-11e9-b145-cc2f844671ed", "name": "record_name", "time": "12_27_54", "length": 180, "extension": "mp4"}]};
+                            while (date_dropdown_container_div.firstChild) {
+                                date_dropdown_container_div.removeChild(date_dropdown_container_div.firstChild);
+                            }
+                            get_record_data(record_dates[c], null);
+                            // requested_data = {"status": "OK", "data": [{"id": "b970138a-argb-11e9-b145-cc2f844671ed", "name": "record_name", "time": "12_27_54", "length": 180, "extension": "mp4"}]};
 
-                                let records;
-                                let records_interval = setInterval(function () {
-                                    if (requested_data !== {}) {
+                            let records;
+                            let records_interval = setInterval(function () {
+                                if (requested_data !== {}) {
 
-                                        if (requested_data["status"] === "OK") {
-                                            records = requested_data["data"];
+                                    if (requested_data["status"] === "OK") {
+                                        records = requested_data["data"];
 
-                                            for (let i = 0; i < records.length; i++) {
-                                                let record_div = document.createElement('div');
-                                                let record_a = document.createElement('a');
-                                                let record_time_span = document.createElement('span');
-                                                let record_length_span = document.createElement('span');
+                                        for (let i = 0; i < records.length; i++) {
+                                            let record_div = document.createElement('div');
+                                            let record_a = document.createElement('a');
+                                            let record_time_span = document.createElement('span');
+                                            let record_length_span = document.createElement('span');
 
-                                                record_div.classList.add("dropdown-item");
-                                                record_div.id = records[i]["id"];
+                                            record_div.classList.add("dropdown-item");
+                                            record_div.id = records[i]["id"];
 
-                                                record_a.role = "button";
-                                                record_a.innerHTML = records[i]["name"];
-                                                record_a.classList.add("record_a");
+                                            record_a.role = "button";
+                                            record_a.innerHTML = records[i]["name"];
+                                            record_a.classList.add("record_a");
 
-                                                record_time_span.innerHTML = records[i]["time"].replace(/_/gi, ":");
-                                                record_time_span.classList.add("record_time_span");
+                                            record_time_span.innerHTML = records[i]["time"].replace(/_/gi, ":");
+                                            record_time_span.classList.add("record_time_span");
 
-                                                record_length_span.innerHTML = records[i]["length"] + " min.";
-                                                record_length_span.classList.add("record_length_span");
+                                            record_length_span.innerHTML = records[i]["length"] + " min.";
+                                            record_length_span.classList.add("record_length_span");
 
-                                                record_a.addEventListener("click", function () {
+                                            record_a.addEventListener("click", function () {
 
-                                                    record_control_div.classList.toggle("hidden_element");
-                                                    options_player_div.classList.toggle("focused");
+                                                record_control_div.classList.toggle("hidden_element");
+                                                options_player_div.classList.toggle("focused");
 
-                                                    options_player_source.type = "video/" + records[i]["extension"];
-                                                    options_player_source.src = "/api/record?id=" + records[i]["id"] + "&admin_id=" + admin_id;
+                                                options_player_source.type = "video/" + records[i]["extension"];
+                                                options_player_source.src = "/api/record?id=" + records[i]["id"] + "&admin_id=" + admin_id;
 
-                                                    // options_player_source.src = "static/resources/images/mov_bbb.mp4"+ "# " + new Date().getTime();
-                                                    options_video.load()
-                                                });
+                                                // options_player_source.src = "static/resources/images/mov_bbb.mp4"+ "# " + new Date().getTime();
+                                                options_video.load()
+                                            });
 
-                                                record_div.appendChild(record_a);
-                                                record_div.appendChild(record_time_span);
-                                                record_div.appendChild(record_length_span);
+                                            record_div.appendChild(record_a);
+                                            record_div.appendChild(record_time_span);
+                                            record_div.appendChild(record_length_span);
 
-                                                date_dropdown_container_div.appendChild(record_div);
-                                            }
+                                            date_dropdown_container_div.appendChild(record_div);
                                         }
-                                        requested_data = {};
-                                        clearInterval(records_interval)
                                     }
-                                }, 300);
+                                    requested_data = {};
+                                    clearInterval(records_interval)
+                                }
+                            }, 300);
                         });
                         date_dropdown_div.appendChild(date_btn);
                         date_dropdown_div.appendChild(date_dropdown_container_div);
@@ -641,6 +690,10 @@ record_control_btn.addEventListener("click", function () {
         }, 300);
 
     } else {
+
+        dark_deep_background_div.removeEventListener("click", record_control_btn_lis_bind);
+        options_template_container.removeEventListener("click", record_control_btn_lis_bind);
+
         while (record_list_ul.firstChild) {
             record_list_ul.removeChild(record_list_ul.firstChild);
         }
@@ -654,6 +707,9 @@ close_options_player_btn.addEventListener("click", function () {
     record_control_div.classList.toggle("hidden_element");
 });
 
+let empty_option_btn_click_count = 0;
+let empty_option_btn_lis_bind = close_opened_option.bind(null, empty_option_btn);
+
 empty_option_btn.addEventListener("click", function () {
 
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
@@ -664,7 +720,21 @@ empty_option_btn.addEventListener("click", function () {
     empty_option_div.classList.toggle("focused");
     empty_option_div.classList.toggle("higher");
     empty_option_io_div.classList.toggle("focused");
+
+    empty_option_btn_click_count++;
+    if (empty_option_btn_click_count <= 1) {
+        dark_deep_background_div.addEventListener("click", empty_option_btn_lis_bind);
+        options_template_container.addEventListener("click", empty_option_btn_lis_bind);
+    } else {
+        dark_deep_background_div.removeEventListener("click", empty_option_btn_lis_bind);
+        options_template_container.removeEventListener("click", empty_option_btn_lis_bind);
+
+        empty_option_btn_click_count = 0;
+    }
 });
+
+let lang_select_btn_click_count = 0;
+let lang_select_btn_lis_bind = close_opened_option.bind(null, lang_select_btn);
 
 lang_select_btn.addEventListener("click", function () {
 
@@ -676,9 +746,22 @@ lang_select_btn.addEventListener("click", function () {
     lang_select_div.classList.toggle("focused");
     lang_select_div.classList.toggle("higher");
     lang_select_io_div.classList.toggle("focused");
+
+    lang_select_btn_click_count++;
+    if (lang_select_btn_click_count <= 1) {
+        dark_deep_background_div.addEventListener("click", lang_select_btn_lis_bind);
+        options_template_container.addEventListener("click", lang_select_btn_lis_bind);
+    } else {
+        dark_deep_background_div.removeEventListener("click", lang_select_btn_lis_bind);
+        options_template_container.removeEventListener("click", lang_select_btn_lis_bind);
+
+        lang_select_btn_click_count = 0;
+    }
 });
 
 
+let help_control_btn_click_count = 0;
+let help_control_btn_lis_bind = close_opened_option.bind(null, help_control_btn);
 
 help_control_btn.addEventListener("click", function () {
 
@@ -690,4 +773,15 @@ help_control_btn.addEventListener("click", function () {
     help_control_div.classList.toggle("focused");
     help_control_div.classList.toggle("higher");
     help_control_io_div.classList.toggle("focused");
+
+    help_control_btn_click_count++;
+    if (help_control_btn_click_count <= 1) {
+        dark_deep_background_div.addEventListener("click", help_control_btn_lis_bind);
+        options_template_container.addEventListener("click", help_control_btn_lis_bind);
+    } else {
+        dark_deep_background_div.removeEventListener("click", help_control_btn_lis_bind);
+        options_template_container.removeEventListener("click", help_control_btn_lis_bind);
+
+        help_control_btn_click_count = 0;
+    }
 });
