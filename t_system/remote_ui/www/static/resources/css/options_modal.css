@@ -62,7 +62,7 @@
     transform: translate(-50%);
 
     transition: opacity 300ms;
-    border: #8a6d3b solid;
+    /*border: #8a6d3b solid;*/
 }
 
 .option_io_div.focused {
@@ -227,6 +227,7 @@
 
 
 /**********************************AUDIO INPUTS OPTION**********************************/
+
 #audio_control_div.higher {
     top: -200% !important;
 }
