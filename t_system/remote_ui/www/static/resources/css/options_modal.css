@@ -348,12 +348,26 @@
     top: -480% !important;
 }
 
-#language_dropdown_ul {
-    max-height: 320px;
-    height: 310px;
+#lang_select_io_div {
+    overflow: hidden;
+}
 
-    margin: auto 5px 5px auto;
-    /*border: turquoise solid;*/
+#lang_select_dd_div {
+    left: 50% !important;
+    transform: translate(-50%) !important;
+}
+
+#lang_select_dd_btn {
+    left: 50% !important;
+    transform: translate(-50%) !important;
+}
+
+#lang_select_dd_container_div {
+    background-color: #fff0eb;
+}
+
+.lang_select_dropdown_menu {
+    left: 50% !important;
 }
 
 /**********************************HELP OPTION**********************************/
