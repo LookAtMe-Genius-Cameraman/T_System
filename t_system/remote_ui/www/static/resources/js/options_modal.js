@@ -44,7 +44,9 @@ const record_list_ul = document.getElementById("record_list_ul");
 
 const lang_select_div = document.getElementById("lang_select_div");
 const lang_select_btn = document.getElementById("lang_select_btn");
-const language_dropdown_div = document.getElementById("language_dropdown_div");
+const lang_select_io_div = document.getElementById("lang_select_io_div");
+const lang_select_dd_btn = document.getElementById("lang_select_dd_btn");
+const lang_list_ul = document.getElementById("lang_list_ul");
 
 const help_control_div = document.getElementById("help_control_div");
 const help_control_btn = document.getElementById("help_control_btn");
@@ -54,7 +56,32 @@ const empty_option_div = document.getElementById("empty_option_div");
 const empty_option_btn = document.getElementById("empty_option_btn");
 const empty_option_io_div = document.getElementById("empty_option_io_div");
 
+/**
+ * Method to create drop-down language selection menu.
+ */
+function build_language_menu() {
 
+    for (let i = 0; i < language_list.length; i++) {
+
+        let lang_div = document.createElement('div');
+        let lang_btn = document.createElement('button');
+
+        lang_btn.classList.add("btn","btn-light", "mb-2");
+        lang_btn.innerHTML = language_list[i][1];
+
+        lang_btn.addEventListener("click", function () {
+           translate_text(language_list[i][0].toString(), lang_select_dd_btn);
+        });
+
+        lang_div.appendChild(lang_btn);
+        lang_list_ul.appendChild(lang_div);
+
+        if (language_list[i][0] === language) {
+            lang_select_dd_btn.innerHTML = language_list[i][1];
+        }
+    }
+
+}
 
 /**
  * Method to updating `auto_update` status of UpdateManager of t_system.
@@ -173,8 +200,8 @@ wifi_connections_btn.addEventListener("click", function () {
 
     wifi_connections_btn_click_count++;
     if (wifi_connections_btn_click_count <= 1) {
-        get_network_data();
-        // requested_data = {"status": "OK", "data": [{"ssid": "Beyaz", "password": "arge"}, {"ssid": "new_wifi", "password": "1234"}, {"ssid": "demo", "password": "bla"}]};
+        // get_network_data();
+        requested_data = {"status": "OK", "data": [{"ssid": "Beyaz", "password": "arge"}, {"ssid": "new_wifi", "password": "1234"}, {"ssid": "demo", "password": "bla"}]};
 
         let timer_settings_cont = setInterval(function () {
 
@@ -648,8 +675,10 @@ lang_select_btn.addEventListener("click", function () {
     lang_select_div.classList.toggle("col");
     lang_select_div.classList.toggle("focused");
     lang_select_div.classList.toggle("higher");
-    language_dropdown_div.classList.toggle("focused");
+    lang_select_io_div.classList.toggle("focused");
 });
+
+
 
 help_control_btn.addEventListener("click", function () {
 
