@@ -7,7 +7,7 @@ let translated_list = [];
 
 //endRemoveIf(production)
 
-function translate_text(lang) {
+function translate_text(lang, showing_element) {
     let item;
     let content;
     let currenttrans = {};
@@ -17,7 +17,7 @@ function translate_text(lang) {
     for (let lang_i = 0; lang_i < language_list.length; lang_i++) {
         if (language_list[lang_i][0] === lang) {
             currenttrans = eval(language_list[lang_i][2]);
-            document.getElementById("translate_menu").innerHTML = language_list[lang_i][1];
+            showing_element.innerHTML = language_list[lang_i][1];
         }
     }
     const All = document.getElementsByTagName('*');
