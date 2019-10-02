@@ -23,10 +23,14 @@ footer {
 }
 
 .hidden_element {
+    display: none;
+}
+
+.hidden_element_with_disable_area {
     visibility: hidden !important;
     opacity: 0 !important;
 
-    pointer-events: none;
+    pointer-events: painted;
 }
 
 .hidden_element_without_child {
