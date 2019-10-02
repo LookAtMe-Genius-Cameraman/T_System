@@ -122,16 +122,13 @@
                 <div class="position-relative row mt-3">
                     <div id="lang_select_div" class="position-relative col option_div">
                         <button id="lang_select_btn" class="option_btn" translate>Language</button>
-                        <div id="language_dropdown_div" class="option_io_div">
-                            <ul id="language_dropdown_ul" class="option_list_ul">
-                                <li class="dropdown">
-                                    <a href="#">
-                                        <span class="dropbtn text-info" id="translate_menu"></span>
-                                    </a>
-                                    <div class="dropdown-content" id="lang_menu">
+                        <div id="lang_select_io_div" class="option_io_div">
+                                <div id="lang_select_dd_div" class="dropdown position-absolute mt-1">
+                                    <button id="lang_select_dd_btn" type="button" class="position-relative btn btn-outline-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                                    <div id="lang_select_dd_container_div" class="dropdown-menu dropdown_menu lang_select_dropdown_menu">
+                                        <ul id="lang_list_ul"></ul>
                                     </div>
-                                </li>
-                            </ul>
+                                </div>
                         </div>
                     </div>
                     <div id="help_control_div" class="position-relative col option_div">
@@ -394,8 +391,6 @@
 
 <script type="text/javascript" charset="UTF-8" src="static/resources/js/jquery.js"></script>
 <script type="text/javascript" charset="UTF-8" src="static/resources/js/jsalert.js"></script>
-<script type="text/javascript" charset="UTF-8" src="static/resources/js/settings.js"></script>
-<script type="text/javascript" charset="UTF-8" src="static/resources/js/connectdlg.js"></script>
 <script type="text/javascript" charset="UTF-8" src="static/resources/js/translate.js"></script>
 <script type="text/javascript" charset="UTF-8" src="static/resources/js/localstorage.js"></script>
 <script type="text/javascript" charset="UTF-8" src="static/resources/js/prepare_modal.js"></script>
