@@ -287,7 +287,7 @@ Portable usage interface v0.5
 
 #### Remote UI
 
-The remotely controlling interface v0.7.3
+The remotely controlling interface v0.7.4
 
 - Properties
     -             
