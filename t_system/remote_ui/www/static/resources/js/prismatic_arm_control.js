@@ -7,89 +7,80 @@
  */
 
 
-x_up_btn.addEventListener("mousedown", function () {
+x_up_btn.setAttribute("data-id", "x");
+x_up_btn.setAttribute("data-move-type", "axis");
+x_up_btn.setAttribute("data-quantity", 5);
 
-    let route = "/api/move?id=x&admin_id=" + admin_id;
-    let data = {"type": "axis", "id": "x", "quantity": 5};
+x_down_btn.setAttribute("data-id", "x");
+x_down_btn.setAttribute("data-move-type", "axis");
+x_down_btn.setAttribute("data-quantity", -5);
 
-    interval = setInterval(function () {
-        // console.log("gönderdi");
+y_up_btn.setAttribute("data-id", "y");
+y_up_btn.setAttribute("data-move-type", "axis");
+y_up_btn.setAttribute("data-quantity", 5);
+
+y_down_btn.setAttribute("data-id", "y");
+y_down_btn.setAttribute("data-move-type", "axis");
+y_down_btn.setAttribute("data-quantity", -5);
+
+z_up_btn.setAttribute("data-id", "z");
+z_up_btn.setAttribute("data-move-type", "axis");
+z_up_btn.setAttribute("data-quantity", 5);
+
+z_down_btn.setAttribute("data-id", "z");
+z_down_btn.setAttribute("data-move-type", "axis");
+z_down_btn.setAttribute("data-quantity", -5);
+
+x_up_i.setAttribute("data-id", "x");
+x_up_i.setAttribute("data-move-type", "axis");
+x_up_i.setAttribute("data-quantity", 5);
+
+x_down_i.setAttribute("data-id", "x");
+x_down_i.setAttribute("data-move-type", "axis");
+x_down_i.setAttribute("data-quantity", -5);
+
+y_up_i.setAttribute("data-id", "y");
+y_up_i.setAttribute("data-move-type", "axis");
+y_up_i.setAttribute("data-quantity", 5);
+
+y_down_i.setAttribute("data-id", "y");
+y_down_i.setAttribute("data-move-type", "axis");
+y_down_i.setAttribute("data-quantity", -5);
+
+z_up_i.setAttribute("data-id", "z");
+z_up_i.setAttribute("data-move-type", "axis");
+z_up_i.setAttribute("data-quantity", 5);
+
+z_down_i.setAttribute("data-id", "z");
+z_down_i.setAttribute("data-move-type", "axis");
+z_down_i.setAttribute("data-quantity", -5);
+
+
+interact('.prismatic_control_button')
+    .on('tap', function (event) {
+        let button = event.target;
+
+        let route = "/api/move?id=" + button.getAttribute("data-id") + "&admin_id=" + admin_id;
+        let data = {"type": button.getAttribute("data-move-type"), "id": button.getAttribute("data-id"), "quantity": button.getAttribute("data-quantity")};
+
         jquery_manager.put_data(route, data);
-    }, 300);
-});
+    })
+    .on('doubletap', function (event) {
+    })
+    .on('hold', function (event) {
+        let button = event.target;
 
+        let route = "/api/move?id=" + button.getAttribute("data-id") + "&admin_id=" + admin_id;
+        let data = {"type": button.getAttribute("data-move-type"), "id": button.getAttribute("data-id"), "quantity": button.getAttribute("data-quantity")};
 
-x_down_btn.addEventListener("mousedown", function () {
+        interval = setInterval(function () {
+            // console.log("gönderdi");
+            jquery_manager.put_data(route, data);
+        }, 300);
 
-    let route = "/api/move?id=x&admin_id=" + admin_id;
-    let data = {"type": "axis", "id": "x", "quantity": -5};
-
-    interval = setInterval(function () {
-        // console.log("gönderdi");
-        jquery_manager.put_data(route, data);
-    }, 300);
-});
-
-
-y_up_btn.addEventListener("mousedown", function () {
-
-    let route = "/api/move?id=y&admin_id=" + admin_id;
-    let data = {"type": "axis", "id": "y", "quantity": 5};
-
-    interval = setInterval(function () {
-        // console.log("gönderdi");
-        jquery_manager.put_data(route, data);
-    }, 300);
-});
-
-
-y_down_btn.addEventListener("mousedown", function () {
-
-    let route = "/api/move?id=y&admin_id=" + admin_id;
-    let data = {"type": "axis", "id": "y", "quantity": -5};
-
-    interval = setInterval(function () {
-        // console.log("gönderdi");
-        jquery_manager.put_data(route, data);
-    }, 300);
-});
-
-
-z_up_btn.addEventListener("mousedown", function () {
-
-    let route = "/api/move?id=z&admin_id=" + admin_id;
-    let data = {"type": "axis", "id": "z", "quantity": 5};
-
-    interval = setInterval(function () {
-        // console.log("gönderdi");
-        jquery_manager.put_data(route, data);
-    }, 300);
-});
-
-
-z_down_btn.addEventListener("mousedown", function () {
-
-    let route = "/api/move?id=z&admin_id=" + admin_id;
-    let data = {"type": "axis", "id": "z", "quantity": -5};
-
-    interval = setInterval(function () {
-        // console.log("gönderdi");
-        jquery_manager.put_data(route, data);
-    }, 300);
-});
-
-
-let elements_prismatic = [x_up_btn, x_down_btn, y_up_btn, y_down_btn, z_up_btn, z_down_btn];
-
-
-add_listener_to_elements(elements_prismatic, "mouseup", function () {
-    clearInterval(interval);
-});
-
-
-function add_listener_to_elements(elements, type, func) {
-
-    for(let i = 0; i<elements.length ;i++){
-        elements[i].addEventListener(type, func)
-    }
-}
+    })
+    .on('down', function (event) {
+    })
+    .on('up', function (event) {
+        clearInterval(interval);
+    });
