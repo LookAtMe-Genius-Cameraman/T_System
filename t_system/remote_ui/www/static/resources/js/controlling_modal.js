@@ -51,6 +51,13 @@ const x_down_btn = document.getElementById("x_down_btn");
 const y_down_btn = document.getElementById("y_down_btn");
 const z_down_btn = document.getElementById("z_down_btn");
 
+const x_up_i = document.getElementById("x_up_i");
+const y_up_i = document.getElementById("y_up_i");
+const z_up_i = document.getElementById("z_up_i");
+const x_down_i = document.getElementById("x_down_i");
+const y_down_i = document.getElementById("y_down_i");
+const z_down_i = document.getElementById("z_down_i");
+
 const record_pos_sce_btn = document.getElementById("record_pos_sce_btn");
 const record_pos_sce_div = document.getElementById("record_pos_sce_div");
 
@@ -577,20 +584,29 @@ rotational_menu_control_input.addEventListener("change", function () {
                         arm_joint_right_btn.id = "joint_" + joint_number + "cw_btn";
                         arm_joint_right_btn.innerHTML = translate_text_item("j-" + joint_number + " ");
 
-                        arm_joint_right_btn.addEventListener("mousedown", function () {
+                        interact('#' + arm_joint_right_btn.id)
+                            .on('tap', function (event) {
+                                let route = "/api/move?id=" + joint_number + "&admin_id=" + admin_id;
+                                let data = {"type": "joint", "id": joint_number.toString(), "quantity": 5};
 
-                            let route = "/api/move?id=" + joint_number + "&admin_id=" + admin_id;
-                            let data = {"type": "joint", "id": joint_number.toString(), "quantity": 5};
+                                    jquery_manager.put_data(route, data);
+                            })
+                            .on('doubletap', function (event) {
+                            })
+                            .on('hold', function (event) {
+                                let route = "/api/move?id=" + joint_number + "&admin_id=" + admin_id;
+                                let data = {"type": "joint", "id": joint_number.toString(), "quantity": 5};
 
-                            interval = setInterval(function () {
-                                // console.log("gönderdi");
-                                jquery_manager.put_data(route, data);
-                            }, 300);
-                        });
+                                interval = setInterval(function () {
+                                    // console.log("gönderdi");
+                                    jquery_manager.put_data(route, data);
+                                }, 300);
 
-                        arm_joint_right_btn.addEventListener("mouseup", function () {
-                            clearInterval(interval);
-                        });
+                            })
+                            .on('down', function (event) {})
+                            .on('up', function (event) {
+                                clearInterval(interval);
+                            });
 
 
                         arm_joint_right_i.classList.add("fas", "fa-redo");
@@ -599,20 +615,29 @@ rotational_menu_control_input.addEventListener("change", function () {
                         arm_joint_left_btn.id = "joint_" + joint_number + "ccw_btn";
                         arm_joint_left_btn.innerHTML = translate_text_item("j-" + joint_number + " ");
 
-                        arm_joint_left_btn.addEventListener("mousedown", function () {
+                        interact('#' + arm_joint_left_btn.id)
+                            .on('tap', function (event) {
+                                let route = "/api/move?id=" + joint_number + "&admin_id=" + admin_id;
+                                let data = {"type": "joint", "id": joint_number.toString(), "quantity": -5};
 
-                            let route = "/api/move?id=" + joint_number + "&admin_id=" + admin_id;
-                            let data = {"type": "joint", "id": joint_number.toString(), "quantity": -5};
+                                    jquery_manager.put_data(route, data);
+                            })
+                            .on('doubletap', function (event) {
+                            })
+                            .on('hold', function (event) {
+                                let route = "/api/move?id=" + joint_number + "&admin_id=" + admin_id;
+                                let data = {"type": "joint", "id": joint_number.toString(), "quantity": -5};
 
-                            interval = setInterval(function () {
-                                // console.log("gönderdi");
-                                jquery_manager.put_data(route, data);
-                            }, 300);
-                        });
+                                interval = setInterval(function () {
+                                    // console.log("gönderdi");
+                                    jquery_manager.put_data(route, data);
+                                }, 300);
 
-                        arm_joint_left_btn.addEventListener("mouseup", function () {
-                            clearInterval(interval);
-                        });
+                            })
+                            .on('down', function (event) {})
+                            .on('up', function (event) {
+                                clearInterval(interval);
+                            });
 
                         arm_joint_left_i.classList.add("fas", "fa-undo");
 
