@@ -433,7 +433,7 @@ class Position:
         if not self.is_for_scenario:
             if self.table.search((Query().name == self.name)):
                 if force_insert:
-                    self.table.update({'name': self.name, 'cartesian_coords': self.cartesian_coords, 'polar_cords': self.polar_coords}, Query().id == self.id)
+                    self.table.update({'name': self.name, 'cartesian_coords': self.cartesian_coords, 'polar_coords': self.polar_coords}, Query().id == self.id)
 
                 else:
                     return "Already Exist"
@@ -442,7 +442,7 @@ class Position:
                     'id': self.id,
                     'name': self.name,
                     'cartesian_coords': self.cartesian_coords,
-                    'polar_cords': self.polar_coords
+                    'polar_coords': self.polar_coords
                 })  # insert the given data
 
         return ""
