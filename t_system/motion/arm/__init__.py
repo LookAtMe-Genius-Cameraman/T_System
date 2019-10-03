@@ -161,12 +161,15 @@ class Arm:
         self.current_pos_as_theta = []
 
         with open(self.config_file) as conf_file:
-            joints = json.load(conf_file)[self.name]  # config file returns the arms.
+            joint_configs = json.load(conf_file)[self.name]  # config file returns the arms.
 
-        self.__set_joints(joints)
+        self.__set_joints(joint_configs)
         self.__set_dh_params(self.joints)
 
+        self.current_pos_as_coord = self.get_coords_from_forward_kinematics(self.__forward_kinematics(self.current_pos_as_theta)[-1])
+
         logger.info(f'{self.name} arm started successfully.')
+        logger.debug(f'cartesian coords calculated as {self.current_pos_as_coord}')
 
     def expand(self):
         """Method to expand arm with using target_locker of t_system's vision.
@@ -213,16 +216,21 @@ class Arm:
 
         return self.__is_expanded
 
-    def __set_joints(self, joints):
+    def __set_joints(self, joint_configs):
         """Method to setting joints with D-H parameters.
 
         Args:
-            joints (list):          The joint list from the config file.
+            joint_configs (list):          The joint list from the config file.
         """
 
-        self.joint_count = len(joints)
-        for joint in joints:
-            self.joints.append(Joint(joint))
+        self.joint_count = len(joint_configs)
+
+        for joint_conf in joint_configs:
+
+            joint = Joint(joint_conf)
+            self.joints.append(joint)
+            if joint.structure != "constant":
+                self.current_pos_as_theta.append(joint.current_angle)
 
         self.__prepare_dh_params()
 
@@ -299,8 +307,21 @@ class Arm:
                             [0., 0., 0., 1.]])
         return tf_matrix
 
+    @staticmethod
+    def get_coords_from_forward_kinematics(forward_kinematics_result):
+        """Method to get cartesian coords from calculated forward kinematics result of the Arm.
+
+        Args:
+            forward_kinematics_result (list):   result of the forward kinematics calculation.
+
+        Returns:
+            list:                               The cartesian coordinate position of Arm's farthest point as millimeter list.
+        """
+
+        return [current_pos[0] for current_pos in forward_kinematics_result]
+
     def __forward_kinematics(self, theta_list):
-        """Method to calculate forword kinematics of the Arm.
+        """Method to calculate forward kinematics of the Arm.
 
         Args:
             theta_list (list):          The list of current joints angles.
@@ -324,7 +345,7 @@ class Arm:
 
         to_current_pos.append(np.array([x, y, z]))
 
-        return to_current_pos
+        return to_current_pos  # to_current_pos is something like [[22], [23], [20]]
 
     def __calc_jacobian_matrix(self):
         """Method to calculate jacobian matrix of Arm's General Denavit-Hartenberg Transform Matrix.
@@ -335,7 +356,7 @@ class Arm:
         self.jacobian_matrix = Matrix(self.jacobian_matrix).T  # .T returns the transpose of matrix.
 
     def __inverse_kinematics(self, guess, target_point):
-        """Method to calculate forword kinematics of the Arm.
+        """Method to calculate inverse kinematics of the Arm.
 
         Args:
             guess:                      The twist angle. Axis angle between consecutive two axes.
@@ -416,7 +437,7 @@ class Arm:
         elif pos_thetas:
             self.__rotate_joints(pos_thetas)
 
-            pos_coords = self.__forward_kinematics(pos_thetas)[-1]
+            pos_coords = self.get_coords_from_forward_kinematics(self.__forward_kinematics(pos_thetas)[-1])
 
         elif pos_coords:
             pos_thetas = self.__inverse_kinematics(self.current_pos_as_theta, pos_coords)
@@ -466,7 +487,7 @@ class Arm:
 
                     self.current_pos_as_theta.append(joint.current_angle)
 
-        self.current_pos_as_coord = self.__forward_kinematics(self.current_pos_as_theta)[-1]
+        self.current_pos_as_coord = self.get_coords_from_forward_kinematics(self.__forward_kinematics(self.current_pos_as_theta)[-1])
 
     def move_endpoint(self, axis, distance):
         """Method to move endpoint of the arm with the given axis and the distance.
