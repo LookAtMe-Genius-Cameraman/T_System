@@ -15,9 +15,6 @@ let interval = 0;
 
 let dark_overlay_active = false;
 
-let current_arm_position = {
-    "cartesian_coords": [30, 25, 42],
-    "polar_coords": [1.5, 1.02, 0.5]
-};
+let current_arm_position = {};
 
 let action_db_name = "missions";
