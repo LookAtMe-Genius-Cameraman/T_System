@@ -4,11 +4,11 @@
     max-width: 100%;
     max-height: 100%;
 
-    width: 0;
+    width: 70px;
     height: 85px;
 
     top: 15%;
-    left: 83%;
+    left: 75%;
 
     visibility: visible;
     opacity: 1;
@@ -17,19 +17,22 @@
 }
 
 #rotational_control_div.focused {
-    left: 1% !important;
+    left: -1% !important;
+    /*transform: translate(-80%);*/
+
+    top: 45% !important;
 }
 
 #rotational_control_nav {
     /*border: #8a6d3b dashed;*/
-    width: 80px;
+    width: 70px;
     height: 80px;
     z-index: 200;
 }
 
 #rotational_ccw_control_nav.focused {
     top: 50px;
-    left: 25px;
+    left: 60px !important;
 }
 
 #rotational_ccw_menu_control_label {
