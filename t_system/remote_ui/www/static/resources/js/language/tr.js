@@ -43,6 +43,7 @@ const turkishtrans = {
     "j-6 ": "e-6 ",
     "j-7 ": "e-7 ",
     "save": "kaydet",
+    "cancel": "iptal",
     "As position": "Pozisyon olarak",
     "In scenario": "Senaryo içine",
     "Back": "Geri",

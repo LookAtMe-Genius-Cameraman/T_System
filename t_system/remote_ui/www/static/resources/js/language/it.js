@@ -41,6 +41,7 @@ const italiantrans = {
     "j-6 ": "n-6 ",
     "j-7 ": "n-7 ",
     "save": "salvare",
+    "cancel": "annulla",
     "As position": "Come posizione",
     "In scenario": "Nello scenario",
     "Back": "indietro",

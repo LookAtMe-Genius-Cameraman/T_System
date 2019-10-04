@@ -1,7 +1,7 @@
 //french
 const frenchtrans = {
     "Look.At.Me.": "Look.At.Me.",
-    "Powered By": "Alimenté Par",
+    "Powered By ": "Alimenté Par ",
     "T_System": "T_System",
     "Settings": "Paramétres",
     "Options": "Options",
@@ -43,6 +43,7 @@ const frenchtrans = {
     "j-6 ": "j-6 ",
     "j-7 ": "j-7 ",
     "save": "sauvegarder",
+    "cancel": "annuler",
     "As position": "Comme position",
     "In scenario": "Dans scénarios",
     "Back": "Dos",
