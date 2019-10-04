@@ -105,7 +105,7 @@ positional arguments:
 optional arguments:
   -h, --help            show this help message and exit
 ```
-<sup>For detailed output look at [#help-output](https://github.com/connected-life/T_System/blob/master/USAGE.md#help-output)</sup>
+<sup>For detailed output look at [Help](https://github.com/connected-life/T_System/blob/master/USAGE.md#help-output)</sup>
 
 `t_system user-interfaces {official_stand,augmented,remote_ui,None}` is standard running command.
 
@@ -159,7 +159,7 @@ Portable usage interface v0.5
 
 #### Remote UI
 
-The remotely controlling interface v0.7.7
+The remotely controlling interface v0.7.8
 
 - Properties
     -             
