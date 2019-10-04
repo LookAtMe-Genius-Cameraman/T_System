@@ -78,7 +78,6 @@ class Joint:
         if self.is_reverse:
             target_angle = pi - target_angle
 
-        logger.debug(f' Motor of Joint {self.number} is moving...')
         self.motor.directly_goto_position(target_angle)
         self.current_angle = target_angle
 
@@ -169,7 +168,6 @@ class Arm:
         self.current_pos_as_coord = self.get_coords_from_forward_kinematics(self.__forward_kinematics(self.current_pos_as_theta)[-1])
 
         logger.info(f'{self.name} arm started successfully.')
-        logger.debug(f'cartesian coords calculated as {self.current_pos_as_coord}')
 
     def expand(self):
         """Method to expand arm with using target_locker of t_system's vision.
@@ -177,14 +175,22 @@ class Arm:
         self.joints.pop(-1)
 
         with open(self.config_file) as conf_file:
-            joints = json.load(conf_file)[self.expansion_name]  # config file returns the arms.
+            joint_configs = json.load(conf_file)[self.expansion_name]  # config file returns the arms.
 
-            for joint in joints:
-                joint['joint_number'] = len(self.joints) + joint['joint_number']
-                self.joints.append(Joint(joint))
+            for joint_conf in joint_configs:
+
+                joint_conf['joint_number'] = len(self.joints) + joint_conf['joint_number']
+
+                joint = Joint(joint_conf)
+                self.joints.append(joint)
+
+                if joint.structure != "constant":
+                    self.current_pos_as_theta.append(joint.current_angle)
 
         self.__prepare_dh_params()
         self.__set_dh_params(self.joints)
+
+        self.current_pos_as_coord = self.get_coords_from_forward_kinematics(self.__forward_kinematics(self.current_pos_as_theta)[-1])
 
         self.__is_expanded = True
 
@@ -200,6 +206,8 @@ class Arm:
                 self.joints[-1].gpio_cleanup()
                 del self.joints[-1]
 
+                del self.current_pos_as_theta[-1]
+
         with open(self.config_file) as conf_file:
             joints = json.load(conf_file)[self.name]  # config file returns the arms.
 
@@ -207,6 +215,8 @@ class Arm:
 
         self.__prepare_dh_params()
         self.__set_dh_params(self.joints)
+
+        self.current_pos_as_coord = self.get_coords_from_forward_kinematics(self.__forward_kinematics(self.current_pos_as_theta)[-1])
 
         self.__is_expanded = False
 
@@ -229,6 +239,7 @@ class Arm:
 
             joint = Joint(joint_conf)
             self.joints.append(joint)
+
             if joint.structure != "constant":
                 self.current_pos_as_theta.append(joint.current_angle)
 
@@ -475,17 +486,15 @@ class Arm:
                 direction = True
 
             delta_angle = abs(delta_angle)
-            logger.debug(f'Joint {joint_number} will change angle by {delta_angle} degree.')
 
-        self.current_pos_as_theta.clear()
-
-        for joint in self.joints:
-            if joint.structure != "constant":
-                if joint.number == joint_number:
-                    logger.debug(f'Joint {joint_number} moving...')
-                    joint.change_angle_by(delta_angle, direction)
-
-                    self.current_pos_as_theta.append(joint.current_angle)
+        for i in range(len(self.joints)):
+            if self.joints[i].structure != "constant":
+                if self.joints[i].number == joint_number:
+                    self.joints[i].change_angle_by(delta_angle, direction)
+                    try:
+                        self.current_pos_as_theta[i] = self.joints[i].current_angle
+                    except IndexError:
+                        logger.critical(f'current_pos_as_theta list of Arm has IndexError!')
 
         self.current_pos_as_coord = self.get_coords_from_forward_kinematics(self.__forward_kinematics(self.current_pos_as_theta)[-1])
 
