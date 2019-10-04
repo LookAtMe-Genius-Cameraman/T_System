@@ -38,7 +38,7 @@ specify_sce_div.addEventListener("click", function (e) {
     if (e.target !== e.currentTarget) return;
 
     if (specify_sce_span.innerHTML === "") {
-        specify_sce_span.innerHTML = "Specify Scenarios";
+        specify_sce_span.innerHTML = translate_text_item("Specify Scenarios");
         specify_param_span.innerHTML = "";
 
         main_specify_div.classList.remove("center");
@@ -131,7 +131,7 @@ specify_param_div.addEventListener("click", function (e) {
     if (e.target !== e.currentTarget) return;
 
     if (specify_param_span.innerHTML === "") {
-        specify_param_span.innerHTML = "Specify Parameters";
+        specify_param_span.innerHTML = translate_text_item("Specify Parameters");
         specify_sce_span.innerHTML = "";
 
         main_specify_div.classList.remove("center");
