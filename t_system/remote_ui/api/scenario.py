@@ -61,8 +61,7 @@ class ScenarioApi(Resource):
             return {'status': 'ERROR', 'message': '\'db\' parameter is missing'}
 
         try:
-            form = request.form.to_dict(flat=True)
-            data = SCENARIO_SCHEMA.validate(form)
+            data = SCENARIO_SCHEMA.validate(request.json)
         except SchemaError as e:
             return {'status': 'ERROR', 'message': e.code}
         result, scenario_id = create_scenario(admin_id, db_name, data)
@@ -82,8 +81,7 @@ class ScenarioApi(Resource):
         if not scenario_id:
             return {'status': 'ERROR', 'message': '\'id\' parameter is missing'}
         try:
-            form = request.form.to_dict(flat=True)
-            data = SCENARIO_SCHEMA.validate(form)
+            data = SCENARIO_SCHEMA.validate(request.json)
         except SchemaError as e:
             return {'status': 'ERROR', 'message': e.code}
 

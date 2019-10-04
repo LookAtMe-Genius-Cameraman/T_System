@@ -9,12 +9,18 @@
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
 
+import json
+
 from flask import Blueprint, request
 from flask_restful import Api, Resource
 from schema import SchemaError
 
 from t_system.remote_ui.modules.position import create_position, get_position, get_positions, update_position, delete_position
 from t_system.remote_ui.api.data_schema import POSITION_SCHEMA
+
+from t_system import log_manager
+
+logger = log_manager.get_logger(__name__, "DEBUG")
 
 api_bp = Blueprint('position_api', __name__)
 api = Api(api_bp)
@@ -63,10 +69,12 @@ class PositionApi(Resource):
             return {'status': 'ERROR', 'message': '\'db\' parameter is missing'}
 
         try:
-            form = request.form.to_dict(flat=True)
-            data = POSITION_SCHEMA.validate(form)
+            data = POSITION_SCHEMA.validate(request.json)
         except SchemaError as e:
             return {'status': 'ERROR', 'message': e.code}
+
+        logger.debug("position creation starting...")
+
         result, position_id = create_position(admin_id, db_name, data)
 
         return {'status': 'OK' if result else 'ERROR', 'id': position_id}
@@ -84,8 +92,7 @@ class PositionApi(Resource):
         if not position_id:
             return {'status': 'ERROR', 'message': '\'id\' parameter is missing'}
         try:
-            form = request.form.to_dict(flat=True)
-            data = POSITION_SCHEMA.validate(form)
+            data = POSITION_SCHEMA.validate(request.json)
         except SchemaError as e:
             return {'status': 'ERROR', 'message': e.code}
 
