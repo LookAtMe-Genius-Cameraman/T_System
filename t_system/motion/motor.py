@@ -102,32 +102,38 @@ class ServoMotor:
             self.current_duty_cy = target_duty_cy
             logger.debug(f'Move of motor in GPIO {self.gpio_pin} completed')
 
-    def softly_goto_position(self, target_angle):
+    def softly_goto_position(self, target_angle, divide_count=1, delay=0):
         """Method to changing position to the target angle step by step for more softly than direct_goto_position func.
 
         Args:
             target_angle (float):     The target position angle of servo motor. In radian type.
+            divide_count (int):       The count that specify motor how many steps will use.
+            delay (float):            delay time between motor steps.
         """
+
+        if not divide_count:
+            divide_count = 1
 
         target_duty_cy = self.__angle_to_duty_cy(target_angle)
         target_duty_cy = round(target_duty_cy, 5)
 
-        # rotation will become from current_duty_cy to target duty_cy more softly. THESE LINES WILL BE EDITED WITH SOME FILTERS
         if target_duty_cy > self.current_duty_cy:
             delta_duty_cy = target_duty_cy - self.current_duty_cy
 
             while self.current_duty_cy < target_duty_cy:
                 self.__change_duty_cycle(self.current_duty_cy)
-                self.current_duty_cy += delta_duty_cy / 50  # Divide the increasing to 50 parse.
+                self.current_duty_cy += delta_duty_cy / divide_count  # Divide the increasing to 50 parse.
+                time.sleep(delay)
 
         elif target_duty_cy < self.current_duty_cy:
             delta_duty_cy = self.current_duty_cy - target_duty_cy
 
             while self.current_duty_cy > target_duty_cy:
                 self.__change_duty_cycle(self.current_duty_cy)
-                self.current_duty_cy -= delta_duty_cy / 50  # Each 0.055 decrease decreases the angle as 1 degree.
+                self.current_duty_cy -= delta_duty_cy / divide_count  # Each 0.055 decrease decreases the angle as 1 degree.
+                time.sleep(delay)
         else:
-            self.__change_duty_cycle(self.current_duty_cy)
+            pass
 
         self.__change_duty_cycle(target_duty_cy)
 
