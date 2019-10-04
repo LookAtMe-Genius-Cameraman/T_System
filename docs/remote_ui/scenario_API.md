@@ -7,7 +7,7 @@ Returns an error if the DB is empty.
 ```http
 POST /api/scenario?db=<DB>&admin_id=<ADMIN_ID>
 Host: domain
-Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+Content-Type: application/json; charset=UTF-8
 
 {
     "name": "scenario_name",
@@ -94,7 +94,7 @@ Returns an error if the ID or DB is empty.
 ```http
 PUT /api/scenario?db=<DB>&id=<ID>&admin_id=<ADMIN_ID>
 Host: domain
-Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+Content-Type: application/json; charset=UTF-8
 
 {
     "name": "scenario_name",
