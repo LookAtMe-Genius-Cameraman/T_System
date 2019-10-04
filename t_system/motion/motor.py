@@ -65,17 +65,6 @@ class ServoMotor:
         time.sleep(1)
         self.__sleep()
 
-    def low_pass_filter(self, init_angel):
-        """Method to start of the motor initially.
-
-        Args:
-            init_angel (float):     Initialization angle value for servo motor in radian unit.
-        """
-        init_duty_cy = self.__angle_to_duty_cy(init_angel)
-
-        self.servo.start(init_duty_cy)
-        self.current_duty_cy = init_duty_cy
-
     def __angle_to_duty_cy(self, theta_radian):
         """Method to convert theta angle to the duty cycle.
 
