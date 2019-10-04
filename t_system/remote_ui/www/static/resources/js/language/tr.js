@@ -1,7 +1,7 @@
 //turkish
 const turkishtrans = {
     "Look.At.Me.": "Look.At.Me.",
-    "Powered By ": "Arkadaki Güç: ",
+    "Powered By <a><mark translate=\"\">T_System</mark></a>": "<a><mark translate=\"\">T_System</mark></a>'e dayanır",
     "T_System": "T_System",
     "Settings": "Ayarlar",
     "Options": "Seçenekler",

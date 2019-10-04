@@ -1,7 +1,7 @@
 //french
 const frenchtrans = {
     "Look.At.Me.": "Look.At.Me.",
-    "Powered By ": "Alimenté Par ",
+    "Powered By <a><mark translate=\"\">T_System</mark></a>": "Alimenté Par <a><mark translate=\"\">T_System</mark></a>",
     "T_System": "T_System",
     "Settings": "Paramétres",
     "Options": "Options",
