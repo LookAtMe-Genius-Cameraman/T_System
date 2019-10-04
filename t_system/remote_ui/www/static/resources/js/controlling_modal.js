@@ -98,23 +98,23 @@ function get_position_s(id = null) {
 
 function update_position(id, data) {
 
-    jquery_manager.put_data("/api/position?db=" + action_db_name + "&id=" + id + "&admin_id=" + admin_id, data);
+    jquery_manager.put_app_json_data("/api/position?db=" + action_db_name + "&id=" + id + "&admin_id=" + admin_id, data);
 }
 
 function get_scenario_s(id = null) {
 
     if (id == null) {
-        jquery_manager.get_data("/api/scenario?admin_id=" + admin_id);
+        jquery_manager.get_data("/api/scenario?db=" + action_db_name + "&admin_id=" + admin_id);
 
     } else {
-        jquery_manager.get_data("/api/scenario?id=" + id + "&admin_id=" + admin_id);
+        jquery_manager.get_data("/api/scenario?db=" + action_db_name + "&id=" + id + "&admin_id=" + admin_id);
     }
 }
 
 
 function update_scenario(id, data) {
 
-    jquery_manager.put_data("/api/scenario?db=" + action_db_name + "&id=" + id + "&admin_id=" + admin_id, data);
+    jquery_manager.put_app_json_data("/api/scenario?db=" + action_db_name + "&id=" + id + "&admin_id=" + admin_id, data);
 }
 
 
@@ -159,6 +159,7 @@ sidebar_toggle_btn.addEventListener("click", function () {
                             // console.log(scenarios);
 
                             for (let c = 0; c < positions.length; c++) {
+
                                 let position_div = document.createElement('div');
                                 let position_span = document.createElement('span');
 
@@ -252,7 +253,8 @@ sidebar_toggle_btn.addEventListener("click", function () {
 
                                     // listen for drop related events:
 
-                                    ondropactivate: function (event) {},
+                                    ondropactivate: function (event) {
+                                    },
                                     ondragenter: function (event) {
                                         scenario_dd_btn.click();
                                         event.target.classList.add('actions-drop-target');
@@ -262,7 +264,8 @@ sidebar_toggle_btn.addEventListener("click", function () {
                                         event.target.classList.remove('actions-drop-target');
 
                                     },
-                                    ondrop: function (event) {},
+                                    ondrop: function (event) {
+                                    },
 
                                     ondropdeactivate: function (event) {
                                         // scenario_dd_btn.click()
@@ -379,7 +382,6 @@ sidebar_toggle_btn.addEventListener("click", function () {
 });
 
 controlling_template_sidebar_close_btn.addEventListener("click", function () {
-
     controlling_template_sidebar.classList.toggle("active");
     dark_deep_background_div.classList.toggle("focused");
     show_element(controlling_template_content)
@@ -447,8 +449,7 @@ interact('#position_list_ul').dropzone({
         clearTimeout(position_drop_timeout);
     },
     ondrop: function (event) {
-        event.relatedTarget.textContent = 'Dropped';
-    },
+    },  // drop is partially works.
     ondropdeactivate: function (event) {
         // remove active dropzone feedback
         event.target.classList.remove('drop-active');
@@ -457,20 +458,20 @@ interact('#position_list_ul').dropzone({
 });
 
 interact('.drag-drop')
-  .draggable({
-    inertia: true,
-    modifiers: [
-      interact.modifiers.restrictRect({
-        restriction: 'parent',
-        endOnly: true
-      })
-    ],
-    autoScroll: true,
-    // dragMoveListener from the dragging demo above
-    onmove: function (event) {
+    .draggable({
+        inertia: true,
+        modifiers: [
+            interact.modifiers.restrictRect({
+                restriction: 'parent',
+                endOnly: true
+            })
+        ],
+        autoScroll: true,
+        // dragMoveListener from the dragging demo above
+        onmove: function (event) {
             dragMoveListener(event);
         }
-  });
+    });
 
 
 stream_area_img.addEventListener("mouseover", function () {
@@ -557,8 +558,8 @@ rotational_menu_control_input.addEventListener("change", function () {
     rotational_menu_control_label.classList.toggle("fa-times");
 
     if (rotational_menu_control_input.checked) {
-        // get_move_info("joint_count");
-        requested_data = {"status": "OK", "data": "5"};
+        get_move_info("joint_count");
+        // requested_data = {"status": "OK", "data": "5"};
 
         let timer_settings_cont = setInterval(function () {
 
@@ -589,7 +590,7 @@ rotational_menu_control_input.addEventListener("change", function () {
                                 let route = "/api/move?id=" + joint_number + "&admin_id=" + admin_id;
                                 let data = {"type": "joint", "id": joint_number.toString(), "quantity": 5};
 
-                                    jquery_manager.put_data(route, data);
+                                jquery_manager.put_data(route, data);
                             })
                             .on('doubletap', function (event) {
                             })
@@ -603,7 +604,8 @@ rotational_menu_control_input.addEventListener("change", function () {
                                 }, 300);
 
                             })
-                            .on('down', function (event) {})
+                            .on('down', function (event) {
+                            })
                             .on('up', function (event) {
                                 clearInterval(interval);
                             });
@@ -620,7 +622,7 @@ rotational_menu_control_input.addEventListener("change", function () {
                                 let route = "/api/move?id=" + joint_number + "&admin_id=" + admin_id;
                                 let data = {"type": "joint", "id": joint_number.toString(), "quantity": -5};
 
-                                    jquery_manager.put_data(route, data);
+                                jquery_manager.put_data(route, data);
                             })
                             .on('doubletap', function (event) {
                             })
@@ -634,7 +636,8 @@ rotational_menu_control_input.addEventListener("change", function () {
                                 }, 300);
 
                             })
-                            .on('down', function (event) {})
+                            .on('down', function (event) {
+                            })
                             .on('up', function (event) {
                                 clearInterval(interval);
                             });
@@ -675,6 +678,7 @@ record_pos_sce_btn.addEventListener("click", function () {
 
         record_pos_sce_btn.innerHTML = translate_text_item("cancel");
 
+        current_arm_position = {};
         get_move_info();
         let timer_settings_cont = setInterval(function () {
 
@@ -682,7 +686,7 @@ record_pos_sce_btn.addEventListener("click", function () {
                 if (requested_data["status"] === "OK") {
 
                     current_arm_position = requested_data["data"];
-                    // console.log(requested_data["data"]);
+                    console.log(requested_data["data"]);
                 }
                 requested_data = {};
                 clearInterval(timer_settings_cont)
@@ -724,11 +728,14 @@ position_name_input.addEventListener("mousemove", function () {
 
 create_pos_btn.addEventListener("click", function () {
 
-    let name_dict = {"name": position_name_input.value};
     let data = {};
-    data = Object.assign({}, name_dict, current_arm_position);
+    data = {"name": position_name_input.value, "cartesian_coords": current_arm_position["cartesian_coords"], "polar_coords": current_arm_position["polar_coords"]};
+    // let data = {};
+    // data = Object.assign({}, name_dict, current_arm_position);
 
-    jquery_manager.post_data("/api/position?db=" + action_db_name + "&admin_id=" + admin_id, data);
+    console.log(data);
+
+    jquery_manager.post_app_json_data("/api/position?db=" + action_db_name + "&admin_id=" + admin_id, data);
 
     position_name_input.value = "";
     position_div_back_btn.click();
