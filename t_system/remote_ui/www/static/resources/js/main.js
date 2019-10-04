@@ -155,12 +155,8 @@ $(document).ready(function () {
 
 });
 
-title_footer.addEventListener("click", function (e) {
-   // window.open('https://github.com/connected-life/T_System', '_system');
-
-   e.preventDefault();
-  $('#title_footer_url_modal').modal('show').find('.modal-body').load('https://github.com/connected-life/T_System');
-});
+console.log(title_footer.innerHTML);
+title_footer.addEventListener("click", function (e) {});
 
 
 options_btn.addEventListener("click", function () {
