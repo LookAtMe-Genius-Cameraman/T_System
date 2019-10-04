@@ -51,6 +51,19 @@ function post_job_data() {
 
     }
 
+    let labels = document.getElementsByTagName('label');
+
+
+    for (let i = 0; i < scenario_checkboxes.length; i++) {
+        if (scenario_checkboxes[i].checked) {
+            for (let a = 0; a < labels.length; a++) {
+                if (labels[a].htmlFor === scenario_checkboxes[i].id) {
+                    data["scenario"] = labels[a].innerHTML;
+                }
+            }
+        }
+    }
+
     jquery_manager.post_data("/api/job&admin_id=" + admin_id, data);
 
 }
@@ -58,7 +71,6 @@ function post_job_data() {
 let selected_spans = [];
 
 function show_checked_boxes(elements, dest) {
-    selected_spans = [];
     while (dest.firstChild) {
         dest.removeChild(dest.firstChild);
     }
@@ -104,7 +116,11 @@ function toggle_job_modal() {
 
         job_btn_i.innerHTML = translate_text_item(" job");
         post_job_data();
-        show_checked_boxes([security_mode_checkbox, learn_mode_checkbox, non_moving_target_checkbox, time_laps_checkbox].concat(recognize_checkboxes).concat(ai_checkboxes), selected_params_div)
+
+        selected_spans = [];
+        show_checked_boxes([security_mode_checkbox, learn_mode_checkbox, non_moving_target_checkbox, time_laps_checkbox].concat(recognize_checkboxes).concat(ai_checkboxes), selected_params_div);
+        show_checked_boxes([].concat(scenario_checkboxes), selected_scenarios_div);
+
     } else {  // 2. click
         if (dark_overlay_active === false) {
             dark_overlay_active = true
@@ -228,6 +244,7 @@ job_ready_btn.addEventListener("click", function () {
 
         for (let i = 0; i < selected_spans.length; i++) {
             selected_spans[i].classList.add("shine_in_dark");
+            selected_spans[i].classList.remove("hidden_element");
         }
     }
 });
