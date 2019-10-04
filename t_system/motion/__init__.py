@@ -38,40 +38,70 @@ def degree_to_radian(angle):
 if __name__ == '__main__':
 
     # FOLLOWING LINES FOR THE TESTING THE "motion" SUBMODULE!!
-    servo_pin = 23
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(servo_pin, GPIO.OUT)
 
-    p = GPIO.PWM(servo_pin, 50)  # GPIO 17 for PWM with 50Hz
-    p.start(11)  # Initialization
-    time.sleep(1)
+    def regular_control(servo_pin):
+        """The top-level method to servo motor via given GPIO pin number with endless loop work.
 
-    try:
-        print("loop starting")
-        while True:
-            duty_cy = 2.5
-            while duty_cy <= 12.5:
-                duty_cy = round(duty_cy, 3)
-                p.ChangeDutyCycle(duty_cy)
-                print(str(duty_cy))
+        Args:
+            servo_pin:    	         GPIO pin of the servo motor.
+        """
 
-                duty_cy += 1
-                time.sleep(0.5)
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(servo_pin, GPIO.OUT)
 
+        p = GPIO.PWM(servo_pin, 50)  # GPIO 17 for PWM with 50Hz
+        p.start(11)  # Initialization
+        time.sleep(1)
+
+        try:
+            print("loop starting")
             while True:
-                p.ChangeDutyCycle(0)
-                time.sleep(10)
-                break
+                duty_cy = 2.5
+                while duty_cy <= 12.5:
+                    duty_cy = round(duty_cy, 3)
+                    p.ChangeDutyCycle(duty_cy)
+                    print(str(duty_cy))
 
-            while duty_cy >= 2.5:
-                duty_cy = round(duty_cy, 3)
-                p.ChangeDutyCycle(duty_cy)
-                print(str(duty_cy))
+                    duty_cy += 1
+                    time.sleep(0.5)
 
-                duty_cy -= 1
-                time.sleep(0.5)
+                while True:
+                    p.ChangeDutyCycle(0)
+                    time.sleep(10)
+                    break
 
-    except KeyboardInterrupt:
-        pass
-        p.stop()
-        GPIO.cleanup()
+                while duty_cy >= 2.5:
+                    duty_cy = round(duty_cy, 3)
+                    p.ChangeDutyCycle(duty_cy)
+                    print(str(duty_cy))
+
+                    duty_cy -= 1
+                    time.sleep(0.5)
+
+        except KeyboardInterrupt:
+            pass
+            p.stop()
+            GPIO.cleanup()
+
+    def discrete_control(servo_pin, duty_cys):
+        """The top-level method to servo motor via given GPIO pin number with given duty cycle list.
+
+        Args:
+            servo_pin:    	         GPIO pin of the servo motor.
+            duty_cys:    	         Duty cycle list those are sending to servo motor.
+        """
+
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(servo_pin, GPIO.OUT)
+
+        p = GPIO.PWM(servo_pin, 50)  # GPIO 17 for PWM with 50Hz
+        p.start(11)  # Initialization
+        time.sleep(1)
+
+        for duty_cy in duty_cys:
+            duty_cy = round(duty_cy, 3)
+            p.ChangeDutyCycle(duty_cy)
+            time.sleep(0.5)
+
+    regular_control(17)
+    discrete_control(17, [3.5, 4.5, 7.5, 11.5])
