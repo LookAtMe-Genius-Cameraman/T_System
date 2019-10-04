@@ -167,7 +167,7 @@ def initiate():
                                              "`augmented`: Augmented control with the Augmented Virtual Assistant A.V.A.. \'https://github.com/MCYBA/A.V.A.\' is the home page of the A.V.A. and usage explained into the \'AUGMENTED.md\'."
                                              "`remote_ui`: remote control with created graphic interface that is power by flask available on desktop or mobile."
                                              "None: Use to just by `running modes` parameters."
-                                             "The default value is None.", action="store", type=str, default="None")
+                                             "The default value is None.", action="store", type=str, choices=["official_stand", "augmented", "remote_ui", None], default="None")
 
     official_stand_gr = ap.add_argument_group('official_stand')
     official_stand_gr.add_argument("--stand-gpios", help="GPIO pin numbers of official stand's LEDs and fans. 5(as red led), 6(as green led) and 14(as fan) GPIO pins are default.", nargs=3, default=[5, 6, 14], type=int, metavar=('RED-LED', 'GREEN-LED', 'FAN'))
