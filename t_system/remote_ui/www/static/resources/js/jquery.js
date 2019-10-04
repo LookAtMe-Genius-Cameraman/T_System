@@ -6,6 +6,29 @@
  * @author cem.baybars@gmail.com (Cem Baybars GÜÇLÜ)
  */
 
+/**
+ * Method to handle of POST request of $.ajax query with application/json content type.
+ * @param {string} url: the route address of the flask
+ * @param data: putting data to route.
+ * @param {function} callback: the callback function.
+ * @return {ajax} Whether something occurred.
+ */
+$.post_app_json = function (url, data, callback) {
+
+    if ($.isFunction(data)) {
+        callback = data;
+        data = {}
+    }
+
+    return $.ajax({
+        url: url,
+        type: 'POST',
+        success: callback,
+        data: JSON.stringify(data),
+        contentType: 'application/json; charset=utf-8',  // Default one.
+        dataType: "json"
+    });
+};
 
 /**
  * Method to handle of PUT request of $.ajax query.
@@ -27,6 +50,30 @@ $.put = function (url, data, callback) {
         success: callback,
         data: data,
         contentType: 'application/x-www-form-urlencoded; charset=UTF-8'  // Default one.
+    });
+};
+
+/**
+ * Method to handle of PUT request of $.ajax query with application/json content type.
+ * @param {string} url: the route address of the flask
+ * @param data: putting data to route.
+ * @param {function} callback: the callback function.
+ * @return {ajax} Whether something occurred.
+ */
+$.put_app_json = function (url, data, callback) {
+
+    if ($.isFunction(data)) {
+        callback = data;
+        data = {}
+    }
+
+    return $.ajax({
+        url: url,
+        type: 'PUT',
+        success: callback,
+        data: JSON.stringify(data),
+        contentType: 'application/json; charset=utf-8',  // Default one.
+        dataType: "json"
     });
 };
 
@@ -90,14 +137,34 @@ class JQueryManager {
     /**
      * Method to sending data that is given with data parameter to the route.
      * @param {string} route: the route address of the flask
-     * @param {dict} data: posting data to route.
+     * @param data: posting data to route.
      * @return {string} Whether something occurred.
      */
     static post_data(route, data) {
 
         let success = "";
-        // console.log(data);
         $.post(route, data, function (req, err, resp) {
+            response_data = JSON.parse(resp.responseText);
+            // console.log(response_data);
+
+            success = err
+        });
+        // stop link reloading the page
+        // event.preventDefault();
+
+        return success
+    }
+
+    /**
+     * Method to sending data that is given with data parameter to the route.
+     * @param {string} route: the route address of the flask
+     * @param data: posting data to route.
+     * @return {string} Whether something occurred.
+     */
+    static post_app_json_data(route, data) {
+
+        let success = "";
+        $.post_app_json(route, data, function (req, err, resp) {
             response_data = JSON.parse(resp.responseText);
             // console.log(response_data);
 
@@ -137,6 +204,27 @@ class JQueryManager {
         let success = "";
         $.put(route, data, function (req, err, resp) {
             response_data = JSON.parse(resp.responseText);
+            success = err
+        });
+        // stop link reloading the page
+        // event.preventDefault();
+
+        return success
+    }
+
+    /**
+     * Method to sending data that is given with data parameter to the route.
+     * @param {string} route: the route address of the flask
+     * @param data: posting data to route.
+     * @return {string} Whether something occurred.
+     */
+    static put_app_json_data(route, data) {
+
+        let success = "";
+        $.put_app_json(route, data, function (req, err, resp) {
+            response_data = JSON.parse(resp.responseText);
+            // console.log(response_data);
+
             success = err
         });
         // stop link reloading the page
