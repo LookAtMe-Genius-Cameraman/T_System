@@ -14,7 +14,9 @@ const update_btn = document.getElementById("update_btn");
 
 const wifi_control_div = document.getElementById("wifi_control_div");
 const wifi_connections_btn = document.getElementById("wifi_connections_btn");
+const create_wifi_checkbox = document.getElementById("create_wifi_checkbox");
 const wifi_control_io_div = document.getElementById("wifi_control_io_div");
+const create_new_network = document.getElementById("create_new_network");
 const network_ssid_input = document.getElementById("network_ssid_input");
 const network_password_input = document.getElementById("network_password_input");
 const network_pass_eye_span = document.getElementById("network_pass_eye_span");
@@ -108,10 +110,12 @@ function get_update_data(key) {
  * Method of getting specified network information with its ssid or the all existing network information.
  * It is triggered via a click on options_btn or clicked specified network on network list.
  */
-function get_network_data(ssid = null) {
+function get_network_data(ssid = null, activity = null) {
 
     if (ssid) {
         jquery_manager.get_data("/api/network?ssid=" + ssid + "&admin_id=" + admin_id);
+    } else if (activity) {
+        jquery_manager.get_data("/api/network?activity=" + activity + "&admin_id=" + admin_id);
     } else {
         jquery_manager.get_data("/api/network?admin_id=" + admin_id);
     }
@@ -229,81 +233,105 @@ wifi_connections_btn.addEventListener("click", function () {
 
                 if (requested_data["status"] === "OK") {
                     let network_connections = requested_data["data"];
+                    requested_data = {};
 
-                    for (let c = 0; c < network_connections.length; c++) {
+                    // get_network_data(null, true);
+                    requested_data = {"status": "OK", "data": true};
 
-                        let wifi_dropdown_div = document.createElement('div');
-                        let wifi_btn = document.createElement('button');
-                        let wifi_dropdown_container_div = document.createElement('div');
+                    let activity_interval = setInterval(function () {
 
-                        wifi_dropdown_div.classList.add("dropdown", "btn-group", "mt-1");
+                        if (requested_data !== {}) {
 
-                        wifi_btn.classList.add("btn", "btn-secondary", "dropdown-toggle", "cut-text");
-                        wifi_btn.type = "button";
-                        wifi_btn.id = network_connections[c]["ssid"] + "_btn";
-                        wifi_btn.setAttribute("data-toggle", "dropdown");
-                        wifi_btn.setAttribute("aria-haspopup", "true");
-                        wifi_btn.setAttribute("aria-expanded", "false");
-                        wifi_btn.innerHTML = network_connections[c]["ssid"];
+                            if (requested_data["status"] === "OK") {
+                                let activity = requested_data["data"];
 
-                        wifi_dropdown_container_div.classList.add("dropdown-menu", "dropdown-menu-right", "dropdown-menu-center", "body_background", "no-border");
-                        wifi_dropdown_container_div.setAttribute("aria-labelledby", wifi_btn.id);
+                                for (let c = 0; c < network_connections.length; c++) {
 
-                        // let ssid_output = document.createElement('output');
-                        let password_div = document.createElement('div');
-                        let password_input = document.createElement('input');
-                        let password_update_btn = document.createElement('button');
+                                    let wifi_dropdown_div = document.createElement('div');
+                                    let wifi_btn = document.createElement('button');
+                                    let wifi_dropdown_container_div = document.createElement('div');
 
-                        password_div.classList.add("dropdown-item");
+                                    wifi_dropdown_div.classList.add("dropdown", "btn-group", "mt-1");
 
-                        password_input.type = "password";
-                        password_input.classList.add("modal_input", "existing_network_password");
-                        password_input.value = network_connections[c]["password"];
+                                    wifi_btn.classList.add("btn", "btn-secondary", "dropdown-toggle", "cut-text");
+                                    wifi_btn.type = "button";
+                                    wifi_btn.id = network_connections[c]["ssid"] + "_btn";
+                                    wifi_btn.setAttribute("data-toggle", "dropdown");
+                                    wifi_btn.setAttribute("aria-haspopup", "true");
+                                    wifi_btn.setAttribute("aria-expanded", "false");
+                                    wifi_btn.innerHTML = network_connections[c]["ssid"];
 
-                        let password_last_value = password_input.value;
+                                    wifi_dropdown_container_div.classList.add("dropdown-menu", "dropdown-menu-right", "dropdown-menu-center", "body_background", "no-border");
+                                    wifi_dropdown_container_div.setAttribute("aria-labelledby", wifi_btn.id);
 
-                        password_input.addEventListener("focus", function () {
-                            password_input.classList.add("focused");
-                        });
+                                    // let ssid_output = document.createElement('output');
+                                    let password_div = document.createElement('div');
+                                    let password_input = document.createElement('input');
+                                    let password_update_btn = document.createElement('button');
 
-                        password_input.addEventListener("blur", function () {
-                            password_input.classList.remove("focused");
-                        });
+                                    password_div.classList.add("dropdown-item");
 
-                        password_input.addEventListener("mousemove", function () {
-                            if (password_input.value !== "" && password_input.value !== password_last_value) {
-                                password_input.classList.add("changed");
-                                show_element(password_update_btn);
-                            } else {
-                                password_input.classList.remove("changed");
-                                hide_element(password_update_btn);
+                                    password_input.type = "password";
+                                    password_input.classList.add("modal_input", "existing_network_password");
+                                    password_input.value = network_connections[c]["password"];
+
+                                    let password_last_value = password_input.value;
+
+                                    password_input.addEventListener("focus", function () {
+                                        password_input.classList.add("focused");
+                                    });
+
+                                    password_input.addEventListener("blur", function () {
+                                        password_input.classList.remove("focused");
+                                    });
+
+                                    password_input.addEventListener("mousemove", function () {
+                                        if (password_input.value !== "" && password_input.value !== password_last_value) {
+                                            password_input.classList.add("changed");
+                                            show_element(password_update_btn);
+                                        } else {
+                                            password_input.classList.remove("changed");
+                                            hide_element(password_update_btn);
+                                        }
+                                    });
+
+
+                                    password_update_btn.classList.add("send_network_data_btn");
+                                    password_update_btn.innerHTML = "&#187;";
+
+                                    password_update_btn.addEventListener("click", function () {
+                                        let data = {"ssid": network_connections[c]["ssid"], "password": password_input.value};
+                                        jquery_manager.put_data("/api/network?ssid=" + network_connections[c]["ssid"] + "&admin_id=" + admin_id, data);
+
+                                        wifi_connections_btn.click();
+                                        wifi_connections_btn.click();
+                                    });
+
+                                    password_div.appendChild(password_input);
+                                    password_div.appendChild(password_update_btn);
+
+                                    wifi_dropdown_container_div.appendChild(password_div);
+
+                                    wifi_dropdown_div.appendChild(wifi_btn);
+                                    wifi_dropdown_div.appendChild(wifi_dropdown_container_div);
+
+                                    network_list_ul.appendChild(wifi_dropdown_div);
+                                }
+
+                                if (activity) {
+                                    create_wifi_checkbox.checked = false
+                                } else {
+                                    create_wifi_checkbox.checked = true;
+                                    create_new_network.classList.add("disabled");
+                                    network_list_ul.classList.add("disabled");
+                                }
                             }
-                        });
+                            requested_data = {};
+                            clearInterval(activity_interval)
+                        }
+                    }, 300);
 
-
-                        password_update_btn.classList.add("send_network_data_btn");
-                        password_update_btn.innerHTML = "&#187;";
-
-                        password_update_btn.addEventListener("click", function () {
-                            let data = {"ssid": network_connections[c]["ssid"], "password": password_input.value};
-                            jquery_manager.put_data("/api/network?ssid=" + network_connections[c]["ssid"] + "&admin_id=" + admin_id, data);
-
-                            wifi_connections_btn.click();
-                            wifi_connections_btn.click();
-                        });
-
-                        password_div.appendChild(password_input);
-                        password_div.appendChild(password_update_btn);
-
-                        wifi_dropdown_container_div.appendChild(password_div);
-
-                        wifi_dropdown_div.appendChild(wifi_btn);
-                        wifi_dropdown_div.appendChild(wifi_dropdown_container_div);
-
-                        network_list_ul.appendChild(wifi_dropdown_div);
-                    }
                 }
-                requested_data = {};
                 clearInterval(timer_settings_cont)
             }
         }, 300);
@@ -316,6 +344,23 @@ wifi_connections_btn.addEventListener("click", function () {
         }
         wifi_connections_btn_click_count = 0;
     }
+});
+
+create_wifi_checkbox.setAttribute("data-on", translate_text_item(" "));
+create_wifi_checkbox.setAttribute("data-off", translate_text_item(" "));
+
+$('#create_wifi_checkbox').change(function () {
+    let data = {};
+    jquery_manager.post_data("/api/network?activity=" + create_wifi_checkbox.checked, data);
+
+    if (create_wifi_checkbox.checked) {
+        create_new_network.classList.add("disabled");
+        network_list_ul.classList.add("disabled");
+    } else {
+        create_new_network.classList.remove("disabled");
+        network_list_ul.classList.remove("disabled");
+    }
+    swal(translate_text_item("This process will be the effect after reboot!"), "", "info");
 });
 
 network_pass_eye_span.addEventListener("click", function () {
