@@ -11,6 +11,7 @@
 
 import numpy as np
 import json
+import threading
 
 from numpy import linalg
 from sympy import symbols, eye, Matrix, cos, sin, diff
@@ -470,7 +471,7 @@ class Arm:
 
         for joint in self.joints:
             if joint.structure != "constant":
-                joint.move_to_angle(pos_thetas[joint.number - 1])
+                threading.Thread(target=joint.move_to_angle, args=(pos_thetas[joint.number - 1],)).start()
 
     def rotate_single_joint(self, joint_number, delta_angle, direction=None):
         """Method to move a single joint towards the given direction with the given variation.
