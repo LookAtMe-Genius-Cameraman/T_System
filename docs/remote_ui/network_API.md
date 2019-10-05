@@ -1,10 +1,11 @@
 # Creating new Login
 
-This process creates a login point to a new network.
+If ACTIVITY None, this process creates a login point to a new network with incoming data.
+If ACTIVITY is not None (True/False), it changes network connector's activity status of stand_ui.
 
 ## Request
 ```http
-POST /api/network?admin_id=<ADMIN_ID>
+POST /api/network?activity=<ACTIVITY>&admin_id=<ADMIN_ID>
 Host: domain
 Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 
@@ -31,16 +32,18 @@ Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 ```
 
 # Getting Networks
-- If a specific parameter SSID is given, its network are listed.
+- If ACTIVITY None, and specific parameter SSID is given, its network are listed.
+- If ACTIVITY is not None, network connector's activity status of stand_ui returns.
 
 ## Request
 ```http
-GET /api/network?ssid=<SSID>&admin_id=<ADMIN_ID>
+GET /api/network?activity=<ACTIVITY>&ssid=<SSID>&admin_id=<ADMIN_ID>
 Host: domain
 ```
 
 ## Response
 ### On Success
+- If ACTIVITY is None
 ```json
 {
     "status": "OK",
@@ -50,6 +53,14 @@ Host: domain
     }]
 }
 ```
+- If ACTIVITY is not None (True/False)
+```json
+{
+    "status": "OK",
+    "data": true
+}
+```
+
 ### On Failure
 ```json
 {
