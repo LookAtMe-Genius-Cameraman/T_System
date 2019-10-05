@@ -152,10 +152,8 @@ $(document).ready(function () {
     document.addEventListener("contextmenu", function (e) {
         e.preventDefault();
     }, false);
-
 });
 
-console.log(title_footer.innerHTML);
 title_footer.addEventListener("click", function (e) {});
 
 
