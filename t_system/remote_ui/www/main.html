@@ -7,6 +7,7 @@
     <link rel="apple-touch-icon image_src" href="static/resources/images/favicon.png">
 
     <link rel="stylesheet" href="static/vendors/bootstrap/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="static/vendors/bootstrap/css/bootstrap2-toggle.min.css">
     <link rel="stylesheet" href="static/vendors/chart.js/css/Chart.min.css">
     <link rel="stylesheet" href="static/vendors/swiper/css/swiper.min.css">
     <link rel="stylesheet" href="static/vendors/fontawesome/css/all.min.css">
@@ -58,6 +59,10 @@
                     <div id="wifi_control_div" class="position-relative col option_div">
                         <button id="wifi_connections_btn" class="option_btn" translate>Wi-Fi Connections</button>
                         <div id="wifi_control_io_div" class="option_io_div">
+                            <div id="create_wifi_input_form" class="form-check mb-2 specify_checkbox_div">
+                                <label id="create_wifi_cb_label" class="form-check-label mr-2" for="create_wifi_checkbox" translate>Create Own Wi-Fi</label>
+                                <input id="create_wifi_checkbox" class="form-check-input" type="checkbox" value="" data-toggle="toggle" data-width="39" data-height="23" data-onstyle="info" data-offstyle="danger">
+                            </div>
                             <div id="create_new_network">
                                 <div class="form-group">
                                     <input id="network_ssid_input" class=" modal_input" type="text" name="network_ssid" placeholder="ssid"/>
@@ -360,6 +365,7 @@
 <script src="static/vendors/jquery/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <script type="text/javascript" src="static/vendors/popper.min.js"></script>
 <script type="text/javascript" src="static/vendors/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="static/vendors/bootstrap/js/bootstrap2-toggle.min.js"></script>
 <script type="text/javascript" src="static/vendors/interact/interact.min.js"></script>
 
 <script type="text/javascript" charset="UTF-8" src="static/resources/js/__init__.js"></script>
