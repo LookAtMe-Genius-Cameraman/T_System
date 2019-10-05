@@ -14,7 +14,7 @@ from flask import Blueprint, request
 from flask_restful import Api, Resource
 from schema import SchemaError
 
-from t_system.remote_ui.modules.network import create_network, get_networks, get_network, update_network, delete_network
+from t_system.remote_ui.modules.network import change_nc_activity, get_nc_activity, create_network, get_networks, get_network, update_network, delete_network
 from t_system.remote_ui.api.data_schema import NETWORK_SCHEMA
 
 api_bp = Blueprint('network_api', __name__)
@@ -39,8 +39,13 @@ class NetworkApi(Resource):
         """The API method to GET request for flask.
         """
 
+        activity = request.args.get('activity', None)
         network_ssid = request.args.get('ssid', None)
         admin_id = request.args.get('admin_id', None)
+
+        if activity is not None:
+            result = get_nc_activity(admin_id)
+            return {'status': 'OK', 'data': result}
 
         if network_ssid:
             network = get_network(admin_id, network_ssid)
@@ -53,7 +58,12 @@ class NetworkApi(Resource):
     def post(self):
         """The API method to POST request for flask.
         """
+        activity = request.args.get('activity', None)
         admin_id = request.args.get('admin_id', None)
+
+        if activity is not None:
+            result = change_nc_activity(admin_id, activity)
+            return {'status': 'OK' if result else 'ERROR'}
 
         try:
             form = request.form.to_dict(flat=True)  # request.form returns an immutable dict. And flat=False convert each value of the keys to list.

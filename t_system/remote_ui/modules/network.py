@@ -18,6 +18,38 @@ from t_system import log_manager
 logger = log_manager.get_logger(__name__, "DEBUG")
 
 
+def change_nc_activity(admin_id, activity):
+    """Method to change status of NetworkConnector.
+
+    Args:
+        admin_id (str):                 Admin privileges flag.
+        activity (bool):                Activity status of network_connector of stand_ui.
+    """
+
+    result = True
+
+    try:
+        from t_system import stand_ui
+        stand_ui.network_connector.change_status(activity)
+    except Exception as e:
+        logger.error(e)
+        result = False
+
+    return result
+
+
+def get_nc_activity(admin_id):
+    """Method to get status of NetworkConnector.
+
+    Args:
+        admin_id (str):                 Admin privileges flag.
+    """
+
+    from t_system import stand_ui
+
+    return stand_ui.network_connector.activity
+
+
 def create_network(admin_id, data):
     """Method to create new network.
 
