@@ -141,7 +141,11 @@ class NetworkConnector:
         if not os.path.exists(self.folder):
             os.mkdir(self.folder)
 
-        self.table = DBFetcher(self.folder, "db", "login").fetch()
+        self.login_table = DBFetcher(self.folder, "db", "login").fetch()
+        self.status_table = DBFetcher(self.folder, "db", "status").fetch()
+
+        self.activity = True
+        self.__refresh_status()
 
         self.wpa_supplicant = WpaSupplicant(args)
 
@@ -154,9 +158,10 @@ class NetworkConnector:
         if args["static_ip"]:
             set_local_ip_address(args["wlan"], args["static_ip"])
 
-        self.scan()
-        self.__set_available_networks()
-        self.__refresh_known_networks()
+        if self.activity:
+            self.scan()
+            self.__set_available_networks()
+            self.__refresh_known_networks()
 
     def scan(self, wlan=None):
         """Method to scan around for searching available networks.
@@ -193,7 +198,7 @@ class NetworkConnector:
 
         for network in self.current_available_networks:
             if ssid == network["ssid"]:
-                self.db_upsert(ssid, password)
+                self.login_upsert(ssid, password)
                 self.__refresh_known_networks()
                 self.wpa_supplicant.add_network_to_wsc(ssid, password)
                 self.__restart_networking_service()
@@ -209,10 +214,10 @@ class NetworkConnector:
             ssid:       	        The name of the surrounding access point.
         """
 
-        self.table.remove((Query().ssid == ssid))
+        self.login_table.remove((Query().ssid == ssid))
         self.wpa_supplicant.create_wsc()
 
-        for login in self.table.all():
+        for login in self.login_table.all():
             self.wpa_supplicant.add_network_to_wsc(login["ssid"], login["password"])
 
     @dispatch()
@@ -220,13 +225,14 @@ class NetworkConnector:
         """Method to try to connect to one of the available networks using wpa_supplicant.conf file that is restarted by subprocess.
         """
 
-        if self.are_networks_accessible():
-            self.wpa_supplicant.restart_ws_service()
-            time.sleep(5)
+        if self.activity:
+            if self.are_networks_accessible():
+                self.wpa_supplicant.restart_ws_service()
+                time.sleep(5)
 
-        if self.is_connected_to_network():
-            logger.info("Connected to a network.")
-            return True
+            if self.is_connected_to_network():
+                logger.info("Connected to a network.")
+                return True
 
         return False
 
@@ -239,14 +245,15 @@ class NetworkConnector:
             password (str):       	    The password of the surrounding access point.
         """
         result = False
-        for cell in self.current_cells:
-            if cell.ssid == ssid:
-                try:
-                    scheme = Scheme.for_cell(self.wlan, ssid, cell, password)
-                    scheme.activate()
-                    result = True
-                except Exception as e:
-                    logger.error(e)
+        if self.activity:
+            for cell in self.current_cells:
+                if cell.ssid == ssid:
+                    try:
+                        scheme = Scheme.for_cell(self.wlan, ssid, cell, password)
+                        scheme.activate()
+                        result = True
+                    except Exception as e:
+                        logger.error(e)
 
         return result
 
@@ -254,13 +261,14 @@ class NetworkConnector:
         """Method to try connect to one of available networks.
         """
 
-        for network in self.known_networks:
-            if self.connect(network["ssid"], network["password"]):
-                return True
+        if self.activity:
+            for network in self.known_networks:
+                if self.connect(network["ssid"], network["password"]):
+                    return True
         return False
 
-    def db_upsert(self, ssid, password, force_insert=False):
-        """Function to insert(or update) the position to the database.
+    def login_upsert(self, ssid, password, force_insert=False):
+        """Function to insert(or update) the connection info of new networks to the database.
 
         Args:
             ssid:       	        The name of the surrounding access point.
@@ -271,16 +279,16 @@ class NetworkConnector:
             str:  Response.
         """
 
-        if self.table.search((Query().ssid == ssid)):
+        if self.login_table.search((Query().ssid == ssid)):
             if force_insert:
                 # self.already_exist = False
-                self.table.update({'password': password, 'wlan': self.wlan}, Query().ssid == ssid)
+                self.login_table.update({'password': password, 'wlan': self.wlan}, Query().ssid == ssid)
 
             else:
                 # self.already_exist = True
                 return "Already Exist"
         else:
-            self.table.insert({
+            self.login_table.insert({
                 'wlan': self.wlan,
                 'ssid': ssid,
                 'password': password
@@ -288,13 +296,35 @@ class NetworkConnector:
 
         return ""
 
+    def status_upsert(self, activity, force_insert=False):
+        """Function to insert(or update) the status of NetworkConnector to the database.
+
+        Args:
+            activity (bool):        Activity flag of the NetworkConnector. If False, NetworkConnector not try connecting to surround networks.
+            force_insert (bool):    Force insert flag.
+
+        Returns:
+            str:  Response.
+        """
+
+        status = self.status_table.all()
+
+        if status:
+            self.status_table.update({'activity': activity})
+        else:
+            self.status_table.insert({
+                'activity': activity,
+            })  # insert the given data
+
+        return ""
+
     def __refresh_known_networks(self):
-        """Method to refreshing known networks from the database (and creating objects for them.)
+        """Method to refresh known networks from the database (and creating objects for them.)
         """
 
         self.known_networks.clear()
 
-        for login in self.table.all():
+        for login in self.login_table.all():
             network = {"ssid": login["ssid"], "password": login["password"], "wlan": login["wlan"]}
             self.known_networks.append(network)
 
@@ -303,6 +333,27 @@ class NetworkConnector:
         """Method to to restart networking.service
         """
         call("systemctl restart networking.service", shell=True)
+
+    def __refresh_status(self):
+        """Method to refresh status from the database.
+        """
+        status = self.login_table.all()
+
+        if status:
+            self.activity = status[0]["activity"]
+
+    def change_status(self, activity):
+        """high-level method to change status of NetworkConnector via given parameters.
+
+        Args:
+            activity (bool):              Activity flag of the NetworkConnector. If False, NetworkConnector not try connecting to surround networks.
+
+        Returns:
+            str:  Response.
+        """
+
+        self.status_upsert(activity)
+        self.__refresh_status()
 
     @staticmethod
     def is_network_online():
