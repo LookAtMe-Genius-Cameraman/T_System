@@ -161,7 +161,8 @@ class NetworkConnector:
         if self.activity:
             self.scan()
             self.__set_available_networks()
-            self.__refresh_known_networks()
+
+        self.__refresh_known_networks()
 
     def scan(self, wlan=None):
         """Method to scan around for searching available networks.
