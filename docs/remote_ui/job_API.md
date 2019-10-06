@@ -45,7 +45,8 @@ Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 ```
 
 # Starting the job
-Returns an error if the TYPE is empty.
+Returns an error if the TYPE is empty. 
+TYPE can be 'real' or 'simulation'.
 
 ## Request
 ```http
@@ -100,6 +101,7 @@ Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 ```
 
 # Stopping/Pausing the job
+If the PAUSE parameter is not None, job will pause.
 
 ## Request
 ```http
