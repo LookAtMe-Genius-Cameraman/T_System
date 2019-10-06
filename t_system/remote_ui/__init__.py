@@ -29,7 +29,7 @@ from t_system.remote_ui.api.update import api_bp as update_api_bp
 from t_system import T_SYSTEM_PATH, dot_t_system_dir
 # dot_t_system_dir = "/home/baybars/.t_system"
 # T_SYSTEM_PATH = "/home/baybars/T_System/t_system"
-__version__ = '0.9.2'
+__version__ = '0.9.21'
 
 
 REMOTE_UI_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
