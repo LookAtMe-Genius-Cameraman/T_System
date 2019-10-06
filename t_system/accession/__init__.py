@@ -144,7 +144,7 @@ class NetworkConnector:
         self.login_table = DBFetcher(self.folder, "db", "login").fetch()
         self.status_table = DBFetcher(self.folder, "db", "status").fetch()
 
-        self.activity = True
+        self.activity = None
         self.__refresh_status()
 
         self.wpa_supplicant = WpaSupplicant(args)
@@ -338,10 +338,12 @@ class NetworkConnector:
     def __refresh_status(self):
         """Method to refresh status from the database.
         """
-        status = self.login_table.all()
+        status = self.status_table.all()
 
         if status:
             self.activity = status[0]["activity"]
+        else:
+            self.activity = True
 
     def change_status(self, activity):
         """high-level method to change status of NetworkConnector via given parameters.
