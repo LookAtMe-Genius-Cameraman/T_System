@@ -109,6 +109,7 @@ function toggle_job_modal() {
     job_template_container.classList.toggle("focused");
     job_div.classList.toggle("focused");
     job_btn.classList.toggle("clicked");
+    job_btn.classList.toggle("heart");
 
 
     if (job_div.classList.contains("focused")) {  // 1. click
@@ -151,6 +152,15 @@ job_div.addEventListener("click", function (event) {
     } else {
     }
 });
+
+setInterval(function () {
+    job_btn.classList.add("heart");
+
+    setTimeout(function () {
+        job_btn.classList.remove("heart");
+    }, 1000)
+
+}, 30000);
 
 job_btn.addEventListener("click", toggle_job_modal);
 
