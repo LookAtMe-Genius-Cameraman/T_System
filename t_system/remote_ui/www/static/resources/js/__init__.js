@@ -8,9 +8,6 @@
 
 let admin_id = false;
 
-let requested_data = {};
-let response_data = {};
-
 let interval = 0;
 
 let dark_overlay_active = false;

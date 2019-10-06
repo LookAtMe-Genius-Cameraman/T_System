@@ -9,10 +9,6 @@
 /** @type {!Element} */
 const body = document.getElementsByTagName("BODY")[0];
 
-/** @type {!Object} */
-const jquery_manager = JQueryManager;
-
-
 const initial_loading_div = document.getElementById("initial_loading_div");
 const loading_animation_div = document.getElementById("loading_animation_div");
 

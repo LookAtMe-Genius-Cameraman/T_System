@@ -91,65 +91,6 @@ function close_opened_option(option_btn) {
     }
 }
 
-/**
- * Method to updating `auto_update` status of UpdateManager of t_system.
- */
-function put_update_data(data) {
-    jquery_manager.put_data("/api/update&admin_id=" + admin_id, data);
-}
-
-/**
- * Method of getting specified network information with its ssid or the all existing network information.
- * It is triggered via a click on options_btn or clicked specified network on network list.
- */
-function get_update_data(key) {
-    jquery_manager.get_data("/api/network?key=" + key + "&admin_id=" + admin_id);
-}
-
-/**
- * Method of getting specified network information with its ssid or the all existing network information.
- * It is triggered via a click on options_btn or clicked specified network on network list.
- */
-function get_network_data(ssid = null, activity = null) {
-
-    if (ssid) {
-        jquery_manager.get_data("/api/network?ssid=" + ssid + "&admin_id=" + admin_id);
-    } else if (activity) {
-        jquery_manager.get_data("/api/network?activity=" + activity + "&admin_id=" + admin_id);
-    } else {
-        jquery_manager.get_data("/api/network?admin_id=" + admin_id);
-    }
-}
-
-/**
- * Method of getting specified network information with its ssid or the all existing network information.
- * It is triggered via a click on options_btn or clicked specified network on network list.
- */
-function get_face_recognition_data(id = null) {
-
-    if (id) {
-        jquery_manager.get_data("/api/face_encoding?id=" + id + "&admin_id=" + admin_id);
-    } else {
-        jquery_manager.get_data("/api/face_encoding?admin_id=" + admin_id);
-    }
-}
-
-/**
- * Method of getting records, record lists and specified record information with their id, date or none.
- * It is triggered via a click on record_control_btn, specified date of the records or specified record.
- */
-function get_record_data(date = null, id = null) {
-
-    if (date && id) {
-        jquery_manager.get_data("/api/record?date=" + date + "&id=" + id + "&admin_id=" + admin_id);
-    } else if (!date && !id) {
-        jquery_manager.get_data("/api/record?admin_id=" + admin_id);
-    } else if (date) {
-        jquery_manager.get_data("/api/record?date=" + date + "&admin_id=" + admin_id);
-    } else if (id) {
-        jquery_manager.get_data("/api/record?id=" + id + "&admin_id=" + admin_id);
-    }
-}
 
 let update_control_btn_click_count = 0;
 let update_control_btn_lis_bind = close_opened_option.bind(null, update_control_btn);
@@ -171,17 +112,15 @@ update_control_btn.addEventListener("click", function () {
         dark_deep_background_div.addEventListener("click", update_control_btn_lis_bind);
         options_template_container.addEventListener("click", update_control_btn_lis_bind);
 
-        get_update_data("auto_update");
-
-        let timer_settings_cont = setInterval(function () {
-            if (requested_data !== {}) {
-                if (requested_data["status"] === "OK") {
-                    auto_update_checkbox.checked = requested_data["data"] === true;
+        request_asynchronous('/api/network?key=auto_update&admin_id=' + admin_id, 'GET',
+            'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
+                if (err === "success") {
+                    if (requested_data["status"] === "OK") {
+                        auto_update_checkbox.checked = requested_data["data"] === true;
+                    }
                 }
-                requested_data = {};
-                clearInterval(timer_settings_cont)
-            }
-        }, 300);
+            });
+
     } else {
         dark_deep_background_div.removeEventListener("click", update_control_btn_lis_bind);
         options_template_container.removeEventListener("click", update_control_btn_lis_bind);
@@ -193,16 +132,34 @@ update_control_btn.addEventListener("click", function () {
 auto_update_checkbox.addEventListener("change", function () {
     if (auto_update_checkbox.checked) {
         let data = {"auto_update": true};
-        put_update_data(data);
+
+        request_asynchronous('/api/update?admin_id=' + admin_id, 'PUT',
+            'application/x-www-form-urlencoded; charset=UTF-8', data, function (req, err, response) {
+                if (err === "success") {
+                    let response_data = JSON.parse(response.responseText);
+                }
+            });
     } else {
         let data = {"auto_update": false};
-        put_update_data(data);
+
+        request_asynchronous('/api/update?admin_id=' + admin_id, 'PUT',
+            'application/x-www-form-urlencoded; charset=UTF-8', data, function (req, err, response) {
+                if (err === "success") {
+                    let response_data = JSON.parse(response.responseText);
+                }
+            });
     }
 });
 
 update_btn.addEventListener("click", function () {
     // Todo: Response will handled. for response arrive, button will be disabled. and maybe for update completed, Remote UI will sleep, shutdown or locked. decide that.
-    jquery_manager.post_data("/api/update?admin_id=" + admin_id, {})
+
+    request_asynchronous('/api/update?admin_id=' + admin_id, 'POST',
+        'application/x-www-form-urlencoded; charset=UTF-8', {}, function (req, err, response) {
+            if (err === "success") {
+                let response_data = JSON.parse(response.responseText);
+            }
+        });
 });
 
 let wifi_connections_btn_click_count = 0;
@@ -224,117 +181,117 @@ wifi_connections_btn.addEventListener("click", function () {
 
         dark_deep_background_div.addEventListener("click", wifi_connections_btn_lis_bind);
         options_template_container.addEventListener("click", wifi_connections_btn_lis_bind);
-        // get_network_data();
-        requested_data = {"status": "OK", "data": [{"ssid": "Beyaz", "password": "arge"}, {"ssid": "new_wifi", "password": "1234"}, {"ssid": "demo", "password": "bla"}]};
 
-        let timer_settings_cont = setInterval(function () {
+        request_asynchronous('/api/network?admin_id=' + admin_id, 'GET',
+            'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
+                // err = "success";
+                // requested_data = {"status": "OK", "data": [{"ssid": "Beyaz", "password": "arge"}, {"ssid": "new_wifi", "password": "1234"}, {"ssid": "demo", "password": "bla"}]};
+                if (err === "success") {
+                    if (requested_data["status"] === "OK") {
+                        let network_connections = requested_data["data"];
 
-            if (requested_data !== {}) {
+                        for (let c = 0; c < network_connections.length; c++) {
 
-                if (requested_data["status"] === "OK") {
-                    let network_connections = requested_data["data"];
-                    requested_data = {};
+                            let wifi_dropdown_div = document.createElement('div');
+                            let wifi_btn = document.createElement('button');
+                            let wifi_dropdown_container_div = document.createElement('div');
 
-                    // get_network_data(null, true);
-                    requested_data = {"status": "OK", "data": true};
+                            wifi_dropdown_div.classList.add("dropdown", "btn-group", "mt-1");
 
-                    let activity_interval = setInterval(function () {
+                            wifi_btn.classList.add("btn", "btn-secondary", "dropdown-toggle", "cut-text");
+                            wifi_btn.type = "button";
+                            wifi_btn.id = network_connections[c]["ssid"] + "_btn";
+                            wifi_btn.setAttribute("data-toggle", "dropdown");
+                            wifi_btn.setAttribute("aria-haspopup", "true");
+                            wifi_btn.setAttribute("aria-expanded", "false");
+                            wifi_btn.innerHTML = network_connections[c]["ssid"];
 
-                        if (requested_data !== {}) {
+                            wifi_dropdown_container_div.classList.add("dropdown-menu", "dropdown-menu-right", "dropdown-menu-center", "body_background", "no-border");
+                            wifi_dropdown_container_div.setAttribute("aria-labelledby", wifi_btn.id);
 
-                            if (requested_data["status"] === "OK") {
-                                let activity = requested_data["data"];
+                            // let ssid_output = document.createElement('output');
+                            let password_div = document.createElement('div');
+                            let password_input = document.createElement('input');
+                            let password_update_btn = document.createElement('button');
 
-                                for (let c = 0; c < network_connections.length; c++) {
+                            password_div.classList.add("dropdown-item");
 
-                                    let wifi_dropdown_div = document.createElement('div');
-                                    let wifi_btn = document.createElement('button');
-                                    let wifi_dropdown_container_div = document.createElement('div');
+                            password_input.type = "password";
+                            password_input.classList.add("modal_input", "existing_network_password");
+                            password_input.value = network_connections[c]["password"];
 
-                                    wifi_dropdown_div.classList.add("dropdown", "btn-group", "mt-1");
+                            let password_last_value = password_input.value;
 
-                                    wifi_btn.classList.add("btn", "btn-secondary", "dropdown-toggle", "cut-text");
-                                    wifi_btn.type = "button";
-                                    wifi_btn.id = network_connections[c]["ssid"] + "_btn";
-                                    wifi_btn.setAttribute("data-toggle", "dropdown");
-                                    wifi_btn.setAttribute("aria-haspopup", "true");
-                                    wifi_btn.setAttribute("aria-expanded", "false");
-                                    wifi_btn.innerHTML = network_connections[c]["ssid"];
+                            password_input.addEventListener("focus", function () {
+                                password_input.classList.add("focused");
+                            });
 
-                                    wifi_dropdown_container_div.classList.add("dropdown-menu", "dropdown-menu-right", "dropdown-menu-center", "body_background", "no-border");
-                                    wifi_dropdown_container_div.setAttribute("aria-labelledby", wifi_btn.id);
+                            password_input.addEventListener("blur", function () {
+                                password_input.classList.remove("focused");
+                            });
 
-                                    // let ssid_output = document.createElement('output');
-                                    let password_div = document.createElement('div');
-                                    let password_input = document.createElement('input');
-                                    let password_update_btn = document.createElement('button');
+                            password_input.addEventListener("mousemove", function () {
+                                if (password_input.value !== "" && password_input.value !== password_last_value) {
+                                    password_input.classList.add("changed");
+                                    show_element(password_update_btn);
+                                } else {
+                                    password_input.classList.remove("changed");
+                                    hide_element(password_update_btn);
+                                }
+                            });
 
-                                    password_div.classList.add("dropdown-item");
 
-                                    password_input.type = "password";
-                                    password_input.classList.add("modal_input", "existing_network_password");
-                                    password_input.value = network_connections[c]["password"];
+                            password_update_btn.classList.add("send_network_data_btn");
+                            password_update_btn.innerHTML = "&#187;";
 
-                                    let password_last_value = password_input.value;
+                            password_update_btn.addEventListener("click", function () {
+                                let data = {"ssid": network_connections[c]["ssid"], "password": password_input.value};
 
-                                    password_input.addEventListener("focus", function () {
-                                        password_input.classList.add("focused");
-                                    });
-
-                                    password_input.addEventListener("blur", function () {
-                                        password_input.classList.remove("focused");
-                                    });
-
-                                    password_input.addEventListener("mousemove", function () {
-                                        if (password_input.value !== "" && password_input.value !== password_last_value) {
-                                            password_input.classList.add("changed");
-                                            show_element(password_update_btn);
-                                        } else {
-                                            password_input.classList.remove("changed");
-                                            hide_element(password_update_btn);
+                                request_asynchronous('/api/network?ssid=' + network_connections[c]["ssid"] + '&admin_id=' + admin_id, 'PUT',
+                                    'application/x-www-form-urlencoded; charset=UTF-8', data, function (req, err, response) {
+                                        if (err === "success") {
+                                            let response_data = JSON.parse(response.responseText);
                                         }
                                     });
 
+                                wifi_connections_btn.click();
+                                wifi_connections_btn.click();
+                            });
 
-                                    password_update_btn.classList.add("send_network_data_btn");
-                                    password_update_btn.innerHTML = "&#187;";
+                            password_div.appendChild(password_input);
+                            password_div.appendChild(password_update_btn);
 
-                                    password_update_btn.addEventListener("click", function () {
-                                        let data = {"ssid": network_connections[c]["ssid"], "password": password_input.value};
-                                        jquery_manager.put_data("/api/network?ssid=" + network_connections[c]["ssid"] + "&admin_id=" + admin_id, data);
+                            wifi_dropdown_container_div.appendChild(password_div);
 
-                                        wifi_connections_btn.click();
-                                        wifi_connections_btn.click();
-                                    });
+                            wifi_dropdown_div.appendChild(wifi_btn);
+                            wifi_dropdown_div.appendChild(wifi_dropdown_container_div);
 
-                                    password_div.appendChild(password_input);
-                                    password_div.appendChild(password_update_btn);
-
-                                    wifi_dropdown_container_div.appendChild(password_div);
-
-                                    wifi_dropdown_div.appendChild(wifi_btn);
-                                    wifi_dropdown_div.appendChild(wifi_dropdown_container_div);
-
-                                    network_list_ul.appendChild(wifi_dropdown_div);
-                                }
-
-                                if (activity) {
-                                    create_wifi_checkbox.checked = false
-                                } else {
-                                    create_wifi_checkbox.checked = true;
-                                    create_new_network.classList.add("disabled");
-                                    network_list_ul.classList.add("disabled");
-                                }
-                            }
-                            requested_data = {};
-                            clearInterval(activity_interval)
+                            network_list_ul.appendChild(wifi_dropdown_div);
                         }
-                    }, 300);
 
+                    }
                 }
-                clearInterval(timer_settings_cont)
-            }
-        }, 300);
+            });
+
+        request_asynchronous('/api/network?activity=' + true + '&admin_id=' + admin_id, 'GET',
+            'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
+                // err = "success";
+                // requested_data = {"status": "OK", "data": true};
+                if (err === "success") {
+                    if (requested_data["status"] === "OK") {
+                        let activity = requested_data["data"];
+
+                        if (activity) {
+                            create_wifi_checkbox.checked = false
+                        } else {
+                            create_wifi_checkbox.checked = true;
+                            create_new_network.classList.add("disabled");
+                            network_list_ul.classList.add("disabled");
+                        }
+                    }
+                }
+            });
+
     } else {
         dark_deep_background_div.removeEventListener("click", wifi_connections_btn_lis_bind);
         options_template_container.removeEventListener("click", wifi_connections_btn_lis_bind);
@@ -351,7 +308,13 @@ create_wifi_checkbox.setAttribute("data-off", translate_text_item(" "));
 
 $('#create_wifi_checkbox').change(function () {
     let data = {};
-    jquery_manager.post_data("/api/network?activity=" + create_wifi_checkbox.checked, data);
+
+    request_asynchronous('/api/network?activity=' + create_wifi_checkbox.checked, 'POST',
+        'application/x-www-form-urlencoded; charset=UTF-8', data, function (req, err, response) {
+            if (err === "success") {
+                let response_data = JSON.parse(response.responseText);
+            }
+        });
 
     if (create_wifi_checkbox.checked) {
         create_new_network.classList.add("disabled");
@@ -388,31 +351,24 @@ network_ssid_input.addEventListener("mousemove", show_create_new_wifi_button);
 network_password_input.addEventListener("mousemove", show_create_new_wifi_button);
 
 create_new_network_btn.addEventListener("click", function () {
-    response_data = null;
 
-    let data = {};
-    data = {"ssid": network_ssid_input.value, "password": network_password_input.value};
-    jquery_manager.post_data("/api/network", data);
+    let data = {"ssid": network_ssid_input.value, "password": network_password_input.value};
+
+    request_asynchronous('/api/network', 'POST',
+        'application/x-www-form-urlencoded; charset=UTF-8', data, function (req, err, response) {
+            if (err === "success") {
+                let response_data = JSON.parse(response.responseText);
+                if (response_data["status"] === "OK") {
+                    wifi_connections_btn.click();
+                    wifi_connections_btn.click();
+
+                    admin_id = response_data["admin_id"];
+                }
+            }
+        });
 
     network_ssid_input.value = "";
     network_password_input.value = "";
-
-    let new_network_interval = setInterval(function () {
-
-        if (response_data !== null) {
-            if (response_data["status"] === "OK") {
-                wifi_connections_btn.click();
-                wifi_connections_btn.click();
-
-                admin_id = response_data["admin_id"];
-                console.log(admin_id)
-            }
-            response_data = {};
-            clearInterval(new_network_interval);
-        }
-    }, 300);
-
-
 });
 
 let audio_control_btn_click_count = 0;
@@ -459,100 +415,103 @@ face_encoding_btn.addEventListener("click", function () {
         dark_deep_background_div.addEventListener("click", face_encoding_btn_lis_bind);
         options_template_container.addEventListener("click", face_encoding_btn_lis_bind);
 
-        get_face_recognition_data();
-        // requested_data = {"status": "OK", "data": [{"id": "z970136a-aegb-15e9-b130-cy2f756671ed", "name": "face_name", "image_names": ["im-n1", "im-n2", "im-n3", "im-n4", "im-n5"]}]};
+        request_asynchronous('/api/face_encoding?admin_id=' + admin_id, 'GET',
+            'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
+                // err = "success";
+                // requested_data = {"status": "OK", "data": [{"id": "z970136a-aegb-15e9-b130-cy2f756671ed", "name": "face_name", "image_names": ["im-n1", "im-n2", "im-n3", "im-n4", "im-n5"]}]};
 
-        let face_encoding_interval = setInterval(function () {
+                if (err === "success") {
+                    if (requested_data["status"] === "OK") {
+                        for (let c = 0; c < requested_data["data"].length; c++) {
 
-            if (requested_data !== {}) {
-                if (requested_data["status"] === "OK") {
-                    for (let c = 0; c < requested_data["data"].length; c++) {
+                            let face_dropdown_div = document.createElement('div');
+                            let face_pp_img = document.createElement('img');
+                            let face_a = document.createElement('a');
+                            let face_dropdown_container_div = document.createElement('div');
 
-                        let face_dropdown_div = document.createElement('div');
-                        let face_pp_img = document.createElement('img');
-                        let face_a = document.createElement('a');
-                        let face_dropdown_container_div = document.createElement('div');
+                            face_dropdown_div.classList.add("dropdown", "show", "mb-1");
 
-                        face_dropdown_div.classList.add("dropdown", "show", "mb-1");
+                            let src = "/api/face_encoding?id=" + requested_data["data"][c]["id"] + "&image=" + requested_data["data"][c]["image_names"][0] + "&admin_id=" + admin_id;   // this url assigning creates a GET request.
+                            // let src = "static/resources/images/favicon.png" + "# " + new Date().getTime();
 
-                        let src = "/api/face_encoding?id=" + requested_data["data"][c]["id"] + "&image=" + requested_data["data"][c]["image_names"][0] + "&admin_id=" + admin_id;   // this url assigning creates a GET request.
-                        // let src = "static/resources/images/favicon.png" + "# " + new Date().getTime();
+                            resize_image(src, 30, 40, face_pp_img);
 
-                        resize_image(src, 30, 40, face_pp_img);
+                            face_a.classList.add("btn", "btn-secondary", "dropdown-toggle", "cut-text", "face_a", "ml-1");
+                            face_a.href = "#";
+                            face_a.role = "button";
+                            face_a.id = requested_data["data"][c]["name"] + "_a";
+                            face_a.setAttribute("data-toggle", "dropdown");
+                            face_a.setAttribute("aria-haspopup", "true");
+                            face_a.setAttribute("aria-expanded", "false");
+                            face_a.innerHTML = requested_data["data"][c]["name"].replace(/_/gi, " ");
+                            face_a.title = face_a.innerHTML;
 
-                        face_a.classList.add("btn", "btn-secondary", "dropdown-toggle", "cut-text", "face_a", "ml-1");
-                        face_a.href = "#";
-                        face_a.role = "button";
-                        face_a.id = requested_data["data"][c]["name"] + "_a";
-                        face_a.setAttribute("data-toggle", "dropdown");
-                        face_a.setAttribute("aria-haspopup", "true");
-                        face_a.setAttribute("aria-expanded", "false");
-                        face_a.innerHTML = requested_data["data"][c]["name"].replace(/_/gi, " ");
-                        face_a.title = face_a.innerHTML;
+                            face_dropdown_container_div.classList.add("dropdown-menu", "dropdown-menu-right", "dropdown_menu", "face_encoding_dropdown_menu");
+                            face_dropdown_container_div.classList.add("container");
+                            face_dropdown_container_div.setAttribute("aria-labelledby", face_a.id);
 
-                        face_dropdown_container_div.classList.add("dropdown-menu", "dropdown-menu-right", "dropdown_menu", "face_encoding_dropdown_menu");
-                        face_dropdown_container_div.classList.add("container");
-                        face_dropdown_container_div.setAttribute("aria-labelledby", face_a.id);
+                            let face_dropdown_row_div;
+                            for (let i = 0; i < requested_data["data"][c]["image_names"].length; i++) {
 
-                        let face_dropdown_row_div;
-                        for (let i = 0; i < requested_data["data"][c]["image_names"].length; i++) {
+                                if (i % 3 === 0) {
+                                    face_dropdown_row_div = document.createElement('div');
+                                    face_dropdown_row_div.classList.add("row", "mb-1", "face_row");
+                                }
 
-                            if (i % 3 === 0) {
-                                face_dropdown_row_div = document.createElement('div');
-                                face_dropdown_row_div.classList.add("row", "mb-1", "face_row");
+                                let face_dropdown_col_div = document.createElement('div');
+                                face_dropdown_col_div.classList.add("col-*", "ml-2");
+
+                                let face_div = document.createElement('div');
+                                let face_img = document.createElement('img');
+
+                                face_div.id = requested_data["data"][c]["image_names"][i];
+                                face_div.classList.add("face_div");
+
+                                let src = "/api/face_encoding?id=" + requested_data["data"][c]["id"] + "&image=" + requested_data["data"][c]["image_names"][i] + "&admin_id=" + admin_id;   // this url assigning creates a GET request.
+                                resize_image(src, 25, 40, face_img);
+
+                                interact('#' + face_div.id)
+                                    .on('tap', function (event) {
+                                    })
+                                    .on('doubletap', function (event) {
+                                        let route = "/api/face_encoding?id=" + requested_data["data"][c]["id"] + "&image=" + requested_data["data"][c]["image_names"][0] + "&download=" + true + "&admin_id=" + admin_id;
+
+                                        request_asynchronous(route, 'GET',
+                                            'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
+                                                if (err === "success") {
+                                                }
+                                            });
+                                    })
+                                    .on('hold', function (event) {
+                                        console.log("triggered haaa?");
+                                        face_encoding_div.classList.add("hidden_element");
+                                        options_image_viewer_div.classList.add("focused");
+                                        options_image_viewer_img.src = src;
+
+                                    })
+                                    .on('up', function (event) {
+                                        options_image_viewer_div.classList.remove("focused");
+                                        options_image_viewer_img.src = "";
+                                        face_encoding_div.classList.remove("hidden_element");
+                                    });
+
+                                face_div.appendChild(face_img);
+                                face_dropdown_col_div.appendChild(face_div);
+                                face_dropdown_row_div.appendChild(face_dropdown_col_div);
+                                face_dropdown_container_div.appendChild(face_dropdown_row_div);
+
                             }
 
-                            let face_dropdown_col_div = document.createElement('div');
-                            face_dropdown_col_div.classList.add("col-*", "ml-2");
+                            face_dropdown_div.appendChild(face_pp_img);
+                            face_dropdown_div.appendChild(face_a);
+                            face_dropdown_div.appendChild(face_dropdown_container_div);
 
-                            let face_div = document.createElement('div');
-                            let face_img = document.createElement('img');
-
-                            face_div.id = requested_data["data"][c]["image_names"][i];
-                            face_div.classList.add("face_div");
-
-                            let src = "/api/face_encoding?id=" + requested_data["data"][c]["id"] + "&image=" + requested_data["data"][c]["image_names"][i] + "&admin_id=" + admin_id;   // this url assigning creates a GET request.
-                            resize_image(src, 25, 40, face_img);
-
-                            interact('#' + face_div.id)
-                                .on('tap', function (event) {
-                                })
-                                .on('doubletap', function (event) {
-                                    let route = "/api/face_encoding?id=" + requested_data["data"][c]["id"] + "&image=" + requested_data["data"][c]["image_names"][0] + "&download=" + true + "&admin_id=" + admin_id;
-                                    jquery_manager.get_data(route);
-                                })
-                                .on('hold', function (event) {
-                                    console.log("triggered haaa?");
-                                    face_encoding_div.classList.add("hidden_element");
-                                    options_image_viewer_div.classList.add("focused");
-                                    options_image_viewer_img.src = src;
-
-                                })
-                                .on('up', function (event) {
-                                    options_image_viewer_div.classList.remove("focused");
-                                    options_image_viewer_img.src = "";
-                                    face_encoding_div.classList.remove("hidden_element");
-                                });
-
-                            face_div.appendChild(face_img);
-                            face_dropdown_col_div.appendChild(face_div);
-                            face_dropdown_row_div.appendChild(face_dropdown_col_div);
-                            face_dropdown_container_div.appendChild(face_dropdown_row_div);
-
+                            encoded_face_list_ul.appendChild(face_dropdown_div);
                         }
-
-                        face_dropdown_div.appendChild(face_pp_img);
-                        face_dropdown_div.appendChild(face_a);
-                        face_dropdown_div.appendChild(face_dropdown_container_div);
-
-                        encoded_face_list_ul.appendChild(face_dropdown_div);
                     }
                 }
+            });
 
-                requested_data = {};
-                clearInterval(face_encoding_interval)
-            }
-        }, 300);
     } else {
 
         dark_deep_background_div.removeEventListener("click", face_encoding_btn_lis_bind);
@@ -563,8 +522,6 @@ face_encoding_btn.addEventListener("click", function () {
         }
         face_encoding_btn_click_count = 0;
     }
-
-
 });
 
 f_enc_photo_input.addEventListener("change", function (event) {
@@ -586,29 +543,25 @@ encode_new_face_btn.addEventListener("click", function () {
 
     // face_encoding_form.submit(function () {});
 
-    response_data = null;
-    jquery_manager.post_data("/api/face_encoding", $("#face_encoding_form").serialize());  // .serialize returns the dictionary form data.
+    request_asynchronous('/api/face_encoding?admin_id=' + admin_id, 'POST',
+        'application/x-www-form-urlencoded; charset=UTF-8', $("#face_encoding_form").serialize(), function (req, err, response) {  // .serialize returns the dictionary form data.
+            if (err === "success") {
+                let response_data = JSON.parse(response.responseText);
+
+                if (response_data["status"] === "OK") {
+                    body.classList.remove("disable_pointer");
+                    swiper_wrapper.classList.remove("disabled");
+                    processing_animation_div.classList.remove("focused");
+                    processing_animation.classList.remove("lds-hourglass");
+
+                    face_encoding_btn.click();
+                    face_encoding_btn.click();
+                }
+            }
+        });
 
     face_name_input.value = "";
 
-    let encode_face_interval = setInterval(function () {
-        console.log(typeof response_data);
-
-        if (response_data !== null) {
-            if (response_data["status"] === "OK") {
-                console.log(response_data);
-                body.classList.remove("disable_pointer");
-                swiper_wrapper.classList.remove("disabled");
-                processing_animation_div.classList.remove("focused");
-                processing_animation.classList.remove("lds-hourglass");
-
-                face_encoding_btn.click();
-                face_encoding_btn.click();
-            }
-            response_data = {};
-            clearInterval(encode_face_interval);
-        }
-    }, 300);
 });
 
 
@@ -632,107 +585,99 @@ record_control_btn.addEventListener("click", function () {
         dark_deep_background_div.addEventListener("click", record_control_btn_lis_bind);
         options_template_container.addEventListener("click", record_control_btn_lis_bind);
 
-        get_record_data();
-        // requested_data = {"status": "OK", "data": ["22_05_2019", "23_05_2019", "27_05_2019", "27_05_2019", "27_05_2019", "27_05_2019", "27_05_2019", "27_05_2019", "27_05_2019"]};
+        request_asynchronous('/api/record?admin_id=' + admin_id, 'GET',
+            'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
+                // err = "success"
+                // requested_data = {"status": "OK", "data": ["22_05_2019", "23_05_2019", "27_05_2019", "27_05_2019", "27_05_2019", "27_05_2019", "27_05_2019", "27_05_2019", "27_05_2019"]};
+                if (err === "success") {
+                    if (requested_data["status"] === "OK") {
+                        let record_dates = requested_data["data"];
 
-        let record_dates;
-        let record_dates_interval = setInterval(function () {
+                        for (let c = 0; c < record_dates.length; c++) {
 
-            if (requested_data !== {}) {
-                console.log(requested_data);
+                            let date_dropdown_div = document.createElement('div');
+                            let date_btn = document.createElement('button');
+                            let date_dropdown_container_div = document.createElement('div');
 
-                if (requested_data["status"] === "OK") {
-                    record_dates = requested_data["data"];
-                    for (let c = 0; c < record_dates.length; c++) {
+                            date_dropdown_div.classList.add("dropdown", "mt-1");
 
-                        let date_dropdown_div = document.createElement('div');
-                        let date_btn = document.createElement('button');
-                        let date_dropdown_container_div = document.createElement('div');
+                            date_btn.classList.add("btn", "btn-secondary", "dropdown-toggle");
+                            date_btn.type = "button";
+                            date_btn.id = record_dates[c] + "_btn";
+                            date_btn.setAttribute("data-toggle", "dropdown");
+                            date_btn.setAttribute("aria-haspopup", "true");
+                            date_btn.setAttribute("aria-expanded", "false");
+                            date_btn.innerHTML = record_dates[c].replace(/_/gi, "/"); // to replace all necessary characters.
 
-                        date_dropdown_div.classList.add("dropdown", "mt-1");
+                            date_dropdown_container_div.classList.add("dropdown-menu", "dropdown-menu-right", "dropdown_menu", "record_dropdown_menu");
+                            date_dropdown_container_div.setAttribute("aria-labelledby", date_btn.id);
 
-                        date_btn.classList.add("btn", "btn-secondary", "dropdown-toggle");
-                        date_btn.type = "button";
-                        date_btn.id = record_dates[c] + "_btn";
-                        date_btn.setAttribute("data-toggle", "dropdown");
-                        date_btn.setAttribute("aria-haspopup", "true");
-                        date_btn.setAttribute("aria-expanded", "false");
-                        date_btn.innerHTML = record_dates[c].replace(/_/gi, "/"); // to replace all necessary characters.
+                            let date_btn_click_count = 0;
+                            date_btn.addEventListener("click", function () {
 
-                        date_dropdown_container_div.classList.add("dropdown-menu", "dropdown-menu-right", "dropdown_menu", "record_dropdown_menu");
-                        date_dropdown_container_div.setAttribute("aria-labelledby", date_btn.id);
+                                date_btn_click_count++;
 
-                        let date_btn_click_count = 0;
-                        date_btn.addEventListener("click", function () {
-
-                            date_btn_click_count++;
-
-                            while (date_dropdown_container_div.firstChild) {
-                                date_dropdown_container_div.removeChild(date_dropdown_container_div.firstChild);
-                            }
-                            get_record_data(record_dates[c], null);
-                            // requested_data = {"status": "OK", "data": [{"id": "b970138a-argb-11e9-b145-cc2f844671ed", "name": "record_name", "time": "12_27_54", "length": 180, "extension": "mp4"}]};
-
-                            let records;
-                            let records_interval = setInterval(function () {
-                                if (requested_data !== {}) {
-
-                                    if (requested_data["status"] === "OK") {
-                                        records = requested_data["data"];
-
-                                        for (let i = 0; i < records.length; i++) {
-                                            let record_div = document.createElement('div');
-                                            let record_a = document.createElement('a');
-                                            let record_time_span = document.createElement('span');
-                                            let record_length_span = document.createElement('span');
-
-                                            record_div.classList.add("dropdown-item");
-                                            record_div.id = records[i]["id"];
-
-                                            record_a.role = "button";
-                                            record_a.innerHTML = records[i]["name"];
-                                            record_a.classList.add("record_a");
-
-                                            record_time_span.innerHTML = records[i]["time"].replace(/_/gi, ":");
-                                            record_time_span.classList.add("record_time_span");
-
-                                            record_length_span.innerHTML = records[i]["length"] + " min.";
-                                            record_length_span.classList.add("record_length_span");
-
-                                            record_a.addEventListener("click", function () {
-
-                                                record_control_div.classList.toggle("hidden_element");
-                                                options_player_div.classList.toggle("focused");
-
-                                                options_player_source.type = "video/" + records[i]["extension"];
-                                                options_player_source.src = "/api/record?id=" + records[i]["id"] + "&admin_id=" + admin_id;
-
-                                                // options_player_source.src = "static/resources/images/mov_bbb.mp4"+ "# " + new Date().getTime();
-                                                options_video.load()
-                                            });
-
-                                            record_div.appendChild(record_a);
-                                            record_div.appendChild(record_time_span);
-                                            record_div.appendChild(record_length_span);
-
-                                            date_dropdown_container_div.appendChild(record_div);
-                                        }
-                                    }
-                                    requested_data = {};
-                                    clearInterval(records_interval)
+                                while (date_dropdown_container_div.firstChild) {
+                                    date_dropdown_container_div.removeChild(date_dropdown_container_div.firstChild);
                                 }
-                            }, 300);
-                        });
-                        date_dropdown_div.appendChild(date_btn);
-                        date_dropdown_div.appendChild(date_dropdown_container_div);
 
-                        record_list_ul.appendChild(date_dropdown_div);
+                                request_asynchronous('/api/record?date=' + record_dates[c] + '&admin_id=' + admin_id, 'GET',
+                                    'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
+                                        // err = "success"
+                                        // requested_data = {"status": "OK", "data": [{"id": "b970138a-argb-11e9-b145-cc2f844671ed", "name": "record_name", "time": "12_27_54", "length": 180, "extension": "mp4"}]};
+                                        if (err === "success") {
+                                            if (requested_data["status"] === "OK") {
+                                                let records = requested_data["data"];
+
+                                                for (let i = 0; i < records.length; i++) {
+                                                    let record_div = document.createElement('div');
+                                                    let record_a = document.createElement('a');
+                                                    let record_time_span = document.createElement('span');
+                                                    let record_length_span = document.createElement('span');
+
+                                                    record_div.classList.add("dropdown-item");
+                                                    record_div.id = records[i]["id"];
+
+                                                    record_a.role = "button";
+                                                    record_a.innerHTML = records[i]["name"];
+                                                    record_a.classList.add("record_a");
+
+                                                    record_time_span.innerHTML = records[i]["time"].replace(/_/gi, ":");
+                                                    record_time_span.classList.add("record_time_span");
+
+                                                    record_length_span.innerHTML = records[i]["length"] + " min.";
+                                                    record_length_span.classList.add("record_length_span");
+
+                                                    record_a.addEventListener("click", function () {
+
+                                                        record_control_div.classList.toggle("hidden_element");
+                                                        options_player_div.classList.toggle("focused");
+
+                                                        options_player_source.type = "video/" + records[i]["extension"];
+                                                        options_player_source.src = "/api/record?id=" + records[i]["id"] + "&admin_id=" + admin_id;
+
+                                                        // options_player_source.src = "static/resources/images/mov_bbb.mp4"+ "# " + new Date().getTime();
+                                                        options_video.load()
+                                                    });
+
+                                                    record_div.appendChild(record_a);
+                                                    record_div.appendChild(record_time_span);
+                                                    record_div.appendChild(record_length_span);
+
+                                                    date_dropdown_container_div.appendChild(record_div);
+                                                }
+                                            }
+                                        }
+                                    });
+                            });
+                            date_dropdown_div.appendChild(date_btn);
+                            date_dropdown_div.appendChild(date_dropdown_container_div);
+
+                            record_list_ul.appendChild(date_dropdown_div);
+                        }
                     }
                 }
-                requested_data = {};
-                clearInterval(record_dates_interval)
-            }
-        }, 300);
+            });
 
     } else {
 

@@ -63,7 +63,12 @@ interact('.prismatic_control_button')
         let route = "/api/move?id=" + button.getAttribute("data-id") + "&admin_id=" + admin_id;
         let data = {"type": button.getAttribute("data-move-type"), "id": button.getAttribute("data-id"), "quantity": button.getAttribute("data-quantity")};
 
-        jquery_manager.put_data(route, data);
+        request_asynchronous(route, 'POST',
+            'application/x-www-form-urlencoded; charset=UTF-8', data, function (req, err, response) {  // .serialize returns the dictionary form data.
+                if (err === "success") {
+                    let response_data = JSON.parse(response.responseText);
+                }
+            });
     })
     .on('doubletap', function (event) {
     })
@@ -74,8 +79,13 @@ interact('.prismatic_control_button')
         let data = {"type": button.getAttribute("data-move-type"), "id": button.getAttribute("data-id"), "quantity": button.getAttribute("data-quantity")};
 
         interval = setInterval(function () {
-            // console.log("gönderdi");
-            jquery_manager.put_data(route, data);
+
+            request_asynchronous(route, 'POST',
+                'application/x-www-form-urlencoded; charset=UTF-8', data, function (req, err, response) {  // .serialize returns the dictionary form data.
+                    if (err === "success") {
+                        let response_data = JSON.parse(response.responseText);
+                    }
+                });
         }, 300);
 
     })

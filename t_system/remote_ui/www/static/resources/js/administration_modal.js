@@ -95,6 +95,10 @@ administration_div.addEventListener("click", function (event) {
 create_emotion_checkbox.addEventListener("change", function () {
     predict_mission_label.disabled = predict_mission_checkbox.disabled = create_emotion_checkbox.checked;
     predict_mission_checkbox.checked = false;
+
+    if (create_emotion_checkbox.checked) {
+
+    }
 });
 
 

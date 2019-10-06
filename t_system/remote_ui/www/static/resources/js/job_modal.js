@@ -64,7 +64,12 @@ function post_job_data() {
         }
     }
 
-    jquery_manager.post_data("/api/job&admin_id=" + admin_id, data);
+    request_asynchronous('/api/job&admin_id=' + admin_id, 'POST',
+        'application/x-www-form-urlencoded; charset=UTF-8', data, function (req, err, response) {
+            if (err === "success") {
+                let response_data = JSON.parse(response.responseText);
+            }
+        });
 
 }
 
@@ -330,18 +335,23 @@ let monitor_area_div_click_count = 0;
 monitor_area_div.addEventListener("click", function () {
     monitor_area_div_click_count++;
     if (monitor_area_div_click_count <= 1) {
-            monitor_stream_area_img.src = "/api/stream?type=preview&admin_id=" + admin_id;   // this url assigning creates a GET request.
-            monitor_stream_area_img.classList.add("focused");
+        monitor_stream_area_img.src = "/api/stream?type=preview&admin_id=" + admin_id;   // this url assigning creates a GET request.
+        monitor_stream_area_img.classList.add("focused");
 
-            monitor_area_div.classList.add("active");
+        monitor_area_div.classList.add("active");
 
-        } else {
-            stop_stream("monitoring");
-            monitor_stream_area_img.src = "";
-            monitor_stream_area_img.classList.remove("focused");
+    } else {
+        request_asynchronous('/api/stream?type=monitoring&admin_id=' + admin_id, 'DELETE',
+            'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
+                if (err === "success") {
+                    let response_data = JSON.parse(response.responseText);
+                }
+            });
+        monitor_stream_area_img.src = "";
+        monitor_stream_area_img.classList.remove("focused");
 
-            monitor_area_div.classList.remove("active");
+        monitor_area_div.classList.remove("active");
 
-            monitor_area_div_click_count = 0;
-        }
+        monitor_area_div_click_count = 0;
+    }
 });

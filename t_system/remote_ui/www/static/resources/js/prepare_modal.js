@@ -55,62 +55,59 @@ specify_sce_div.addEventListener("click", function (e) {
             available_sce_ul.removeChild(available_sce_ul.firstChild);
         }
 
-        // get_scenario_s();
-        requested_data = {"status": "OK", "data": [{"id": "b97tr40a-alcb-31w9-b150-ce2f6156l1ed", "name": "scenario_name1", "positions": [{"name": "pos1"}, {"name": "pos2"}]}, {"id": "b97dr48a-aecb-11e9-b130-cc2f7156l1ed", "name": "scenario_name2", "positions": [{}, {}]}]};
+        request_asynchronous('/api/scenario?db=' + action_db_name + '&admin_id=' + admin_id, 'GET',
+            'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
+                // err = "success"
+                // requested_data = {"status": "OK", "data": [{"id": "b97tr40a-alcb-31w9-b150-ce2f6156l1ed", "name": "scenario_name1", "positions": [{"name": "pos1"}, {"name": "pos2"}]}, {"id": "b97dr48a-aecb-11e9-b130-cc2f7156l1ed", "name": "scenario_name2", "positions": [{}, {}]}]};
+                if (err === "success") {
+                    if (requested_data["status"] === "OK") {
 
-        let specify_sce_count = setInterval(function () {
-            if (requested_data !== {}) {
-                if (requested_data["status"] === "OK") {
+                        let scenarios = requested_data["data"];
 
-                    let scenarios = requested_data["data"];
+                        for (let c = 0; c < scenarios.length; c++) {
 
-                    for (let c = 0; c < scenarios.length; c++) {
+                            let scenario_select_div = document.createElement('div');
+                            let scenario_select_checkbox = document.createElement('input');
+                            let scenario_select_label = document.createElement('label');
 
-                        let scenario_select_div = document.createElement('div');
-                        let scenario_select_checkbox = document.createElement('input');
-                        let scenario_select_label = document.createElement('label');
+                            scenario_select_div.classList.add("form-check", "mb-1");
+                            // class="dropdown-item"
 
-                        scenario_select_div.classList.add("form-check", "mb-1");
-                        // class="dropdown-item"
+                            scenario_select_checkbox.classList.add("form-check-input");
+                            scenario_select_checkbox.id = scenarios[c]["id"];
+                            scenario_select_checkbox.type = "radio";
+                            scenario_select_checkbox.name = "scenario_select";
 
-                        scenario_select_checkbox.classList.add("form-check-input");
-                        scenario_select_checkbox.id = scenarios[c]["id"];
-                        scenario_select_checkbox.type = "radio";
-                        scenario_select_checkbox.name = "scenario_select";
+                            let face_exist = false;
 
-                        let face_exist = false;
-
-                        for (let i = 0; i < scenario_checkboxes.length; i++) {
-                            if (scenario_checkboxes[i].id === scenario_select_checkbox.id) {
-                                scenario_select_checkbox = scenario_checkboxes[i];
-                                face_exist = true;
-                                break;
+                            for (let i = 0; i < scenario_checkboxes.length; i++) {
+                                if (scenario_checkboxes[i].id === scenario_select_checkbox.id) {
+                                    scenario_select_checkbox = scenario_checkboxes[i];
+                                    face_exist = true;
+                                    break;
+                                }
                             }
+
+                            if (!face_exist) {
+                                scenario_checkboxes.push(scenario_select_checkbox);
+                            }
+
+                            scenario_select_checkbox.addEventListener("change", function () {
+
+                            });
+
+                            scenario_select_label.classList.add("form-check-label", "btn", "btn-outline-dark");
+                            scenario_select_label.setAttribute("for", scenario_select_checkbox.id);
+                            scenario_select_label.innerHTML = scenarios[c]["name"];
+
+                            scenario_select_div.appendChild(scenario_select_checkbox);
+                            scenario_select_div.appendChild(scenario_select_label);
+
+                            available_sce_ul.appendChild(scenario_select_div);
                         }
-
-                        if (!face_exist) {
-                            scenario_checkboxes.push(scenario_select_checkbox);
-                        }
-
-                        scenario_select_checkbox.addEventListener("change", function () {
-
-                        });
-
-                        scenario_select_label.classList.add("form-check-label", "btn", "btn-outline-dark");
-                        scenario_select_label.setAttribute("for", scenario_select_checkbox.id);
-                        scenario_select_label.innerHTML = scenarios[c]["name"];
-
-                        scenario_select_div.appendChild(scenario_select_checkbox);
-                        scenario_select_div.appendChild(scenario_select_label);
-
-                        available_sce_ul.appendChild(scenario_select_div);
                     }
                 }
-                requested_data = {};
-                clearInterval(specify_sce_count)
-            }
-        }, 300);
-
+            });
     } else {
         specify_sce_span.innerHTML = "";
 
@@ -212,12 +209,12 @@ recognize_select_dd_btn.addEventListener("click", function () {
         recognize_person_list_ul.removeChild(recognize_person_list_ul.firstChild);
     }
 
-    requested_data = {"status": "OK", "data": [{"id": "z970136a-aegb-15e9-b130-cy2f756671ed", "name": "Face 1", "image_names": ["im-n1"]}, {"id": "z970163v-ayhb-17r9-b132-cy2f857471ed", "name": "Face 2", "image_names": ["im-n1"]}]};
+    request_asynchronous('/api/face_encoding?admin_id=' + admin_id, 'GET',
+        'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
+            // err = "success";
+            // requested_data = {"status": "OK", "data": [{"id": "z970136a-aegb-15e9-b130-cy2f756671ed", "name": "Face 1", "image_names": ["im-n1"]}, {"id": "z970163v-ayhb-17r9-b132-cy2f857471ed", "name": "Face 2", "image_names": ["im-n1"]}]};
 
-    let recognize_select_interval = setInterval(function () {
-
-            if (requested_data !== {}) {
-
+            if (err === "success") {
                 if (requested_data["status"] === "OK") {
 
                     for (let c = 0; c < requested_data["data"].length; c++) {
@@ -262,11 +259,8 @@ recognize_select_dd_btn.addEventListener("click", function () {
                         recognize_person_list_ul.appendChild(recognize_select_div);
                     }
                 }
-                requested_data = {};
-                clearInterval(recognize_select_interval)
             }
-        }
-    );
+        });
 });
 
 
