@@ -635,7 +635,7 @@ record_control_btn.addEventListener("click", function () {
                                                     let record_time_span = document.createElement('span');
                                                     let record_length_span = document.createElement('span');
 
-                                                    record_div.classList.add("dropdown-item");
+                                                    record_div.classList.add("dropdown-item", "position-relative");
                                                     record_div.id = records[i]["id"];
 
                                                     record_a.role = "button";
