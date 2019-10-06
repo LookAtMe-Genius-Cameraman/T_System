@@ -150,6 +150,9 @@ class Vision:
             if self.__check_loop_ended(stop_thread):
                 break
 
+        if self.record:
+            self.stop_recording()
+
         self.is_watching = False
 
     def watch_and(self, task):
@@ -518,7 +521,7 @@ class Vision:
 
         # if the `q` key was pressed, break from the loop
         key = cv2.waitKey(1) & 0xFF
-        if (key == ord("q") or stop_thread()) and self.augmented:
+        if (key == ord("q") or stop_thread()) and (self.augmented or self.active_threads):
             logger.info("All threads killed. In progress...")
             return True
         elif (key == ord("q") or stop_thread()) and not self.augmented:
@@ -842,6 +845,8 @@ class Vision:
             if thread.is_alive():
                 self.stop_thread = True
                 thread.join()
+
+        self.active_threads.clear()
 
         self.stop_thread = False
 
