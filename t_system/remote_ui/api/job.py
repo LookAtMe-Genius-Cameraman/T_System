@@ -84,9 +84,9 @@ class JobApi(Resource):
         admin_id = request.args.get('admin_id', None)
 
         if pause:
-            result = job_manager.stop_job(admin_id)
-        else:
             result = job_manager.pause_job(admin_id)
+        else:
+            result = job_manager.stop_job(admin_id)
 
         return {'status': 'OK' if result else 'ERROR'}
 
