@@ -84,6 +84,8 @@ class MissionManager:
 
         while True:
             self.execute(mission, m_type, root)
+            if stop:
+                break
 
     def execute(self, mission, m_type, root):
         """The top-level method to fulfill mission with using position or scenarios their names specified with given parameter.
