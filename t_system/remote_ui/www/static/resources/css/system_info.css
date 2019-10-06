@@ -26,9 +26,9 @@
     visibility: hidden;
     opacity: 0;
 
-    top: 57%;
+    top: 50%;
     left: 50%;
-    transform: translate(-50%);
+    transform: translate(-50%, -50%);
 }
 
 #disk_usage_div p {
