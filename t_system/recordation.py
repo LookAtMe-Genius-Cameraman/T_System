@@ -122,6 +122,13 @@ class RecordManager:
         for record in self.db.all():
             self.records.append(Record(record["date"], record["time"], record["scope"], record["record_formats"], record["id"], record["name"], record["length"]))
 
+    def refresh_records(self):
+        """Method to refresh existing records on runtime alterations.
+        """
+
+        self.records.clear()
+        self.__set_records()
+
     def get_records(self, date=None):
         """Method to get existing records in given date. If date is None it returns all records.
 
