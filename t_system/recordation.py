@@ -309,7 +309,7 @@ class Record:
             duration = frame_count / fps
 
             minutes = int(duration / 60)
-            seconds = duration % 60
+            seconds = round(duration % 60)
             length = f'{minutes}:{seconds}'
 
             logger.debug(length)
