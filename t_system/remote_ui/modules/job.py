@@ -9,14 +9,13 @@
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
 import threading
-from tinydb import TinyDB, Query  # TinyDB is a lightweight document oriented database
 
 from t_system.administration import is_admin
 from t_system import seer
 from t_system import arm
 from t_system import mission_manager
 
-from t_system import dot_t_system_dir, T_SYSTEM_PATH
+from t_system import record_manager
 from t_system import face_encode_manager
 from t_system import log_manager
 
@@ -107,9 +106,11 @@ class JobManager:
             admin_id (str):                 Root privileges flag.
         """
 
-        self.__stop_mission_thread()
-
         seer.terminate_active_threads()
+
+        record_manager.refresh_records()
+
+        self.__stop_mission_thread()
 
         return True
 
