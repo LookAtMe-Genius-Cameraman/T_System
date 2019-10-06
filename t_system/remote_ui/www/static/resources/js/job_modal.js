@@ -64,7 +64,7 @@ function post_job_data() {
         }
     }
 
-    request_asynchronous('/api/job&admin_id=' + admin_id, 'POST',
+    request_asynchronous('/api/job?admin_id=' + admin_id, 'POST',
         'application/x-www-form-urlencoded; charset=UTF-8', data, function (req, err, response) {
             if (err === "success") {
                 let response_data = JSON.parse(response.responseText);
@@ -224,6 +224,13 @@ job_ready_btn.addEventListener("click", function () {
             selected_spans[i].classList.add("hidden_element");
         }
 
+        request_asynchronous('/api/job?type=real&admin_id=' + admin_id, 'PUT',
+            'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
+                if (err === "success") {
+                    let response_data = JSON.parse(response.responseText);
+                }
+            });
+
     } else if (job_ready_btn.innerHTML === translate_text_item("FINISH")) {
         job_ready_btn.innerHTML = translate_text_item("READY");
         job_ready_btn.classList.remove("start");
@@ -251,6 +258,13 @@ job_ready_btn.addEventListener("click", function () {
             selected_spans[i].classList.add("shine_in_dark");
             selected_spans[i].classList.remove("hidden_element");
         }
+        console.log("finish clicked");
+        request_asynchronous('/api/job?admin_id=' + admin_id, 'DELETE',
+            'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
+                if (err === "success") {
+                    let response_data = JSON.parse(response.responseText);
+                }
+            });
     }
 });
 
@@ -279,10 +293,25 @@ job_cancel_btn.addEventListener("click", function () {
         job_cancel_btn.innerHTML = translate_text_item("RESUME");
         job_cancel_btn.classList.remove("btn-dark");
         job_cancel_btn.classList.add("btn-light");
+
+        request_asynchronous('/api/job?pause=' + true + 'admin_id=' + admin_id, 'DELETE',
+            'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
+                if (err === "success") {
+                    let response_data = JSON.parse(response.responseText);
+                }
+            });
+
     } else if (job_cancel_btn.innerHTML === translate_text_item("RESUME")) {
         job_cancel_btn.innerHTML = translate_text_item("PAUSE");
         job_cancel_btn.classList.remove("btn-light");
         job_cancel_btn.classList.add("btn-dark");
+
+        request_asynchronous('/api/job?admin_id=' + admin_id, 'PATCH',
+            'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
+                if (err === "success") {
+                    let response_data = JSON.parse(response.responseText);
+                }
+            });
     }
 });
 
@@ -307,6 +336,13 @@ job_simulate_btn.addEventListener("click", function () {
             selected_spans[i].classList.add("shine_as_red_in_dark");
         }
 
+        request_asynchronous('/api/job?type=simulation&admin_id=' + admin_id, 'PUT',
+            'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
+                if (err === "success") {
+                    let response_data = JSON.parse(response.responseText);
+                }
+            });
+
     } else if (job_simulate_btn.innerText === translate_text_item("HOLD TO PAUSE")) {
         job_simulate_btn.innerHTML = translate_text_item("SIMULATE");
         job_simulate_btn.classList.remove("active");
@@ -327,6 +363,13 @@ job_simulate_btn.addEventListener("click", function () {
             selected_spans[i].classList.remove("shine_as_red_in_dark");
             selected_spans[i].classList.add("shine_in_dark");
         }
+
+        request_asynchronous('/api/job?admin_id=' + admin_id, 'DELETE',
+            'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
+                if (err === "success") {
+                    let response_data = JSON.parse(response.responseText);
+                }
+            });
     }
 });
 
@@ -335,18 +378,20 @@ let monitor_area_div_click_count = 0;
 monitor_area_div.addEventListener("click", function () {
     monitor_area_div_click_count++;
     if (monitor_area_div_click_count <= 1) {
-        monitor_stream_area_img.src = "/api/stream?type=preview&admin_id=" + admin_id;   // this url assigning creates a GET request.
+        monitor_stream_area_img.src = "/api/stream?type=monitoring&admin_id=" + admin_id;   // this url assigning creates a GET request.
         monitor_stream_area_img.classList.add("focused");
 
         monitor_area_div.classList.add("active");
 
     } else {
+
         request_asynchronous('/api/stream?type=monitoring&admin_id=' + admin_id, 'DELETE',
             'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
                 if (err === "success") {
                     let response_data = JSON.parse(response.responseText);
                 }
             });
+
         monitor_stream_area_img.src = "";
         monitor_stream_area_img.classList.remove("focused");
 
