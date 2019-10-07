@@ -13,6 +13,7 @@ from tinydb import Query  # TinyDB is a lightweight document oriented database
 
 from t_system.db_fetching import DBFetcher
 from t_system.motion.action import Scenario
+from t_system.motion.action import Position
 from t_system.administration import is_admin
 
 from t_system import dot_t_system_dir, T_SYSTEM_PATH
@@ -35,8 +36,13 @@ def create_scenario(admin_id, db_name, data):
     scenario = Scenario(name=data['name'], root=is_admin(admin_id), db_name=db_name)
 
     try:
-        result = True
+        positions = []
+        for position in data['positions']:
+            positions.append(Position(name=position["name"], cartesian_coords=position["cartesian_coords"],
+                                      polar_coords=position["polar_coords"], root=is_admin(admin_id), db_name=db_name, is_for_scenario=True))
+        scenario.add_positions(positions)
         scenario_id = scenario.id
+        result = True
     except Exception:
         result = False
         scenario_id = None
@@ -98,19 +104,22 @@ def update_scenario(admin_id, db_name, scenario_id, data):
         scenario_id (str):              The id of the scenario.
         data (dict):                    Position data structure.
     """
-    table = get_db_table(is_admin(admin_id), db_name)
+    root = is_admin(admin_id)
+    table = get_db_table(root, db_name)
 
     scenario = table.search((Query().id == scenario_id))
 
     if not scenario:
         result = False
     else:
-        try:
-
-            table.update({'name': data['name'], 'positions': data['positions']}, Query().id == scenario_id)
-            result = True
-        except Exception:
-            result = False
+        Scenario(data['name'], scenario_id, root, db_name).update_all_positions(
+            [Position(name=position["name"],
+                      cartesian_coords=position["cartesian_coords"],
+                      polar_coords=position["polar_coords"],
+                      root=root,
+                      db_name=db_name,
+                      is_for_scenario=True) for position in data['positions']])
+        result = True
 
     return result
 
