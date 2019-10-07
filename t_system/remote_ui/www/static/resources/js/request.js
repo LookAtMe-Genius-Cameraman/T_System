@@ -23,16 +23,19 @@ function request_asynchronous(url, type, content_type, data, callback) {
         data = {}
     }
 
-    if (content_type === 'application/json; charset=utf-8') {
-        data = JSON.stringify(data)
-    }
-
-    return $.ajax({
+    let ajax = {
         url: url,
         type: type,
         success: callback,
         data: data,
         contentType: content_type
-        // dataType: "json"
-    });
+    };
+
+
+    if (content_type === 'application/json; charset=UTF-8') {
+        ajax.data = JSON.stringify(data);
+        ajax.dataType = "json";
+    }
+
+    return $.ajax(ajax);
 }
