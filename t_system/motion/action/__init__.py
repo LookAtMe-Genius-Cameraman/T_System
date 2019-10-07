@@ -380,7 +380,6 @@ class Scenario:
         """
 
         scenario = self.table.search((Query().id == self.id))
-        logger.debug(self.table.all())
         if scenario:
             for position in scenario[0]["positions"]:
                 self.positions.append(Position(position["name"], position["id"], position["cartesian_coords"], position["polar_coords"], self.root, self.db_name, is_for_scenario=True))
