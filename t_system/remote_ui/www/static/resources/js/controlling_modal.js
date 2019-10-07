@@ -354,6 +354,7 @@ sidebar_toggle_btn.addEventListener("click", function () {
 
 controlling_template_sidebar_close_btn.addEventListener("click", function () {
     controlling_template_sidebar.classList.toggle("active");
+    dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
     show_element(controlling_template_content)
 });
@@ -666,7 +667,7 @@ record_pos_sce_btn.addEventListener("click", function () {
 
         current_arm_position = {};
 
-        request_asynchronous('/api/stream?admin_id=' + admin_id, 'GET',
+        request_asynchronous('/api/move?admin_id=' + admin_id, 'GET',
             'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
                 if (err === "success") {
                     if (requested_data["status"] === "OK") {
@@ -772,7 +773,7 @@ record_in_sce_btn.addEventListener("click", function () {
                             scenarios[i]["positions"].push(position);
 
                             request_asynchronous('/api/scenario?db=' + action_db_name + "&id=" + scenarios[i]["id"] + '&admin_id=' + admin_id, 'PUT',
-                                'application/x-www-form-urlencoded; charset=UTF-8', scenarios[i], function (req, err, response) {
+                                'application/json; charset=UTF-8', scenarios[i], function (req, err, response) {
                                     if (err === "success") {
                                         let response_data = JSON.parse(response.responseText);
                                     }
@@ -800,17 +801,17 @@ scenario_name_input.addEventListener("mousemove", function () {
 
 create_sce_btn.addEventListener("click", function () {
 
-    // let name_dict = {"name": position_name_input.value};
-    // let data = Object.assign({}, name_dict, current_arm_position);
+    let position = Object.assign({}, {"name": "position_1"}, current_arm_position);
+    let data = {"name": scenario_name_input.value, "positions": [position]};
 
-    // request_asynchronous('/api/position?db=' + action_db_name + '&admin_id=' + admin_id, 'POST',
-    //     'application/x-www-form-urlencoded; charset=UTF-8', data, function (req, err, response) {
-    //         if (err === "success") {
-    //             let response_data = JSON.parse(response.responseText);
-    //         }
-    //     });
 
-    //Todo: Handle the scenario creating and adding position new scenario processes.
+    request_asynchronous('/api/scenario?db=' + action_db_name + '&admin_id=' + admin_id, 'POST',
+        'application/json; charset=UTF-8', data, function (req, err, response) {
+        console.log(response.responseText);
+            if (err === "success") {
+                let response_data = JSON.parse(response.responseText);
+            }
+        });
 
     scenario_name_input.value = "";
     scenario_div_back_btn.click();
