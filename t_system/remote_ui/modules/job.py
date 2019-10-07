@@ -53,7 +53,7 @@ class JobManager:
         self.scenario = data["scenario"]
         self.predicted_mission = data["predicted_mission"]
 
-        self.__set_recognition(data["recognized_person"])
+        self.__set_recognition(data["recognized_persons"])
         self.__set_track_approach(data["ai"], data["non_moving_target"])
 
         return True

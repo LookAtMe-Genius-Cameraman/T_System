@@ -16,6 +16,10 @@ from schema import SchemaError
 from t_system.remote_ui.modules.job import JobManager
 from t_system.remote_ui.api.data_schema import JOB_SCHEMA
 
+from t_system import log_manager
+
+logger = log_manager.get_logger(__name__, "DEBUG")
+
 api_bp = Blueprint('job_api', __name__)
 api = Api(api_bp)
 
@@ -49,8 +53,7 @@ class JobApi(Resource):
         admin_id = request.args.get('admin_id', None)
 
         try:
-            form = request.form.to_dict(flat=True)
-            data = JOB_SCHEMA.validate(form)
+            data = JOB_SCHEMA.validate(request.json)
         except SchemaError as e:
             return {'status': 'ERROR', 'message': e.code}
         result = job_manager.set_seer(admin_id, data)
