@@ -312,8 +312,6 @@ class Record:
             seconds = round(duration % 60)
             length = f'{minutes}:{seconds}'
 
-            logger.debug(length)
-
             cap.release()
 
             return length
