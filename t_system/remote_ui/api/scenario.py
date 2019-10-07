@@ -16,6 +16,10 @@ from schema import SchemaError
 from t_system.remote_ui.modules.scenario import create_scenario, get_scenario, get_scenarios, update_scenario, delete_scenario
 from t_system.remote_ui.api.data_schema import SCENARIO_SCHEMA
 
+from t_system import log_manager
+
+logger = log_manager.get_logger(__name__, "DEBUG")
+
 api_bp = Blueprint('scenario_api', __name__)
 api = Api(api_bp)
 
@@ -62,6 +66,7 @@ class ScenarioApi(Resource):
 
         try:
             data = SCENARIO_SCHEMA.validate(request.json)
+
         except SchemaError as e:
             return {'status': 'ERROR', 'message': e.code}
         result, scenario_id = create_scenario(admin_id, db_name, data)
