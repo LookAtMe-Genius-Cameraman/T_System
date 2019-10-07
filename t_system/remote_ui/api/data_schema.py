@@ -29,7 +29,7 @@ JOB_SCHEMA = Schema({
     'predicted_mission': Use(bool),
     'recognized_persons': Or(None, Use(list)),
     'non_moving_target': Or(None, Use(bool)),
-    'arm_expansion': Or(None, Use(bool)),
+    Optional('arm_expansion'): Or(None, Use(bool)),
     'ai': Or(None, Use(str)),
 })
 
