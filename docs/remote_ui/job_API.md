@@ -6,7 +6,7 @@ This process specifies seer's running parameters.
 ```http
 POST /api/job?admin_id=<ADMIN_ID>
 Host: domain
-Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+Content-Type: application/json; charset=UTF-8
 
 {
     "job_type": "track" / "learn" / "secure",
