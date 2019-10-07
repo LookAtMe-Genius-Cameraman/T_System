@@ -15,7 +15,6 @@ from multipledispatch import dispatch
 from tinydb import Query  # TinyDB is a lightweight document oriented database
 
 from t_system.db_fetching import DBFetcher
-from t_system import arm
 
 from t_system import dot_t_system_dir, T_SYSTEM_PATH
 
@@ -213,7 +212,9 @@ class Actor:
     def __init__(self):
         """Initialization method of :class:`t_system.motion.action.Actor` class.
         """
-        pass
+        from t_system import arm
+
+        self.arm = arm
 
     @dispatch(object)
     def act(self, position):
@@ -223,7 +224,7 @@ class Actor:
             position (Position):            A Position object
         """
 
-        arm.goto_position(pos_thetas=position.polar_coords, pos_coords=position.cartesian_coords)
+        self.arm.goto_position(pos_thetas=position.polar_coords, pos_coords=position.cartesian_coords)
 
     @dispatch(list)
     def act(self, scenarios):
@@ -235,21 +236,21 @@ class Actor:
 
         for scenario in scenarios:
             for position in scenario.positions:
-                arm.goto_position(pos_thetas=position.polar_coords, pos_coords=position.cartesian_coords)
+                self.arm.goto_position(pos_thetas=position.polar_coords, pos_coords=position.cartesian_coords)
 
     def expand(self):
         """Method to expand arm with using axes and motors of target_locker of t_system's vision.
         """
 
-        if not arm.is_expanded():
-            arm.expand()
+        if not self.arm.is_expanded():
+            self.arm.expand()
 
     def revert_the_expand(self):
         """Method to revert back the expansion.
         """
 
-        if arm.is_expanded():
-            arm.revert_the_expand()
+        if self.arm.is_expanded():
+            self.arm.revert_the_expand()
 
 
 class Scenario:
