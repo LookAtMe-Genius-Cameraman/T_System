@@ -21,8 +21,9 @@ function post_job_data() {
         "job_type": "track",
         "scenario": "scenario_1",
         "predicted_mission": false,  // Todo: With the administration authenticate, predicted missions will be editable and this key true.
-        "recognized_person": [],
+        "recognized_persons": [],
         "non_moving_target": null,
+        "arm_expansion": false,
         "ai": null
     };
 
@@ -33,11 +34,11 @@ function post_job_data() {
     }
 
     if (recognize_all_select_checkbox.checked) {
-        data["recognized_person"] = ["all"]
+        data["recognized_persons"] = ["all"]
     } else {
         for (let i = 0; i < recognize_checkboxes.length; i++) {
             if (recognize_checkboxes[i].checked) {
-                data["recognized_person"].push(recognize_checkboxes[i].id)
+                data["recognized_persons"].push(recognize_checkboxes[i].id)
             }
         }
     }
@@ -53,21 +54,22 @@ function post_job_data() {
 
     let labels = document.getElementsByTagName('label');
 
-
     for (let i = 0; i < scenario_checkboxes.length; i++) {
         if (scenario_checkboxes[i].checked) {
             for (let a = 0; a < labels.length; a++) {
                 if (labels[a].htmlFor === scenario_checkboxes[i].id) {
                     data["scenario"] = labels[a].innerHTML;
+                    console.log(labels[a].innerHTML);
                 }
             }
         }
     }
 
     request_asynchronous('/api/job?admin_id=' + admin_id, 'POST',
-        'application/x-www-form-urlencoded; charset=UTF-8', data, function (req, err, response) {
+        'application/json; charset=UTF-8', data, function (req, err, response) {
             if (err === "success") {
                 let response_data = JSON.parse(response.responseText);
+                console.log(response_data)
             }
         });
 
