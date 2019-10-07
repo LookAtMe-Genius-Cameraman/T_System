@@ -19,6 +19,10 @@ from t_system import arm
 
 from t_system import dot_t_system_dir, T_SYSTEM_PATH
 
+from t_system import log_manager
+
+logger = log_manager.get_logger(__name__, "DEBUG")
+
 
 class MissionManager:
     """Class to define a mission manager to managing movements of Arm and Locking System(when it is using independent from seer during tracking non-moving objects) during job.
@@ -65,11 +69,11 @@ class MissionManager:
 
         scenarios = self.scenarios_table.all()
         for scenario in scenarios:
-            self.scenarios.append(Scenario(scenario["name"], scenario["id"], root=True, db_name=self.db_name))
+            self.scenarios.append(Scenario(scenario["name"], scenario["id"], root=False, db_name=self.db_name))
 
         positions = self.positions_table.all()
         for position in positions:
-            self.positions.append(Position(position["name"], position["id"], position["cartesian_coords"], position["polar_coords"], root=True, db_name=self.db_name))
+            self.positions.append(Position(position["name"], position["id"], position["cartesian_coords"], position["polar_coords"], root=False, db_name=self.db_name))
 
     def continuous_execute(self, stop, pause, mission, m_type, root):
         """The top-level method for executing the missions as continuously.
@@ -285,6 +289,16 @@ class Scenario:
 
         self.__refresh_positions()
 
+    def update_all_positions(self, positions):
+        """Method to add position to the scenario.
+
+        Args:
+            positions (list):               Position object list.
+        """
+        self.positions.clear()
+        self.positions.extend(positions)
+        self.db_upsert(force_insert=True)
+
     def add_positions(self, positions):
         """Method to add position to the scenario.
 
@@ -293,7 +307,7 @@ class Scenario:
         """
 
         self.positions.extend(positions)
-        self.db_upsert()
+        self.db_upsert(force_insert=True)
 
     def delete_positions(self, positions):
         """Method to add position to the scenario.
@@ -324,8 +338,14 @@ class Scenario:
 
         if self.table.search((Query().name == self.name)):
             if force_insert:
-                self.table.update({'name': self.name, 'positions': self.positions}, Query().id == self.id)
-
+                self.table.update({
+                    'name': self.name,
+                    'positions': [{
+                        "id": position.id,
+                        "name": position.name,
+                        "cartesian_coords": position.cartesian_coords,
+                        "polar_coords": position.polar_coords
+                    } for position in self.positions]}, Query().id == self.id)
             else:
                 return "Already Exist"
         else:
@@ -358,9 +378,11 @@ class Scenario:
         """Method to refreshing the members
         """
 
-        scenarios = self.table.search((Query().id == self.id))
-        for position in scenarios["positions"]:
-            self.positions.append(Position(position["name"], position["id"], position["cartesian_coords"], position["polar_coords"], self.root, self.db_name, is_for_scenario=True, ))
+        scenario = self.table.search((Query().id == self.id))
+        logger.debug(self.table.all())
+        if scenario:
+            for position in scenario[0]["positions"]:
+                self.positions.append(Position(position["name"], position["id"], position["cartesian_coords"], position["polar_coords"], self.root, self.db_name, is_for_scenario=True))
 
 
 class Position:
