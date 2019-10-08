@@ -77,6 +77,8 @@ const turkishtrans = {
     "Available:": "Kullanılabilir:",
     "min": "dk",
     " job": " iş",
+    "Target Sign": "Hedefi işaretle",
+    "Don't Mark": "İşaretleme",
     " administration": " özel yetki",
     "Create Emotion": "Duygu Yarat",
     "Predict Mission": "Görev öngör"
