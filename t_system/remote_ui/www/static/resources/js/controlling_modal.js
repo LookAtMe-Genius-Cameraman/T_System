@@ -284,7 +284,7 @@ sidebar_toggle_btn.addEventListener("click", function () {
                                 drop_timeout = setTimeout(function () {
 
                                     let position = event.relatedTarget;
-                                    let position_info = {"name": position.getAttribute("data-position-name"), "cartesian_coords": position.getAttribute("data-cartesian-coords"), "polar_coords": position.getAttribute("data-polar-coords")};
+                                    let position_info = {"name": position.getAttribute("data-position-name"), "cartesian_coords": JSON.parse("[" + position.getAttribute("data-cartesian-coords") + "]"), "polar_coords": JSON.parse("[" + position.getAttribute("data-polar-coords") + "]")};
 
                                     let existing_positions = scenarios[c]["positions"];
                                     existing_positions.push(position_info);
@@ -674,6 +674,7 @@ record_pos_sce_btn.addEventListener("click", function () {
 
                         current_arm_position = requested_data["data"];
                         console.log(requested_data["data"]);
+                        console.log(typeof requested_data["data"]);
                     }
                 }
             });
@@ -724,6 +725,7 @@ create_pos_btn.addEventListener("click", function () {
         'application/json; charset=UTF-8', data, function (req, err, response) {
             if (err === "success") {
                 let response_data = JSON.parse(response.responseText);
+                swal(translate_text_item("Position Created!"), "", "success");
             }
         });
 
@@ -731,7 +733,6 @@ create_pos_btn.addEventListener("click", function () {
     position_div_back_btn.click();
     record_pos_sce_btn.click();
 
-    swal(translate_text_item("Position Created!"), "", "success");
 });
 
 record_in_sce_btn.addEventListener("click", function () {
@@ -810,12 +811,11 @@ create_sce_btn.addEventListener("click", function () {
         console.log(response.responseText);
             if (err === "success") {
                 let response_data = JSON.parse(response.responseText);
+                swal(translate_text_item("Position Added in New Scenario!"), "", "success");
             }
         });
 
     scenario_name_input.value = "";
     scenario_div_back_btn.click();
     record_pos_sce_btn.click();
-
-    swal(translate_text_item("Position Added in New Scenario!"), "", "success");
 });
