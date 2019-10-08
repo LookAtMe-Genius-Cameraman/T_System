@@ -163,7 +163,9 @@ job_div.addEventListener("click", function (event) {
 });
 
 setInterval(function () {
-    job_btn.classList.add("heart");
+    if (!job_btn.classList.contains("clicked")) {
+        job_btn.classList.add("heart");
+    }
 
     setTimeout(function () {
         job_btn.classList.remove("heart");
@@ -411,64 +413,64 @@ no_mark_checkbox.addEventListener("change", function () {
 });
 
 mark_target_dd_btn.addEventListener("click", function () {
-        while (mark_target_list_ul.firstChild) {
+    while (mark_target_list_ul.firstChild) {
         mark_target_list_ul.removeChild(mark_target_list_ul.firstChild);
     }
-        request_asynchronous('/api/job?cause=mark&admin_id=' + admin_id, 'GET',
-            'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
+    request_asynchronous('/api/job?cause=mark&admin_id=' + admin_id, 'GET',
+        'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
             // err = "success";
             // requested_data = {"status": "OK", "data": {"drawings": ["single_rect", "partial_rect", "rotating_arcs"], "animations": ["animation_1"]}};
 
-                if (err === "success") {
-                    if (requested_data["status"] === "OK") {
+            if (err === "success") {
+                if (requested_data["status"] === "OK") {
 
 
-                        let target_mark_types = requested_data["data"];
+                    let target_mark_types = requested_data["data"];
 
-                        function create_items(items) {
-                            for (let c = 0; c < items.length; c++) {
+                    function create_items(items) {
+                        for (let c = 0; c < items.length; c++) {
 
-                                let mark_select_div = document.createElement('div');
-                                let mark_select_checkbox = document.createElement('input');
-                                let mark_select_label = document.createElement('label');
+                            let mark_select_div = document.createElement('div');
+                            let mark_select_checkbox = document.createElement('input');
+                            let mark_select_label = document.createElement('label');
 
-                                mark_select_div.classList.add("dropdown-item", "form-check", "mb-1");
+                            mark_select_div.classList.add("dropdown-item", "form-check", "mb-1");
 
-                                mark_select_checkbox.classList.add("form-check-input");
-                                mark_select_checkbox.id = items[c] + "_checkbox_" + c;
-                                mark_select_checkbox.type = "radio";
-                                mark_select_checkbox.name = "mark_select";
+                            mark_select_checkbox.classList.add("form-check-input");
+                            mark_select_checkbox.id = items[c] + "_checkbox_" + c;
+                            mark_select_checkbox.type = "radio";
+                            mark_select_checkbox.name = "mark_select";
 
-                                mark_select_checkbox.addEventListener("change", function () {
-                                    if (mark_select_checkbox.checked) {
-                                        request_asynchronous('/api/job?mark=' + items[c] + '&admin_id=' + admin_id, 'POST',
-                                            'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
-                                                if (err === "success") {
-                                                    let response_data = JSON.parse(response.responseText);
-                                                }
-                                            });
-                                    }
-                                });
+                            mark_select_checkbox.addEventListener("change", function () {
+                                if (mark_select_checkbox.checked) {
+                                    request_asynchronous('/api/job?mark=' + items[c] + '&admin_id=' + admin_id, 'POST',
+                                        'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
+                                            if (err === "success") {
+                                                let response_data = JSON.parse(response.responseText);
+                                            }
+                                        });
+                                }
+                            });
 
-                                mark_select_label.classList.add("form-check-label");
-                                mark_select_label.setAttribute("for", mark_select_checkbox.id);
-                                mark_select_label.innerHTML = items[c];
+                            mark_select_label.classList.add("form-check-label");
+                            mark_select_label.setAttribute("for", mark_select_checkbox.id);
+                            mark_select_label.innerHTML = items[c];
 
-                                mark_select_div.appendChild(mark_select_checkbox);
-                                mark_select_div.appendChild(mark_select_label);
+                            mark_select_div.appendChild(mark_select_checkbox);
+                            mark_select_div.appendChild(mark_select_label);
 
-                                mark_target_list_ul.appendChild(mark_select_div);
-                            }
+                            mark_target_list_ul.appendChild(mark_select_div);
                         }
-
-                        create_items(target_mark_types["drawings"]);
-                        let divider_div = document.createElement('div');
-                        divider_div.classList.add("dropdown-divider");
-                        mark_target_list_ul.appendChild(divider_div);
-                        create_items(target_mark_types["animations"]);
                     }
+
+                    create_items(target_mark_types["drawings"]);
+                    let divider_div = document.createElement('div');
+                    divider_div.classList.add("dropdown-divider");
+                    mark_target_list_ul.appendChild(divider_div);
+                    create_items(target_mark_types["animations"]);
                 }
-            });
+            }
+        });
 });
 
 let monitor_area_div_click_count = 0;
