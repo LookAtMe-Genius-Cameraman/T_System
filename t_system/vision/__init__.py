@@ -15,6 +15,7 @@ import face_recognition
 import pickle
 import numpy as np
 import threading
+import json
 
 from math import sqrt
 from multipledispatch import dispatch
@@ -33,8 +34,6 @@ from t_system import log_manager
 
 logger = log_manager.get_logger(__name__, "DEBUG")
 
-TRACKER_TYPES = ['BOOSTING', 'MIL', 'KCF', 'TLD', 'MEDIANFLOW', 'GOTURN', 'MOSSE', 'CSRT']
-
 
 class Vision:
     """Class to define a vision of tracking system..
@@ -51,6 +50,13 @@ class Vision:
         Args:
                 args:                   Command-line arguments.
         """
+
+        self.config_file = f'{T_SYSTEM_PATH}/vision/vision_config.json'
+
+        with open(self.config_file) as conf_file:
+            conf_file_json = json.load(conf_file)
+            self.tracker_types = conf_file_json["tracker_types"]  # config file returns the tracker type list.
+            self.target_mark_types = conf_file_json["target_mark_types"]  # config file returns the mark type dict.
 
         self.detection_model = args["detection_model"]
 
@@ -612,27 +618,27 @@ class Vision:
     def __create_tracker_by_name(self):
         """Method to creating a tracker object via type that is chosen by the user.
         """
-        if self.tracker_type == TRACKER_TYPES[0]:
+        if self.tracker_type == self.tracker_types[0]:
             tracker = cv2.TrackerBoosting_create()
-        elif self.tracker_type == TRACKER_TYPES[1]:
+        elif self.tracker_type == self.tracker_types[1]:
             tracker = cv2.TrackerMIL_create()
-        elif self.tracker_type == TRACKER_TYPES[2]:
+        elif self.tracker_type == self.tracker_types[2]:
             tracker = cv2.TrackerKCF_create()
-        elif self.tracker_type == TRACKER_TYPES[3]:
+        elif self.tracker_type == self.tracker_types[3]:
             tracker = cv2.TrackerTLD_create()
-        elif self.tracker_type == TRACKER_TYPES[4]:
+        elif self.tracker_type == self.tracker_types[4]:
             tracker = cv2.TrackerMedianFlow_create()
-        elif self.tracker_type == TRACKER_TYPES[5]:
+        elif self.tracker_type == self.tracker_types[5]:
             tracker = cv2.TrackerGOTURN_create()
-        elif self.tracker_type == TRACKER_TYPES[6]:
+        elif self.tracker_type == self.tracker_types[6]:
             tracker = cv2.TrackerMOSSE_create()
-        elif self.tracker_type == TRACKER_TYPES[7]:
+        elif self.tracker_type == self.tracker_types[7]:
             tracker = cv2.TrackerCSRT_create()
         else:
             tracker = None
             logger.error('Incorrect tracker name')
             logger.info('Available trackers are:')
-            for t in TRACKER_TYPES:
+            for t in self.tracker_types:
                 logger.info(t)
 
         return tracker
@@ -758,17 +764,18 @@ class Vision:
                 mark_found_object (str):   The mark type of the detected object.
         """
 
-        if mark_found_object == "single_rect":
+        if mark_found_object == self.target_mark_types["drawings"][0]:
             return self.__mark_as_single_rect
-        elif mark_found_object == "partial_rect":
+        elif mark_found_object == self.target_mark_types["drawings"][1]:
             return self.__mark_as_partial_rect
-        elif mark_found_object == "rotating_arcs":
+        elif mark_found_object == self.target_mark_types["drawings"][2]:
             return self.__mark_as_rotation_arcs
-        elif mark_found_object is None:
+        elif mark_found_object is (None or False):
             return self.__mark_as_none
         else:
-            self.aimer.set_vendor_animation(mark_found_object)
-            return self.__mark_as_vendor_animation
+            if mark_found_object in self.target_mark_types["animations"]:
+                self.aimer.set_vendor_animation(mark_found_object)
+                return self.__mark_as_vendor_animation
 
     def change_mark_object_to(self, mark_found_object):
         """Method to change mark type for using when object detected by given type.

@@ -1,0 +1,22 @@
+{
+  "tracker_types": [
+    "BOOSTING",
+    "MIL",
+    "KCF",
+    "TLD",
+    "MEDIANFLOW",
+    "GOTURN",
+    "MOSSE",
+    "CSRT"
+  ],
+  "target_mark_types": {
+    "drawings": [
+      "single_rect",
+      "partial_rect",
+      "rotating_arcs"
+    ],
+    "animations": [
+      "animation_1"
+    ]
+  }
+}
