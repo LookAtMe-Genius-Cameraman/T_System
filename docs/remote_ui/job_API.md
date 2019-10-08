@@ -1,10 +1,11 @@
 # Setting Job parameters
 
 This process specifies seer's running parameters.
+If the MARK parameter is full, it changes the mark type of the place that is around of the found object on screen.
 
 ## Request
 ```http
-POST /api/job?admin_id=<ADMIN_ID>
+POST /api/job?mark=<MARK>&admin_id=<ADMIN_ID>
 Host: domain
 Content-Type: application/json; charset=UTF-8
 
@@ -33,14 +34,28 @@ Content-Type: application/json; charset=UTF-8
 }
 ```
 
-## GET Request
+## Getting Target Marks 
+```http
+GET /api/job?cause=<CAUSE>&admin_id=<ADMIN_ID>
+Host: domain
+```
 
 ## Response
-
+### On Success
+- If CAUSE is 'mark'
 ```json
 {
-    "status": "ERROR",
-    "message": "NOT VALID"
+    "status": "OK",
+    "data": [
+    "single_rect",
+    "partial_rect",
+    "rotating_arcs",
+    {
+      "animations": [
+        "animation_1"
+      ]
+    }
+  ]
 }
 ```
 
