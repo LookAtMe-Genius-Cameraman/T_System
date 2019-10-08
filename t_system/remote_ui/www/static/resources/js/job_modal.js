@@ -401,6 +401,8 @@ job_simulate_btn.addEventListener("click", function () {
     }
 });
 
+no_mark_checkbox.click();
+
 no_mark_checkbox.addEventListener("change", function () {
     if (no_mark_checkbox.checked) {
         request_asynchronous('/api/job?mark=' + false + '&admin_id=' + admin_id, 'POST',
