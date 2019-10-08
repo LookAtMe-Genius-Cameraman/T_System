@@ -751,6 +751,34 @@ class Vision:
         """
         pass
 
+    def __get_mark_object(self, mark_found_object):
+        """Method to get mark type for using when object detected.
+
+         Args:
+                mark_found_object (str):   The mark type of the detected object.
+        """
+
+        if mark_found_object == "single_rect":
+            return self.__mark_as_single_rect
+        elif mark_found_object == "partial_rect":
+            return self.__mark_as_partial_rect
+        elif mark_found_object == "rotating_arcs":
+            return self.__mark_as_rotation_arcs
+        elif mark_found_object is None:
+            return self.__mark_as_none
+        else:
+            self.aimer.set_vendor_animation(mark_found_object)
+            return self.__mark_as_vendor_animation
+
+    def change_mark_object_to(self, mark_found_object):
+        """Method to change mark type for using when object detected by given type.
+
+         Args:
+                mark_found_object (str):   The mark type of the detected object.
+        """
+
+        self.mark_object = self.__get_mark_object(mark_found_object)
+
     @staticmethod
     def __get_recognition_data(encoding_file):
         """Method to get encoded recognition data from pickle file.
@@ -795,25 +823,6 @@ class Vision:
             self.recognition_data["names"].extend(recognition_data["names"])
 
         self.track = self.__track_with_recognizing
-
-    def __get_mark_object(self, mark_found_object):
-        """Method to get mark type for using when object detected.
-
-         Args:
-                mark_found_object (str):   The mark type of the detected object.
-        """
-
-        if mark_found_object == "single_rect":
-            return self.__mark_as_single_rect
-        elif mark_found_object == "partial_rect":
-            return self.__mark_as_partial_rect
-        elif mark_found_object == "rotating_arcs":
-            return self.__mark_as_rotation_arcs
-        elif mark_found_object is None:
-            return self.__mark_as_none
-        else:
-            self.aimer.set_vendor_animation(mark_found_object)
-            return self.__mark_as_vendor_animation
 
     def get_current_frame(self):
         """Method to get current working camera frame.

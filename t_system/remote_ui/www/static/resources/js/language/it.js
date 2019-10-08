@@ -14,7 +14,7 @@ const italiantrans = {
     "Create Own Wi-Fi": "Crea il tuo wifi",
     "on": "sopra",
     "off": "via",
-    "This process will be the effect after reboot!": "Questo processo avrà effetto dopo il riavvio!"
+    "This process will be the effect after reboot!": "Questo processo avrà effetto dopo il riavvio!",
     "&#187;": "&#187;",
     "Audio Inputs": "Ingressi audio",
     "Empty": "Vuoto",
