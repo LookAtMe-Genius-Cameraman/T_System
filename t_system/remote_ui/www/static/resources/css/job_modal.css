@@ -116,6 +116,19 @@
     transition: all 300ms !important;
 }
 
+#mark_target_dd_div {
+    display: none;
+
+    top: 30%;
+    left: 25%;
+    transform: translate(-50%);
+}
+
+#mark_target_dd_div.focused {
+    display: inherit;
+    z-index: 210;
+}
+
 #monitor_area_div {
     visibility: hidden;
     opacity: 0;

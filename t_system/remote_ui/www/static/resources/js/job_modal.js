@@ -13,6 +13,12 @@ const job_simulate_btn = document.getElementById("job_simulate_btn");
 const job_ready_btn = document.getElementById("job_ready_btn");
 const job_cancel_btn = document.getElementById("job_cancel_btn");
 
+const mark_target_dd_btn = document.getElementById("mark_target_dd_btn");
+const no_mark_div = document.getElementById("no_mark_div");
+const no_mark_checkbox = document.getElementById("no_mark_checkbox");
+const mark_target_list_ul = document.getElementById("mark_target_list_ul");
+
+const mark_target_dd_div = document.getElementById("mark_target_dd_div");
 const monitor_area_div = document.getElementById("monitor_area_div");
 const monitor_stream_area_img = document.getElementById("monitor_stream_area_img");
 
@@ -230,6 +236,7 @@ job_ready_btn.addEventListener("click", function () {
         job_cancel_btn.classList.add("btn-dark");
         job_cancel_btn.innerHTML = translate_text_item("PAUSE");
 
+        mark_target_dd_div.classList.add("focused");
         monitor_area_div.classList.add("focused");
 
         for (let i = 0; i < selected_spans.length; i++) {
@@ -258,6 +265,8 @@ job_ready_btn.addEventListener("click", function () {
         job_cancel_btn.innerHTML = translate_text_item("CANCEL");
 
         job_simulate_btn.classList.remove("inactive");
+
+        mark_target_dd_div.classList.remove("focused");
 
         monitor_area_div.classList.remove("focused");
         monitor_area_div.classList.remove("active");
@@ -339,6 +348,8 @@ job_simulate_btn.addEventListener("click", function () {
 
         job_ready_btn.classList.add("hidden_element");
 
+        mark_target_dd_div.classList.add("focused");
+
         monitor_area_div.classList.add("focused");
 
         selected_sce_span.classList.add("hidden_element");
@@ -364,6 +375,8 @@ job_simulate_btn.addEventListener("click", function () {
 
         job_ready_btn.classList.remove("hidden_element");
 
+        mark_target_dd_div.classList.remove("focused");
+
         monitor_area_div.classList.remove("focused");
         monitor_area_div.classList.remove("active");
 
@@ -386,6 +399,78 @@ job_simulate_btn.addEventListener("click", function () {
     }
 });
 
+no_mark_checkbox.addEventListener("change", function () {
+    if (no_mark_checkbox.checked) {
+        request_asynchronous('/api/job?mark=' + false + '&admin_id=' + admin_id, 'POST',
+            'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
+                if (err === "success") {
+                    let response_data = JSON.parse(response.responseText);
+                }
+            });
+    }
+});
+
+mark_target_dd_btn.addEventListener("click", function () {
+        while (mark_target_list_ul.firstChild) {
+        mark_target_list_ul.removeChild(mark_target_list_ul.firstChild);
+    }
+        request_asynchronous('/api/job?cause=mark&admin_id=' + admin_id, 'GET',
+            'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
+            // err = "success";
+            // requested_data = {"status": "OK", "data": {"drawings": ["single_rect", "partial_rect", "rotating_arcs"], "animations": ["animation_1"]}};
+
+                if (err === "success") {
+                    if (requested_data["status"] === "OK") {
+
+
+                        let target_mark_types = requested_data["data"];
+
+                        function create_items(items) {
+                            for (let c = 0; c < items.length; c++) {
+
+                                let mark_select_div = document.createElement('div');
+                                let mark_select_checkbox = document.createElement('input');
+                                let mark_select_label = document.createElement('label');
+
+                                mark_select_div.classList.add("dropdown-item", "form-check", "mb-1");
+
+                                mark_select_checkbox.classList.add("form-check-input");
+                                mark_select_checkbox.id = items[c] + "_checkbox_" + c;
+                                mark_select_checkbox.type = "radio";
+                                mark_select_checkbox.name = "mark_select";
+
+                                mark_select_checkbox.addEventListener("change", function () {
+                                    if (mark_select_checkbox.checked) {
+                                        request_asynchronous('/api/job?mark=' + items[c] + '&admin_id=' + admin_id, 'POST',
+                                            'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
+                                                if (err === "success") {
+                                                    let response_data = JSON.parse(response.responseText);
+                                                }
+                                            });
+                                    }
+                                });
+
+                                mark_select_label.classList.add("form-check-label");
+                                mark_select_label.setAttribute("for", mark_select_checkbox.id);
+                                mark_select_label.innerHTML = items[c];
+
+                                mark_select_div.appendChild(mark_select_checkbox);
+                                mark_select_div.appendChild(mark_select_label);
+
+                                mark_target_list_ul.appendChild(mark_select_div);
+                            }
+                        }
+
+                        create_items(target_mark_types["drawings"]);
+                        let divider_div = document.createElement('div');
+                        divider_div.classList.add("dropdown-divider");
+                        mark_target_list_ul.appendChild(divider_div);
+                        create_items(target_mark_types["animations"]);
+                    }
+                }
+            });
+});
+
 let monitor_area_div_click_count = 0;
 
 monitor_area_div.addEventListener("click", function () {
@@ -393,6 +478,8 @@ monitor_area_div.addEventListener("click", function () {
     if (monitor_area_div_click_count <= 1) {
         monitor_stream_area_img.src = "/api/stream?type=monitoring&admin_id=" + admin_id;   // this url assigning creates a GET request.
         monitor_stream_area_img.classList.add("focused");
+
+        mark_target_dd_div.classList.remove("focused");
 
         monitor_area_div.classList.add("active");
 
@@ -407,6 +494,8 @@ monitor_area_div.addEventListener("click", function () {
 
         monitor_stream_area_img.src = "";
         monitor_stream_area_img.classList.remove("focused");
+
+        mark_target_dd_div.classList.add("focused");
 
         monitor_area_div.classList.remove("active");
 
