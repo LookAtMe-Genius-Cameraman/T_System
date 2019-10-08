@@ -14,7 +14,7 @@ import os  # Miscellaneous operating system interfaces
 import requests
 
 from PyAccessPoint import pyaccesspoint
-from wifi import Cell, Scheme
+from wifi import Cell, Scheme, exceptions
 from tinydb import Query  # TinyDB is a lightweight document oriented database
 from subprocess import call, check_output # Subprocess managements
 from multipledispatch import dispatch
@@ -46,6 +46,19 @@ def set_local_ip_address(wlan, ip_address):
         logger.error(e)
 
     ip.close()
+
+
+def restart_interface(interface):
+    """Method to restart the network interface via subprocess.
+
+    Args:
+        interface:       	        wi-fi interface that will be used to create hotSpot.
+    """
+
+    call(['ifdown', interface])
+    time.sleep(1)
+    call(['ifup', interface])
+    time.sleep(2)
 
 
 class AccessPoint:
@@ -150,6 +163,7 @@ class NetworkConnector:
         self.wpa_supplicant = WpaSupplicant(args)
 
         self.wlan = args["wlan"]
+        self.interface_ec = 0
 
         self.current_cells = []
         self.current_available_networks = []
@@ -170,9 +184,23 @@ class NetworkConnector:
         Args:
             wlan:       	        wi-fi interface that will be used to create hotSpot.
         """
+
         if wlan:
             self.wlan = wlan
-        self.current_cells = list(Cell.all(self.wlan))
+
+        try:
+            self.current_cells = list(Cell.all(self.wlan))
+        except exceptions.InterfaceError:
+
+            if self.interface_ec < 3:
+                logger.warning(f'InterfaceError for {self.interface_ec} times...')
+                self.interface_ec += 1
+                restart_interface(self.wlan)
+                self.scan()
+
+            else:
+                logger.error(exceptions.InterfaceError(f'Error can not resolved!'))
+                self.current_cells = []
 
     def __set_available_networks(self):
         """Method to setting available networks with their ssid and passwords.
