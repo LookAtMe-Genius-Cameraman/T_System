@@ -44,18 +44,30 @@ class JobApi(Resource):
     def get(self):
         """The API method to GET request for flask.
         """
+        cause = request.args.get('cause', None)
+        admin_id = request.args.get('admin_id', None)
 
-        return {'status': 'ERROR', 'message': 'NOT VALID'}
+        if cause == "mark":
+            result = job_manager.get_found_object_marks(admin_id)
+            return {'status': 'OK', 'data': result}
+
+        return {'status': 'ERROR'}
 
     def post(self):
         """The API method to POST request for flask.
         """
+        mark = request.args.get('mark', None)
         admin_id = request.args.get('admin_id', None)
+
+        if mark or mark is False:
+            job_manager.change_found_object_mark(admin_id, mark)
+            return {'status': 'OK'}
 
         try:
             data = JOB_SCHEMA.validate(request.json)
         except SchemaError as e:
             return {'status': 'ERROR', 'message': e.code}
+
         result = job_manager.set_seer(admin_id, data)
 
         return {'status': 'OK' if result else 'ERROR'}

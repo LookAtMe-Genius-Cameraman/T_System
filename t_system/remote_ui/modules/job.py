@@ -49,6 +49,7 @@ class JobManager:
             admin_id (str):                 Root privileges flag.
             data (dict):                    Job data structure.
         """
+
         self.job_type = data["job_type"]
         self.scenario = data["scenario"]
         self.predicted_mission = data["predicted_mission"]
@@ -57,6 +58,27 @@ class JobManager:
         self.__set_track_approach(data["ai"], data["non_moving_target"])
 
         return True
+
+    @staticmethod
+    def change_found_object_mark(admin_id, mark):
+        """The top-level method to change mark type of found object.
+
+        Args:
+            admin_id (str):                 Root privileges flag.
+            mark (dict):                    The mark type of the detected object.
+        """
+
+        seer.change_mark_object_to(mark)
+
+    @staticmethod
+    def get_found_object_marks(admin_id):
+        """The top-level method to change mark type of found object.
+
+        Args:
+            admin_id (str):                 Root privileges flag.
+        """
+
+        return seer.target_mark_types
 
     def start_job(self, admin_id, running_type):
         """The top-level method to start seer's work.
