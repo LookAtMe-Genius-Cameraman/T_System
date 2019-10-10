@@ -77,6 +77,8 @@ const italiantrans = {
     "Available:": "a disposizione:",
     "min": "min",
     " job": " lavoro",
+    "Target Sign": "Segno Target",
+    "Don't Mark": "Son Segnare",
     "administration" : "amministrazione",
     "Create Emotion" : "Crea emozione",
     "Predict Mission" : "Prevedi la missione"
