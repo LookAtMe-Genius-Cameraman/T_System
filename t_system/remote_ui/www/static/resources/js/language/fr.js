@@ -77,6 +77,8 @@ const frenchtrans = {
     "Available:": "Disponible",
     "min": "min",
     " job": " Travail",
+    "Target Sign": "Cible Signe",
+    "Don't Mark": "Ne Marque Pas",
     " administration": " administration",
     "Create Emotion": "Creer Émotion",
     "Predict Mission": "Prédire Mission",
