@@ -1,5 +1,5 @@
 # Controlling the T_System Identity
-Returns the response it holds name of T_System.
+Returns the response it holds private id of T_System.
 
 ## Request
 ```http
@@ -7,7 +7,9 @@ POST /api/access
 Host: domain
 Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 
-{}
+{
+    "id": "MY3T55"
+}
 ```
 
 ## Response
@@ -15,16 +17,17 @@ Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 ```json
 {
     "status": "OK",
-    "data": "T_System"
+    "data": "PR47V1"
 }
 ```
 
 # Getting Home page pf Remote UI
-- Returns redirection to "/" url.
+- Returns an error if ID is empty.
+- If ID correct returns redirection to "/" url.
 
 ## Request
 ```http
-GET /api/access
+GET /api/access?id=<ID>
 Host: domain
 ```
 
