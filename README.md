@@ -66,7 +66,8 @@ for development mode: `sudo ./install-dev.sh`
 ### Usage <a href="https://t-system.readthedocs.io/en/latest/t_system.html"><img src="https://media.readthedocs.com/corporate/img/header-logo.png" align="right" height="25px" /></a>
 
 ```Shell
-usage: t_system [-h] [--stand-gpios RED-LED GREEN-LED FAN] [--host HOST]
+usage: t_system [-h] [--interface {official_stand,augmented,remote_ui,None}]
+                [--stand-gpios RED-LED GREEN-LED FAN] [--host HOST]
                 [--port PORT] [--debug] [-l] [-s]
                 [--detection-model DETECTION_MODEL]
                 [--cascade-file CASCADE_FILE] [-j]
@@ -86,12 +87,12 @@ usage: t_system [-h] [--stand-gpios RED-LED GREEN-LED FAN] [--host HOST]
                 [--no-emotion] [-S]
                 [-m {single_rect,rotating_arcs,partial_rect,animation_1,None}]
                 [-r] [-v] [--version]
-                {official_stand,augmented,remote_ui,None}
-                {remote-ui-authentication,face-encoding,self-update} ...
+                {id,remote-ui-authentication,face-encoding,self-update} ...
 
 positional arguments:
-  {remote-ui-authentication,face-encoding,self-update}
+  {id,remote-ui-authentication,face-encoding,self-update}
                         officiate the sub-jobs
+    id                  Make identification jobs of T_System.
     remote-ui-authentication
                         Remote UI administrator authority settings of the
                         secret entry point that is the new network connection
