@@ -45,3 +45,7 @@ UPDATE_SCHEMA = Schema({
 RECORD_SCHEMA = Schema({
     'name': Use(str),
 })
+
+ACCESS_SCHEMA = Schema({
+    'id': Use(str)
+})
