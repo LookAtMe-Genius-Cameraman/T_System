@@ -9,8 +9,12 @@
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
 
-from flask import Blueprint, redirect
+from flask import Blueprint, redirect, request
 from flask_restful import Api, Resource
+from schema import SchemaError
+
+from t_system.remote_ui.modules.access import check_private_id, get_private_id_by
+from t_system.remote_ui.api.data_schema import ACCESS_SCHEMA
 
 api_bp = Blueprint('access_api', __name__)
 api = Api(api_bp)
@@ -33,14 +37,29 @@ class AccessApi(Resource):
     def get(self):
         """The API method to GET request for flask.
         """
+        private_id = request.args.get('id')
 
-        return redirect('/')
+        if not private_id:
+            return {'status': 'ERROR', 'message': '\'id\' parameter is missing'}
+
+        if check_private_id(private_id):
+            return redirect('/')
+
+        return {'status': 'ERROR'}
 
     def post(self):
         """The API method to POST request for flask.
         """
 
-        return {'status': 'OK', 'data': 'T_System'}
+        try:
+            form = request.form.to_dict(flat=True)  # request.form returns an immutable dict. And flat=False convert each value of the keys to list.
+            data = ACCESS_SCHEMA.validate(form)
+        except SchemaError as e:
+            return {'status': 'ERROR', 'message': e.code}
+
+        private_id = get_private_id_by(data)
+
+        return {'status': 'OK', 'data': private_id}
 
     def put(self):
         """The API method to PUT request for flask.
