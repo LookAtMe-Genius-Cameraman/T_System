@@ -9,8 +9,6 @@
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
 
-import json
-
 from flask import Blueprint, request
 from flask_restful import Api, Resource
 from schema import SchemaError
