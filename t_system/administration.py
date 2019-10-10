@@ -9,9 +9,113 @@
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
 import hashlib
+import secrets
+import string
 
 from t_system.db_fetching import DBFetcher
 from t_system import dot_t_system_dir
+
+
+class Identifier:
+    """Class to define an identifier for creating and handling an idenditity to T_System.
+
+    This class provides necessary initiations and functions named :func:`t_system.administration.Administrator.change_keys`
+    for changing admin entry keys.
+    """
+
+    def __init__(self):
+        """Initialization method of :class:`t_system.administration.Identifier` class.
+        """
+
+        self.table = DBFetcher(dot_t_system_dir, "db", "identity").fetch()
+
+        self.public_id = None
+        self.private_id = None
+        self.name = None
+
+        self.__get_keys()
+
+    def show_keys(self):
+        """Method to print identification keys to the console.
+        """
+
+        print(f'public id is {self.public_id},\nprivate id is {self.private_id},\nname is {self.name}')
+
+    def change_keys(self, public_id=None, name=None):
+        """Method to change keys of identity for unique identification of T_System. 2 key(id and name) identification.
+
+        Args:
+            public_id:    	    Public id of the T_System itself.
+            name:     	        Specified name of the T_System itself.
+        """
+
+        if public_id is None and name is None:
+            return False
+
+        if public_id:
+            self.public_id = public_id
+
+        if name:
+            self.name = name
+
+        self.__db_upsert(self.public_id, self.private_id, self.name)
+
+    def __get_keys(self):
+        """Method to get keys of identity from database.
+        """
+        identity = self.table.all()
+
+        if identity:
+            identity = identity[0]  # table.all() return a list. But there is just 1 identity.
+            self.public_id = identity["public_id"]
+            self.private_id = identity["private_id"]
+            self.name = identity["name"]
+        else:
+            self.__set_default_identity()
+
+    def __set_default_identity(self):
+        """Method to set keys of identity for default identity specification. If not changed or added yet.
+        """
+
+        self.public_id = self.get_random_id(6)
+        self.private_id = self.get_random_id(6)
+        self.name = "T_System.t_system"
+
+        self.__db_upsert(self.public_id, self.private_id, self.name)
+
+    def __db_upsert(self, public_id, private_id, name):
+        """Function to insert(or update) the position to the database.
+
+        Args:
+            public_id:    	    Public id of the T_System itself.
+            private_id:    	    Private id of the T_System itself.
+            name:     	        Specified name of the T_System itself.
+
+        Returns:
+            str:  Response.
+        """
+
+        identity = self.table.all()
+
+        if identity:
+            self.table.update({'public_id': public_id, 'private_id': private_id, 'name': name})
+        else:
+            self.table.insert({
+                'public_id': public_id,
+                'private_id': private_id,
+                'name': name
+            })  # insert the given data
+
+        return ""
+
+    def get_random_id(self, digit_number=6):
+        """Method to set keys of identity for default identity specification. If not changed or added yet.
+
+        Args:
+            digit_number:    	        number of T_System id digits.
+        """
+
+        return ''.join(secrets.choice(string.ascii_uppercase + string.digits) for i in range(digit_number))
 
 
 class Administrator:
@@ -71,7 +175,7 @@ class Administrator:
 
         self.__db_upsert(self.ssid_hash, self.password_hash, self.private_key)
 
-    def __db_upsert(self, ssid_hash, password_hash, private_key, ):
+    def __db_upsert(self, ssid_hash, password_hash, private_key):
         """Function to insert(or update) the position to the database.
 
         Args:
