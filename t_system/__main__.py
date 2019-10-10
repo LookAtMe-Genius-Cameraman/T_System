@@ -73,7 +73,14 @@ def start_sub(args):
         args:       Command-line arguments.
     """
 
-    if args["sub_jobs"] == "remote-ui-authentication":
+    if args["sub_jobs"] == "id":
+
+        if args["id_sub_jobs"] == "set":
+            t_system.identifier.change_keys(args["id"], args["name"])
+        elif args["id_sub_jobs"] == "show":
+            t_system.identifier.show_keys()
+
+    elif args["sub_jobs"] == "remote-ui-authentication":
         t_system.administrator.change_keys(args["ssid"], args["password"])
 
     elif args["sub_jobs"] == "face-encoding":
@@ -82,7 +89,7 @@ def start_sub(args):
         face_encode_manager = FaceEncodeManager(args["detection_method"])
         face_encode_manager.add_face(args["owner_name"], args["dataset"])
 
-    if args["sub_jobs"] == "self-update":
+    elif args["sub_jobs"] == "self-update":
 
         t_system.update_manager.set_editability(args["editable"])
         t_system.update_manager.set_verbosity(args["verbose"])
@@ -111,6 +118,7 @@ def prepare(args):
     logger = t_system.log_manager.get_logger(__name__, "DEBUG")
     logger.info("Logger integration successful.")
 
+    from t_system.administration import Identifier
     from t_system.administration import Administrator
     from t_system.updation import UpdateManager
     from t_system.motion.arm import Arm
@@ -118,6 +126,7 @@ def prepare(args):
     from t_system.recordation import RecordManager
     from t_system.face_encoding import FaceEncodeManager
 
+    t_system.identifier = Identifier()
     t_system.administrator = Administrator()
     t_system.update_manager = UpdateManager()
     t_system.arm = Arm(args["robotic_arm"])
@@ -162,12 +171,12 @@ def initiate():
     ap = argparse.ArgumentParser()
 
     w_mode_gr = ap.add_argument_group('user-interfaces')
-    w_mode_gr.add_argument("interface", help="Set the user interfaces. To use: either `official_stand`, `augmented`, `remote_ui` or None."
-                                             "`official_stand`: for using the interface of official T_System stand."
-                                             "`augmented`: Augmented control with the Augmented Virtual Assistant A.V.A.. \'https://github.com/MCYBA/A.V.A.\' is the home page of the A.V.A. and usage explained into the \'AUGMENTED.md\'."
-                                             "`remote_ui`: remote control with created graphic interface that is power by flask available on desktop or mobile."
-                                             "None: Use to just by `running modes` parameters."
-                                             "The default value is None.", action="store", type=str, choices=["official_stand", "augmented", "remote_ui", None], default="None")
+    w_mode_gr.add_argument("--interface", help="Set the user interfaces. To use: either `official_stand`, `augmented`, `remote_ui` or None."
+                                               "`official_stand`: for using the interface of official T_System stand."
+                                               "`augmented`: Augmented control with the Augmented Virtual Assistant A.V.A.. \'https://github.com/MCYBA/A.V.A.\' is the home page of the A.V.A. and usage explained into the \'AUGMENTED.md\'."
+                                               "`remote_ui`: remote control with created graphic interface that is power by flask available on desktop or mobile."
+                                               "None: Use to just by `running modes` parameters."
+                                               "The default value is None.", action="store", type=str, choices=["official_stand", "augmented", "remote_ui", None], default="None")
 
     official_stand_gr = ap.add_argument_group('official_stand')
     official_stand_gr.add_argument("--stand-gpios", help="GPIO pin numbers of official stand's LEDs and fans. 5(as red led), 6(as green led) and 14(as fan) GPIO pins are default.", nargs=3, default=[5, 6, 14], type=int, metavar=('RED-LED', 'GREEN-LED', 'FAN'))
@@ -235,6 +244,15 @@ def initiate():
     other_gr.add_argument("--version", help="Display the version number of T_System.", action="store_true")
 
     sub_p = ap.add_subparsers(dest="sub_jobs", help='officiate the sub-jobs')  # if sub-commands not used their arguments create raise.
+
+    ap_id = sub_p.add_parser('id', help='Make identification jobs of T_System.')
+    id_sub_p = ap_id.add_subparsers(dest="id_sub_jobs", help='officiate the identification sub-jobs')  # if sub-commands not used their arguments create raise.
+
+    ap_id_set = id_sub_p.add_parser('set', help='Setting the identity of T_System for detecting specific working device of it.')
+    ap_id_set.add_argument('--id', help='Specific and unique ID of T_System.', type=str)
+    ap_id_set.add_argument('--name', help='Specific name for T_System.', type=str)
+
+    ap_id_show = id_sub_p.add_parser('show', help='Getting the identity info of T_System.')
 
     ap_r_ui_auth = sub_p.add_parser('remote-ui-authentication', help='Remote UI administrator authority settings of the secret entry point that is the new network connection panel.')
     ap_r_ui_auth.add_argument('--ssid', help='Secret administrator ssid flag', type=str)
