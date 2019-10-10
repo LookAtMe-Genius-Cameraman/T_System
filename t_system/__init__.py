@@ -23,6 +23,7 @@ log_manager = None
 seer = None
 augmenter = None
 stand_ui = None
+identifier = None
 administrator = None
 update_manager = None
 arm = None
