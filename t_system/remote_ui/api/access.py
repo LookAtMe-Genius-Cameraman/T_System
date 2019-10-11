@@ -16,6 +16,10 @@ from schema import SchemaError
 from t_system.remote_ui.modules.access import check_private_id, get_private_id_by
 from t_system.remote_ui.api.data_schema import ACCESS_SCHEMA
 
+from t_system import log_manager
+
+logger = log_manager.get_logger(__name__, "DEBUG")
+
 api_bp = Blueprint('access_api', __name__)
 api = Api(api_bp)
 
@@ -52,14 +56,13 @@ class AccessApi(Resource):
         """
 
         try:
-            form = request.form.to_dict(flat=True)  # request.form returns an immutable dict. And flat=False convert each value of the keys to list.
-            data = ACCESS_SCHEMA.validate(form)
+            data = ACCESS_SCHEMA.validate(request.json)
         except SchemaError as e:
             return {'status': 'ERROR', 'message': e.code}
 
-        private_id = get_private_id_by(data)
+        result = get_private_id_by(data)
 
-        return {'status': 'OK', 'data': private_id}
+        return {'status': 'OK' if result else 'ERROR', 'data': result}
 
     def put(self):
         """The API method to PUT request for flask.
