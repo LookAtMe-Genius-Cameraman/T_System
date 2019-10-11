@@ -382,8 +382,23 @@
     background-color: #fff0eb;
 }
 
+#lang_list_ul {
+    padding: 0 !important;
+}
+
 .lang_select_dropdown_menu {
     left: 50% !important;
+}
+
+.lang_row {
+    width: 210px !important;
+    margin: 0 !important;
+}
+
+.lang_col {}
+
+.lang_btn {
+    max-width: 90px;
 }
 
 /**********************************HELP OPTION**********************************/

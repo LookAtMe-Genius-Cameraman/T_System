@@ -63,12 +63,24 @@ const empty_option_io_div = document.getElementById("empty_option_io_div");
  */
 function build_language_menu() {
 
+    let lang_dropdown_row_div;
     for (let i = 0; i < language_list.length; i++) {
+
+        if (i % 2 === 0) {
+            lang_dropdown_row_div = document.createElement('div');
+            lang_dropdown_row_div.classList.add("position-relative", "row", "lang_row");
+
+            lang_list_ul.appendChild(lang_dropdown_row_div);
+        }
+
+        let lang_dropdown_col_div = document.createElement('div');
+        lang_dropdown_col_div.classList.add("position-relative", "col-*", "lang_col", "ml-2");
+
 
         let lang_div = document.createElement('div');
         let lang_btn = document.createElement('button');
 
-        lang_btn.classList.add("btn", "btn-light", "mb-2");
+        lang_btn.classList.add("btn", "btn-light", "lang_btn", "cut-text", "mb-2");
         lang_btn.innerHTML = language_list[i][1];
 
         lang_btn.addEventListener("click", function () {
@@ -76,7 +88,8 @@ function build_language_menu() {
         });
 
         lang_div.appendChild(lang_btn);
-        lang_list_ul.appendChild(lang_div);
+        lang_dropdown_col_div.appendChild(lang_div);
+        lang_dropdown_row_div.appendChild(lang_dropdown_col_div);
 
         if (language_list[i][0] === language) {
             lang_select_dd_btn.innerHTML = language_list[i][1];
@@ -680,6 +693,10 @@ record_control_btn.addEventListener("click", function () {
             });
 
     } else {
+
+        if (options_player_div.classList.contains("focused")) {
+            close_options_player_btn.click();
+        }
 
         dark_deep_background_div.removeEventListener("click", record_control_btn_lis_bind);
         options_template_container.removeEventListener("click", record_control_btn_lis_bind);
