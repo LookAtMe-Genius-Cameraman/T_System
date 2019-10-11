@@ -64,6 +64,8 @@ class Identifier:
 
         self.__db_upsert(self.public_id, self.private_id, self.name)
 
+        return True
+
     def __get_keys(self):
         """Method to get keys of identity from database.
         """
@@ -83,7 +85,7 @@ class Identifier:
 
         self.public_id = self.get_random_id(6)
         self.private_id = self.get_random_id(6)
-        self.name = "T_System.t_system"
+        self.name = f'T_System-{self.public_id}'
 
         self.__db_upsert(self.public_id, self.private_id, self.name)
 
