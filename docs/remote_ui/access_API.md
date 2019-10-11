@@ -5,7 +5,7 @@ Returns the response it holds private id of T_System.
 ```http
 POST /api/access
 Host: domain
-Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+Content-Type: application/json; charset=UTF-8
 
 {
     "id": "MY3T55"
@@ -18,6 +18,14 @@ Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 {
     "status": "OK",
     "data": "PR47V1"
+}
+```
+
+### On Failure
+```json
+{
+    "status": "ERROR",
+    "message": "missing or incorrect parameters"
 }
 ```
 
@@ -35,6 +43,14 @@ Host: domain
 ### On Success
 ```
 redirect('/')
+```
+
+### On Failure
+```json
+{
+    "status": "ERROR",
+    "message": "missing or incorrect parameters"
+}
 ```
 
 ## PUT Request
