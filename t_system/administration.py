@@ -41,19 +41,23 @@ class Identifier:
 
         print(f'public id is {self.public_id},\nprivate id is {self.private_id},\nname is {self.name}')
 
-    def change_keys(self, public_id=None, name=None):
+    def change_keys(self, public_id=None, private_id=None, name=None):
         """Method to change keys of identity for unique identification of T_System. 2 key(id and name) identification.
 
         Args:
             public_id:    	    Public id of the T_System itself.
+            private_id:    	    Private id of the T_System itself.
             name:     	        Specified name of the T_System itself.
         """
 
-        if public_id is None and name is None:
+        if public_id is None and private_id is None and name is None:
             return False
 
         if public_id:
             self.public_id = public_id
+
+        if private_id:
+            self.private_id = private_id
 
         if name:
             self.name = name

@@ -76,7 +76,7 @@ def start_sub(args):
     if args["sub_jobs"] == "id":
 
         if args["id_sub_jobs"] == "set":
-            t_system.identifier.change_keys(args["id"], args["name"])
+            t_system.identifier.change_keys(args["public_id"], args["private_id"], args["name"])
         elif args["id_sub_jobs"] == "show":
             t_system.identifier.show_keys()
 
@@ -249,7 +249,8 @@ def initiate():
     id_sub_p = ap_id.add_subparsers(dest="id_sub_jobs", help='officiate the identification sub-jobs')  # if sub-commands not used their arguments create raise.
 
     ap_id_set = id_sub_p.add_parser('set', help='Setting the identity of T_System for detecting specific working device of it.')
-    ap_id_set.add_argument('--id', help='Specific and unique ID of T_System.', type=str)
+    ap_id_set.add_argument('--public_id', help='Specific and unique ID of T_System.', type=str)
+    ap_id_set.add_argument('--private_id', help='Specific and unique ID of T_System.', type=str)
     ap_id_set.add_argument('--name', help='Specific name for T_System.', type=str)
 
     ap_id_show = id_sub_p.add_parser('show', help='Getting the identity info of T_System.')
