@@ -59,7 +59,7 @@
 }
 
 .position_div {
- max-width: 150px;
+    max-width: 150px;
     z-index: 9999;
 }
 
@@ -79,18 +79,18 @@
 }
 
 .actions-drop-active {
-  border-color: #aaa;
+    border-color: #aaa;
 }
 
 .actions-drop-target {
-  background-color: #29e;
-  border-color: #fff;
-  border-style: solid;
+    background-color: #29e;
+    border-color: #fff;
+    border-style: solid;
 }
 
 .action-can-drop {
-  color: #000;
-  background-color: #aaa;
+    color: #000;
+    background-color: #aaa;
 }
 
 .scenario_dropdown_menu {
