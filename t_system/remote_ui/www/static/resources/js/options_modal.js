@@ -131,6 +131,8 @@ update_control_btn.addEventListener("click", function () {
         dark_deep_background_div.addEventListener("click", update_control_btn_lis_bind);
         options_template_container.addEventListener("click", update_control_btn_lis_bind);
 
+        $('#swiper_wrapper').addClass( "disabled" );
+
         request_asynchronous('/api/network?key=auto_update&admin_id=' + admin_id, 'GET',
             'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
                 if (err === "success") {
@@ -143,6 +145,8 @@ update_control_btn.addEventListener("click", function () {
     } else {
         dark_deep_background_div.removeEventListener("click", update_control_btn_lis_bind);
         options_template_container.removeEventListener("click", update_control_btn_lis_bind);
+
+        $('#swiper_wrapper').removeClass("disabled");
 
         update_control_btn_click_count = 0;
     }
@@ -200,6 +204,8 @@ wifi_connections_btn.addEventListener("click", function () {
 
         dark_deep_background_div.addEventListener("click", wifi_connections_btn_lis_bind);
         options_template_container.addEventListener("click", wifi_connections_btn_lis_bind);
+
+        $('#swiper_wrapper').addClass( "disabled" );
 
         request_asynchronous('/api/network?admin_id=' + admin_id, 'GET',
             'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
@@ -318,6 +324,9 @@ wifi_connections_btn.addEventListener("click", function () {
         while (network_list_ul.firstChild) {
             network_list_ul.removeChild(network_list_ul.firstChild);
         }
+
+        $('#swiper_wrapper').removeClass( "disabled" );
+
         wifi_connections_btn_click_count = 0;
     }
 });
@@ -407,9 +416,14 @@ audio_control_btn.addEventListener("click", function () {
     if (audio_control_btn_click_count <= 1) {
         dark_deep_background_div.addEventListener("click", audio_control_btn_lis_bind);
         options_template_container.addEventListener("click", audio_control_btn_lis_bind);
+
+        $('#swiper_wrapper').addClass( "disabled" );
+
     } else {
         dark_deep_background_div.removeEventListener("click", audio_control_btn_lis_bind);
         options_template_container.removeEventListener("click", audio_control_btn_lis_bind);
+
+        $('#swiper_wrapper').removeClass( "disabled" );
 
         audio_control_btn_click_count = 0;
     }
@@ -433,6 +447,8 @@ face_encoding_btn.addEventListener("click", function () {
 
         dark_deep_background_div.addEventListener("click", face_encoding_btn_lis_bind);
         options_template_container.addEventListener("click", face_encoding_btn_lis_bind);
+
+        $('#swiper_wrapper').addClass( "disabled" );
 
         request_asynchronous('/api/face_encoding?admin_id=' + admin_id, 'GET',
             'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
@@ -539,6 +555,9 @@ face_encoding_btn.addEventListener("click", function () {
         while (encoded_face_list_ul.firstChild) {
             encoded_face_list_ul.removeChild(encoded_face_list_ul.firstChild);
         }
+
+        $('#swiper_wrapper').removeClass( "disabled" );
+
         face_encoding_btn_click_count = 0;
     }
 });
@@ -603,6 +622,8 @@ record_control_btn.addEventListener("click", function () {
 
         dark_deep_background_div.addEventListener("click", record_control_btn_lis_bind);
         options_template_container.addEventListener("click", record_control_btn_lis_bind);
+
+        $('#swiper_wrapper').addClass( "disabled" );
 
         request_asynchronous('/api/record?admin_id=' + admin_id, 'GET',
             'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
@@ -710,6 +731,9 @@ record_control_btn.addEventListener("click", function () {
         while (record_list_ul.firstChild) {
             record_list_ul.removeChild(record_list_ul.firstChild);
         }
+
+        $('#swiper_wrapper').removeClass( "disabled" );
+
         record_control_btn_click_count = 0;
     }
 });
@@ -742,6 +766,8 @@ identity_control_btn.addEventListener("click", function () {
     if (identity_control_btn_click_count <= 1) {
         dark_deep_background_div.addEventListener("click", identity_control_btn_lis_bind);
         options_template_container.addEventListener("click", identity_control_btn_lis_bind);
+
+        $('#swiper_wrapper').addClass( "disabled" );
 
         request_asynchronous('/api/identity?admin_id=' + admin_id, 'GET',
             'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
@@ -877,6 +903,8 @@ identity_control_btn.addEventListener("click", function () {
         dark_deep_background_div.removeEventListener("click", identity_control_btn_lis_bind);
         options_template_container.removeEventListener("click", identity_control_btn_lis_bind);
 
+        $('#swiper_wrapper').removeClass( "disabled" );
+
         identity_control_btn_click_count = 0;
     }
 });
@@ -899,9 +927,14 @@ lang_select_btn.addEventListener("click", function () {
     if (lang_select_btn_click_count <= 1) {
         dark_deep_background_div.addEventListener("click", lang_select_btn_lis_bind);
         options_template_container.addEventListener("click", lang_select_btn_lis_bind);
+
+        $('#swiper_wrapper').addClass( "disabled" );
+
     } else {
         dark_deep_background_div.removeEventListener("click", lang_select_btn_lis_bind);
         options_template_container.removeEventListener("click", lang_select_btn_lis_bind);
+
+        $('#swiper_wrapper').removeClass( "disabled" );
 
         lang_select_btn_click_count = 0;
     }
@@ -926,9 +959,13 @@ help_control_btn.addEventListener("click", function () {
     if (help_control_btn_click_count <= 1) {
         dark_deep_background_div.addEventListener("click", help_control_btn_lis_bind);
         options_template_container.addEventListener("click", help_control_btn_lis_bind);
+
+        $('#swiper_wrapper').addClass( "disabled" );
     } else {
         dark_deep_background_div.removeEventListener("click", help_control_btn_lis_bind);
         options_template_container.removeEventListener("click", help_control_btn_lis_bind);
+
+        $('#swiper_wrapper').removeClass( "disabled" );
 
         help_control_btn_click_count = 0;
     }
