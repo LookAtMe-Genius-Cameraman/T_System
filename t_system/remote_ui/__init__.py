@@ -33,9 +33,6 @@ from t_system import T_SYSTEM_PATH, dot_t_system_dir
 __version__ = '0.9.69'
 
 
-REMOTE_UI_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-
-
 class RemoteUI:
     """Class to define a flask handler to T_System communication ability with html and js.
 
@@ -62,7 +59,7 @@ class RemoteUI:
 
         self.remote_ui_dir = f'{dot_t_system_dir}/remote_ui'
 
-        config_file = f'{REMOTE_UI_PATH}/config/{args["environment"]}.cfg'
+        config_file = f'{T_SYSTEM_PATH}/remote_ui/config/{args["environment"]}.cfg'
         self.app.config.from_pyfile(config_file)
 
         Session(self.app)
@@ -130,10 +127,6 @@ def allowed_file(filename, allowed_extensions):
 
 
 if __name__ == "__main__":
-
-    REMOTE_UI_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-    _template_folder = REMOTE_UI_PATH + "/www"
-    _static_folder = _template_folder + "/static"
 
     app = RemoteUI(args={"host": "localhost", "port": "5000", "debug": True, "environment": "development"})
     app.run(host="0.0.0.0", port="5000",  debug=True)  # 0.0.0.0 means "all IPv4 addresses on the local machine"
