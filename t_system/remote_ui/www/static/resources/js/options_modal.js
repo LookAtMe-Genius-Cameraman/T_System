@@ -54,9 +54,15 @@ const help_control_div = document.getElementById("help_control_div");
 const help_control_btn = document.getElementById("help_control_btn");
 const help_control_io_div = document.getElementById("help_control_io_div");
 
-const empty_option_div = document.getElementById("empty_option_div");
-const empty_option_btn = document.getElementById("empty_option_btn");
-const empty_option_io_div = document.getElementById("empty_option_io_div");
+const identity_control_div = document.getElementById("identity_control_div");
+const identity_control_btn = document.getElementById("identity_control_btn");
+const identity_control_io_div = document.getElementById("identity_control_io_div");
+const identity_public_id_div = document.getElementById("identity_public_id_div");
+const identity_public_id_span = document.getElementById("identity_public_id_span");
+const identity_name_div = document.getElementById("identity_name_div");
+const identity_name_span = document.getElementById("identity_name_span");
+const identity_private_id_div = document.getElementById("identity_private_id_div");
+const identity_private_id_span = document.getElementById("identity_private_id_span");
 
 /**
  * Method to create drop-down language selection menu.
@@ -113,7 +119,7 @@ update_control_btn.addEventListener("click", function () {
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
 
-    toggle_elements([wifi_control_div, audio_control_div, face_encoding_div, record_control_div, empty_option_div, lang_select_div, help_control_div]);
+    toggle_elements([wifi_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, lang_select_div, help_control_div]);
     update_control_div.classList.toggle("col");
     update_control_div.classList.toggle("focused");
     update_control_div.classList.toggle("higher");
@@ -183,7 +189,7 @@ wifi_connections_btn.addEventListener("click", function () {
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
 
-    toggle_elements([update_control_div, audio_control_div, face_encoding_div, record_control_div, empty_option_div, lang_select_div, help_control_div]);
+    toggle_elements([update_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, lang_select_div, help_control_div]);
     wifi_control_div.classList.toggle("col");
     wifi_control_div.classList.toggle("focused");
     wifi_control_div.classList.toggle("higher");
@@ -391,7 +397,7 @@ audio_control_btn.addEventListener("click", function () {
 
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
-    toggle_elements([update_control_div, wifi_control_div, face_encoding_div, record_control_div, empty_option_div, lang_select_div, help_control_div]);
+    toggle_elements([update_control_div, wifi_control_div, face_encoding_div, record_control_div, identity_control_div, lang_select_div, help_control_div]);
     audio_control_div.classList.toggle("col");
     audio_control_div.classList.toggle("focused");
     audio_control_div.classList.toggle("higher");
@@ -416,7 +422,7 @@ face_encoding_btn.addEventListener("click", function () {
 
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
-    toggle_elements([update_control_div, wifi_control_div, audio_control_div, record_control_div, empty_option_div, lang_select_div, help_control_div]);
+    toggle_elements([update_control_div, wifi_control_div, audio_control_div, record_control_div, identity_control_div, lang_select_div, help_control_div]);
     face_encoding_div.classList.toggle("col");
     face_encoding_div.classList.toggle("focused");
     face_encoding_div.classList.toggle("higher");
@@ -586,7 +592,7 @@ record_control_btn.addEventListener("click", function () {
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
 
-    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, empty_option_div, lang_select_div, help_control_div]);
+    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, identity_control_div, lang_select_div, help_control_div]);
     record_control_div.classList.toggle("col");
     record_control_div.classList.toggle("focused");
     record_control_div.classList.toggle("higher");
@@ -714,29 +720,164 @@ close_options_player_btn.addEventListener("click", function () {
     record_control_div.classList.toggle("hidden_element");
 });
 
-let empty_option_btn_click_count = 0;
-let empty_option_btn_lis_bind = close_opened_option.bind(null, empty_option_btn);
+let identity_control_btn_click_count = 0;
+let identity_control_btn_lis_bind = close_opened_option.bind(null, identity_control_btn);
 
-empty_option_btn.addEventListener("click", function () {
+identity_control_btn.addEventListener("click", function () {
 
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
 
     toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, lang_select_div, help_control_div]);
-    empty_option_div.classList.toggle("col");
-    empty_option_div.classList.toggle("focused");
-    empty_option_div.classList.toggle("higher");
-    empty_option_io_div.classList.toggle("focused");
+    identity_control_div.classList.toggle("col");
+    identity_control_div.classList.toggle("focused");
+    identity_control_div.classList.toggle("higher");
+    identity_control_io_div.classList.toggle("focused");
 
-    empty_option_btn_click_count++;
-    if (empty_option_btn_click_count <= 1) {
-        dark_deep_background_div.addEventListener("click", empty_option_btn_lis_bind);
-        options_template_container.addEventListener("click", empty_option_btn_lis_bind);
+    identity_public_id_div.classList.toggle("identity_div");
+    identity_private_id_div.classList.toggle("identity_div");
+    identity_name_div.classList.toggle("identity_div");
+
+    identity_control_btn_click_count++;
+    if (identity_control_btn_click_count <= 1) {
+        dark_deep_background_div.addEventListener("click", identity_control_btn_lis_bind);
+        options_template_container.addEventListener("click", identity_control_btn_lis_bind);
+
+        request_asynchronous('/api/identity?admin_id=' + admin_id, 'GET',
+            'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
+                if (err === "success") {
+                    if (requested_data["status"] === "OK") {
+                        let identity_info = requested_data["data"];
+
+                        identity_public_id_span.classList.add("pale");
+                        identity_public_id_span.innerHTML = identity_info["public_id"];
+                        identity_public_id_span.name = identity_info["public_id"];
+
+                        identity_name_span.innerHTML = identity_info["name"];
+                        identity_name_span.name = identity_info["name"];
+
+                        identity_name_span.addEventListener("click", function () {
+
+                            identity_name_div.removeChild(identity_name_span);
+
+                            let identity_name_input = document.createElement('input');
+
+                            identity_name_input.type = "text";
+                            identity_name_input.placeholder = identity_name_span.innerHTML;
+                            identity_name_input.classList.add("identity_update_input");
+
+                            identity_name_input.addEventListener("focusout", function () {
+                                if (identity_name_input.value !== identity_name_span.innerHTML && identity_name_input.value !== "") {
+
+                                    let data = {"public_id": null, "private_id": null, "name": identity_name_input.value};
+
+                                    request_asynchronous('/api/identity?cause=name&admin_id=' + admin_id, 'PUT',
+                                        'application/json; charset=UTF-8', data, function (req, err, response) {
+                                            if (err === "success") {
+                                                let response_data = JSON.parse(response.responseText);
+                                                if (response_data["status"] === "OK") {
+                                                    swal(translate_text_item("Device Name is now:\n" + identity_name_input.value), "", "success");
+                                                    identity_name_span.innerHTML = identity_name_input.value
+                                                } else if (response_data["status"] === "ERROR") {
+                                                    swal(translate_text_item("Device Name changing failed!"), "", "error");
+                                                }
+                                            }
+                                        });
+                                }
+                                identity_name_div.removeChild(identity_name_input);
+                                identity_name_div.appendChild(identity_name_span);
+                            });
+                            identity_name_div.appendChild(identity_name_input);
+                            identity_name_input.focus();
+                        });
+
+                        if (identity_info["private_id"] != null) {
+
+                            identity_public_id_span.classList.remove("pale");
+
+                            identity_public_id_span.addEventListener("click", function () {
+
+                                identity_public_id_div.removeChild(identity_public_id_span);
+
+                                let identity_public_id_input = document.createElement('input');
+
+                                identity_public_id_input.type = "text";
+                                identity_public_id_input.placeholder = identity_public_id_span.innerHTML;
+                                identity_public_id_input.classList.add("identity_update_input");
+
+                                identity_public_id_input.addEventListener("focusout", function () {
+                                    if (identity_public_id_input.value !== identity_public_id_span.innerHTML && identity_public_id_input.value !== "") {
+
+                                        let data = {"public_id": identity_public_id_input.value, "private_id": null, "name": null};
+
+                                        request_asynchronous('/api/identity?cause=public_id&admin_id=' + admin_id, 'PUT',
+                                            'application/json; charset=UTF-8', data, function (req, err, response) {
+                                                if (err === "success") {
+                                                    let response_data = JSON.parse(response.responseText);
+                                                    if (response_data["status"] === "OK") {
+                                                        swal(translate_text_item("Device Public ID is now:\n" + identity_public_id_input.value), "", "success");
+                                                        identity_public_id_span.innerHTML = identity_public_id_input.value
+                                                    } else if (response_data["status"] === "ERROR") {
+                                                        swal(translate_text_item("Device Public ID changing failed!"), "", "error");
+                                                    }
+                                                }
+                                            });
+                                    }
+                                    identity_public_id_div.removeChild(identity_public_id_input);
+                                    identity_public_id_div.appendChild(identity_public_id_span);
+                                });
+                                identity_public_id_div.appendChild(identity_public_id_input);
+                                identity_public_id_input.focus();
+                            });
+
+                            identity_private_id_div.classList.add("active");
+                            identity_private_id_span.innerHTML = identity_info["private_id"];
+                            identity_private_id_span.name = identity_info["private_id"];
+
+                            identity_private_id_span.addEventListener("click", function () {
+
+                                identity_private_id_div.removeChild(identity_private_id_span);
+
+                                let identity_private_id_input = document.createElement('input');
+
+                                identity_private_id_input.type = "text";
+                                identity_private_id_input.placeholder = identity_private_id_span.innerHTML;
+                                identity_private_id_input.classList.add("identity_update_input");
+
+                                identity_private_id_input.addEventListener("focusout", function () {
+                                    if (identity_private_id_input.value !== identity_private_id_span.innerHTML && identity_private_id_input.value !== "") {
+
+                                        let data = {"public_id": null, "private_id": identity_private_id_input.value, "name": null};
+
+                                        request_asynchronous('/api/identity?cause=private_id&admin_id=' + admin_id, 'PUT',
+                                            'application/json; charset=UTF-8', data, function (req, err, response) {
+                                                if (err === "success") {
+                                                    let response_data = JSON.parse(response.responseText);
+                                                    if (response_data["status"] === "OK") {
+                                                        swal(translate_text_item("Device Private ID is now:\n" + identity_private_id_input.value), "", "success");
+                                                        identity_private_id_span.innerHTML = identity_private_id_input.value;
+                                                    } else if (response_data["status"] === "ERROR") {
+                                                        swal(translate_text_item("Device Private ID changing failed!"), "", "error");
+                                                    }
+                                                }
+                                            });
+                                    }
+                                    identity_private_id_div.removeChild(identity_private_id_input);
+                                    identity_private_id_div.appendChild(identity_private_id_span);
+                                });
+                                identity_private_id_div.appendChild(identity_private_id_input);
+                                identity_private_id_input.focus();
+                            });
+                        }
+                    }
+                }
+            });
+
     } else {
-        dark_deep_background_div.removeEventListener("click", empty_option_btn_lis_bind);
-        options_template_container.removeEventListener("click", empty_option_btn_lis_bind);
+        dark_deep_background_div.removeEventListener("click", identity_control_btn_lis_bind);
+        options_template_container.removeEventListener("click", identity_control_btn_lis_bind);
 
-        empty_option_btn_click_count = 0;
+        identity_control_btn_click_count = 0;
     }
 });
 
@@ -748,7 +889,7 @@ lang_select_btn.addEventListener("click", function () {
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
 
-    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, empty_option_div, help_control_div]);
+    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, help_control_div]);
     lang_select_div.classList.toggle("col");
     lang_select_div.classList.toggle("focused");
     lang_select_div.classList.toggle("higher");
@@ -775,7 +916,7 @@ help_control_btn.addEventListener("click", function () {
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
 
-    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, empty_option_div, lang_select_div]);
+    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, lang_select_div]);
     help_control_div.classList.toggle("col");
     help_control_div.classList.toggle("focused");
     help_control_div.classList.toggle("higher");
