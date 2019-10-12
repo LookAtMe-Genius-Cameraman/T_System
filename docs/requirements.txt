@@ -1,7 +1,7 @@
 m2r==0.2.1
 picamera>=1.13
 RPi.GPIO>=0.6.5
-tinydb==3.14.1
+tinydb==3.14.2
 numpy==1.17.2
 sympy==1.4
 paho-mqtt>=1.4.0
