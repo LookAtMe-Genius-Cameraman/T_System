@@ -35,7 +35,7 @@ class AccessApi(Resource):
     """
 
     def __init__(self):
-        """Initialization method of :class:`t_system.remote_ui.api.access.MoveApi` class.
+        """Initialization method of :class:`t_system.remote_ui.api.access.AccessApi` class.
         """
 
     def get(self):

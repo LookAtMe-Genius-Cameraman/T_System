@@ -29,7 +29,7 @@ Content-Type: application/json; charset=UTF-8
 }
 ```
 
-# Getting Home page pf Remote UI
+# Getting Home page of Remote UI
 - Returns an error if ID is empty.
 - If ID correct returns redirection to "/" url.
 

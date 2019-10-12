@@ -10,7 +10,6 @@
 """
 
 from t_system import identifier
-
 from t_system import log_manager
 
 logger = log_manager.get_logger(__name__, "DEBUG")
