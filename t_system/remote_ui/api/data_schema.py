@@ -49,3 +49,9 @@ RECORD_SCHEMA = Schema({
 ACCESS_SCHEMA = Schema({
     'id': Use(str)
 })
+
+IDENTITY_SCHEMA = Schema({
+    'public_id': Or(None, Use(str)),
+    'private_id': Or(None, Use(str)),
+    'name': Or(None, Use(str))
+})
