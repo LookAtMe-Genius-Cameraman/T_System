@@ -353,10 +353,41 @@
     font-size: 11px;
 }
 
-/**********************************EMPTY OPTION**********************************/
-#empty_option_div.higher {
+/**********************************IDENTITY CONTROL**********************************/
+#identity_control_div.higher {
     top: -340% !important;
+}
 
+#identity_control_io_div{}
+
+#identity_private_id_div {
+    display: none;
+}
+
+#identity_private_id_div.active {
+    display: inherit !important;
+}
+
+#identity_public_id_span.pale {
+    color: grey;
+}
+
+.identity_div{
+    margin-left: 30px;
+    width: 180px !important;
+}
+
+.identity_update_input {
+    max-width: 150px;
+
+    background-color: white;
+    color: black;
+    border-color: #008CBA;
+    border-style: none none solid none !important;
+    border-radius: 2px;
+}
+
+#identity_list_ul {
 }
 
 /**********************************LANGUAGE OPTION**********************************/
