@@ -92,6 +92,10 @@ footer {
     pointer-events:  none !important;
 }
 
+.swiper-wrapper.disabled {
+    transform: translate3d(0px, 0, 0) !important;
+}
+
 #initial_loading_div {
     font-family: Arial, Helvetica, sans-serif;
     top: 0;
