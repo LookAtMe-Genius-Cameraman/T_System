@@ -776,7 +776,7 @@ identity_control_btn.addEventListener("click", function () {
                                             if (err === "success") {
                                                 let response_data = JSON.parse(response.responseText);
                                                 if (response_data["status"] === "OK") {
-                                                    swal(translate_text_item("Device Name is now:\n" + identity_name_input.value), "", "success");
+                                                    swal(translate_text_item("Device Name is now:") + "\n" + translate_text_item(identity_name_input.value), "", "success");
                                                     identity_name_span.innerHTML = identity_name_input.value
                                                 } else if (response_data["status"] === "ERROR") {
                                                     swal(translate_text_item("Device Name changing failed!"), "", "error");
@@ -815,7 +815,7 @@ identity_control_btn.addEventListener("click", function () {
                                                 if (err === "success") {
                                                     let response_data = JSON.parse(response.responseText);
                                                     if (response_data["status"] === "OK") {
-                                                        swal(translate_text_item("Device Public ID is now:\n" + identity_public_id_input.value), "", "success");
+                                                        swal(translate_text_item("Device Public ID is now:") + "\n" + translate_text_item(identity_public_id_input.value), "", "success");
                                                         identity_public_id_span.innerHTML = identity_public_id_input.value
                                                     } else if (response_data["status"] === "ERROR") {
                                                         swal(translate_text_item("Device Public ID changing failed!"), "", "error");
@@ -854,7 +854,7 @@ identity_control_btn.addEventListener("click", function () {
                                                 if (err === "success") {
                                                     let response_data = JSON.parse(response.responseText);
                                                     if (response_data["status"] === "OK") {
-                                                        swal(translate_text_item("Device Private ID is now:\n" + identity_private_id_input.value), "", "success");
+                                                        swal(translate_text_item("Device Private ID is now:") + "\n" + translate_text_item(identity_private_id_input.value), "", "success");
                                                         identity_private_id_span.innerHTML = identity_private_id_input.value;
                                                     } else if (response_data["status"] === "ERROR") {
                                                         swal(translate_text_item("Device Private ID changing failed!"), "", "error");
