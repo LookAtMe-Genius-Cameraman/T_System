@@ -52,7 +52,11 @@ Host: domain
         "id": "b970138a-aecb-11e9-b130-cc2f714671ed",
         "name": "position_name",
         "cartesian_coords": [30, 25, 42],
-        "polar_coords": [1.5, 1.02, 0.5]
+        "polar_params": {
+                  "coords": [1.5, 1.02, 0.5], 
+                  "delays": [0, 0.5, 0.2], 
+                  "divide_counts": [3, 4, 1]
+                  }
     }]
 }
 ```
@@ -75,7 +79,11 @@ Content-Type: application/json; charset=UTF-8
 {
     "name": "position_name",
     "cartesian_coords": [18, 27, 48],
-    "polar_coords": [1.2, 1.85, 0.65],
+    "polar_params": {
+                  "coords": [1.5, 1.85, 0.65], 
+                  "delays": [1, 0.25, 0.4], 
+                  "divide_counts": [3, 7, 1]
+                  }
 }
 ```
 

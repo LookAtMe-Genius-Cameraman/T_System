@@ -16,13 +16,21 @@ Content-Type: application/json; charset=UTF-8
         "id": "b970138a-aecb-11e9-b130-cc2f714671ed",
         "name": "position1_name",
         "cartesian_coords": [30, 25, 42],
-        "polar_coords": [1.5, 1.02, 0.5]
+        "polar_params": {
+                  "coords": [1.28, 1.62, 0.52], 
+                  "delays": [0.2, 0, 0.5], 
+                  "divide_counts": [5, 3, 2]
+                  }
     },
     {
         "id": "b970138a-aecb-11e9-b130-cc2f714671ed",
         "name": "position2_name",
         "cartesian_coords": [30, 25, 42],
-        "polar_coords": [1.5, 1.02, 0.5]
+        "polar_params": {
+                  "coords": [2.12, 1.52, 0.78], 
+                  "delays": [0.1, 0.4, 1], 
+                  "divide_counts": [1, 3, 1]
+                  }
     }],
 }
 ```
