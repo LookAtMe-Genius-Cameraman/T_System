@@ -64,7 +64,7 @@ class MissionManager:
 
         predicted_positions = self.predicted_positions_table.all()
         for position in predicted_positions:
-            self.predicted_positions.append(Position(position["name"], position["id"], position["cartesian_coords"], position["polar_coords"], root=True, db_name=self.predicted_db_name))
+            self.predicted_positions.append(Position(position["name"], position["id"], position["cartesian_coords"], position["polar_params"], root=True, db_name=self.predicted_db_name))
 
         scenarios = self.scenarios_table.all()
         for scenario in scenarios:
@@ -72,7 +72,7 @@ class MissionManager:
 
         positions = self.positions_table.all()
         for position in positions:
-            self.positions.append(Position(position["name"], position["id"], position["cartesian_coords"], position["polar_coords"], root=False, db_name=self.db_name))
+            self.positions.append(Position(position["name"], position["id"], position["cartesian_coords"], position["polar_params"], root=False, db_name=self.db_name))
 
     def continuous_execute(self, stop, pause, mission, m_type, root):
         """The top-level method for executing the missions as continuously.
@@ -169,7 +169,7 @@ class EmotionManager:
 
         positions = self.positions_table.all()
         for position in positions:
-            self.positions.append(Position(position["name"], position["id"], position["cartesian_coords"], position["polar_coords"], root=True, db_name=self.db_name))
+            self.positions.append(Position(position["name"], position["id"], position["cartesian_coords"], position["polar_params"], root=True, db_name=self.db_name))
 
     def make_feel(self, emotion, e_type):
         """The top-level method to generating emotion with using position or scenarios their names specified with given parameter.
@@ -345,7 +345,11 @@ class Scenario:
                         "id": position.id,
                         "name": position.name,
                         "cartesian_coords": position.cartesian_coords,
-                        "polar_coords": position.polar_coords
+                        "polar_params": {
+                            "coords": position.polar_coords,
+                            "delays": position.polar_delays,
+                            "divide_counts": position.polar_divide_counts
+                        }
                     } for position in self.positions]}, Query().id == self.id)
             else:
                 return "Already Exist"
@@ -357,7 +361,11 @@ class Scenario:
                     "id": position.id,
                     "name": position.name,
                     "cartesian_coords": position.cartesian_coords,
-                    "polar_coords": position.polar_coords
+                    "polar_params": {
+                        "coords": position.polar_coords,
+                        "delays": position.polar_delays,
+                        "divide_counts": position.polar_divide_counts
+                    }
                 } for position in self.positions]
             })  # insert the given data
 
@@ -382,7 +390,7 @@ class Scenario:
         scenario = self.table.search((Query().id == self.id))
         if scenario:
             for position in scenario[0]["positions"]:
-                self.positions.append(Position(position["name"], position["id"], position["cartesian_coords"], position["polar_coords"], self.root, self.db_name, is_for_scenario=True))
+                self.positions.append(Position(position["name"], position["id"], position["cartesian_coords"], position["polar_params"], self.root, self.db_name, is_for_scenario=True))
 
 
 class Position:
@@ -393,14 +401,14 @@ class Position:
 
     """
 
-    def __init__(self, name, id=None, cartesian_coords=None, polar_coords=None, root=False, db_name="predicted_missions", is_for_scenario=False):
+    def __init__(self, name, id=None, cartesian_coords=None, polar_params=None, root=False, db_name="predicted_missions", is_for_scenario=False):
         """Initialization method of :class:`t_system.motion.arm.action.Position` class.
 
         Args:
             name (str):                     The name of the position.
             id (str):                       The id of the position.
             cartesian_coords (list):        Cartesian coordinate value list of the position.
-            polar_coords (list):            Polar coordinate value list of the position.
+            polar_params (dict):            Dict of polar coordinate, delay and step value list of the position.
             root (bool):                    Root privileges flag.
             db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
             is_for_scenario (bool):         Flag that is specified position is inside a scenario.
@@ -412,7 +420,15 @@ class Position:
 
         self.name = name
         self.cartesian_coords = cartesian_coords
-        self.polar_coords = polar_coords
+
+        self.polar_coords = None
+        self.polar_delays = None
+        self.polar_divide_counts = None
+        if polar_params:
+            self.polar_coords = polar_params["coords"]
+            self.polar_delays = polar_params["delays"]
+            self.polar_divide_counts = polar_params["divide_counts"]
+
         self.root = root
         self.is_for_scenario = is_for_scenario
 
@@ -457,7 +473,7 @@ class Position:
         if not self.is_for_scenario:
             if self.table.search((Query().name == self.name)):
                 if force_insert:
-                    self.table.update({'name': self.name, 'cartesian_coords': self.cartesian_coords, 'polar_coords': self.polar_coords}, Query().id == self.id)
+                    self.table.update({'name': self.name, 'cartesian_coords': self.cartesian_coords, 'polar_params': {'coords': self.polar_coords, 'delays': self.polar_delays, 'divide_counts': self.polar_divide_counts}}, Query().id == self.id)
 
                 else:
                     return "Already Exist"
@@ -466,7 +482,7 @@ class Position:
                     'id': self.id,
                     'name': self.name,
                     'cartesian_coords': self.cartesian_coords,
-                    'polar_coords': self.polar_coords
+                    'polar_params': {'coords': self.polar_coords, 'delays': self.polar_delays, 'divide_counts': self.polar_divide_counts}
                 })  # insert the given data
 
         return ""
@@ -487,5 +503,4 @@ class Position:
 
 
 if __name__ == '__main__':
-
     position_demonstration = Position("go_to_home", cartesian_coords=[1.5, 1.5, 1.5], root=True)
