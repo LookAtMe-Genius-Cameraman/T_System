@@ -131,7 +131,7 @@ update_control_btn.addEventListener("click", function () {
         dark_deep_background_div.addEventListener("click", update_control_btn_lis_bind);
         options_template_container.addEventListener("click", update_control_btn_lis_bind);
 
-        $('#swiper_wrapper').addClass( "disabled" );
+        setSwiperSwiping(false);
 
         request_asynchronous('/api/network?key=auto_update&admin_id=' + admin_id, 'GET',
             'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
@@ -205,7 +205,7 @@ wifi_connections_btn.addEventListener("click", function () {
         dark_deep_background_div.addEventListener("click", wifi_connections_btn_lis_bind);
         options_template_container.addEventListener("click", wifi_connections_btn_lis_bind);
 
-        $('#swiper_wrapper').addClass( "disabled" );
+        setSwiperSwiping(false);
 
         request_asynchronous('/api/network?admin_id=' + admin_id, 'GET',
             'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
@@ -325,7 +325,7 @@ wifi_connections_btn.addEventListener("click", function () {
             network_list_ul.removeChild(network_list_ul.firstChild);
         }
 
-        $('#swiper_wrapper').removeClass( "disabled" );
+        setSwiperSwiping(true);
 
         wifi_connections_btn_click_count = 0;
     }
@@ -417,13 +417,13 @@ audio_control_btn.addEventListener("click", function () {
         dark_deep_background_div.addEventListener("click", audio_control_btn_lis_bind);
         options_template_container.addEventListener("click", audio_control_btn_lis_bind);
 
-        $('#swiper_wrapper').addClass( "disabled" );
+        setSwiperSwiping(false);
 
     } else {
         dark_deep_background_div.removeEventListener("click", audio_control_btn_lis_bind);
         options_template_container.removeEventListener("click", audio_control_btn_lis_bind);
 
-        $('#swiper_wrapper').removeClass( "disabled" );
+        setSwiperSwiping(true);
 
         audio_control_btn_click_count = 0;
     }
@@ -448,7 +448,7 @@ face_encoding_btn.addEventListener("click", function () {
         dark_deep_background_div.addEventListener("click", face_encoding_btn_lis_bind);
         options_template_container.addEventListener("click", face_encoding_btn_lis_bind);
 
-        $('#swiper_wrapper').addClass( "disabled" );
+        setSwiperSwiping(false);
 
         request_asynchronous('/api/face_encoding?admin_id=' + admin_id, 'GET',
             'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
@@ -556,7 +556,7 @@ face_encoding_btn.addEventListener("click", function () {
             encoded_face_list_ul.removeChild(encoded_face_list_ul.firstChild);
         }
 
-        $('#swiper_wrapper').removeClass( "disabled" );
+        setSwiperSwiping(true);
 
         face_encoding_btn_click_count = 0;
     }
@@ -623,7 +623,7 @@ record_control_btn.addEventListener("click", function () {
         dark_deep_background_div.addEventListener("click", record_control_btn_lis_bind);
         options_template_container.addEventListener("click", record_control_btn_lis_bind);
 
-        $('#swiper_wrapper').addClass( "disabled" );
+        setSwiperSwiping(false);
 
         request_asynchronous('/api/record?admin_id=' + admin_id, 'GET',
             'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
@@ -732,7 +732,7 @@ record_control_btn.addEventListener("click", function () {
             record_list_ul.removeChild(record_list_ul.firstChild);
         }
 
-        $('#swiper_wrapper').removeClass( "disabled" );
+        setSwiperSwiping(true);
 
         record_control_btn_click_count = 0;
     }
@@ -767,7 +767,7 @@ identity_control_btn.addEventListener("click", function () {
         dark_deep_background_div.addEventListener("click", identity_control_btn_lis_bind);
         options_template_container.addEventListener("click", identity_control_btn_lis_bind);
 
-        $('#swiper_wrapper').addClass( "disabled" );
+        setSwiperSwiping(false);
 
         request_asynchronous('/api/identity?admin_id=' + admin_id, 'GET',
             'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
@@ -903,7 +903,7 @@ identity_control_btn.addEventListener("click", function () {
         dark_deep_background_div.removeEventListener("click", identity_control_btn_lis_bind);
         options_template_container.removeEventListener("click", identity_control_btn_lis_bind);
 
-        $('#swiper_wrapper').removeClass( "disabled" );
+        setSwiperSwiping(true);
 
         identity_control_btn_click_count = 0;
     }
@@ -928,16 +928,21 @@ lang_select_btn.addEventListener("click", function () {
         dark_deep_background_div.addEventListener("click", lang_select_btn_lis_bind);
         options_template_container.addEventListener("click", lang_select_btn_lis_bind);
 
-        $('#swiper_wrapper').addClass( "disabled" );
+        setSwiperSwiping(false);
 
     } else {
         dark_deep_background_div.removeEventListener("click", lang_select_btn_lis_bind);
         options_template_container.removeEventListener("click", lang_select_btn_lis_bind);
 
-        $('#swiper_wrapper').removeClass( "disabled" );
+        setSwiperSwiping(true);
 
         lang_select_btn_click_count = 0;
     }
+});
+
+lang_select_dd_btn.addEventListener("click", function () {
+    $("#lang_select_dd_container_div").addClass("show");
+    //Todo this show class works. us it for positions and scenarios in controlling_modal.
 });
 
 
@@ -960,12 +965,12 @@ help_control_btn.addEventListener("click", function () {
         dark_deep_background_div.addEventListener("click", help_control_btn_lis_bind);
         options_template_container.addEventListener("click", help_control_btn_lis_bind);
 
-        $('#swiper_wrapper').addClass( "disabled" );
+        setSwiperSwiping(false);
     } else {
         dark_deep_background_div.removeEventListener("click", help_control_btn_lis_bind);
         options_template_container.removeEventListener("click", help_control_btn_lis_bind);
 
-        $('#swiper_wrapper').removeClass( "disabled" );
+        setSwiperSwiping(true);
 
         help_control_btn_click_count = 0;
     }

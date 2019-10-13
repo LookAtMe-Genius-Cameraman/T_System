@@ -78,6 +78,8 @@ const record_in_scenario_list_ul = document.getElementById("record_in_scenario_l
 
 sidebar_toggle_btn.addEventListener("click", function () {
 
+    setSwiperSwiping(false);
+
     while (position_list_ul.firstChild) {
         position_list_ul.removeChild(position_list_ul.firstChild);
     }
@@ -401,7 +403,6 @@ sidebar_toggle_btn.addEventListener("click", function () {
                         scenario_dropdown_div.appendChild(scenario_context_menu);
 
                         scenario_list_ul.appendChild(scenario_dropdown_div);
-
                     }
                 }
 
@@ -414,6 +415,8 @@ controlling_template_sidebar_close_btn.addEventListener("click", function () {
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
     show_element(controlling_template_content)
+
+    setSwiperSwiping(true);
 });
 
 
@@ -527,6 +530,9 @@ video_area_div.addEventListener("click", function () {
         stream_area_img_click_count++;
 
         if (stream_area_img_click_count <= 1) {
+
+            setSwiperSwiping(false);
+
             stream_area_img.src = "/api/stream?type=preview&admin_id=" + admin_id;   // this url assigning creates a GET request.
 
             hide_element(sidebar_toggle_btn);
@@ -547,6 +553,8 @@ video_area_div.addEventListener("click", function () {
             stream_area_img.classList.toggle("focused");
             video_area_div.classList.toggle("focused");
             show_element(sidebar_toggle_btn);
+
+            setSwiperSwiping(true);
 
             stream_area_img_click_count = 0;
         }
@@ -728,6 +736,8 @@ record_pos_sce_btn.addEventListener("click", function () {
     record_pos_sce_btn_click_count++;
     if (record_pos_sce_btn_click_count <= 1) {
 
+        setSwiperSwiping(false);
+
         record_pos_sce_btn.innerHTML = translate_text_item("cancel");
 
         current_arm_position = {};
@@ -748,6 +758,8 @@ record_pos_sce_btn.addEventListener("click", function () {
         record_pos_sce_btn.innerHTML = translate_text_item("save");
         position_div_back_btn.click();
         scenario_div_back_btn.click();
+
+        setSwiperSwiping(true);
 
         record_pos_sce_btn_click_count = 0
     }

@@ -62,6 +62,15 @@ function refresh_page() {
     window.location.reload();
 }
 
+/**
+ * Method to change swipeablity of swiper element.
+ * @param {boolean} is_active: swipeablity flag
+ */
+function setSwiperSwiping(is_active) {
+        swiper.allowSlideNext = is_active;
+        swiper.allowSlidePrev = is_active;
+}
+
 function dragMoveListener(event) {
     let target = event.target;
     // keep the dragged position in the data-x/data-y attributes
