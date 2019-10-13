@@ -4,7 +4,7 @@ from schema import Schema, Use, Optional, And, Or
 POSITION_SCHEMA = Schema({
     'name': Use(str),
     'cartesian_coords': Use(list),
-    'polar_coords': Use(list),
+    'polar_params': Use(dict),
 })
 
 SCENARIO_SCHEMA = Schema({
