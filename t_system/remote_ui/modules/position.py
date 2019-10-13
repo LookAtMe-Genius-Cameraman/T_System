@@ -32,7 +32,7 @@ def create_position(admin_id, db_name, data):
 
     # table = get_db_table(admin_id)
 
-    position = Position(name=data['name'], cartesian_coords=data['cartesian_coords'], polar_coords=data['polar_coords'], root=is_admin(admin_id), db_name=db_name)
+    position = Position(name=data['name'], cartesian_coords=data['cartesian_coords'], polar_params=data['polar_params'], root=is_admin(admin_id), db_name=db_name)
 
     try:
         result = True

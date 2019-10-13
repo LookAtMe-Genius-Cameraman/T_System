@@ -39,7 +39,7 @@ def create_scenario(admin_id, db_name, data):
         positions = []
         for position in data['positions']:
             positions.append(Position(name=position["name"], cartesian_coords=position["cartesian_coords"],
-                                      polar_coords=position["polar_coords"], root=is_admin(admin_id), db_name=db_name, is_for_scenario=True))
+                                      polar_params=position["polar_params"], root=is_admin(admin_id), db_name=db_name, is_for_scenario=True))
         scenario.add_positions(positions)
         scenario_id = scenario.id
         result = True
@@ -115,7 +115,7 @@ def update_scenario(admin_id, db_name, scenario_id, data):
         Scenario(data['name'], scenario_id, root, db_name).update_all_positions(
             [Position(name=position["name"],
                       cartesian_coords=position["cartesian_coords"],
-                      polar_coords=position["polar_coords"],
+                      polar_params=position["polar_params"],
                       root=root,
                       db_name=db_name,
                       is_for_scenario=True) for position in data['positions']])
