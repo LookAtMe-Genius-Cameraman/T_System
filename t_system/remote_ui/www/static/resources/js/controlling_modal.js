@@ -18,7 +18,7 @@ const controlling_template_content = document.getElementById("controlling_templa
 const sidebar_toggle_btn = document.getElementById("sidebar_toggle_btn");
 const controlling_template_sidebar_close_btn = document.getElementById("controlling_template_sidebar_close_btn");
 
-const dark_deep_background_div = document.getElementById("dark_deep_background_div");
+const advanced_edit_div = document.getElementById("advanced_edit_div");
 
 /** @type {!Element} */
 const video_area_div = document.getElementById("video_area_div");
@@ -76,7 +76,7 @@ const scenario_name_input = document.getElementById("scenario_name_input");
 const create_sce_btn = document.getElementById("create_sce_btn");
 const record_in_scenario_list_ul = document.getElementById("record_in_scenario_list_ul");
 
-sidebar_toggle_btn.addEventListener("click", function () {
+sidebar_toggle_btn.addEventListener("click", function (x) {
 
     setSwiperSwiping(false);
 
@@ -196,7 +196,199 @@ sidebar_toggle_btn.addEventListener("click", function () {
                         scenario_cm_remove_a.innerHTML = translate_text_item("remove");
 
                         scenario_cm_advanced_a.classList.add("dropdown-item");
-                        scenario_cm_advanced_a.innerHTML = translate_text_item("advance control");
+                        scenario_cm_advanced_a.innerHTML = translate_text_item("advanced edit");
+
+                        scenario_cm_advanced_a.addEventListener("click", function (x) {
+
+                            advanced_edit_div.classList.add("active");
+
+                            let advance_sce_title_div = document.createElement('div');
+                            let advance_sce_header_a = document.createElement('a');
+                            let advance_sce_name_span = document.createElement('span');
+
+                            let advance_positions_list_ul = document.createElement('ul');
+
+                            let advance_sce_btns_div = document.createElement('div');
+                            let advance_sce_ok_btn = document.createElement('button');
+                            let advance_sce_cancel_btn = document.createElement('button');
+
+                            advance_sce_title_div.classList.add("position-absolute", "advanced_title_div", "mb-2");
+
+                            advance_sce_header_a.innerHTML = translate_text_item("Scenario name: ");
+
+                            advance_sce_name_span.classList.add("cut-text", "advanced_scenario_name");
+                            advance_sce_name_span.innerHTML = scenarios[c]["name"];
+                            advance_sce_name_span.title = scenarios[c]["name"];
+
+                            let sliders = [];
+
+                            for (let i = 0; i < scenarios[c]["positions"].length; i++) {
+
+                                let advance_position_dd_div = document.createElement('div');
+                                let advance_position_dd_a = document.createElement('a');
+                                let advance_position_dd_container_div = document.createElement('div');
+
+                                let advance_po_ca_co_div = document.createElement('div');
+                                let advance_po_ca_co_header_a = document.createElement('a');
+                                let advance_po_ca_co_name_span = document.createElement('span');
+
+                                let advance_po_divider_div = document.createElement('div');
+
+                                advance_position_dd_div.classList.add("dropdown");
+                                // advance_position_dd_div.classList.add("dropdown", "show", "draggable_position", "drag-drop");
+
+                                advance_position_dd_a.classList.add("dropdown-toggle");
+
+                                advance_position_dd_a.role = "button";
+                                advance_position_dd_a.id = scenarios[c]["positions"][i]["id"] + "_a";
+                                advance_position_dd_a.setAttribute("data-toggle", "dropdown");
+                                advance_position_dd_a.setAttribute("aria-haspopup", "true");
+                                advance_position_dd_a.setAttribute("aria-expanded", "false");
+                                advance_position_dd_a.innerHTML = scenarios[c]["positions"][i]["name"];
+                                advance_position_dd_a.title = advance_position_dd_a.innerHTML;
+
+                                advance_position_dd_a.addEventListener("click", function () {
+                                    advance_position_dd_container_div.classList.toggle("show")
+                                });
+
+                                advance_position_dd_container_div.classList.add("position-relative", "dropdown-menu", "dropdown-menu-right", "dropdown_menu", "advanced_pos_dropdown_menu");
+                                advance_position_dd_container_div.classList.add("container");
+                                advance_position_dd_container_div.setAttribute("aria-labelledby", advance_position_dd_a.id);
+
+                                advance_po_ca_co_div.classList.add("dropdown-item", "ml-0", "advanced_cartesian_div");
+
+                                advance_po_ca_co_header_a.innerHTML = translate_text_item("Cartesian coordinates: ");
+                                let rounded_c_coords = [];
+                                for(let count = 0; count < scenarios[c]["positions"][i]["cartesian_coords"].length; count++) {
+                                    rounded_c_coords.push(scenarios[c]["positions"][i]["cartesian_coords"][count].toFixed(2));
+                                }
+
+                                advance_po_ca_co_name_span.classList.add("cut-text", "advanced_cartesian_span");
+                                advance_po_ca_co_name_span.innerHTML = rounded_c_coords.toString();
+
+                                advance_po_divider_div.classList.add("dropdown-divider");
+
+                                advance_position_dd_container_div.appendChild(advance_po_ca_co_div);
+                                advance_position_dd_container_div.appendChild(advance_po_divider_div);
+
+                                for (let a = 0; a < scenarios[c]["positions"][i]["polar_params"]["coords"].length; a++) {
+
+                                    let ad_po_joint_div = document.createElement('div');
+
+                                    let ad_po_joint_header_div = document.createElement('div');
+                                    let ad_po_joint_header_a = document.createElement('a');
+                                    let ad_po_joint_theta_span = document.createElement('span');
+
+                                    let ad_po_joint_slider_div = document.createElement('div');
+
+                                    let ad_po_joint_speed_div = document.createElement('div');
+                                    let ad_po_joint_speed_a = document.createElement('a');
+                                    let ad_po_joint_speed_input = document.createElement('input');
+
+                                    let ad_po_joint_precision_div = document.createElement('div');
+                                    let ad_po_joint_precision_a = document.createElement('a');
+                                    let ad_po_joint_precision_input = document.createElement('input');
+
+                                    ad_po_joint_div.classList.add("ml-0", "dropdown-item", "row", "advance_joint_div");
+
+                                    ad_po_joint_header_div.classList.add("row", "mb-1", "advance_joint_header_div");
+
+                                    ad_po_joint_header_a.classList.add("advance_small_font", "mr-2");
+                                    ad_po_joint_header_a.innerHTML = translate_text_item("j-" + (a + 1)) + ":";
+
+                                    ad_po_joint_theta_span.classList.add("advance_small_font");
+                                    ad_po_joint_theta_span.innerHTML = Math.round(scenarios[c]["positions"][i]["polar_params"]["coords"][a] * 180 / 3.1416) + " deg";
+
+                                    ad_po_joint_slider_div.classList.add("row");
+
+                                    ad_po_joint_speed_div.classList.add("row", "mt-1", "mb-2", "advance_slider_div");
+
+                                    ad_po_joint_speed_a.classList.add("mr-2", "advance_small_font", "advance_slider_title");
+                                    ad_po_joint_speed_a.innerHTML = translate_text_item("speed: ");
+
+                                    ad_po_joint_speed_input.classList.add("custom-range", "advance_slider");
+                                    ad_po_joint_speed_input.type = "range";
+                                    ad_po_joint_speed_input.value = 1 - scenarios[c]["positions"][i]["polar_params"]["delays"][a];
+                                    ad_po_joint_speed_input.id = scenarios[c]["name"] + "_" + scenarios[c]["positions"][i]["name"] + "_speed_slider_" + a;
+                                    ad_po_joint_speed_input.setAttribute("min", "0");
+                                    ad_po_joint_speed_input.setAttribute("max", "1");
+                                    ad_po_joint_speed_input.setAttribute("step", "0.2");
+
+                                    sliders.push({"id": ad_po_joint_speed_input.id, "slider": null});
+
+                                    ad_po_joint_precision_div.classList.add("row", "mt-2", "advance_slider_div");
+
+                                    ad_po_joint_precision_a.classList.add("mr-2", "advance_small_font", "advance_slider_title");
+                                    ad_po_joint_precision_a.innerHTML = translate_text_item("precision: ");
+
+                                    ad_po_joint_precision_input.classList.add("custom-range", "advance_slider");
+                                    ad_po_joint_precision_input.type = "range";
+                                    ad_po_joint_precision_input.value = scenarios[c]["positions"][i]["polar_params"]["divide_counts"][a];
+                                    ad_po_joint_precision_input.id = scenarios[c]["name"] + "_" + scenarios[c]["positions"][i]["name"] + "_precision_slider_" + a;
+                                    ad_po_joint_precision_input.setAttribute("min", "1");
+                                    ad_po_joint_precision_input.setAttribute("max", "5");
+                                    ad_po_joint_precision_input.setAttribute("step", "1");
+
+                                    sliders.push({"id": ad_po_joint_precision_input.id, "slider": null});
+
+                                    ad_po_joint_header_div.appendChild(ad_po_joint_header_a);
+                                    ad_po_joint_header_div.appendChild(ad_po_joint_theta_span);
+
+                                    ad_po_joint_speed_div.appendChild(ad_po_joint_speed_a);
+                                    ad_po_joint_speed_div.appendChild(ad_po_joint_speed_input);
+
+                                    ad_po_joint_precision_div.appendChild(ad_po_joint_precision_a);
+                                    ad_po_joint_precision_div.appendChild(ad_po_joint_precision_input);
+
+                                    ad_po_joint_slider_div.appendChild(ad_po_joint_speed_div);
+                                    ad_po_joint_slider_div.appendChild(ad_po_joint_precision_div);
+
+                                    ad_po_joint_div.appendChild(ad_po_joint_header_div);
+                                    ad_po_joint_div.appendChild(ad_po_joint_slider_div);
+
+                                    advance_position_dd_container_div.appendChild(ad_po_joint_div);
+                                }
+
+
+                                advance_po_ca_co_div.appendChild(advance_po_ca_co_header_a);
+                                advance_po_ca_co_div.appendChild(advance_po_ca_co_name_span);
+
+                                advance_position_dd_div.appendChild(advance_position_dd_a);
+                                advance_position_dd_div.appendChild(advance_position_dd_container_div);
+
+                                advance_positions_list_ul.appendChild(advance_position_dd_div);
+                            }
+
+                            advance_positions_list_ul.classList.add("mt-5", "mb-2", "advance_positions_ul");
+
+                            advance_sce_btns_div.classList.add("position-absolute", "mt-2", "advance_sce_btns_div");
+
+                            advance_sce_ok_btn.classList.add("btn", "btn-outline-success", "mr-2");
+                            advance_sce_ok_btn.innerHTML = translate_text_item("okay");
+
+                            advance_sce_ok_btn.addEventListener("click", function () {
+                                clearElement(advanced_edit_div);
+                                advanced_edit_div.classList.remove("active");
+                            });
+
+                            advance_sce_cancel_btn.classList.add("btn", "btn-outline-danger", "ml-2");
+                            advance_sce_cancel_btn.innerHTML = translate_text_item("cancel");
+
+                            advance_sce_cancel_btn.addEventListener("click", function () {
+                                clearElement(advanced_edit_div);
+                                advanced_edit_div.classList.remove("active");
+                            });
+
+                            advance_sce_title_div.appendChild(advance_sce_header_a);
+                            advance_sce_title_div.appendChild(advance_sce_name_span);
+
+                            advance_sce_btns_div.appendChild(advance_sce_ok_btn);
+                            advance_sce_btns_div.appendChild(advance_sce_cancel_btn);
+
+                            advanced_edit_div.appendChild(advance_sce_title_div);
+                            advanced_edit_div.appendChild(advance_positions_list_ul);
+                            advanced_edit_div.appendChild(advance_sce_btns_div);
+                        });
 
                         scenario_btn.classList.add("btn", "btn-dark");
                         scenario_btn.type = "button";
@@ -231,7 +423,7 @@ sidebar_toggle_btn.addEventListener("click", function () {
                         });
 
                         function hide_context_menu() {
-                            $("#" + scenario_context_menu.id).removeClass("show").hide();
+                            // $("#" + scenario_context_menu.id).removeClass("show").hide();
                             document.removeEventListener("click", hide_context_menu);
 
                         }
@@ -293,7 +485,7 @@ sidebar_toggle_btn.addEventListener("click", function () {
                             });
 
                         $("#" + scenario_context_menu.id + " a").on("click", function () {
-                            $(this).parent().removeClass("show").hide();
+                            // $(this).parent().removeClass("show").hide();
                         });
 
                         scenario_dd_btn.classList.add("btn", "btn-dark", "dropdown-toggle", "dropdown-toggle-split");
@@ -302,6 +494,20 @@ sidebar_toggle_btn.addEventListener("click", function () {
                         scenario_dd_btn.setAttribute("aria-haspopup", "true");
                         scenario_dd_btn.setAttribute("aria-expanded", "false");
                         // scenario_dd_btn.innerHTML = "";
+
+                        let scenario_dd_btn_click_count = 0;
+                        scenario_dd_btn.addEventListener("click", function () {
+
+                            scenario_dropdown_container_div.classList.toggle("show");
+
+                            scenario_dd_btn_click_count++;
+                            if (scenario_dd_btn_click_count <= 1) {
+                                scenario_dropdown_container_div.classList.add("show");
+                            } else {
+                                // scenario_dropdown_container_div.classList.remove("show");
+                                scenario_dd_btn_click_count = 0;
+                            }
+                        });
 
                         scenario_dd_span.classList.add("sr-only");
 
@@ -391,10 +597,10 @@ sidebar_toggle_btn.addEventListener("click", function () {
                             position_div.appendChild(position_span);
                             scenario_dropdown_container_div.appendChild(position_div);
                         }
-                        
+
                         scenario_context_menu.appendChild(scenario_cm_remove_a);
                         scenario_context_menu.appendChild(scenario_cm_advanced_a);
-                        
+
                         scenario_dd_btn.appendChild(scenario_dd_span);
 
                         scenario_dropdown_div.appendChild(scenario_btn);
@@ -414,7 +620,7 @@ controlling_template_sidebar_close_btn.addEventListener("click", function () {
     controlling_template_sidebar.classList.toggle("active");
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
-    show_element(controlling_template_content)
+    show_element(controlling_template_content);
 
     setSwiperSwiping(true);
 });
