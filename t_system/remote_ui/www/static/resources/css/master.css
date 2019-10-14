@@ -4,6 +4,7 @@
 @import url(prismatic_arm_control.css);
 @import url(rotational_arm_control.css);
 @import url(controlling_modal.css);
+@import url(advanced_edit.css);
 @import url(prepare_modal.css);
 @import url(job_modal.css);
 @import url(heartbeat.css);
