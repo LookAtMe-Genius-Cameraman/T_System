@@ -29,6 +29,9 @@ const controlling_template_container = document.getElementById("controlling_temp
 const options_template_container = document.getElementById("options_template_container");
 const prepare_template_container = document.getElementById("prepare_template_container");
 
+const dark_deep_background_div = document.getElementById("dark_deep_background_div");
+
+
 function toggle_elements(elements) {
     for (let i = 0; i < elements.length; i++) {
         elements[i].classList.toggle("hidden_element")
@@ -60,6 +63,16 @@ function hide_element(element) {
  */
 function refresh_page() {
     window.location.reload();
+}
+
+/**
+ * Method to remove all children elements of given element.
+ * @param {Object} element: the route address of the flask
+ */
+function clearElement(element) {
+    while (element.firstChild) {
+        element.removeChild(element.firstChild);
+    }
 }
 
 /**
