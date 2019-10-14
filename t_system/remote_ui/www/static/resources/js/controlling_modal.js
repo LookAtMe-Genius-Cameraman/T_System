@@ -108,6 +108,9 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
                         let position_div = document.createElement('div');
                         let position_span = document.createElement('span');
 
+                        let position_context_menu = document.createElement('div');
+                        let position_cm_remove_a = document.createElement('a');
+
                         position_div.classList.add("draggable_position", "drag-drop", "ml-1", "mr-1", "position_div");
                         position_div.setAttribute("data-position-name", positions[c]["name"]);
                         position_div.setAttribute("data-cartesian-coords", positions[c]["cartesian_coords"]);
@@ -117,10 +120,23 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
 
                         position_span.classList.add("shine_in_dark");
                         position_span.innerHTML = positions[c]["name"];
+                        position_span.id = positions[c]["name"] + "_span";
 
-                        position_span.addEventListener("click", function () {
+                        position_context_menu.classList.add("position-relative", "dropdown-menu", "dropdown-menu-sm");
+                        position_context_menu.id = positions[c]["name"] + "context-menu";
 
-                            position_div.removeChild(position_span);
+                        position_cm_remove_a.classList.add("dropdown-item");
+                        position_cm_remove_a.innerHTML = translate_text_item("remove");
+
+                        function hide_context_menu() {
+                            $("#" + position_context_menu.id).removeClass("show").hide();
+                            document.removeEventListener("click", hide_context_menu);
+
+                        }
+
+                        interact('#' + position_span.id)
+                            .on('tap', function (event) {
+                                position_div.removeChild(position_span);
 
                             let position_input = document.createElement('input');
 
@@ -148,9 +164,40 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
                             });
                             position_div.appendChild(position_input);
                             position_input.focus();
+                            })
+                            .on('doubletap', function (event) {
+                            })
+                            .on('hold', function (event) {
+
+                                let target = event.target;
+                                let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+                                let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+                                position_context_menu.setAttribute('data-x', x);
+                                position_context_menu.setAttribute('data-y', y);
+
+                                $("#" + position_context_menu.id).css({
+                                    display: "block",
+                                    transform: 'translate(' + x + 'px, ' + y + 'px)',
+                                }).addClass("show");
+
+                                return false; //blocks default WebBrowser right click menu
+                            })
+                            .on('down', function (event) {
+                            })
+                            .on('up', function (event) {
+                                document.addEventListener("click", hide_context_menu);
+                            });
+
+                        $("#" + position_context_menu.id + " a").on("click", function () {
+                            // $(this).parent().removeClass("show").hide();
                         });
 
+                        position_context_menu.appendChild(position_cm_remove_a);
+
                         position_div.appendChild(position_span);
+                        position_div.appendChild(position_context_menu);
+
                         position_list_ul.appendChild(position_div);
                     }
 
@@ -462,12 +509,16 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
                             })
                             .on('hold', function (event) {
 
-                                let top = event.pageY - 340;
-                                let left = event.pageX - 90;
+                                let target = event.target;
+                                let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+                                let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+                                scenario_context_menu.setAttribute('data-x', x);
+                                scenario_context_menu.setAttribute('data-y', y);
+
                                 $("#" + scenario_context_menu.id).css({
                                     display: "block",
-                                    top: top,
-                                    left: left
+                                    transform: 'translate(' + x + 'px, ' + y + 'px)',
                                 }).addClass("show");
 
                                 document.addEventListener("click", hide_context_menu);
