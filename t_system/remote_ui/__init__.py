@@ -8,8 +8,6 @@
 
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
-import os
-import inspect
 
 from flask import Flask, render_template, request, redirect, Response
 from flask_session import Session
