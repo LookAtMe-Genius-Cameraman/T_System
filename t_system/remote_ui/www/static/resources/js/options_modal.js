@@ -321,9 +321,7 @@ wifi_connections_btn.addEventListener("click", function () {
         dark_deep_background_div.removeEventListener("click", wifi_connections_btn_lis_bind);
         options_template_container.removeEventListener("click", wifi_connections_btn_lis_bind);
 
-        while (network_list_ul.firstChild) {
-            network_list_ul.removeChild(network_list_ul.firstChild);
-        }
+        clearElement(network_list_ul);
 
         setSwiperSwiping(true);
 
@@ -481,8 +479,7 @@ face_encoding_btn.addEventListener("click", function () {
                             face_a.innerHTML = requested_data["data"][c]["name"].replace(/_/gi, " ");
                             face_a.title = face_a.innerHTML;
 
-                            face_dropdown_container_div.classList.add("dropdown-menu", "dropdown-menu-right", "dropdown_menu", "face_encoding_dropdown_menu");
-                            face_dropdown_container_div.classList.add("container");
+                            face_dropdown_container_div.classList.add("dropdown-menu", "dropdown-menu-right", "dropdown_menu", "face_encoding_dropdown_menu", "container");
                             face_dropdown_container_div.setAttribute("aria-labelledby", face_a.id);
 
                             let face_dropdown_row_div;
@@ -552,9 +549,7 @@ face_encoding_btn.addEventListener("click", function () {
         dark_deep_background_div.removeEventListener("click", face_encoding_btn_lis_bind);
         options_template_container.removeEventListener("click", face_encoding_btn_lis_bind);
 
-        while (encoded_face_list_ul.firstChild) {
-            encoded_face_list_ul.removeChild(encoded_face_list_ul.firstChild);
-        }
+        clearElement(encoded_face_list_ul);
 
         setSwiperSwiping(true);
 
@@ -657,9 +652,7 @@ record_control_btn.addEventListener("click", function () {
 
                                 date_btn_click_count++;
 
-                                while (date_dropdown_container_div.firstChild) {
-                                    date_dropdown_container_div.removeChild(date_dropdown_container_div.firstChild);
-                                }
+                                clearElement(date_dropdown_container_div);
 
                                 request_asynchronous('/api/record?date=' + record_dates[c] + '&admin_id=' + admin_id, 'GET',
                                     'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
@@ -728,9 +721,7 @@ record_control_btn.addEventListener("click", function () {
         dark_deep_background_div.removeEventListener("click", record_control_btn_lis_bind);
         options_template_container.removeEventListener("click", record_control_btn_lis_bind);
 
-        while (record_list_ul.firstChild) {
-            record_list_ul.removeChild(record_list_ul.firstChild);
-        }
+        clearElement(record_list_ul);
 
         setSwiperSwiping(true);
 
@@ -777,10 +768,10 @@ identity_control_btn.addEventListener("click", function () {
 
                         identity_public_id_span.classList.add("pale");
                         identity_public_id_span.innerHTML = identity_info["public_id"];
-                        identity_public_id_span.name = identity_info["public_id"];
+                        identity_public_id_span.title = identity_info["public_id"];
 
                         identity_name_span.innerHTML = identity_info["name"];
-                        identity_name_span.name = identity_info["name"];
+                        identity_name_span.title = identity_info["name"];
 
                         identity_name_span.addEventListener("click", function () {
 
@@ -858,7 +849,7 @@ identity_control_btn.addEventListener("click", function () {
 
                             identity_private_id_div.classList.add("active");
                             identity_private_id_span.innerHTML = identity_info["private_id"];
-                            identity_private_id_span.name = identity_info["private_id"];
+                            identity_private_id_span.title = identity_info["private_id"];
 
                             identity_private_id_span.addEventListener("click", function () {
 
@@ -939,12 +930,6 @@ lang_select_btn.addEventListener("click", function () {
         lang_select_btn_click_count = 0;
     }
 });
-
-lang_select_dd_btn.addEventListener("click", function () {
-    $("#lang_select_dd_container_div").addClass("show");
-    //Todo this show class works. us it for positions and scenarios in controlling_modal.
-});
-
 
 let help_control_btn_click_count = 0;
 let help_control_btn_lis_bind = close_opened_option.bind(null, help_control_btn);

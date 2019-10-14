@@ -51,9 +51,7 @@ specify_sce_div.addEventListener("click", function (e) {
         available_sce_div.classList.add("focused");
         select_param_cb_div.classList.remove("focused");
 
-        while (available_sce_ul.firstChild) {
-            available_sce_ul.removeChild(available_sce_ul.firstChild);
-        }
+        clearElement(available_sce_ul);
 
         request_asynchronous('/api/scenario?db=' + action_db_name + '&admin_id=' + admin_id, 'GET',
             'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
@@ -205,9 +203,7 @@ recognize_select_dd_btn.addEventListener("click", function () {
 
     date_btn_click_count++;
 
-    while (recognize_person_list_ul.firstChild) {
-        recognize_person_list_ul.removeChild(recognize_person_list_ul.firstChild);
-    }
+    clearElement(recognize_person_list_ul);
 
     request_asynchronous('/api/face_encoding?admin_id=' + admin_id, 'GET',
         'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {

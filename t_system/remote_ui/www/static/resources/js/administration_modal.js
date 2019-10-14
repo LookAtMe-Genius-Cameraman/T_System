@@ -57,9 +57,8 @@ function toggle_administration_modal() {
         }
 
         administration_btn_i.innerHTML = translate_text_item(" administration");
-        while (administration_selected_task_div.firstChild) {
-            administration_selected_task_div.removeChild(administration_selected_task_div.firstChild);
-        }
+        clearElement(administration_selected_task_div);
+
     } else {  // 2. click
         if (dark_overlay_active === false) {
             dark_overlay_active = true

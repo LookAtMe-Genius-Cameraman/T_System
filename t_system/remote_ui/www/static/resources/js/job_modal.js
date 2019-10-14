@@ -84,9 +84,8 @@ function post_job_data() {
 let selected_spans = [];
 
 function show_checked_boxes(elements, dest) {
-    while (dest.firstChild) {
-        dest.removeChild(dest.firstChild);
-    }
+
+    clearElement(dest);
 
     let labels = document.getElementsByTagName('label');
 
@@ -415,9 +414,7 @@ no_mark_checkbox.addEventListener("change", function () {
 });
 
 mark_target_dd_btn.addEventListener("click", function () {
-    while (mark_target_list_ul.firstChild) {
-        mark_target_list_ul.removeChild(mark_target_list_ul.firstChild);
-    }
+    clearElement(mark_target_list_ul);
     request_asynchronous('/api/job?cause=mark&admin_id=' + admin_id, 'GET',
         'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
             // err = "success";

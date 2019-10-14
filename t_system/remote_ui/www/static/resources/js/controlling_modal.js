@@ -79,14 +79,9 @@ const record_in_scenario_list_ul = document.getElementById("record_in_scenario_l
 sidebar_toggle_btn.addEventListener("click", function (x) {
 
     setSwiperSwiping(false);
-
-    while (position_list_ul.firstChild) {
-        position_list_ul.removeChild(position_list_ul.firstChild);
-    }
-
-    while (scenario_list_ul.firstChild) {
-        scenario_list_ul.removeChild(scenario_list_ul.firstChild);
-    }
+    
+    clearElement(position_list_ul);
+    clearElement(scenario_list_ul);
 
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
@@ -1033,10 +1028,7 @@ record_in_sce_btn.addEventListener("click", function () {
         record_in_scenario_div.classList.add("focused");
     }, 175);
 
-
-    while (record_in_scenario_list_ul.firstChild) {
-        record_in_scenario_list_ul.removeChild(record_in_scenario_list_ul.firstChild);
-    }
+    clearElement(record_in_scenario_list_ul);
 
     request_asynchronous('/api/scenario?db=' + action_db_name + '&admin_id=' + admin_id, 'GET',
         'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
