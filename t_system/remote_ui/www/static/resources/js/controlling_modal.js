@@ -305,10 +305,10 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
 
                                 let advance_po_divider_div = document.createElement('div');
 
-                                advance_position_dd_div.classList.add("dropdown");
+                                advance_position_dd_div.classList.add("dropdown", "mb-2");
                                 // advance_position_dd_div.classList.add("dropdown", "show", "draggable_position", "drag-drop");
 
-                                advance_position_dd_a.classList.add("dropdown-toggle");
+                                advance_position_dd_a.classList.add("dropdown-toggle", "btn", "btn-outline-info");
 
                                 advance_position_dd_a.role = "button";
                                 advance_position_dd_a.id = scenarios[c]["positions"][i]["id"] + "_a";
