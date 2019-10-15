@@ -50,11 +50,11 @@ class MissionManager:
         self.positions = []
         self.scenarios = []
 
-        self.__refresh_members()
+        self.refresh_members()
 
         self.actor = Actor()
 
-    def __refresh_members(self):
+    def refresh_members(self):
         """Method to refreshing the members
         """
 
@@ -155,11 +155,11 @@ class EmotionManager:
         self.positions = []
         self.scenarios = []
 
-        self.__refresh_members()
+        self.refresh_members()
 
         self.actor = Actor()
 
-    def __refresh_members(self):
+    def refresh_members(self):
         """Method to refreshing the members
         """
 
