@@ -91,7 +91,7 @@ const turkishtrans = {
     "RESUME": "DEVAM ET",
     "SIMULATE": "SİMÜLE ET",
     "HOLD TO PAUSE": "DURAKLAMA İÇİN BASILI TUT",
-    "System Info": "Sistem bilgisi",
+    "System Info": "Sistem Bilgisi",
     "Available:": "Kullanılabilir:",
     "min": "dk",
     " job": " iş",
