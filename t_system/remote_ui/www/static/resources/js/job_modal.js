@@ -156,7 +156,6 @@ function toggle_job_modal() {
 job_div.addEventListener("click", function (event) {
     if (event.target === event.currentTarget) {
         toggle_job_modal()
-
     } else {
     }
 });

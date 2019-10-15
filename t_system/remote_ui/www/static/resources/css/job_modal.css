@@ -31,26 +31,20 @@
 }
 
 #job_div {
-    position: relative;
-
-    visibility: hidden;
-    opacity: 0;
+    display: none;
 
     max-width: 100%;
     max-height: 100%;
     /*margin: 0 auto;*/
 
     height: 85%;
-    pointer-events: none;
 
     transition: opacity 300ms;
     /*border: #8a6d3b solid;*/
 }
 
 #job_div.focused {
-    visibility: visible;
-    opacity: 1;
-    pointer-events: auto !important;
+    display: block; !important;
 }
 
 #job_simulate_btn {
