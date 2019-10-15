@@ -9,6 +9,7 @@
 
 /** @type {!Element} */
 const system_info_template_container = document.getElementById("system_info_template_container");
+const system_info_div = document.getElementById("system_info_div");
 const system_info_btn = document.getElementById("system_info_btn");
 const system_info_chart_div = document.getElementById("system_info_chart_div");
 const system_info_chart = document.getElementById('system_info_chart').getContext('2d');
@@ -23,24 +24,14 @@ const remote_ui_version_p = document.getElementById('remote_ui_version_p');
 const t_system_version_p = document.getElementById('t_system_version_p');
 
 
-function toggle_elements_if_necessary(elements, class_names, way) {
-    for (let i = 0; i < elements.length; i++) {
-        if (elements[i].classList.contains(class_names[i]) === way[i]) {
-            elements[i].classList.toggle(class_names[i]);
-        }
-    }
-}
+function toggle_system_info_modal() {
+    system_info_template_container.classList.toggle("focused");
+    system_info_div.classList.toggle("focused");
+    system_info_btn.classList.toggle("clicked");
 
-let system_info_btn_click_count = 0;
+    if (system_info_div.classList.contains("focused")) {  // 1. click
 
-system_info_btn.addEventListener("click", function () {
-    system_info_btn_click_count++;
-
-    if (system_info_btn_click_count <= 1) {
         set_system_info();
-
-        system_info_template_container.classList.toggle("focused");
-
 
         if (dark_overlay_active) {
             dark_overlay_active = false
@@ -48,21 +39,7 @@ system_info_btn.addEventListener("click", function () {
             dark_deep_background_div.classList.toggle("focused");
             dark_overlay_active = true
         }
-
-        toggle_elements_if_necessary([options_template_container, controlling_template_container, prepare_template_container, job_template_container], ["hidden_element", "hidden_element", "hidden_element", "hidden_element"], [false, false, false, false]);
-
-        show_element(system_info_chart_div);
-        show_element(versions_div);
-        show_element(disk_usage_div);
-
-    } else {
-        system_info_template_container.classList.toggle("focused");
-        options_template_container.classList.toggle("hidden_element");
-        controlling_template_container.classList.toggle("hidden_element");
-        prepare_template_container.classList.toggle("hidden_element");
-        job_template_container.classList.toggle("hidden_element");
-
-
+    } else {  // 2. click
         if (dark_overlay_active === false) {
             dark_overlay_active = true
 
@@ -70,14 +47,14 @@ system_info_btn.addEventListener("click", function () {
             dark_deep_background_div.classList.toggle("focused");
             dark_overlay_active = false
         }
-
-        hide_element(system_info_chart_div);
-        hide_element(versions_div);
-        hide_element(disk_usage_div);
-
-        system_info_btn_click_count = 0;
     }
-});
+
+    options_template_container.classList.toggle("hidden_element");
+    controlling_template_container.classList.toggle("hidden_element");
+    prepare_template_container.classList.toggle("hidden_element");
+    job_template_container.classList.toggle("hidden_element");
+
+}
 
 
 /**
@@ -182,7 +159,6 @@ function set_system_info() {
                                 "maintainAspectRatio": true,
                                 "showScale": true
                             }
-
                         });
                         stand_version_p.innerHTML = "stand: v" + stand_version;
                         remote_ui_version_p.innerHTML = "remote_ui: v" + remote_ui_version;
@@ -192,3 +168,13 @@ function set_system_info() {
             }
         });
 }
+
+system_info_div.addEventListener("click", function (event) {
+    if (event.target === event.currentTarget) {
+        toggle_system_info_modal()
+    } else {
+    }
+});
+
+system_info_btn.title = translate_text_item("System Info");
+system_info_btn.addEventListener("click", toggle_system_info_modal);
