@@ -15,6 +15,7 @@ from t_system.db_fetching import DBFetcher
 from t_system.motion.action import Scenario
 from t_system.motion.action import Position
 from t_system.administration import is_admin
+from t_system.remote_ui.modules.position import deterfresh_manager
 
 from t_system import dot_t_system_dir, T_SYSTEM_PATH
 from t_system import log_manager
@@ -30,18 +31,19 @@ def create_scenario(admin_id, db_name, data):
         db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
         data (dict):                    Scenario data structure.
     """
+    root = is_admin(admin_id)
 
-    # table = get_db_table(is_admin(admin_id))
-
-    scenario = Scenario(name=data['name'], root=is_admin(admin_id), db_name=db_name)
+    scenario = Scenario(name=data['name'], root=root, db_name=db_name)
 
     try:
         positions = []
         for position in data['positions']:
             positions.append(Position(name=position["name"], cartesian_coords=position["cartesian_coords"],
-                                      polar_params=position["polar_params"], root=is_admin(admin_id), db_name=db_name, is_for_scenario=True))
+                                      polar_params=position["polar_params"], root=root, db_name=db_name, is_for_scenario=True))
         scenario.add_positions(positions)
         scenario_id = scenario.id
+
+        deterfresh_manager(root, db_name)
         result = True
     except Exception:
         result = False
@@ -119,6 +121,7 @@ def update_scenario(admin_id, db_name, scenario_id, data):
                       root=root,
                       db_name=db_name,
                       is_for_scenario=True) for position in data['positions']])
+        deterfresh_manager(root, db_name)
         result = True
 
     return result
@@ -132,11 +135,13 @@ def delete_scenario(admin_id, db_name, scenario_id):
         db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
         scenario_id (str):              The id of the position.
     """
-    table = get_db_table(is_admin(admin_id), db_name)
+    root = is_admin(admin_id)
+
+    table = get_db_table(root, db_name)
 
     if table.search((Query().id == scenario_id)):
         table.remove((Query().id == scenario_id))
-
+        deterfresh_manager(root, db_name)
         result = True
     else:
         result = False

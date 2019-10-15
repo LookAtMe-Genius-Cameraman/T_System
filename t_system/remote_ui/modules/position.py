@@ -16,6 +16,7 @@ from t_system.motion.action import Position
 from t_system.administration import is_admin
 
 from t_system import dot_t_system_dir, T_SYSTEM_PATH
+from t_system import mission_manager, emotion_manager
 from t_system import log_manager
 
 logger = log_manager.get_logger(__name__, "DEBUG")
@@ -30,13 +31,13 @@ def create_position(admin_id, db_name, data):
         data (dict):                    Position data structure.
     """
 
-    # table = get_db_table(admin_id)
-
-    position = Position(name=data['name'], cartesian_coords=data['cartesian_coords'], polar_params=data['polar_params'], root=is_admin(admin_id), db_name=db_name)
-
     try:
-        result = True
+        position = Position(name=data['name'], cartesian_coords=data['cartesian_coords'], polar_params=data['polar_params'], root=is_admin(admin_id), db_name=db_name)
         position_id = position.id
+
+        deterfresh_manager(is_admin(admin_id), db_name)
+
+        result = True
     except Exception:
         result = False
         position_id = None
@@ -73,15 +74,12 @@ def get_position(admin_id, db_name, position_id):
     """
     try:
         table = get_db_table(is_admin(admin_id), db_name)
-
         position = table.search((Query().id == position_id))
 
         if not position:
             result = []
         else:
-            # result = [b.to_dict() for b in record]
             result = [position[0]]
-
     except Exception as e:
         logger.error(e)
         result = []
@@ -98,16 +96,18 @@ def update_position(admin_id, db_name, position_id, data):
         position_id (str):              The id of the position.
         data (dict):                    Position data structure.
     """
-    table = get_db_table(is_admin(admin_id), db_name)
 
+    root = is_admin(admin_id)
+
+    table = get_db_table(root, db_name)
     position = table.search((Query().id == position_id))
 
     if not position:
         result = False
     else:
         try:
-
             table.update({'name': data['name'], 'cartesian_coords': data['cartesian_coords'], 'polar_coords': data['polar_coords']}, Query().id == position_id)
+            deterfresh_manager(root, db_name)
             result = True
         except Exception:
             result = False
@@ -123,11 +123,13 @@ def delete_position(admin_id, db_name, position_id):
         db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
         position_id (str):              The id of the position.
     """
-    table = get_db_table(is_admin(admin_id), db_name)
+    root = is_admin(admin_id)
+
+    table = get_db_table(root, db_name)
 
     if table.search((Query().id == position_id)):
         table.remove((Query().id == position_id))
-
+        deterfresh_manager(root, db_name)
         result = True
     else:
         result = False
@@ -150,3 +152,20 @@ def get_db_table(is_admin, db_name):
         db_folder = dot_t_system_dir
         db_name = 'missions'
         return DBFetcher(db_folder, db_name, table).fetch()
+
+
+def deterfresh_manager(is_admin, db_name):
+    """Method to determine the manager that is mission or emotion manager and refresh it with using given database name and administration flag.
+
+    Args:
+        is_admin (bool):                 Root privileges flag.
+        db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
+    """
+
+    if is_admin:
+        if db_name in ["predicted_missions", "missions"]:
+            mission_manager.refresh_members()
+        elif db_name == "emotions":
+            emotion_manager.refresh_members()
+    else:
+        mission_manager.refresh_members()
