@@ -54,15 +54,6 @@
     width: auto;
 }
 
-#position_list_ul {
-    min-width: 150px;
-}
-
-.position_div {
-    max-width: 150px;
-    z-index: 9999;
-}
-
 .action_name_input {
     max-width: 150px;
 
@@ -73,10 +64,21 @@
     border-radius: 2px;
 }
 
+#position_list_ul {
+    min-width: 150px;
+}
+
+.position_div {
+    max-width: 150px;
+    z-index: 9999;
+}
+
 #scenario_list_ul {
     min-width: 150px;
     max-width: 200px;
 }
+
+.scenario_position_input {}
 
 .actions-drop-active {
     border-color: #aaa;

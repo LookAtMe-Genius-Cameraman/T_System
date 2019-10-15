@@ -79,7 +79,7 @@ const record_in_scenario_list_ul = document.getElementById("record_in_scenario_l
 sidebar_toggle_btn.addEventListener("click", function (x) {
 
     setSwiperSwiping(false);
-    
+
     clearElement(position_list_ul);
     clearElement(scenario_list_ul);
 
@@ -120,54 +120,48 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
 
                         position_span.classList.add("shine_in_dark");
                         position_span.innerHTML = positions[c]["name"];
-                        position_span.id = positions[c]["name"] + "_span";
-
-                        position_context_menu.classList.add("position-relative", "dropdown-menu", "dropdown-menu-sm");
-                        position_context_menu.id = positions[c]["name"] + "context-menu";
-
-                        position_cm_remove_a.classList.add("dropdown-item");
-                        position_cm_remove_a.innerHTML = translate_text_item("remove");
+                        position_span.id = positions[c]["name"] + "_span_" + c;
 
                         function hide_context_menu() {
                             $("#" + position_context_menu.id).removeClass("show").hide();
                             document.removeEventListener("click", hide_context_menu);
-
                         }
 
                         interact('#' + position_span.id)
                             .on('tap', function (event) {
                                 position_div.removeChild(position_span);
+                                position_div.removeChild(position_context_menu);
 
-                            let position_input = document.createElement('input');
+                                let position_input = document.createElement('input');
 
-                            position_input.type = "text";
-                            position_input.placeholder = position_span.innerHTML;
-                            position_input.classList.add("action_name_input");
+                                position_input.type = "text";
+                                position_input.placeholder = position_span.innerHTML;
+                                position_input.classList.add("action_name_input");
 
-                            position_input.addEventListener("focusout", function () {
-                                if (position_input.value !== position_span.innerHTML && position_input.value !== "") {
-                                    let data = {"name": position_input.value, "cartesian_coords": positions[c]["cartesian_coords"], "polar_params": positions[c]["polar_params"]};
+                                position_input.addEventListener("focusout", function () {
+                                    if (position_input.value !== position_span.innerHTML && position_input.value !== "") {
+                                        let data = {"name": position_input.value, "cartesian_coords": positions[c]["cartesian_coords"], "polar_params": positions[c]["polar_params"]};
 
-                                    request_asynchronous('/api/position?db=' + action_db_name + '&id=' + positions[c]["id"] + '&admin_id=' + admin_id, 'PUT',
-                                        'application/json; charset=UTF-8', data, function (req, err, response) {
-                                            if (err === "success") {
-                                                let response_data = JSON.parse(response.responseText);
-                                            }
-                                        });
+                                        request_asynchronous('/api/position?db=' + action_db_name + '&id=' + positions[c]["id"] + '&admin_id=' + admin_id, 'PUT',
+                                            'application/json; charset=UTF-8', data, function (req, err, response) {
+                                                if (err === "success") {
+                                                    let response_data = JSON.parse(response.responseText);
+                                                }
+                                            });
+                                        position_span.innerHTML = position_input.value
+                                    }
+                                    position_div.removeChild(position_input);
+                                    position_div.appendChild(position_span);
+                                    position_div.appendChild(position_context_menu);
 
-                                    position_span.innerHTML = position_input.value
-                                }
-
-                                position_div.removeChild(position_input);
-                                position_div.appendChild(position_span);
-
-                            });
-                            position_div.appendChild(position_input);
-                            position_input.focus();
+                                });
+                                position_div.appendChild(position_input);
+                                position_input.focus();
                             })
                             .on('doubletap', function (event) {
                             })
                             .on('hold', function (event) {
+                                position_span.classList.add("disable_pointer");
 
                                 let target = event.target;
                                 let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
@@ -181,16 +175,39 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
                                     transform: 'translate(' + x + 'px, ' + y + 'px)',
                                 }).addClass("show");
 
+                                setTimeout(function () {
+                                    position_span.classList.remove("disable_pointer");
+                                    document.addEventListener("click", hide_context_menu);
+                                }, 500);
+
                                 return false; //blocks default WebBrowser right click menu
                             })
                             .on('down', function (event) {
                             })
                             .on('up', function (event) {
-                                document.addEventListener("click", hide_context_menu);
                             });
 
+                        position_context_menu.classList.add("position-relative", "dropdown-menu", "dropdown-menu-sm");
+                        position_context_menu.id = positions[c]["name"] + "context-menu_" + c;
+
                         $("#" + position_context_menu.id + " a").on("click", function () {
-                            // $(this).parent().removeClass("show").hide();
+                            $(this).parent().removeClass("show").hide();
+                        });
+
+                        position_cm_remove_a.classList.add("dropdown-item");
+                        position_cm_remove_a.innerHTML = translate_text_item("remove");
+
+                        position_cm_remove_a.addEventListener("click", function () {
+                            JSalert(translate_text_item("Position Deleting!"),
+                                translate_text_item("You are about to delete the position: ") + "\n" + positions[c]["name"],
+                                translate_text_item("OK"), translate_text_item("CANCEL"), function () {
+                                    request_asynchronous('/api/position?db=' + action_db_name + '&id=' + positions[c]["id"] + '&admin_id=' + admin_id, 'DELETE',
+                                        'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
+                                            if (err === "success") {
+                                                let response_data = JSON.parse(response.responseText);
+                                            }
+                                        });
+                                })
                         });
 
                         position_context_menu.appendChild(position_cm_remove_a);
@@ -200,7 +217,6 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
 
                         position_list_ul.appendChild(position_div);
                     }
-
                 }
             }
         });
@@ -237,12 +253,27 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
                         scenario_cm_remove_a.classList.add("dropdown-item");
                         scenario_cm_remove_a.innerHTML = translate_text_item("remove");
 
+                        scenario_cm_remove_a.addEventListener("click", function () {
+                            JSalert(translate_text_item("Scenario Deleting!"),
+                                translate_text_item("You are about to delete this scenario: ") + "\n" + scenarios[c]["name"],
+                                translate_text_item("OK"), translate_text_item("CANCEL"), function () {
+                                    request_asynchronous('/api/scenario?db=' + action_db_name + '&id=' + scenarios[c]["id"] + '&admin_id=' + admin_id, 'DELETE',
+                                        'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
+                                            if (err === "success") {
+                                                let response_data = JSON.parse(response.responseText);
+                                            }
+                                        });
+                                })
+                        });
+
                         scenario_cm_advanced_a.classList.add("dropdown-item");
                         scenario_cm_advanced_a.innerHTML = translate_text_item("advanced edit");
 
                         scenario_cm_advanced_a.addEventListener("click", function (x) {
 
                             advanced_edit_div.classList.add("active");
+
+                            let scenario_backup = scenarios[c];
 
                             let advance_sce_title_div = document.createElement('div');
                             let advance_sce_header_a = document.createElement('a');
@@ -261,8 +292,6 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
                             advance_sce_name_span.classList.add("cut-text", "advanced_scenario_name");
                             advance_sce_name_span.innerHTML = scenarios[c]["name"];
                             advance_sce_name_span.title = scenarios[c]["name"];
-
-                            let sliders = [];
 
                             for (let i = 0; i < scenarios[c]["positions"].length; i++) {
 
@@ -301,7 +330,7 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
 
                                 advance_po_ca_co_header_a.innerHTML = translate_text_item("Cartesian coordinates: ");
                                 let rounded_c_coords = [];
-                                for(let count = 0; count < scenarios[c]["positions"][i]["cartesian_coords"].length; count++) {
+                                for (let count = 0; count < scenarios[c]["positions"][i]["cartesian_coords"].length; count++) {
                                     rounded_c_coords.push(scenarios[c]["positions"][i]["cartesian_coords"][count].toFixed(2));
                                 }
 
@@ -339,7 +368,7 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
                                     ad_po_joint_header_a.innerHTML = translate_text_item("j-" + (a + 1)) + ":";
 
                                     ad_po_joint_theta_span.classList.add("advance_small_font");
-                                    ad_po_joint_theta_span.innerHTML = Math.round(scenarios[c]["positions"][i]["polar_params"]["coords"][a] * 180 / 3.1416) + " deg";
+                                    ad_po_joint_theta_span.innerHTML = Math.round(scenarios[c]["positions"][i]["polar_params"]["coords"][a] * 180 / 3.1416) + "°";
 
                                     ad_po_joint_slider_div.classList.add("row");
 
@@ -350,13 +379,15 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
 
                                     ad_po_joint_speed_input.classList.add("custom-range", "advance_slider");
                                     ad_po_joint_speed_input.type = "range";
-                                    ad_po_joint_speed_input.value = 1 - scenarios[c]["positions"][i]["polar_params"]["delays"][a];
+                                    ad_po_joint_speed_input.value = (scenarios[c]["positions"][i]["polar_params"]["delays"][a] * 10) / 2;
                                     ad_po_joint_speed_input.id = scenarios[c]["name"] + "_" + scenarios[c]["positions"][i]["name"] + "_speed_slider_" + a;
-                                    ad_po_joint_speed_input.setAttribute("min", "0");
-                                    ad_po_joint_speed_input.setAttribute("max", "1");
-                                    ad_po_joint_speed_input.setAttribute("step", "0.2");
+                                    ad_po_joint_speed_input.setAttribute("min", "1");
+                                    ad_po_joint_speed_input.setAttribute("max", "5");
+                                    ad_po_joint_speed_input.setAttribute("step", "1");
 
-                                    sliders.push({"id": ad_po_joint_speed_input.id, "slider": null});
+                                    ad_po_joint_speed_input.addEventListener("change", function () {
+                                        scenarios[c]["positions"][i]["polar_params"]["delays"][a] = (ad_po_joint_speed_input.value / 10) * 2;
+                                    });
 
                                     ad_po_joint_precision_div.classList.add("row", "mt-2", "advance_slider_div");
 
@@ -371,7 +402,9 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
                                     ad_po_joint_precision_input.setAttribute("max", "5");
                                     ad_po_joint_precision_input.setAttribute("step", "1");
 
-                                    sliders.push({"id": ad_po_joint_precision_input.id, "slider": null});
+                                    ad_po_joint_precision_input.addEventListener("change", function () {
+                                        scenarios[c]["positions"][i]["polar_params"]["divide_counts"][a] = ad_po_joint_precision_input.value;
+                                    });
 
                                     ad_po_joint_header_div.appendChild(ad_po_joint_header_a);
                                     ad_po_joint_header_div.appendChild(ad_po_joint_theta_span);
@@ -390,8 +423,6 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
 
                                     advance_position_dd_container_div.appendChild(ad_po_joint_div);
                                 }
-
-
                                 advance_po_ca_co_div.appendChild(advance_po_ca_co_header_a);
                                 advance_po_ca_co_div.appendChild(advance_po_ca_co_name_span);
 
@@ -400,7 +431,6 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
 
                                 advance_positions_list_ul.appendChild(advance_position_dd_div);
                             }
-
                             advance_positions_list_ul.classList.add("mt-5", "mb-2", "advance_positions_ul");
 
                             advance_sce_btns_div.classList.add("position-absolute", "mt-2", "advance_sce_btns_div");
@@ -409,18 +439,35 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
                             advance_sce_ok_btn.innerHTML = translate_text_item("okay");
 
                             advance_sce_ok_btn.addEventListener("click", function () {
+                                let data = {"name": scenarios[c]["name"], "positions": scenarios[c]["positions"]};
+
+                                request_asynchronous('/api/scenario?db=' + action_db_name + '&id=' + scenarios[c]["id"] + '&admin_id=' + admin_id, 'PUT',
+                                    'application/json; charset=UTF-8', data, function (req, err, response) {
+                                        if (err === "success") {
+                                            let response_data = JSON.parse(response.responseText);
+
+                                            if (response_data["status"] === "OK") {
+                                                swal(translate_text_item("Changes saved."), "", "success");
+                                            } else {
+                                                swal(translate_text_item("Scenario editing failed!"), "", "error");
+                                            }
+                                        }
+                                    });
                                 clearElement(advanced_edit_div);
                                 advanced_edit_div.classList.remove("active");
-                            });
 
+                                controlling_template_sidebar_close_btn.click();
+                                sidebar_toggle_btn.click();
+                            });
                             advance_sce_cancel_btn.classList.add("btn", "btn-outline-danger", "ml-2");
                             advance_sce_cancel_btn.innerHTML = translate_text_item("cancel");
 
                             advance_sce_cancel_btn.addEventListener("click", function () {
+                                scenarios[c] = scenario_backup;
+
                                 clearElement(advanced_edit_div);
                                 advanced_edit_div.classList.remove("active");
                             });
-
                             advance_sce_title_div.appendChild(advance_sce_header_a);
                             advance_sce_title_div.appendChild(advance_sce_name_span);
 
@@ -438,36 +485,28 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
                         scenario_btn.innerHTML = scenarios[c]["name"];
 
                         interact('#' + scenario_btn.id).dropzone({
-                            // only accept elements matching this CSS selector
                             accept: '.draggable_position',
-                            // Require a 75% element overlap for a drop to be possible
                             overlap: 0.75,
-
-                            // listen for drop related events:
 
                             ondropactivate: function (event) {
                             },
                             ondragenter: function (event) {
                                 scenario_dd_btn.click();
                                 event.target.classList.add('actions-drop-target');
-
                             },
                             ondragleave: function (event) {
                                 event.target.classList.remove('actions-drop-target');
-
                             },
                             ondrop: function (event) {
                             },
-
                             ondropdeactivate: function (event) {
                                 // scenario_dd_btn.click()
                             }
                         });
 
                         function hide_context_menu() {
-                            // $("#" + scenario_context_menu.id).removeClass("show").hide();
+                            $("#" + scenario_context_menu.id).removeClass("show").hide();
                             document.removeEventListener("click", hide_context_menu);
-
                         }
 
                         interact('#' + scenario_btn.id)
@@ -475,6 +514,7 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
                                 scenario_dropdown_div.removeChild(scenario_btn);
                                 scenario_dropdown_div.removeChild(scenario_dd_btn);
                                 scenario_dropdown_div.removeChild(scenario_dropdown_container_div);
+                                scenario_dropdown_div.removeChild(scenario_context_menu);
 
                                 let scenario_input = document.createElement('input');
 
@@ -494,13 +534,12 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
                                             });
                                         scenario_btn.innerHTML = scenario_input.value
                                     }
-
                                     scenario_dropdown_div.removeChild(scenario_input);
 
                                     scenario_dropdown_div.appendChild(scenario_btn);
                                     scenario_dropdown_div.appendChild(scenario_dd_btn);
                                     scenario_dropdown_div.appendChild(scenario_dropdown_container_div);
-
+                                    scenario_dropdown_div.appendChild(scenario_context_menu);
                                 });
                                 scenario_dropdown_div.appendChild(scenario_input);
                                 scenario_input.focus();
@@ -508,7 +547,7 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
                             .on('doubletap', function (event) {
                             })
                             .on('hold', function (event) {
-
+                                scenario_btn.classList.add("disable_pointer");
                                 let target = event.target;
                                 let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
                                 let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
@@ -518,10 +557,14 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
 
                                 $("#" + scenario_context_menu.id).css({
                                     display: "block",
-                                    transform: 'translate(' + x + 'px, ' + y + 'px)',
+                                    transform: 'translate(' + x + 'px, ' + y - 50 + 'px)',
                                 }).addClass("show");
 
                                 document.addEventListener("click", hide_context_menu);
+
+                                setTimeout(function () {
+                                    scenario_btn.classList.remove("disable_pointer");
+                                }, 500);
 
                                 return false; //blocks default WebBrowser right click menu
                             })
@@ -531,7 +574,7 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
                             });
 
                         $("#" + scenario_context_menu.id + " a").on("click", function () {
-                            // $(this).parent().removeClass("show").hide();
+                            $(this).parent().removeClass("show").hide();
                         });
 
                         scenario_dd_btn.classList.add("btn", "btn-dark", "dropdown-toggle", "dropdown-toggle-split");
@@ -557,9 +600,9 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
 
                         scenario_dd_span.classList.add("sr-only");
 
-                        scenario_dropdown_container_div.classList.add("dropdown-menu", "dropdown-menu-right", "dropdown_menu", "scenario_dropdown_menu", "keep-open");
+                        scenario_dropdown_container_div.classList.add("dropdown-menu", "dropdown-menu-right", "container", "dropdown_menu", "scenario_dropdown_menu", "keep-open");
                         scenario_dropdown_container_div.id = scenarios[c]["id"] + "_container_div";
-                        // scenario_dropdown_container_div.setAttribute("aria-labelledby", date_btn.id);
+
                         let drop_timeout;
                         interact('#' + scenario_dropdown_container_div.id).dropzone({
                             // only accept elements matching this CSS selector
@@ -619,15 +662,12 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
                                 clearTimeout(drop_timeout);
                             },
                             ondrop: function (event) {
-                                // event.preventDefault();
-                                event.relatedTarget.textContent = 'Dropped';
                             },
 
                             ondropdeactivate: function (event) {
                                 // remove active dropzone feedback
                                 event.target.classList.remove('actions-drop-active');
                                 event.target.classList.remove('actions-drop-target');
-
                             }
                         });
 
@@ -635,12 +675,115 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
                             let position_div = document.createElement('div');
                             let position_span = document.createElement('span');
 
+                            let position_context_menu = document.createElement('div');
+                            let position_cm_remove_a = document.createElement('a');
+
                             position_div.classList.add("dropdown-item", "draggable_position", "drag-drop", "position_of_scenario");
+                            position_div.setAttribute("data-position-name", scenarios[c]["positions"][i]["name"]);
+                            position_div.setAttribute("data-cartesian-coords", scenarios[c]["positions"][i]["cartesian_coords"]);
+                            position_div.setAttribute("data-polar-coords", scenarios[c]["positions"][i]["polar_params"]["coords"]);
+                            position_div.setAttribute("data-polar-delays", scenarios[c]["positions"][i]["polar_params"]["delays"]);
+                            position_div.setAttribute("data-polar-divide-counts", scenarios[c]["positions"][i]["polar_params"]["divide_counts"]);
 
                             position_span.classList.add("cut-text");
                             position_span.innerHTML = scenarios[c]["positions"][i]["name"];
+                            position_span.title = scenarios[c]["positions"][i]["name"];
+                            position_span.id = scenarios[c]["name"] + "_" + scenarios[c]["positions"][i]["name"] + "_span_" + i;
+
+                            function hide_position_context_menu() {
+                                $("#" + position_context_menu.id).removeClass("show").hide();
+                                document.removeEventListener("click", hide_context_menu);
+                            }
+
+                            interact('#' + position_span.id)
+                                .on('tap', function (event) {
+                                    position_div.removeChild(position_span);
+
+                                    let position_input = document.createElement('input');
+
+                                    position_input.type = "text";
+                                    position_input.placeholder = position_span.innerHTML;
+                                    position_input.classList.add("action_name_input", "scenario_position_input");
+
+                                    position_input.addEventListener("focusout", function () {
+                                        if (position_input.value !== position_span.innerHTML && position_input.value !== "") {
+
+                                            scenarios[c]["positions"][i]["name"] = position_input.value;
+                                            let data = {"name": scenarios[c]["name"], "positions": scenarios[c]["positions"]};
+
+                                            request_asynchronous('/api/scenario?db=' + action_db_name + '&id=' + scenarios[c]["id"] + '&admin_id=' + admin_id, 'PUT',
+                                                'application/json; charset=UTF-8', data, function (req, err, response) {
+                                                    if (err === "success") {
+                                                        let response_data = JSON.parse(response.responseText);
+                                                    }
+                                                });
+                                            position_span.innerHTML = position_input.value
+                                        }
+                                        position_div.removeChild(position_input);
+                                        position_div.appendChild(position_span);
+                                    });
+                                    position_div.appendChild(position_input);
+                                    position_input.focus();
+                                })
+                                .on('doubletap', function (event) {
+                                })
+                                .on('hold', function (event) {
+                                    position_span.classList.add("disable_pointer");
+
+                                    let target = event.target;
+                                    let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+                                    let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+                                    position_context_menu.setAttribute('data-x', x);
+                                    position_context_menu.setAttribute('data-y', y);
+
+                                    $("#" + position_context_menu.id).css({
+                                        display: "block",
+                                        transform: 'translate(' + x + 'px, ' + y + 'px)',
+                                    }).addClass("show");
+
+                                    setTimeout(function () {
+                                        position_span.classList.remove("disable_pointer");
+                                        document.addEventListener("click", hide_position_context_menu);
+                                    }, 500);
+
+                                    return false; //blocks default WebBrowser right click menu
+                                })
+                                .on('down', function (event) {
+                                })
+                                .on('up', function (event) {
+                                });
+
+                            position_context_menu.classList.add("position-relative", "dropdown-menu", "dropdown-menu-sm");
+                            position_context_menu.id = scenarios[c]["name"] + "_" + scenarios[c]["positions"][i]["name"] + "context-menu_" + i;
+
+                            $("#" + position_context_menu.id + " a").on("click", function () {
+                                $(this).parent().removeClass("show").hide();
+                            });
+
+                            position_cm_remove_a.classList.add("dropdown-item");
+                            position_cm_remove_a.innerHTML = translate_text_item("remove");
+
+                            position_cm_remove_a.addEventListener("click", function () {
+                                JSalert(translate_text_item("Position Deleting!"),
+                                    translate_text_item("You are about to delete this scenario's position: ") + "\n" + scenarios[c]["positions"][i]["name"],
+                                    translate_text_item("OK"), translate_text_item("CANCEL"), function () {
+                                        scenarios[c]["positions"].splice(i, 1);
+                                        let data = {"name": scenarios[c]["name"], "positions": scenarios[c]["positions"]};
+                                        request_asynchronous('/api/scenario?db=' + action_db_name + '&id=' + scenarios[c]["id"] + '&admin_id=' + admin_id, 'PUT',
+                                            'application/json; charset=UTF-8', data, function (req, err, response) {
+                                                if (err === "success") {
+                                                    let response_data = JSON.parse(response.responseText);
+                                                }
+                                            });
+                                    });
+                            });
+
+                            position_context_menu.appendChild(position_cm_remove_a);
 
                             position_div.appendChild(position_span);
+                            position_div.appendChild(position_context_menu);
+
                             scenario_dropdown_container_div.appendChild(position_div);
                         }
 
@@ -878,7 +1021,7 @@ rotational_menu_control_input.addEventListener("change", function () {
 
                             arm_joint_right_btn.classList.add("rotational-menu-item", "joint_btn");
                             arm_joint_right_btn.id = "joint_" + joint_number + "cw_btn";
-                            arm_joint_right_btn.innerHTML = translate_text_item("j-" + joint_number + " ");
+                            arm_joint_right_btn.innerHTML = translate_text_item("j-") + joint_number + " ";
 
                             interact('#' + arm_joint_right_btn.id)
                                 .on('tap', function (event) {
@@ -915,12 +1058,11 @@ rotational_menu_control_input.addEventListener("change", function () {
                                     clearInterval(interval);
                                 });
 
-
                             arm_joint_right_i.classList.add("fas", "fa-redo");
 
                             arm_joint_left_btn.classList.add("rotational-menu-item", "joint_btn");
                             arm_joint_left_btn.id = "joint_" + joint_number + "ccw_btn";
-                            arm_joint_left_btn.innerHTML = translate_text_item("j-" + joint_number + " ");
+                            arm_joint_left_btn.innerHTML = translate_text_item("j-") + joint_number + " ";
 
                             interact('#' + arm_joint_left_btn.id)
                                 .on('tap', function (event) {
