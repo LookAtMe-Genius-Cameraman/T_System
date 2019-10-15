@@ -236,9 +236,9 @@ footer {
 }
 
 #system_info_template_container.focused {
-    top: 20% !important;
+    top: 5% !important;
     width: 85% !important;
-    height: 68% !important;
+    height: 85% !important;
 }
 
 #administration_template_container {
