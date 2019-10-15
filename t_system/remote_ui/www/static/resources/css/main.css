@@ -4,7 +4,7 @@ html, body {
 
 body {
     overflow: hidden;
-    background-color: #fff0eb; /*Default white tone*/
+    background-color: #f7f7f7; /*Default white tone*/
     transform: translateZ(0);
 }
 
@@ -15,7 +15,7 @@ footer {
 }
 
 .body_background {
-    background-color: #fff0eb; /*Default white tone*/
+    background-color: #f7f7f7; /*Default white tone*/
 }
 
 .no-border {
@@ -43,7 +43,7 @@ footer {
     width: 85% !important;
 
     transition: all 300ms;
-    background-color: #fff0eb !important;
+    background-color: #f7f7f7 !important;
     border: #008CBA !important;
     border-style: none none solid none !important;
     border-radius: 5px !important;

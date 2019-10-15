@@ -16,7 +16,7 @@
     transition: all 300ms;
     /*border: tan solid;*/
     border-radius: 5px;
-    background-color: #fff0eb;
+    background-color: #f7f7f7;
     /*margin: auto 5px auto auto;*/
 }
 
@@ -410,7 +410,7 @@
 }
 
 #lang_select_dd_container_div {
-    background-color: #fff0eb;
+    background-color: #f7f7f7;
 }
 
 #lang_list_ul {

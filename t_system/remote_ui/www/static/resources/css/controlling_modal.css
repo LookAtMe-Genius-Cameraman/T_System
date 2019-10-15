@@ -234,9 +234,6 @@
     height: 50px;
 
     transition: all 500ms;
-
-    border: gold solid;
-
     /*z-index: 200;*/
 }
 
@@ -268,8 +265,6 @@
     height: 50%;
     transform: translate(-50%, -50%);
     transition: all 300ms;
-
-    border: gray solid;
 }
 
 #pos_sce_select_div.inactive {
@@ -281,7 +276,7 @@
 }
 
 #pos_sce_select_div button {
-    background-color: #fff0eb;
+    background-color: #f7f7f7;
     color: #008CBA;
 }
 
@@ -299,8 +294,9 @@
     transform: translate(-50%, -50%);
     transition: all 300ms;
 
-    background-color: #fff0eb;
-    border: green solid;
+    background-color: #f7f7f7;
+    border-radius: 5px;
+    /*border: green solid;*/
 }
 
 #record_as_position_div.focused {
@@ -312,7 +308,7 @@
 }
 
 #record_as_position_div ._button {
-    background-color: #fff0eb;
+    background-color: #f7f7f7;
     color: #008CBA;
 }
 
@@ -348,8 +344,9 @@
     transform: translate(-50%, -50%);
     transition: all 300ms;
 
-    background-color: #fff0eb;
-    border: green solid;
+    background-color: #f7f7f7;
+    border-radius: 5px;
+    /*border: green solid;*/
 }
 
 #record_in_scenario_div.focused {
@@ -361,7 +358,7 @@
 }
 
 #record_in_scenario_div ._button {
-    background-color: #fff0eb;
+    background-color: #f7f7f7;
     color: #008CBA;
 }
 

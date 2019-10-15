@@ -34,7 +34,7 @@
 #disk_usage_div p {
     font-size: 100%;
     margin: auto;
-    color: #fff0eb;
+    color: #f7f7f7;
 }
 
 #d_u_as_giga_min {
@@ -58,5 +58,5 @@
 #versions_div p {
     font-size: 60%;
     margin: 0;
-    color: #fff0eb;
+    color: #f7f7f7;
 }
