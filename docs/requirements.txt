@@ -1,7 +1,7 @@
 m2r==0.2.1
 picamera>=1.13
 RPi.GPIO>=0.6.5
-tinydb==3.14.2
+tinydb==3.15.0
 numpy==1.17.2
 sympy==1.4
 paho-mqtt>=1.4.0
@@ -23,7 +23,7 @@ imutils==0.5.3
 gpiozero==1.5.1
 pyaudio==0.2.11
 requests==2.22.0
-pyroute2==0.5.6
+pyroute2==0.5.7
 pexpect==4.7.0
 opencv-python==4.1.1.26
 opencv-contrib-python==4.1.1.26
