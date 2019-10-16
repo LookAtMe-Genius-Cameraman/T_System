@@ -374,11 +374,11 @@
 
 .identity_div{
     margin-left: 30px;
-    width: 180px !important;
+    width: 200px !important;
 }
 
 .identity_update_input {
-    max-width: 150px;
+    max-width: 140px;
 
     background-color: white;
     color: black;
