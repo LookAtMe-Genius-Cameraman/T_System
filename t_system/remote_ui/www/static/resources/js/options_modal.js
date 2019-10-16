@@ -889,8 +889,11 @@ identity_control_btn.addEventListener("click", function () {
                     }
                 }
             });
-
     } else {
+        identity_public_id_span.innerHTML = "";
+        identity_name_span.innerHTML = "";
+        identity_private_id_span.innerHTML = "";
+
         dark_deep_background_div.removeEventListener("click", identity_control_btn_lis_bind);
         options_template_container.removeEventListener("click", identity_control_btn_lis_bind);
 
