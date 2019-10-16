@@ -129,34 +129,36 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
 
                         interact('#' + position_span.id)
                             .on('tap', function (event) {
-                                position_div.removeChild(position_span);
-                                position_div.removeChild(position_context_menu);
+                                if (!position_context_menu.classList.contains("show")) {
+                                    position_div.removeChild(position_span);
+                                    position_div.removeChild(position_context_menu);
 
-                                let position_input = document.createElement('input');
+                                    let position_input = document.createElement('input');
 
-                                position_input.type = "text";
-                                position_input.placeholder = position_span.innerHTML;
-                                position_input.classList.add("action_name_input");
+                                    position_input.type = "text";
+                                    position_input.placeholder = position_span.innerHTML;
+                                    position_input.classList.add("action_name_input");
 
-                                position_input.addEventListener("focusout", function () {
-                                    if (position_input.value !== position_span.innerHTML && position_input.value !== "") {
-                                        let data = {"name": position_input.value, "cartesian_coords": positions[c]["cartesian_coords"], "polar_params": positions[c]["polar_params"]};
+                                    position_input.addEventListener("focusout", function () {
+                                        if (position_input.value !== position_span.innerHTML && position_input.value !== "") {
+                                            let data = {"name": position_input.value, "cartesian_coords": positions[c]["cartesian_coords"], "polar_params": positions[c]["polar_params"]};
 
-                                        request_asynchronous('/api/position?db=' + action_db_name + '&id=' + positions[c]["id"] + '&admin_id=' + admin_id, 'PUT',
-                                            'application/json; charset=UTF-8', data, function (req, err, response) {
-                                                if (err === "success") {
-                                                    let response_data = JSON.parse(response.responseText);
-                                                }
-                                            });
-                                        position_span.innerHTML = position_input.value
-                                    }
-                                    position_div.removeChild(position_input);
-                                    position_div.appendChild(position_span);
-                                    position_div.appendChild(position_context_menu);
+                                            request_asynchronous('/api/position?db=' + action_db_name + '&id=' + positions[c]["id"] + '&admin_id=' + admin_id, 'PUT',
+                                                'application/json; charset=UTF-8', data, function (req, err, response) {
+                                                    if (err === "success") {
+                                                        let response_data = JSON.parse(response.responseText);
+                                                    }
+                                                });
+                                            position_span.innerHTML = position_input.value
+                                        }
+                                        position_div.removeChild(position_input);
+                                        position_div.appendChild(position_span);
+                                        position_div.appendChild(position_context_menu);
 
-                                });
-                                position_div.appendChild(position_input);
-                                position_input.focus();
+                                    });
+                                    position_div.appendChild(position_input);
+                                    position_input.focus();
+                                }
                             })
                             .on('doubletap', function (event) {
                             })
@@ -511,38 +513,41 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
 
                         interact('#' + scenario_btn.id)
                             .on('tap', function (event) {
-                                scenario_dropdown_div.removeChild(scenario_btn);
-                                scenario_dropdown_div.removeChild(scenario_dd_btn);
-                                scenario_dropdown_div.removeChild(scenario_dropdown_container_div);
-                                scenario_dropdown_div.removeChild(scenario_context_menu);
 
-                                let scenario_input = document.createElement('input');
+                                if (!scenario_context_menu.classList.contains("show")) {
+                                    scenario_dropdown_div.removeChild(scenario_btn);
+                                    scenario_dropdown_div.removeChild(scenario_dd_btn);
+                                    scenario_dropdown_div.removeChild(scenario_dropdown_container_div);
+                                    scenario_dropdown_div.removeChild(scenario_context_menu);
 
-                                scenario_input.type = "text";
-                                scenario_input.placeholder = scenario_btn.innerHTML;
-                                scenario_input.classList.add("action_name_input");
+                                    let scenario_input = document.createElement('input');
 
-                                scenario_input.addEventListener("focusout", function () {
-                                    if (scenario_input.value !== scenario_btn.innerHTML && scenario_input.value !== "") {
-                                        let data = {"name": scenario_input.value, "positions": scenarios[c]["positions"]};
+                                    scenario_input.type = "text";
+                                    scenario_input.placeholder = scenario_btn.innerHTML;
+                                    scenario_input.classList.add("action_name_input");
 
-                                        request_asynchronous('/api/scenario?db=' + action_db_name + '&id=' + scenarios[c]["id"] + '&admin_id=' + admin_id, 'PUT',
-                                            'application/json; charset=UTF-8', data, function (req, err, response) {
-                                                if (err === "success") {
-                                                    let response_data = JSON.parse(response.responseText);
-                                                }
-                                            });
-                                        scenario_btn.innerHTML = scenario_input.value
-                                    }
-                                    scenario_dropdown_div.removeChild(scenario_input);
+                                    scenario_input.addEventListener("focusout", function () {
+                                        if (scenario_input.value !== scenario_btn.innerHTML && scenario_input.value !== "") {
+                                            let data = {"name": scenario_input.value, "positions": scenarios[c]["positions"]};
 
-                                    scenario_dropdown_div.appendChild(scenario_btn);
-                                    scenario_dropdown_div.appendChild(scenario_dd_btn);
-                                    scenario_dropdown_div.appendChild(scenario_dropdown_container_div);
-                                    scenario_dropdown_div.appendChild(scenario_context_menu);
-                                });
-                                scenario_dropdown_div.appendChild(scenario_input);
-                                scenario_input.focus();
+                                            request_asynchronous('/api/scenario?db=' + action_db_name + '&id=' + scenarios[c]["id"] + '&admin_id=' + admin_id, 'PUT',
+                                                'application/json; charset=UTF-8', data, function (req, err, response) {
+                                                    if (err === "success") {
+                                                        let response_data = JSON.parse(response.responseText);
+                                                    }
+                                                });
+                                            scenario_btn.innerHTML = scenario_input.value
+                                        }
+                                        scenario_dropdown_div.removeChild(scenario_input);
+
+                                        scenario_dropdown_div.appendChild(scenario_btn);
+                                        scenario_dropdown_div.appendChild(scenario_dd_btn);
+                                        scenario_dropdown_div.appendChild(scenario_dropdown_container_div);
+                                        scenario_dropdown_div.appendChild(scenario_context_menu);
+                                    });
+                                    scenario_dropdown_div.appendChild(scenario_input);
+                                    scenario_input.focus();
+                                }
                             })
                             .on('doubletap', function (event) {
                             })
@@ -697,33 +702,36 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
 
                             interact('#' + position_span.id)
                                 .on('tap', function (event) {
-                                    position_div.removeChild(position_span);
 
-                                    let position_input = document.createElement('input');
+                                    if (!position_context_menu.classList.contains("show")) {
+                                        position_div.removeChild(position_span);
 
-                                    position_input.type = "text";
-                                    position_input.placeholder = position_span.innerHTML;
-                                    position_input.classList.add("action_name_input", "scenario_position_input");
+                                        let position_input = document.createElement('input');
 
-                                    position_input.addEventListener("focusout", function () {
-                                        if (position_input.value !== position_span.innerHTML && position_input.value !== "") {
+                                        position_input.type = "text";
+                                        position_input.placeholder = position_span.innerHTML;
+                                        position_input.classList.add("action_name_input", "scenario_position_input");
 
-                                            scenarios[c]["positions"][i]["name"] = position_input.value;
-                                            let data = {"name": scenarios[c]["name"], "positions": scenarios[c]["positions"]};
+                                        position_input.addEventListener("focusout", function () {
+                                            if (position_input.value !== position_span.innerHTML && position_input.value !== "") {
 
-                                            request_asynchronous('/api/scenario?db=' + action_db_name + '&id=' + scenarios[c]["id"] + '&admin_id=' + admin_id, 'PUT',
-                                                'application/json; charset=UTF-8', data, function (req, err, response) {
-                                                    if (err === "success") {
-                                                        let response_data = JSON.parse(response.responseText);
-                                                    }
-                                                });
-                                            position_span.innerHTML = position_input.value
-                                        }
-                                        position_div.removeChild(position_input);
-                                        position_div.appendChild(position_span);
-                                    });
-                                    position_div.appendChild(position_input);
-                                    position_input.focus();
+                                                scenarios[c]["positions"][i]["name"] = position_input.value;
+                                                let data = {"name": scenarios[c]["name"], "positions": scenarios[c]["positions"]};
+
+                                                request_asynchronous('/api/scenario?db=' + action_db_name + '&id=' + scenarios[c]["id"] + '&admin_id=' + admin_id, 'PUT',
+                                                    'application/json; charset=UTF-8', data, function (req, err, response) {
+                                                        if (err === "success") {
+                                                            let response_data = JSON.parse(response.responseText);
+                                                        }
+                                                    });
+                                                position_span.innerHTML = position_input.value
+                                            }
+                                            position_div.removeChild(position_input);
+                                            position_div.appendChild(position_span);
+                                        });
+                                        position_div.appendChild(position_input);
+                                        position_input.focus();
+                                    }
                                 })
                                 .on('doubletap', function (event) {
                                 })
