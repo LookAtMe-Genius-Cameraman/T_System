@@ -44,7 +44,7 @@
     overflow-y: scroll;
     overflow-x: hidden;
 
-    height: 80%;
+    height: 78%;
     transition: opacity 300ms;
 }
 
@@ -62,7 +62,6 @@
 
 .advance_slider_div {
     margin: auto !important;
-    min-width: 300px !important;
 }
 
 .advance_slider_title {
@@ -70,16 +69,18 @@
 }
 
 .advance_slider {
-    width: 200px !important;
+    width: auto !important;
 }
+
 .advance_sce_btns_div {
     left: 50%;
     transform: translate(-50%);
+    width: 180px !important;
     bottom: 10px;
 }
 
 .advance_sce_btns_div button {
-    /*width: 80px !important;*/
+    width: 80px !important;
 }
 
 .advance_small_font {
