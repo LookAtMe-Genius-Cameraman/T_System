@@ -255,6 +255,10 @@ footer {
     z-index: 205;
     /*border: #8a6d3b solid;*/
 
+    display: none !important;
+}
+
+#administration_template_container.active {
     display: inline-block !important;
 }
 
