@@ -57,12 +57,12 @@ function hide_element(element) {
     element.style.visibility = "hidden";
 }
 
-
-/**
- * The method to reload the page.
- */
-function refresh_page() {
-    window.location.reload();
+function activateAdminAuthorityBy(admin_id) {
+    if (admin_id !== false) {
+        administration_template_container.classList.add("active");
+    } else {
+        administration_template_container.classList.remove("active");
+    }
 }
 
 /**
