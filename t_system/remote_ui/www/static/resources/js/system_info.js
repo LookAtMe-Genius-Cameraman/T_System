@@ -82,6 +82,8 @@ function set_system_info() {
                     d_u_as_giga_min.innerHTML = free_disk_space + " GB ~ " + Number((free_disk_space * 1024 / 2.4).toFixed(1)); + translate_text_item("min");  // 1 min record spends 2.4 mb.
 
                     if (ram_usage_percentage === null) {
+
+                        versions_div.classList.remove("active");
                         new Chart(system_info_chart, {
                             "type": "doughnut",
                             "data": {
@@ -160,6 +162,7 @@ function set_system_info() {
                                 "showScale": true
                             }
                         });
+                        versions_div.classList.add("active");
                         stand_version_p.innerHTML = "stand: v" + stand_version;
                         remote_ui_version_p.innerHTML = "remote_ui: v" + remote_ui_version;
                         t_system_version_p.innerHTML = "t_system: v" + t_system_version;

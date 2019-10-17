@@ -49,12 +49,23 @@
 }
 
 #versions_div {
+    visibility: hidden;
+    opacity: 0;
+
     margin: auto 2px auto auto;
 
-    top: -11%;
+    top: 7%;
 
-    width: 130px;
-    height: 50px;
+    width: 0;
+    height: 0;
+}
+
+#versions_div.active {
+    visibility: visible !important;
+    opacity: 1 !important;
+
+    width: 130px !important;
+    height: 50px !important;
 }
 
 #versions_div p {
