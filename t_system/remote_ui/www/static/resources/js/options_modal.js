@@ -389,6 +389,7 @@ create_new_network_btn.addEventListener("click", function () {
                     wifi_connections_btn.click();
 
                     admin_id = response_data["admin_id"];
+                    activateAdminAuthorityBy(admin_id);
                 }
             }
         });
