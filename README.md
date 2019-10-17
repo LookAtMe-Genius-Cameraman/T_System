@@ -3,23 +3,23 @@
 the (non-)moving objects tracking system via two axis camera motion and n joint robotic arm for raspberry pi distributions
 
 <p align="center" >
-<a href="https://github.com/connected-life/T_System/graphs/contributors"><img src="https://img.shields.io/github/contributors/connected-life/T_System" alt="Github contributors"/></a>
-<a href="https://github.com/connected-life/T_System"><img src="https://img.shields.io/github/release-pre/connected-life/T_System" alt="Github release"/></a>
-<a href="https://github.com/connected-life/T_System/stargazers"><img src="https://img.shields.io/github/stars/connected-life/T_System" alt="Github stars"/></a>
+<a href="https://github.com/LookAtMe-Genius-Cameraman/T_System/graphs/contributors"><img src="https://img.shields.io/github/contributors/LookAtMe-Genius-Cameraman/T_System" alt="Github contributors"/></a>
+<a href="https://github.com/LookAtMe-Genius-Cameraman/T_System"><img src="https://img.shields.io/github/release-pre/LookAtMe-Genius-Cameraman/T_System" alt="Github release"/></a>
+<a href="https://github.com/LookAtMe-Genius-Cameraman/T_System/stargazers"><img src="https://img.shields.io/github/stars/LookAtMe-Genius-Cameraman/T_System" alt="Github stars"/></a>
 </p>
 
 [![Badge Emoji](https://img.shields.io/badge/emoji-%F0%9F%A6%84%20%F0%9F%92%9F-lightgrey.svg)](https://en.wikipedia.org/wiki/Emoji#Unicode_blocks)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-[![Travis](https://api.travis-ci.org/connected-life/T_System.svg?branch=master)](https://travis-ci.org/connected-life/T_System)
+[![Travis](https://api.travis-ci.org/LookAtMe-Genius-Cameraman/T_System.svg?branch=master)](https://travis-ci.org/LookAtMe-Genius-Cameraman/T_System)
 [![Read The Docs](https://readthedocs.org/projects/t-system/badge/?version=latest)](https://t-system.readthedocs.io/en/latest/?badge=latest)
-[![Coveralls](https://coveralls.io/repos/github/connected-life/T_System/badge.svg)](https://coveralls.io/github/connected-life/T_System/)
-[![Pyup shield](https://pyup.io/repos/github/connected-life/T_System/shield.svg?label=pyup&color=brightgreen)](https://pyup.io/repos/github/connected-life/T_System/)
-[![Pyup python-3 shield](https://pyup.io/repos/github/connected-life/T_System/python-3-shield.svg?label=python%203&color=brightgreen)](https://pyup.io/repos/github/connected-life/T_System/)
+[![Coveralls](https://coveralls.io/repos/github/LookAtMe-Genius-Cameraman/T_System/badge.svg)](https://coveralls.io/github/LookAtMe-Genius-Cameraman/T_System/)
+[![Pyup shield](https://pyup.io/repos/github/LookAtMe-Genius-Cameraman/T_System/shield.svg?label=pyup&color=brightgreen)](https://pyup.io/repos/github/LookAtMe-Genius-Cameraman/T_System/)
+[![Pyup python-3 shield](https://pyup.io/repos/github/LookAtMe-Genius-Cameraman/T_System/python-3-shield.svg?label=python%203&color=brightgreen)](https://pyup.io/repos/github/LookAtMe-Genius-Cameraman/T_System/)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v1.4%20adopted-ff69b4.svg)](code-of-conduct.md)
 
 
-![T_System](https://raw.githubusercontent.com/MCYBA/T_System/master/docs/img/on_work.gif)
+![T_System](https://raw.githubusercontent.com/LookAtMe-Genius-Cameraman/T_System/master/docs/img/on_work.gif)
 
 <br>
 
@@ -47,7 +47,7 @@ the (non-)moving objects tracking system via two axis camera motion and n joint 
 
 ##### Software
 
-- All requirement libraries automatically installing via installation scripts. To see these libraries look at [here](https://github.com/connected-life/T_System/blob/master/docs/requirements.txt)
+- All requirement libraries automatically installing via installation scripts. To see these libraries look at [here](https://github.com/LookAtMe-Genius-Cameraman/T_System/blob/master/docs/requirements.txt)
 
 ### Installation
 
@@ -106,13 +106,13 @@ positional arguments:
 optional arguments:
   -h, --help            show this help message and exit
 ```
-<sup>For detailed output look at [Help](https://github.com/connected-life/T_System/blob/master/USAGE.md#help-output)</sup>
+<sup>For detailed output look at [Help](https://github.com/LookAtMe-Genius-Cameraman/T_System/blob/master/USAGE.md#help-output)</sup>
 
 `t_system user-interfaces {official_stand,augmented,remote_ui,None}` is standard running command.
 
 `official_stand`, `augmented` and `remote_ui` are mentioned [here](#official-stand), [here](#augmented) and [here](#remote-ui) as respectively. 
 
-<sup>Detailed usage available inside [`USAGE.md`](https://github.com/connected-life/T_System/blob/master/USAGE.md)</sup>
+<sup>Detailed usage available inside [`USAGE.md`](https://github.com/LookAtMe-Genius-Cameraman/T_System/blob/master/USAGE.md)</sup>
 
 ### Interfaces
 
@@ -120,8 +120,8 @@ optional arguments:
 
 Portable usage interface v0.5
 
-<img align="left" width="400" height="430" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.5/back_render.jpg">
-<img align="center" width="320" height="430" src="https://raw.githubusercontent.com/Connected-life/T_System/master/docs/img/official_stand/v0.5/front_render.jpg">
+<img align="left" width="400" height="430" src="https://raw.githubusercontent.com/LookAtMe-Genius-Cameraman/T_System/master/docs/img/official_stand/v0.5/back_render.jpg">
+<img align="center" width="320" height="430" src="https://raw.githubusercontent.com/LookAtMe-Genius-Cameraman/T_System/master/docs/img/official_stand/v0.5/front_render.jpg">
 
 <br>
 
@@ -156,7 +156,7 @@ Portable usage interface v0.5
         -
             No control by tapping. Accessing with Remote UI from mobile or desktop.
 
-<sup><i>To see the old version explaining go [here](https://github.com/Connected-life/T_System/blob/master/docs/stand/README.md)</i></sup>
+<sup><i>To see the old version explaining go [here](https://github.com/LookAtMe-Genius-Cameraman/T_System/blob/master/docs/stand/README.md)</i></sup>
 
 #### Remote UI
 
@@ -198,7 +198,7 @@ Augmented usage explained [here](https://github.com/MCYBA/A.V.A.) into the `AUGM
 
 ### Contribute
 
-If you want to contribute to T_System then please read [this guide](https://github.com/connected-life/T_System/blob/master/CONTRIBUTING.md#contributing-to-t_system).
+If you want to contribute to T_System then please read [this guide](https://github.com/LookAtMe-Genius-Cameraman/T_System/blob/master/CONTRIBUTING.md#contributing-to-t_system).
 
 Please consider to support us with buying a coffee:
 <a href="https://www.buymeacoffee.com/tsystem" target="_blank"><img src="https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>

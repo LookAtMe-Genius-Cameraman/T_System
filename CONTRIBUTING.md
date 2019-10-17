@@ -35,7 +35,7 @@ The following is a set of guidelines for contributing to T_System an open source
   - [Git Commit Messages](#git-commit-messages)
   - [Python Styleguide](#python-styleguide)
 
-- [Troubleshooting](https://github.com/connected-life/T_System/blob/master/docs/TROUBLESHOOTING.md#troubleshooting)
+- [Troubleshooting](https://github.com/LookAtMe-Genius-Cameraman/T_System/blob/master/docs/TROUBLESHOOTING.md#troubleshooting)
 
 
 ## Code of Conduct
@@ -46,7 +46,7 @@ This project and everyone participating in it is governed by the [T_System's Cod
 
 > **Note:** Please don't file an issue to ask a question. You'll get faster results by using the resources below.
 
-We have an official [chat room on Gitter](https://gitter.im/connected-life/community) where the community chimes in with helpful advice if you have questions.
+We have an official [chat room on Gitter](https://gitter.im/LookAtMe-Genius-Cameraman/community) where the community chimes in with helpful advice if you have questions.
 
 
 ## Getting Started
@@ -74,7 +74,7 @@ Forking a repository is a simple two-step process:
 
 <img src="http://i.imgur.com/XlXtYBV.png" width="300" align="right" />
 
-1. On GitHub, navigate to the [connected-life/T_System](https://github.com/connected-life/T_System) repository.
+1. On GitHub, navigate to the [connected-life/T_System](https://github.com/LookAtMe-Genius-Cameraman/T_System) repository.
 2. In the top-right corner of the page, click **Fork**.
 
 That's it! Now, you have a **fork** of the original T_System repository under your account.
@@ -122,7 +122,7 @@ sudo ./install-dev.sh
 
 Try to experience every command listed in [README.md](https://github.com/DragonComputer/T_System#Usage). Please watch [this playlist]() if you did not understand how to use T_System.
 
-If you face with a problem while installing or using T_System then please take a look at the [Troubleshooting](https://github.com/connected-life/T_System/blob/master/docs/TROUBLESHOOTING.md#troubleshooting) section for the cases that fitting to your situation. Our [chat room on Gitter](https://gitter.im/connected-life/community) is also a viable option for support requests.
+If you face with a problem while installing or using T_System then please take a look at the [Troubleshooting](https://github.com/LookAtMe-Genius-Cameraman/T_System/blob/master/docs/TROUBLESHOOTING.md#troubleshooting) section for the cases that fitting to your situation. Our [chat room on Gitter](https://gitter.im/LookAtMe-Genius-Cameraman/community) is also a viable option for support requests.
 
 #### Choice for Code Editor
 
@@ -139,7 +139,7 @@ If you are wondering about the package structure and distribution then please ta
 
 #### Reporting Bugs
 
-If you think you found a bug in T_System then first please check the all cases listed in [Troubleshooting](https://github.com/connected-life/T_System/blob/master/docs/TROUBLESHOOTING.md#troubleshooting) section. If you still think that's a bug then please [file an issue](https://github.com/connected-life/T_System/issues/new) immediately. Don't forget to mention that it's a bug or something going on very wrong.
+If you think you found a bug in T_System then first please check the all cases listed in [Troubleshooting](https://github.com/LookAtMe-Genius-Cameraman/T_System/blob/master/docs/TROUBLESHOOTING.md#troubleshooting) section. If you still think that's a bug then please [file an issue](https://github.com/LookAtMe-Genius-Cameraman/T_System/issues/new) immediately. Don't forget to mention that it's a bug or something going on very wrong.
 
 <!-- This section guides you through submitting a bug report for T_System. Following these guidelines helps maintainers and the community understand your report :pencil:, reproduce the behavior :computer: :computer:, and find related reports :mag_right:. -->
 
@@ -147,13 +147,13 @@ If you think you found a bug in T_System then first please check the all cases l
 
 #### Suggesting Enhancements
 
-If you have an enhancement idea or you are not happy with an ugly piece of code then please [file an issue](https://github.com/connected-life/T_System/issues/new) and mention that it's an enhancement proposal.
+If you have an enhancement idea or you are not happy with an ugly piece of code then please [file an issue](https://github.com/LookAtMe-Genius-Cameraman/T_System/issues/new) and mention that it's an enhancement proposal.
 
 <!-- This section guides you through submitting an enhancement suggestion for T-System, including completely new features and minor improvements to existing functionality. Following these guidelines helps maintainers and the community understand your suggestion :pencil: and find related suggestions :mag_right:. -->
 
 #### Projects
 
-Look at the cards pinned to **To Do** columns inside [open projects](https://github.com/connected-life/T_System/projects) to find something suitable for you. If you are willing to take a card/task from there then contact with project maintainers via [Gitter chat room](https://gitter.im/connected-life/community) so they will assign that task to you.
+Look at the cards pinned to **To Do** columns inside [open projects](https://github.com/LookAtMe-Genius-Cameraman/T_System/projects) to find something suitable for you. If you are willing to take a card/task from there then contact with project maintainers via [Gitter chat room](https://gitter.im/LookAtMe-Genius-Cameraman/community) so they will assign that task to you.
 
 #### Your First Code Contribution
 
@@ -207,7 +207,7 @@ git push -u origin master
 
 #### Step 5: Creating a Pull Request
 
-Now follow [this tutorial](https://help.github.com/articles/creating-a-pull-request/) to create a pull request. You will create your pull request via [this page](https://github.com/connected-life/T_System/compare).
+Now follow [this tutorial](https://help.github.com/articles/creating-a-pull-request/) to create a pull request. You will create your pull request via [this page](https://github.com/LookAtMe-Genius-Cameraman/T_System/compare).
 
 Once you have successfully created the pull request, wait for a response from the project maintainers. If your patch is OK then we will merge it within approximately 24 hours.
 
@@ -310,11 +310,11 @@ Once you have successfully created the pull request, wait for a response from th
 
 All Python must adhere to [PEP 8](https://www.python.org/dev/peps/pep-0008/).
 
-[beginner]:https://github.com/connected-life/T_System/issues?q=is%3Aissue+is%3Aopen+label%3Abeginner
-[help-wanted]:https://github.com/connected-life/T_System/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22
-[missing-dependency]:https://github.com/connected-life/T_System/issues?q=is%3Aissue+is%3Aopen+label%3A%22missing+dependency%22
-[enhancement]:https://github.com/connected-life/T_System/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement
-[bug]:https://github.com/connected-life/T_System/issues?q=is%3Aissue+is%3Aopen+label%3Abug
+[beginner]:https://github.com/LookAtMe-Genius-Cameraman/T_System/issues?q=is%3Aissue+is%3Aopen+label%3Abeginner
+[help-wanted]:https://github.com/LookAtMe-Genius-Cameraman/T_System/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22
+[missing-dependency]:https://github.com/LookAtMe-Genius-Cameraman/T_System/issues?q=is%3Aissue+is%3Aopen+label%3A%22missing+dependency%22
+[enhancement]:https://github.com/LookAtMe-Genius-Cameraman/T_System/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement
+[bug]:https://github.com/LookAtMe-Genius-Cameraman/T_System/issues?q=is%3Aissue+is%3Aopen+label%3Abug
 
 ##### References
   - <sup>https://en.wikipedia.org/wiki/Comment_(computer_programming)#Tags</sup>
