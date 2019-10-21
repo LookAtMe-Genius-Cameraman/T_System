@@ -34,6 +34,6 @@ def get_private_id_by(data):
         data (dict):                    Access data structure.
     """
 
-    if data["id"] == identifier.public_id:
+    if data["id"] in [identifier.public_id, identifier.name]:
         return identifier.private_id
     return False
