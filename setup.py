@@ -113,7 +113,10 @@ setup(
         'pexpect',
         'opencv-python',
         'opencv-contrib-python',
-        'dlib'
+        'dlib',
+        'adafruit-blinka',
+        'adafruit-circuitpython-pca9685',
+        'adafruit-circuitpython-servokit'
     ],
 
     # List additional groups of dependencies here (e.g. development
