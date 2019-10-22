@@ -118,6 +118,10 @@ def prepare(args):
     logger = t_system.log_manager.get_logger(__name__, "DEBUG")
     logger.info("Logger integration successful.")
 
+    if args["ext_servo_driver"]:
+        from adafruit_servokit import ServoKit
+        t_system.motor_driver = ServoKit(channels=args["sd_channels"])
+
     from t_system.administration import Identifier
     from t_system.administration import Administrator
     from t_system.updation import UpdateManager
@@ -129,7 +133,7 @@ def prepare(args):
     t_system.identifier = Identifier()
     t_system.administrator = Administrator()
     t_system.update_manager = UpdateManager()
-    t_system.arm = Arm(args["robotic_arm"])
+    t_system.arm = Arm(args["arm_name"])
     t_system.mission_manager = MissionManager()
     t_system.record_manager = RecordManager()
     t_system.face_encode_manager = FaceEncodeManager()
@@ -209,10 +213,15 @@ def initiate():
     video_gr.add_argument("--record-formats", help="Formats for recording the work. `h264` and `wav` for separate video and audio recording and `mp4` for merged file are default.", nargs=3, default=["h264", "wav", "mp4"], type=str, metavar=('VIDEO', 'AUDIO', 'MERGED'))
 
     motion_gr = ap.add_argument_group('Motion Mechanism')
-    motion_gr.add_argument("--robotic-arm", help="One of the robotic arm names those are defined in arm_config.json file. The arm is for relocating the 2 axis target locking system hybrid-synchronously.", default="Senior", type=str, metavar=('ARM',))
+    motion_gr.add_argument("-p", "--ext-servo-driver", help="Use external servo motor driver board.", action="store_true")
+    motion_gr.add_argument("--sd-channels", help="Number of external servo driver's channels. Default value is 16.", action="store", default=16, type=int)
 
-    lock_sys_gr = ap.add_argument_group('Target Locking System')
+    robotic_arm_gr = ap.add_argument_group('Robotic Arm')
+    robotic_arm_gr.add_argument("--arm-name", help="One of the robotic arm names those are defined in arm_config.json file. The arm is for relocating the 2 axis target locking system hybrid-synchronously.", default="Senior", type=str, metavar=('ARM',))
+
+    lock_sys_gr = motion_gr.add_argument_group('Target Locking System')
     lock_sys_gr.add_argument("--ls-gpios", help="GPIO pin numbers of the 2 axis target locking system's servo motors. 23(as pan) and 24(as tilt) GPIO pins are default.", nargs=2, default=[23, 24], type=int, metavar=('PAN', 'TILT'))
+    lock_sys_gr.add_argument("--ls-channels", help="Servo driver channels of the 2 axis target locking system's servo motors. 10(as pan) and 11(as tilt) channels are default.", nargs=2, default=[10, 11], type=int, metavar=('PAN', 'TILT'))
     lock_sys_usage_gr = lock_sys_gr.add_mutually_exclusive_group()
     lock_sys_usage_gr.add_argument("--AI", help="Specify the learning method of how to move to the target position from the current. When the nothing chosen, learn mode and decision mechanisms will be deprecated. to use: either `official_ai`", action="store", type=str, default=None)
     lock_sys_usage_gr.add_argument("--non-moving-target", help="Track the non-moving objects. Don't use AI or OpenCv's object detection methods. Just try to stay focused on the current focus point with changing axis angles by own position.", action="store_true")
