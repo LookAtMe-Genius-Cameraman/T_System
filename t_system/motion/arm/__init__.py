@@ -17,7 +17,7 @@ from numpy import linalg
 from sympy import symbols, eye, Matrix, cos, sin, diff
 from math import pi
 
-from t_system.motion.motor import ServoMotor
+from t_system.motion.motor import ServoMotor, ExtServoMotor
 from t_system.motion import degree_to_radian
 from t_system import T_SYSTEM_PATH
 from t_system import log_manager
@@ -33,11 +33,12 @@ class Joint:
 
     """
 
-    def __init__(self, joint):
+    def __init__(self, joint, use_ext_driver=None):
         """Initialization method of :class:`t_system.motion.arm.Joint` class.
 
         Args:
-            joint (dict):          The requested_data that is contain joint's properties from the config file.
+            joint (dict):                   The requested_data that is contain joint's properties from the config file.
+            use_ext_driver (bool):          The flag of external PWM driver activation.
         """
         self.number = joint['joint_number']
         self.is_reverse = joint['reverse']
@@ -60,13 +61,19 @@ class Joint:
         self.a = joint['a']
         self.alpha = joint['alpha']
 
+        self.use_ext_driver = use_ext_driver
+
         self.current_angle = degree_to_radian(self.q)
         if self.is_reverse:
             self.current_angle = pi - self.current_angle
 
         if self.structure != 'constant':
-            self.motor = ServoMotor(joint['motor_gpio_pin'])
-            self.motor.start(round(self.current_angle, 4))
+            if self.use_ext_driver:
+                self.motor = ExtServoMotor(joint['channel'])
+                self.motor.start(round(self.current_angle, 4))
+            else:
+                self.motor = ServoMotor(joint['motor_gpio_pin'])
+                self.motor.start(round(self.current_angle, 4))
 
         logger.info(f'Joint{self.number} started successfully. As {self.structure}, in {self.rotation_type} rotation type, on {round(self.current_angle,4)} radian.')
 
@@ -161,9 +168,11 @@ class Arm:
         self.current_pos_as_theta = []
 
         with open(self.config_file) as conf_file:
-            joint_configs = json.load(conf_file)[self.name]  # config file returns the arms.
+            arm_configs = json.load(conf_file)[self.name]  # config file returns the arms.
 
-        self.__set_joints(joint_configs)
+        self.use_ext_driver = arm_configs["use_ext_driver"]
+
+        self.__set_joints(arm_configs["joints"])
         self.__set_dh_params(self.joints)
 
         self.current_pos_as_coord = self.get_coords_from_forward_kinematics(self.__forward_kinematics(self.current_pos_as_theta)[-1])
@@ -176,13 +185,13 @@ class Arm:
         self.joints.pop(-1)
 
         with open(self.config_file) as conf_file:
-            joint_configs = json.load(conf_file)[self.expansion_name]  # config file returns the arms.
+            expansion_joint_configs = json.load(conf_file)[self.expansion_name]  # config file returns the arms.
 
-            for joint_conf in joint_configs:
+            for joint_conf in expansion_joint_configs:
 
                 joint_conf['joint_number'] = len(self.joints) + joint_conf['joint_number']
 
-                joint = Joint(joint_conf)
+                joint = Joint(joint_conf, self.use_ext_driver)
                 self.joints.append(joint)
 
                 if joint.structure != "constant":
@@ -200,9 +209,9 @@ class Arm:
         """
 
         with open(self.config_file) as conf_file:
-            joints = json.load(conf_file)[self.expansion_name]  # config file returns the arms.
+            expansion_joints = json.load(conf_file)[self.expansion_name]  # config file returns the arms.
 
-            for joint in joints:
+            for joint in expansion_joints:
                 self.joints[-1].stop()
                 self.joints[-1].gpio_cleanup()
                 del self.joints[-1]
@@ -210,9 +219,9 @@ class Arm:
                 del self.current_pos_as_theta[-1]
 
         with open(self.config_file) as conf_file:
-            joints = json.load(conf_file)[self.name]  # config file returns the arms.
+            arm = json.load(conf_file)[self.name]  # config file returns the arms.
 
-            self.joints.append(Joint(joints[-1]))
+            self.joints.append(Joint(arm["joints"][-1], self.use_ext_driver))
 
         self.__prepare_dh_params()
         self.__set_dh_params(self.joints)
