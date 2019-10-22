@@ -26,6 +26,7 @@ stand_ui = None
 identifier = None
 administrator = None
 update_manager = None
+motor_driver = None
 arm = None
 mission_manager = None
 emotion_manager = None
