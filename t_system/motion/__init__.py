@@ -8,10 +8,17 @@
 
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
-from math import sqrt, pi
-
 import RPi.GPIO as GPIO
 import time  # Time access and conversions
+import board
+import digitalio
+import busio
+
+from math import sqrt, pi
+
+from t_system import log_manager
+
+logger = log_manager.get_logger(__name__, "DEBUG")
 
 
 def calc_ellipsoidal_angle(angle, pan_max, tilt_max):
@@ -32,7 +39,46 @@ def degree_to_radian(angle):
         angle:       	         Servo motor's angle. Between 0 - 180 Degree.
     """
 
-    return angle * pi / 180
+    return (angle * pi) / 180
+
+
+def radian_to_degree(angle):
+    """The top-level method to provide converting radian type angle to degree type angle.
+
+    Args:
+        angle:       	         Servo motor's angle. Between 0 - 3.1416(pi number) radian.
+    """
+
+    return (angle * 180) / pi
+
+
+def check_digital_io():
+    """The top-level method to testing digital I/O's with adafruit blinka digitalio.
+    """
+    try:
+        pin = digitalio.DigitalInOut(board.D4)
+    except Exception as e:
+        logger.error(f'{e}')
+
+
+def check_i2c():
+    """The top-level method to testing I2C with adafruit blinka busio.
+    """
+
+    try:
+        i2c = busio.I2C(board.SCL, board.SDA)
+    except Exception as e:
+        logger.error(f'{e}')
+
+
+def check_spi():
+    """The top-level method to testing SPI with adafruit blinka busio.
+    """
+
+    try:
+        spi = busio.SPI(board.SCLK, board.MOSI, board.MISO)
+    except Exception as e:
+        logger.error(f'{e}')
 
 
 if __name__ == '__main__':
