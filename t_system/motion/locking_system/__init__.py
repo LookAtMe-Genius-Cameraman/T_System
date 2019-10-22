@@ -43,8 +43,8 @@ class LockingSystem:
         self.decider = decider
         self.current_k_fact = 0.01
 
-        self.pan = Collimator(args["ls_gpios"][0], self.frame_width, init_angles[0])      # pan means rotate right and left ways.
-        self.tilt = Collimator(args["ls_gpios"][1], self.frame_height, init_angles[1], False)   # tilt means rotate up and down ways.
+        self.pan = Collimator((args["ls_gpios"][0], args["ls_channels"][0]), self.frame_width, init_angles[0], use_ext_driver=args["ext_servo_driver"])      # pan means rotate right and left ways.
+        self.tilt = Collimator((args["ls_gpios"][1], args["ls_channels"][1]), self.frame_height, init_angles[1], False, use_ext_driver=args["ext_servo_driver"])   # tilt means rotate up and down ways.
 
         self.current_target_obj_width = 0
 

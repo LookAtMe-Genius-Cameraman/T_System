@@ -14,7 +14,7 @@ from math import pi
 
 from multipledispatch import dispatch
 
-from t_system.motion.motor import ServoMotor
+from t_system.motion.motor import ServoMotor, ExtServoMotor
 from t_system.motion import degree_to_radian
 from t_system import log_manager
 
@@ -29,13 +29,14 @@ class Collimator:
 
     """
 
-    def __init__(self, gpio_pin, frame_width, init_angle=pi/2, is_reverse=True):
+    def __init__(self, out_number, frame_width, init_angle=pi / 2, is_reverse=True, use_ext_driver=None):
         """Initialization method of :class:`t_system.motion.LockingSystem` class.
 
         Args:
-            gpio_pin:       	    GPIO pin to use for servo motor.
-            frame_width:       	     Width of the camera's frame.
+            out_number (tuple):     GPIO pin and servo driver channel to use for servo motor.
+            frame_width:       	    Width of the camera's frame.
             init_angle:       	    Initialization angle value for servo motor as radian unit.
+            use_ext_driver (bool):  The flag of external PWM driver activation.
         """
 
         self.frame_width = frame_width
@@ -43,9 +44,14 @@ class Collimator:
         self.previous_dis_to_des = 0.0
 
         self.is_reverse = is_reverse
+        self.use_ext_driver = use_ext_driver
 
-        self.motor = ServoMotor(gpio_pin)
-        self.motor.start(init_angle)
+        if self.use_ext_driver:
+            self.motor = ExtServoMotor(out_number[1])
+            self.motor.start(round(self.current_angle, 4))
+        else:
+            self.motor = ServoMotor(out_number[0])
+            self.motor.start(init_angle)
 
         self.motor_thread_stop = None
         self.motor_thread_direction = None
