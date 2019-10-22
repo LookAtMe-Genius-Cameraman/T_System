@@ -55,8 +55,9 @@ class Vision:
 
         with open(self.config_file) as conf_file:
             conf_file_json = json.load(conf_file)
-            self.tracker_types = conf_file_json["tracker_types"]  # config file returns the tracker type list.
-            self.target_mark_types = conf_file_json["target_mark_types"]  # config file returns the mark type dict.
+
+        self.tracker_types = conf_file_json["tracker_types"]  # config file returns the tracker type list.
+        self.target_mark_types = conf_file_json["target_mark_types"]  # config file returns the mark type dict.
 
         self.detection_model = args["detection_model"]
 
