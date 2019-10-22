@@ -14,21 +14,22 @@ import threading
 from math import pi
 from RPi import GPIO as GPIO
 
+from t_system.motion import radian_to_degree
 from t_system import log_manager
 
 logger = log_manager.get_logger(__name__, "DEBUG")
 
 
 class ServoMotor:
-    """Class to define a servo motors of joints.
+    """Class to define a servo motors of joints that has been controlling via directly GPIO pins.
 
-        This class provides necessary initiations and a function named :func:`t_system.motion.Motor.move`
+        This class provides necessary initiations and a function named :func:`t_system.motion.motor.ServoMotor.move`
         for the provide move of servo motor.
 
     """
 
     def __init__(self, gpio_pin):
-        """Initialization method of :class:`t_system.motor.Motor` class.
+        """Initialization method of :class:`t_system.motion.motor.ServoMotor` class.
 
         Args:
             gpio_pin:       	    GPIO pin to use for servo motor.
@@ -195,3 +196,132 @@ class ServoMotor:
         """Method to provide clean the GPIO pin that is reserved the servo motor.
         """
         GPIO.cleanup(self.gpio_pin)
+
+
+class ExtServoMotor:
+    """Class to define a servo motors of joints that has been controlling via external servo PWM drivers.
+
+        This class provides necessary initiations and a function named :func:`t_system.motion.Motor.move`
+        for the provide move of servo motor.
+
+    """
+
+    def __init__(self, channel):
+        """Initialization method of :class:`t_system.motor.Motor` class.
+
+        Args:
+            channel:       	    Driver channel to use for servo motor.
+        """
+        from t_system import motor_driver
+
+        self.channel = channel
+
+        self.servo = motor_driver.servo[channel]
+
+        self.max_angle = 180
+        self.min_angle = 0
+        self.current_angle = None
+
+    def start(self, init_angel):
+        """Method to start of the motor initially.
+
+        Args:
+            init_angel (float):     Initialization angle value for servo motor in radian unit.
+        """
+        init_angel = radian_to_degree(init_angel)
+        logger.debug(f'motor started at {init_angel}')
+
+        self.servo.angle = init_angel
+        self.current_angle = init_angel
+
+    def directly_goto_position(self, target_angle):
+        """Method to changing position to the target angle.
+
+        Args:
+            target_angle (float):     The target position angle of servo motor. In radian type.
+        """
+        ta_in_degree = radian_to_degree(target_angle)
+
+        logger.debug(f' Target duty cycle of Motor in channel {self.channel} is {ta_in_degree}')
+
+        if self.min_angle <= ta_in_degree <= self.max_angle:
+            ta_in_degree = round(ta_in_degree, 1)
+
+            self.servo.angle = ta_in_degree
+
+            self.current_angle = ta_in_degree
+            logger.debug(f'Move of motor in GPIO {self.channel} completed')
+
+    def softly_goto_position(self, target_angle, divide_count=1, delay=0):
+        """Method to changing position to the target angle step by step for more softly than direct_goto_position func.
+
+        Args:
+            target_angle (float):     The target position angle of servo motor. In radian type.
+            divide_count (int):       The count that specify motor how many steps will use.
+            delay (float):            delay time between motor steps.
+        """
+
+        if not divide_count:
+            divide_count = 1
+
+        ta_in_degree = radian_to_degree(target_angle)
+        ta_in_degree = round(ta_in_degree, 1)
+
+        if ta_in_degree > self.current_angle:
+            delta_angle = ta_in_degree - self.current_angle
+
+            while self.current_angle < ta_in_degree:
+                self.servo.angle = self.current_angle
+                self.current_angle += delta_angle / divide_count  # Divide the increasing to 50 parse.
+                time.sleep(delay)
+
+        elif ta_in_degree < self.current_angle:
+            delta_angle = self.current_angle - ta_in_degree
+
+            while self.current_angle > ta_in_degree:
+                self.servo.angle = self.current_angle
+                self.current_angle -= delta_angle / divide_count  # Each 0.055 decrease decreases the angle as 1 degree.
+                time.sleep(delay)
+        else:
+            pass
+
+        self.servo.angle = ta_in_degree
+
+    def change_position_incregular(self, stop, direction):
+        """Method to changing position to the given direction as regularly and incremental when the stop flag is not triggered yet.
+
+        Args:
+            stop:                     The motion interrupt flag.
+            direction:                The rotation way of servo motor. True is for clockwise, false is for can't clockwise.
+        """
+        increase = 2  # increase unit is degree.
+        timeout = 0
+
+        while not stop():
+            if timeout >= 5:  # 5 * 0.2 millisecond is equal to 1 second.
+                break
+            if direction():  # true direction is the left way
+                if self.min_angle <= self.current_angle <= self.max_angle:
+
+                    self.current_angle = self.current_angle + increase
+                    self.current_angle = round(self.current_angle, 1)
+                    self.servo.angle = self.current_angle
+            else:
+                if self.min_angle <= self.current_angle <= self.max_angle:
+
+                    self.current_angle = self.current_angle - increase
+                    self.current_angle = round(self.current_angle, 1)
+                    self.servo.angle = self.current_angle
+            timeout += 1
+
+            time.sleep(0.2)
+
+    def stop(self):
+        """Method to provide stop the GPIO.PWM service that is reserved the servo motor.
+        """
+        pass
+
+    def gpio_cleanup(self):
+        """Method to provide clean the GPIO pin that is reserved the servo motor.
+        """
+        pass
