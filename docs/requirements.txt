@@ -30,4 +30,4 @@ opencv-contrib-python==4.1.1.26
 dlib==19.18.0
 adafruit-blinka==2.6.1
 adafruit-circuitpython-pca9685
-adafruit-circuitpython-servokit
+adafruit-circuitpython-servokit==1.1.0
