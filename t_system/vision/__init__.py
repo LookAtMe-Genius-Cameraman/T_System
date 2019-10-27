@@ -89,13 +89,13 @@ class Vision:
         self.camera = PiCamera()
         self.camera.resolution = resolution
         self.camera.framerate = args["framerate"]
-        self.camera.rotation = 240
+        self.camera.rotation = args["camera_rotation"]
 
         self.recorder = Recorder(args["record_formats"], self.camera, self.hearer)
 
         self.raw_capture = PiRGBArray(self.camera, size=resolution)
 
-        ccade_xml_file = T_SYSTEM_PATH + "/haarcascade/" + args["cascade_file"] + ".xml"
+        ccade_xml_file = f'{T_SYSTEM_PATH}/haarcascade/{args["cascade_file"]}.xml'
         self.object_cascade = cv2.CascadeClassifier(ccade_xml_file)
 
         (self.frame_width, self.frame_height) = resolution

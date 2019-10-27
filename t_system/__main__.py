@@ -205,6 +205,7 @@ def initiate():
     tool_gr.add_argument("--tracker-type", help="OpenCV's tracking type to use: either `BOOSTING`, `MIL`, `KCF`, `TLD`, `MEDIANFLOW`, `GOTURN`, `MOSSE` or `CSRT`. `CSRT` is default.", action="store", type=str, choices=["BOOSTING", "MIL", "KCF", "TLD", "MEDIANFLOW", "GOTURN", "MOSSE", "CSRT"], default="CSRT")
 
     video_gr = ap.add_argument_group('Video Options')
+    video_gr.add_argument("--camera-rotation", help="Specify the camera's ratational position. 180 degree is default.", action="store", default=180, type=int)
     video_gr.add_argument("--resolution", help="Specify the camera's resolution of vision ability. 320x240 is default", nargs=2, default=[320, 240], type=int, metavar=('WIDTH', 'HEIGHT'))
     video_gr.add_argument("--framerate", help="Specify the camera's framerate. of vision ability. 32 fps is default.", action="store", default=32, type=int)
     video_gr.add_argument("--chunk", help="Smallest unit of audio. 1024*8=8192 bytes are default.", action="store", default=8192, type=int)
