@@ -247,7 +247,7 @@ class Arm:
 
         for joint_conf in joint_configs:
 
-            joint = Joint(joint_conf)
+            joint = Joint(joint_conf, self.use_ext_driver)
             self.joints.append(joint)
 
             if joint.structure != "constant":
