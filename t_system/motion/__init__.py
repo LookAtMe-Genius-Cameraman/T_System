@@ -16,10 +16,6 @@ import busio
 
 from math import sqrt, pi
 
-from t_system import log_manager
-
-logger = log_manager.get_logger(__name__, "DEBUG")
-
 
 def calc_ellipsoidal_angle(angle, pan_max, tilt_max):
     """The top-level method to calculate what is going to be angle of second axis to ellipsoidal scanning of the around.
@@ -58,6 +54,9 @@ def check_digital_io():
     try:
         pin = digitalio.DigitalInOut(board.D4)
     except Exception as e:
+        from t_system import log_manager
+        logger = log_manager.get_logger(__name__, "DEBUG")
+
         logger.error(f'{e}')
 
 
@@ -68,6 +67,9 @@ def check_i2c():
     try:
         i2c = busio.I2C(board.SCL, board.SDA)
     except Exception as e:
+        from t_system import log_manager
+        logger = log_manager.get_logger(__name__, "DEBUG")
+
         logger.error(f'{e}')
 
 
@@ -78,6 +80,9 @@ def check_spi():
     try:
         spi = busio.SPI(board.SCLK, board.MOSI, board.MISO)
     except Exception as e:
+        from t_system import log_manager
+        logger = log_manager.get_logger(__name__, "DEBUG")
+
         logger.error(f'{e}')
 
 
