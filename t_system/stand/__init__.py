@@ -145,7 +145,7 @@ class Fan:
         self.gpio_pin = gpio_pin
 
         GPIO.setmode(GPIO.BCM)
-        GPIO.setup(self.gpio_pin, GPIO.OUT)
+        GPIO.setup(self.gpio_pin, GPIO.OUT, initial=GPIO.LOW)
         GPIO.setwarnings(False)
 
         self.servo = GPIO.PWM(gpio_pin, 50)  # GPIO pin for PWM with 50Hz
@@ -262,12 +262,12 @@ class Cooler:
         cpu = CPUTemperature()
 
         while True:
-            temperature = float(cpu.temperature)
+            temperature = cpu.temperature
 
             for fan in self.fans:
                 if temperature <= 45:
                     fan.change_speed(0)
-                elif temperature <= 75:
+                elif temperature >= 75:
                     fan.change_speed(100)
                 else:
                     fan.change_speed(self.__temperature_to_percent(temperature))
