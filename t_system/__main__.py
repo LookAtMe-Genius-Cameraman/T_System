@@ -121,6 +121,7 @@ def prepare(args):
     if args["ext_servo_driver"]:
         from adafruit_servokit import ServoKit
         t_system.motor_driver = ServoKit(channels=args["sd_channels"])
+        logger.info("Motors running on external driver.")
 
     from t_system.administration import Identifier
     from t_system.administration import Administrator
@@ -160,7 +161,7 @@ def prepare(args):
 
     logger.info("Package preparation completed.")
 
-    t_system.mission_manager.execute("initial", "position", True)
+    # t_system.mission_manager.execute("initial", "position", True)
     logger.info("Initial position taken.")
 
 
@@ -213,7 +214,7 @@ def initiate():
     video_gr.add_argument("--record-formats", help="Formats for recording the work. `h264` and `wav` for separate video and audio recording and `mp4` for merged file are default.", nargs=3, default=["h264", "wav", "mp4"], type=str, metavar=('VIDEO', 'AUDIO', 'MERGED'))
 
     motion_gr = ap.add_argument_group('Motion Mechanism')
-    motion_gr.add_argument("-p", "--ext-servo-driver", help="Use external servo motor driver board.", action="store_true")
+    motion_gr.add_argument("-x", "--ext-servo-driver", help="Use external servo motor driver board.", action="store_true")
     motion_gr.add_argument("--sd-channels", help="Number of external servo driver's channels. Default value is 16.", action="store", default=16, type=int)
 
     robotic_arm_gr = ap.add_argument_group('Robotic Arm')
