@@ -32,7 +32,7 @@ setup(
     long_description_content_type='text/markdown',
 
     # The project's main homepage.
-    url='https://github.com/MCYBA/A.V.A..git',
+    url='https://github.com/LookAtMe-Genius-Cameraman/T_System',
 
     # Author details
     author='Cem Baybars GÜÇLÜ',

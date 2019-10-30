@@ -120,7 +120,7 @@ optional arguments:
 
 Portable usage interface v0.6
 
-<img align="left" width="470" height="500" src="https://raw.githubusercontent.com/LookAtMe-Genius-Cameraman/T_System/master/docs/img/official_stand/v0.6/back_render.jpg">
+<img align="center" width="470" height="500" src="https://raw.githubusercontent.com/LookAtMe-Genius-Cameraman/T_System/master/docs/img/official_stand/v0.6/back_render.jpg">
 <img align="center" width="470" height="500" src="https://raw.githubusercontent.com/LookAtMe-Genius-Cameraman/T_System/master/docs/img/official_stand/v0.6/front_render.jpg">
 
 > Special thanks to [Uğur Özdemir](https://www.linkedin.com/in/u%C4%9Fur-%C3%B6zdemir-7944bb190/) for the awesome design idea of this Stand.
