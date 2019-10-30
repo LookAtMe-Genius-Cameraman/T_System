@@ -118,10 +118,12 @@ optional arguments:
 
 #### Official Stand
 
-Portable usage interface v0.5
+Portable usage interface v0.6
 
-<img align="left" width="400" height="430" src="https://raw.githubusercontent.com/LookAtMe-Genius-Cameraman/T_System/master/docs/img/official_stand/v0.5/back_render.jpg">
-<img align="center" width="320" height="430" src="https://raw.githubusercontent.com/LookAtMe-Genius-Cameraman/T_System/master/docs/img/official_stand/v0.5/front_render.jpg">
+<img align="left" width="400" height="430" src="https://raw.githubusercontent.com/LookAtMe-Genius-Cameraman/T_System/master/docs/img/official_stand/v0.6/back_render.jpg">
+<img align="center" width="320" height="430" src="https://raw.githubusercontent.com/LookAtMe-Genius-Cameraman/T_System/master/docs/img/official_stand/v0.6/front_render.jpg">
+
+> Special thanks to [Uğur Özdemir](https://www.linkedin.com/in/u%C4%9Fur-%C3%B6zdemir-7944bb190/) for the awesome design idea of this Stand.
 
 <br>
 
@@ -132,7 +134,7 @@ Portable usage interface v0.5
                    
 - Properties
     -
-    1.25 times bigger than the previous version.
+    Has 1.125 times longer body and arm length than the previous version.
     
     - Tiny Camera
         -
@@ -145,7 +147,10 @@ Portable usage interface v0.5
             Cut the electiric current directly.
     - 4 pieces 18650 li-ion batteries
         -
-            Parallel connected sources.
+            Seri connected 2 pieces for feeding Raspbbery Pi and other seri connected 2 pieces for servo motor.
+    - External Motor Driver
+        -
+            12 bit 16 channel PWM servo driver with I2C communication.
     - Internal Cooler
         -
             2 pieces 30x30x10mm micro fan and the aluminyum block for falling down the cpu temperature.
