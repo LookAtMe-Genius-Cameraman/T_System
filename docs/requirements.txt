@@ -28,6 +28,6 @@ pexpect==4.7.0
 opencv-python==4.1.1.26
 opencv-contrib-python==4.1.1.26
 dlib==19.18.0
-adafruit-blinka==2.6.1
+adafruit-blinka==3.0.0
 adafruit-circuitpython-pca9685
 adafruit-circuitpython-servokit==1.1.0
