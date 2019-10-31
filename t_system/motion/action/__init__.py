@@ -223,8 +223,9 @@ class Actor:
         Args:
             position (Position):            A Position object
         """
-
-        self.arm.goto_position(pos_thetas=position.polar_coords, pos_coords=position.cartesian_coords)
+        self.arm.goto_position(polar_params={"coords": position.polar_coords,
+                                             "delays": position.polar_delays,
+                                             "divide_counts": position.polar_divide_counts}, cartesian_coords=position.cartesian_coords)
 
     @dispatch(list)
     def act(self, scenarios):
@@ -236,7 +237,9 @@ class Actor:
 
         for scenario in scenarios:
             for position in scenario.positions:
-                self.arm.goto_position(pos_thetas=position.polar_coords, pos_coords=position.cartesian_coords)
+                self.arm.goto_position(polar_params={"coords": position.polar_coords,
+                                                     "delays": position.polar_delays,
+                                                     "divide_counts": position.polar_divide_counts}, cartesian_coords=position.cartesian_coords)
 
     def expand(self):
         """Method to expand arm with using axes and motors of target_locker of t_system's vision.
