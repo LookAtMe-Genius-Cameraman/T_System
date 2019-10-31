@@ -16,6 +16,7 @@ import threading
 from numpy import linalg
 from sympy import symbols, eye, Matrix, cos, sin, diff
 from math import pi
+from multipledispatch import dispatch
 
 from t_system.motion.motor import ServoMotor, ExtServoMotor
 from t_system.motion import degree_to_radian
@@ -77,16 +78,32 @@ class Joint:
 
         logger.info(f'Joint{self.number} started successfully. As {self.structure}, in {self.rotation_type} rotation type, on {round(self.current_angle,4)} radian.')
 
+    @dispatch(float)
     def move_to_angle(self, target_angle):
         """The top-level method to provide servo motors moving.
 
         Args:
-            target_angle:       	        The target angle of servo motors. In radian Unit.
+            target_angle (float):       	The target angle of servo motors. In radian Unit.
         """
         if self.is_reverse:
             target_angle = pi - target_angle
 
         self.motor.directly_goto_position(target_angle)
+        self.current_angle = target_angle
+
+    @dispatch(float, int, float)
+    def move_to_angle(self, target_angle, divide_count, delay):
+        """The top-level method to provide servo motors moving.
+
+        Args:
+            target_angle (float):       	The target angle of servo motors. In radian Unit.
+            divide_count (int):             The count that specify motor how many steps will use.
+            delay (float):                  delay time between motor steps.
+        """
+        if self.is_reverse:
+            target_angle = pi - target_angle
+
+        self.motor.softly_goto_position(target_angle, divide_count, delay)
         self.current_angle = target_angle
 
     def change_angle_by(self, delta_angle, direction):
@@ -440,37 +457,38 @@ class Arm:
         theta_all, omega_all, acceleration_all = lpsb.trajectory_planner(Q_matrix, time, acceleration, 0.01)
         return Q_list
 
-    def goto_position(self, pos_thetas=None, pos_coords=None):
+    def goto_position(self, polar_params=None, cartesian_coords=None):
         """Method to go to given position via position angles or coordinates of the Arm.
 
            If the target position is given with angles, cartesian coordinates have been created,
            else cartesian coordinates given the joints angles create.
 
         Args:
-            pos_thetas (list):          Angular position list to go. List length equals to joint count.
-            pos_coords (list):          Cartesian position list to go. List length equals to 3 for 3 dimensions of the cartesian coordinate system.
+            polar_params (dict):          Angular position dictionary to go. Keeps theta, divide_count and delay lists and the length of this lists equals to joint count.
+            cartesian_coords (list):          Cartesian position list to go. List length equals to 3 for 3 dimensions of the cartesian coordinate system.
 
         """
 
-        if pos_coords and pos_thetas:
-            self.__rotate_joints(pos_thetas)
+        if cartesian_coords and polar_params:
+            self.__rotate_joints(polar_params)
 
-        elif pos_thetas:
-            self.__rotate_joints(pos_thetas)
+        elif polar_params:
+            self.__rotate_joints(polar_params)
 
-            pos_coords = self.get_coords_from_forward_kinematics(self.__forward_kinematics(pos_thetas)[-1])
+            cartesian_coords = self.get_coords_from_forward_kinematics(self.__forward_kinematics(polar_params["coords"])[-1])
 
-        elif pos_coords:
-            pos_thetas = self.__inverse_kinematics(self.current_pos_as_theta, pos_coords)
+        elif cartesian_coords:
+            polar_params["coords"] = self.__inverse_kinematics(self.current_pos_as_theta, cartesian_coords)
 
-            self.__rotate_joints(pos_thetas)
+            self.__rotate_joints(polar_params)
 
         else:
             raise Exception('Going to position requires angle or coordinate!')
 
-        self.current_pos_as_theta = pos_thetas
-        self.current_pos_as_coord = pos_coords
+        self.current_pos_as_theta = polar_params["coords"]
+        self.current_pos_as_coord = cartesian_coords
 
+    @dispatch(list)
     def __rotate_joints(self, pos_thetas):
         """Method to rotate all joints according to given position theta angles.
 
@@ -481,6 +499,19 @@ class Arm:
         for joint in self.joints:
             if joint.structure != "constant":
                 threading.Thread(target=joint.move_to_angle, args=(pos_thetas[joint.number - 1],)).start()
+
+    @dispatch(dict)
+    def __rotate_joints(self, polar_params):
+        """Method to rotate all joints according to given position theta angles.
+
+        Args:
+            polar_params (dict):          Angular position list to go. List length equals to joint count.
+        """
+
+        for joint in self.joints:
+            if joint.structure != "constant":
+                joint.move_to_angle(polar_params["coords"][joint.number - 1], polar_params["divide_counts"][joint.number - 1], float(polar_params["delays"][joint.number - 1]))
+                # threading.Thread(target=joint.move_to_angle, args=(polar_params["coords"][joint.number - 1], polar_params["divide_counts"][joint.number - 1], float(polar_params["delays"][joint.number - 1]))).start()
 
     def rotate_single_joint(self, joint_number, delta_angle, direction=None):
         """Method to move a single joint towards the given direction with the given variation.
@@ -521,7 +552,7 @@ class Arm:
 
         cartesian_coords[axis] += distance
 
-        self.goto_position(pos_coords=current_pos_as_coord)
+        self.goto_position(cartesian_coords=current_pos_as_coord)
 
     def get_current_positions(self):
         """Method to send current positions.
