@@ -8,7 +8,7 @@
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
 
-from t_system.system_info import *
+from t_system.foundation import *
 
 from gpiozero import CPUTemperature
 

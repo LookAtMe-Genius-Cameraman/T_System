@@ -9,7 +9,7 @@
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
 
-from t_system.system_info import *
+from t_system.foundation import *
 from t_system.administration import is_admin
 
 
