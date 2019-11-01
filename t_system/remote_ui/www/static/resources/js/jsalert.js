@@ -7,7 +7,7 @@
  */
 
 
-function JSalert(title, text, confirm_btn_text, cancel_btn_text, confirm_function) {
+function JSalert(title, text, confirm_btn_text, cancel_btn_text, confirm_function, confirm_text=null) {
     swal({
             title: title,
             text: text,
@@ -33,7 +33,11 @@ function JSalert(title, text, confirm_btn_text, cancel_btn_text, confirm_functio
     ).then(function (isConfirm) {
         if (isConfirm) {
             confirm_function();
-            swal(translate_text_item("Process Completed!"), "", "success");
+            if (confirm_text !== null) {
+                swal(translate_text_item("Process Completed!"), "", "success");
+            } else {
+                swal(confirm_text, "", "success");
+            }
         } else {
             // swal("Hurray", "Account is not removed!", "error");
         }
