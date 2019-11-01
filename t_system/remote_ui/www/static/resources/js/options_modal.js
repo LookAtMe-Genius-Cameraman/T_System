@@ -44,6 +44,16 @@ const record_control_btn = document.getElementById("record_control_btn");
 const record_control_io_div = document.getElementById("record_control_io_div");
 const record_list_ul = document.getElementById("record_list_ul");
 
+const identity_control_div = document.getElementById("identity_control_div");
+const identity_control_btn = document.getElementById("identity_control_btn");
+const identity_control_io_div = document.getElementById("identity_control_io_div");
+const identity_public_id_div = document.getElementById("identity_public_id_div");
+const identity_public_id_span = document.getElementById("identity_public_id_span");
+const identity_name_div = document.getElementById("identity_name_div");
+const identity_name_span = document.getElementById("identity_name_span");
+const identity_private_id_div = document.getElementById("identity_private_id_div");
+const identity_private_id_span = document.getElementById("identity_private_id_span");
+
 const lang_select_div = document.getElementById("lang_select_div");
 const lang_select_btn = document.getElementById("lang_select_btn");
 const lang_select_io_div = document.getElementById("lang_select_io_div");
@@ -54,15 +64,15 @@ const help_control_div = document.getElementById("help_control_div");
 const help_control_btn = document.getElementById("help_control_btn");
 const help_control_io_div = document.getElementById("help_control_io_div");
 
-const identity_control_div = document.getElementById("identity_control_div");
-const identity_control_btn = document.getElementById("identity_control_btn");
-const identity_control_io_div = document.getElementById("identity_control_io_div");
-const identity_public_id_div = document.getElementById("identity_public_id_div");
-const identity_public_id_span = document.getElementById("identity_public_id_span");
-const identity_name_div = document.getElementById("identity_name_div");
-const identity_name_span = document.getElementById("identity_name_span");
-const identity_private_id_div = document.getElementById("identity_private_id_div");
-const identity_private_id_span = document.getElementById("identity_private_id_span");
+const switching_control_div = document.getElementById("switching_control_div");
+const switching_control_btn = document.getElementById("switching_control_btn");
+const switching_control_io_div = document.getElementById("switching_control_io_div");
+const switching_disconnect_btn = document.getElementById("switching_disconnect_btn");
+const switching_disconnect_btn_i = document.getElementById("switching_disconnect_btn_i");
+const switching_reboot_btn = document.getElementById("switching_reboot_btn");
+const switching_reboot_btn_i = document.getElementById("switching_reboot_btn_i");
+const switching_shutdown_btn = document.getElementById("switching_shutdown_btn");
+const switching_shutdown_btn_i = document.getElementById("switching_shutdown_btn_i");
 
 /**
  * Method to create drop-down language selection menu.
@@ -119,7 +129,7 @@ update_control_btn.addEventListener("click", function () {
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
 
-    toggle_elements([wifi_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, lang_select_div, help_control_div]);
+    toggle_elements([wifi_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, lang_select_div, help_control_div, switching_control_div]);
     update_control_div.classList.toggle("col");
     update_control_div.classList.toggle("focused");
     update_control_div.classList.toggle("higher");
@@ -193,7 +203,7 @@ wifi_connections_btn.addEventListener("click", function () {
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
 
-    toggle_elements([update_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, lang_select_div, help_control_div]);
+    toggle_elements([update_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, lang_select_div, help_control_div, switching_control_div]);
     wifi_control_div.classList.toggle("col");
     wifi_control_div.classList.toggle("focused");
     wifi_control_div.classList.toggle("higher");
@@ -405,7 +415,7 @@ audio_control_btn.addEventListener("click", function () {
 
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
-    toggle_elements([update_control_div, wifi_control_div, face_encoding_div, record_control_div, identity_control_div, lang_select_div, help_control_div]);
+    toggle_elements([update_control_div, wifi_control_div, face_encoding_div, record_control_div, identity_control_div, lang_select_div, help_control_div, switching_control_div]);
     audio_control_div.classList.toggle("col");
     audio_control_div.classList.toggle("focused");
     audio_control_div.classList.toggle("higher");
@@ -435,7 +445,7 @@ face_encoding_btn.addEventListener("click", function () {
 
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
-    toggle_elements([update_control_div, wifi_control_div, audio_control_div, record_control_div, identity_control_div, lang_select_div, help_control_div]);
+    toggle_elements([update_control_div, wifi_control_div, audio_control_div, record_control_div, identity_control_div, lang_select_div, help_control_div, switching_control_div]);
     face_encoding_div.classList.toggle("col");
     face_encoding_div.classList.toggle("focused");
     face_encoding_div.classList.toggle("higher");
@@ -607,7 +617,7 @@ record_control_btn.addEventListener("click", function () {
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
 
-    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, identity_control_div, lang_select_div, help_control_div]);
+    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, identity_control_div, lang_select_div, help_control_div, switching_control_div]);
     record_control_div.classList.toggle("col");
     record_control_div.classList.toggle("focused");
     record_control_div.classList.toggle("higher");
@@ -744,7 +754,7 @@ identity_control_btn.addEventListener("click", function () {
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
 
-    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, lang_select_div, help_control_div]);
+    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, lang_select_div, help_control_div, switching_control_div]);
     identity_control_div.classList.toggle("col");
     identity_control_div.classList.toggle("focused");
     identity_control_div.classList.toggle("higher");
@@ -912,7 +922,7 @@ lang_select_btn.addEventListener("click", function () {
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
 
-    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, help_control_div]);
+    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, help_control_div, switching_control_div]);
     lang_select_div.classList.toggle("col");
     lang_select_div.classList.toggle("focused");
     lang_select_div.classList.toggle("higher");
@@ -943,7 +953,7 @@ help_control_btn.addEventListener("click", function () {
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
 
-    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, lang_select_div]);
+    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, lang_select_div, switching_control_div]);
     help_control_div.classList.toggle("col");
     help_control_div.classList.toggle("focused");
     help_control_div.classList.toggle("higher");
@@ -963,4 +973,83 @@ help_control_btn.addEventListener("click", function () {
 
         help_control_btn_click_count = 0;
     }
+});
+
+let switching_control_btn_click_count = 0;
+let switching_control_btn_lis_bind = close_opened_option.bind(null, switching_control_btn);
+
+switching_control_btn.addEventListener("click", function () {
+
+    dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
+    dark_deep_background_div.classList.toggle("focused");
+
+    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, help_control_div, lang_select_div]);
+    switching_control_div.classList.toggle("col");
+    switching_control_div.classList.toggle("focused");
+    switching_control_div.classList.toggle("higher");
+    switching_control_io_div.classList.toggle("focused");
+
+    switching_control_btn_click_count++;
+    if (switching_control_btn_click_count <= 1) {
+        dark_deep_background_div.addEventListener("click", switching_control_btn_lis_bind);
+        options_template_container.addEventListener("click", switching_control_btn_lis_bind);
+
+        setSwiperSwiping(false);
+
+        switching_disconnect_btn_i.innerHTML = translate_text_item(" Disconnect");
+        switching_shutdown_btn_i.innerHTML = translate_text_item(" Restart");
+        switching_reboot_btn_i.innerHTML = translate_text_item(" Shutdown");
+
+    } else {
+        dark_deep_background_div.removeEventListener("click", switching_control_btn_lis_bind);
+        options_template_container.removeEventListener("click", switching_control_btn_lis_bind);
+
+        setSwiperSwiping(true);
+
+        switching_control_btn_click_count = 0;
+    }
+});
+
+switching_disconnect_btn.addEventListener("click", function () {
+
+    JSalert(translate_text_item("Disconnection"),
+        translate_text_item("You are about to disconnect!"),
+        translate_text_item("OK"), translate_text_item("CANCEL"), function () {
+            request_asynchronous('/api/access?', 'DELETE',
+                'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
+                    if (err === "success") {
+                        let response_data = JSON.parse(response.responseText);
+                    }
+                });
+            window.close();
+        }, translate_text_item("disconnecting..."));
+});
+
+
+switching_reboot_btn.addEventListener("click", function () {
+
+    JSalert(translate_text_item("Reboot"),
+        translate_text_item("Device will restart."),
+        translate_text_item("OK"), translate_text_item("CANCEL"), function () {
+            request_asynchronous('/api/access?cause=restart', 'DELETE',
+                'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
+                    if (err === "success") {
+                        let response_data = JSON.parse(response.responseText);
+                    }
+                });
+        }, translate_text_item("restarting..."));
+});
+
+switching_shutdown_btn.addEventListener("click", function () {
+
+    JSalert(translate_text_item("Shutdown"),
+        translate_text_item("You are about to shutdown device!"),
+        translate_text_item("OK"), translate_text_item("CANCEL"), function () {
+            request_asynchronous('/api/access?cause=shutdown', 'DELETE',
+                'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
+                    if (err === "success") {
+                        let response_data = JSON.parse(response.responseText);
+                    }
+                });
+        }, translate_text_item("shutting down..."));
 });
