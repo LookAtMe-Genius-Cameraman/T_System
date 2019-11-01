@@ -433,6 +433,21 @@
 }
 
 /**********************************HELP OPTION**********************************/
-#help_control_div {
+#help_control_div.higher {
     top: -480% !important;
 }
+
+/**********************************SWITCHING OPTION**********************************/
+#switching_control_div.higher {
+    top: -620% !important;
+}
+
+#switching_control_io_div {}
+
+.switching_btn {
+    left: 50% !important;
+    transform: translate(-50%) !important;
+
+    min-width: 130px;
+}
+
