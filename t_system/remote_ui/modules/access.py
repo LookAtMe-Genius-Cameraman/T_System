@@ -9,6 +9,8 @@
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
 
+from flask import request
+
 from t_system import identifier
 from t_system import log_manager
 
@@ -37,3 +39,10 @@ def get_private_id_by(data):
     if data["id"] in [identifier.public_id, identifier.name]:
         return identifier.private_id
     return False
+
+
+def shutdown_server():
+    func = request.environ.get('werkzeug.server.shutdown')
+    if func is None:
+        raise RuntimeError('Not running with the Werkzeug Server')
+    func()
