@@ -106,12 +106,6 @@ class RemoteUI:
 
         self.app.run(host=self.host, port=self.port, debug=self.debug)
 
-    def shutdown_server(self):
-        func = request.environ.get('werkzeug.server.shutdown')
-        if func is None:
-            raise RuntimeError('Not running with the Werkzeug Server')
-        func()
-
 
 def allowed_file(filename, allowed_extensions):
     """The low-level method to check the given name compatibility that is for saving.
