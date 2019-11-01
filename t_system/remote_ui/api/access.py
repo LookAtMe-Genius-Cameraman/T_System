@@ -14,12 +14,14 @@ from flask_restful import Api, Resource
 from schema import SchemaError
 
 from t_system.foundation import shutdown, restart
-from t_system.remote_ui.modules.access import check_private_id, get_private_id_by, shutdown_server
+from t_system.remote_ui.modules.access import AccessManager
 from t_system.remote_ui.api.data_schema import ACCESS_SCHEMA
 
 from t_system import log_manager
 
 logger = log_manager.get_logger(__name__, "DEBUG")
+
+access_manager = AccessManager()
 
 api_bp = Blueprint('access_api', __name__)
 api = Api(api_bp)
@@ -47,7 +49,8 @@ class AccessApi(Resource):
         if not private_id:
             return {'status': 'ERROR', 'message': '\'id\' parameter is missing'}
 
-        if check_private_id(private_id):
+        if access_manager.check_private_id(private_id):
+            access_manager.increase_cc()
             return redirect('/')
 
         return {'status': 'ERROR'}
@@ -61,7 +64,10 @@ class AccessApi(Resource):
         except SchemaError as e:
             return {'status': 'ERROR', 'message': e.code}
 
-        result = get_private_id_by(data)
+        if not access_manager.is_connectable():
+            return {'status': 'ERROR', 'message': 'BUSY'}
+
+        result = access_manager.get_private_id_by(data)
 
         return {'status': 'OK' if result else 'ERROR', 'data': result}
 
@@ -82,7 +88,7 @@ class AccessApi(Resource):
         elif cause == "restart":
             result = restart()
         else:
-            shutdown_server()
+            access_manager.decrease_cc()
 
         return {'status': 'OK' if result else 'ERROR'}
 
