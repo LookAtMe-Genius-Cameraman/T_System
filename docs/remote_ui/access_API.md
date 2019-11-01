@@ -64,13 +64,28 @@ redirect('/')
 }
 ```
 
-## DELETE Request
+# Terminating Sessions of T_System
+- If CAUSE parameter is "shutdown", shutdown system.
+- If CAUSE parameter is "restart", restart system.
+- If CAUSE parameter is empty, connection with the device and Remote UI will corrupted.
+
+## Request
+```http
+DELETE /api/access?cause=<CAUSE>
+Host: domain
+```
 
 ## Response
+### On Success
+```json
+{
+    "status": "OK"
+}
+```
 
+### On Failure
 ```json
 {
     "status": "ERROR",
-    "message": "NOT VALID"
 }
 ```
