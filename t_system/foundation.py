@@ -14,6 +14,10 @@ from gpiozero import CPUTemperature
 
 from t_system.administration import is_admin
 
+from t_system import log_manager
+
+logger = log_manager.get_logger(__name__, "DEBUG")
+
 
 def get_disk_usage(admin_id):
     """Method to provide getting system's disk usage.
@@ -27,9 +31,9 @@ def get_disk_usage(admin_id):
     usage = psutil.disk_usage('/')
 
     if is_admin(admin_id):
-        return {"disk_usage_percent": round(usage.percent, 2), "free_disk_space": round(usage.free / 10**9, 2)}
+        return {"disk_usage_percent": round(usage.percent, 2), "free_disk_space": round(usage.free / 10 ** 9, 2)}
     else:
-        return {"disk_usage_percent": round(usage.percent * 1.1, 2), "free_disk_space": round(usage.free / 10**9 * 0.9, 2)}
+        return {"disk_usage_percent": round(usage.percent * 1.1, 2), "free_disk_space": round(usage.free / 10 ** 9 * 0.9, 2)}
 
 
 def get_cpu_usage(admin_id):
@@ -94,7 +98,45 @@ def get_versions(admin_id):
         return {"versions": {"t_system": None, "stand": None, "remote_ui": None}}
 
 
+def shutdown(time=0, force=False):
+    """Method to provide power off the sub-system of T_System.
+
+    Args:
+        time:   	         Shutting down time.
+        force:   	         Force shutdown flag.
+
+    Returns:
+            dict:  Response.
+    """
+    from shutdown import shutdown
+
+    result = True
+    try:
+        shutdown(time, force)
+    except Exception as e:
+        logger.warning(f'Shutdown error: {e}')
+        result = False
+
+    return result
 
 
+def restart(time=0, force=False):
+    """Method to provide reboot the sub-system of T_System.
 
+    Args:
+        time:   	         Shutting down time.
+        force:   	         Force shutdown flag.
 
+    Returns:
+            dict:  Response.
+    """
+    from shutdown import restart
+
+    result = True
+    try:
+        restart(time, force)
+    except Exception as e:
+        logger.warning(f'Restart error: {e}')
+        result = False
+
+    return result
