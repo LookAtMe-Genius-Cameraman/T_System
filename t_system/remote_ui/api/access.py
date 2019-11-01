@@ -13,7 +13,8 @@ from flask import Blueprint, redirect, request
 from flask_restful import Api, Resource
 from schema import SchemaError
 
-from t_system.remote_ui.modules.access import check_private_id, get_private_id_by
+from t_system.foundation import shutdown, restart
+from t_system.remote_ui.modules.access import check_private_id, get_private_id_by, shutdown_server
 from t_system.remote_ui.api.data_schema import ACCESS_SCHEMA
 
 from t_system import log_manager
@@ -72,8 +73,18 @@ class AccessApi(Resource):
     def delete(self):
         """The API method to DELETE request for flask.
         """
+        cause = request.args.get('cause', None)
 
-        return {'status': 'ERROR', 'message': 'NOT VALID'}
+        result = True
+
+        if cause == "shutdown":
+            result = shutdown()
+        elif cause == "restart":
+            result = restart()
+        else:
+            shutdown_server()
+
+        return {'status': 'OK' if result else 'ERROR'}
 
 
 api.add_resource(AccessApi, '/api/access')
