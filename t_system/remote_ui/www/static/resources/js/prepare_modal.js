@@ -53,7 +53,7 @@ specify_sce_div.addEventListener("click", function (e) {
 
         clearElement(available_sce_ul);
 
-        request_asynchronous('/api/scenario?db=' + action_db_name + '&admin_id=' + admin_id, 'GET',
+        request_asynchronous('/api/scenario?db=' + action_db_name + '&admin_id=' + admin_id + '&root=' + root, 'GET',
             'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
                 // err = "success"
                 // requested_data = {"status": "OK", "data": [{"id": "b97tr40a-alcb-31w9-b150-ce2f6156l1ed", "name": "scenario_name1", "positions": [{"name": "pos1"}, {"name": "pos2"}]}, {"id": "b97dr48a-aecb-11e9-b130-cc2f7156l1ed", "name": "scenario_name2", "positions": [{}, {}]}]};
