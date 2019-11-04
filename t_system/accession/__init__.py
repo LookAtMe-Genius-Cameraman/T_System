@@ -192,7 +192,7 @@ class NetworkConnector:
             self.current_cells = list(Cell.all(self.wlan))
         except exceptions.InterfaceError:
 
-            if self.interface_ec < 3:
+            if self.interface_ec < 1:
                 logger.warning(f'InterfaceError for {self.interface_ec} times...')
                 self.interface_ec += 1
                 restart_interface(self.wlan)
