@@ -181,7 +181,7 @@ def initiate():
                                                "`augmented`: Augmented control with the Augmented Virtual Assistant A.V.A.. \'https://github.com/MCYBA/A.V.A.\' is the home page of the A.V.A. and usage explained into the \'AUGMENTED.md\'."
                                                "`remote_ui`: remote control with created graphic interface that is power by flask available on desktop or mobile."
                                                "None: Use to just by `running modes` parameters."
-                                               "The default value is None.", action="store", type=str, choices=["official_stand", "augmented", "remote_ui", None], default="None")
+                                               "The default value is None.", action="store", type=str, choices=["official_stand", "augmented", "remote_ui", None], default=None)
 
     official_stand_gr = ap.add_argument_group('official_stand')
     official_stand_gr.add_argument("--stand-gpios", help="GPIO pin numbers of official stand's LEDs and fans. 5(as red led), 6(as green led) and 14(as fan) GPIO pins are default.", nargs=3, default=[5, 6, 14], type=int, metavar=('RED-LED', 'GREEN-LED', 'FAN'))
@@ -196,7 +196,7 @@ def initiate():
     r_mode_gr.add_argument("-s", "--security", help="Security Mode. Scan the around and optionally take photos of visitors.", action="store_true")
 
     tool_gr = ap.add_argument_group('Running Tools')
-    tool_gr.add_argument("--detection-model", help="Object detection model to use: either `haarcascade`, `hog` or `cnn`. `hog` and `cnn` can only use for detecting human faces. `haarcascade` is default.", action="store", type=str, default="hog")
+    tool_gr.add_argument("--detection-model", help="Object detection model to use: either `haarcascade`, `hog` or `cnn`. `hog` and `cnn` can only use for detecting human faces. `haarcascade` is default.", action="store", type=str, default="haarcascade")
     tool_gr.add_argument("--cascade-file", help="Specify the trained detection algorithm file for the object detection ability. Sample: 'frontalface_default' for frontalface_default.xml file under the 'haarcascade' folder.", action="store", type=str, default="frontalface_default")
     tool_gr.add_argument("-j", "--no-recognize", help="Do not recognize the things.(faces, objects etc.)", action="store_true")
     tool_gr.add_argument("--encoding-file", help="Specify the trained recognition encoding pickle file for recognize object. Sample: 'jane_encoding' for jane_encoding.pickle file under the '.t_system/recognition/encodings' folder in your Home directory. "
@@ -223,7 +223,7 @@ def initiate():
 
     lock_sys_gr = motion_gr.add_argument_group('Target Locking System')
     lock_sys_gr.add_argument("--ls-gpios", help="GPIO pin numbers of the 2 axis target locking system's servo motors. 23(as pan) and 24(as tilt) GPIO pins are default.", nargs=2, default=[23, 24], type=int, metavar=('PAN', 'TILT'))
-    lock_sys_gr.add_argument("--ls-channels", help="Servo driver channels of the 2 axis target locking system's servo motors. 10(as pan) and 11(as tilt) channels are default.", nargs=2, default=[10, 11], type=int, metavar=('PAN', 'TILT'))
+    lock_sys_gr.add_argument("--ls-channels", help="Servo driver channels of the 2 axis target locking system's servo motors. 3(as pan) and 4(as tilt) channels are default.", nargs=2, default=[3, 4], type=int, metavar=('PAN', 'TILT'))
     lock_sys_usage_gr = lock_sys_gr.add_mutually_exclusive_group()
     lock_sys_usage_gr.add_argument("--AI", help="Specify the learning method of how to move to the target position from the current. When the nothing chosen, learn mode and decision mechanisms will be deprecated. to use: either `official_ai`", action="store", type=str, default=None)
     lock_sys_usage_gr.add_argument("--non-moving-target", help="Track the non-moving objects. Don't use AI or OpenCv's object detection methods. Just try to stay focused on the current focus point with changing axis angles by own position.", action="store_true")
