@@ -79,7 +79,7 @@ function set_system_info() {
                     let remote_ui_version = requested_data["data"]["versions"]["remote_ui"];
 
                     d_u_title.innerHTML = translate_text_item("Available:");
-                    d_u_as_giga_min.innerHTML = free_disk_space + " GB ~ " + Number((free_disk_space * 1024 / 2.4).toFixed(1)); + translate_text_item("min");  // 1 min record spends 2.4 mb.
+                    d_u_as_giga_min.innerHTML = free_disk_space + " GB ~ " + Number((free_disk_space * 1024 / 2.4).toFixed(1)) + translate_text_item(" min");  // 1 min record spends 2.4 mb.
 
                     if (ram_usage_percentage === null) {
 
