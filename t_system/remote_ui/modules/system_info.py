@@ -19,12 +19,14 @@ def get_system_info(admin_id):
     Args:
         admin_id (str):                 Admin privileges flag.
     """
+    root = is_admin(admin_id)
+
     result = {}
 
-    result.update(get_ram_usage(admin_id))
-    result.update(get_cpu_usage(admin_id))
-    result.update(get_cpu_temperature(admin_id))
-    result.update(get_disk_usage(admin_id))
-    result.update(get_versions(admin_id))
+    result.update(get_ram_usage(root))
+    result.update(get_cpu_usage(root))
+    result.update(get_cpu_temperature(root))
+    result.update(get_disk_usage(root))
+    result.update(get_versions(root))
 
     return result
