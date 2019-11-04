@@ -96,7 +96,11 @@ create_emotion_checkbox.addEventListener("change", function () {
     predict_mission_checkbox.checked = false;
 
     if (create_emotion_checkbox.checked) {
-
+        action_db_name = "emotions";
+        root = true;
+    } else {
+        action_db_name = "missions";
+        root = false;
     }
 });
 
@@ -104,4 +108,12 @@ create_emotion_checkbox.addEventListener("change", function () {
 predict_mission_checkbox.addEventListener("change", function () {
     create_emotion_label.disabled = create_emotion_checkbox.disabled = predict_mission_checkbox.checked;
     create_emotion_checkbox.checked = false;
+
+    if (predict_mission_checkbox.checked) {
+        action_db_name = "predicted_missions";
+        root = true;
+    } else {
+        action_db_name = "missions";
+        root = false;
+    }
 });
