@@ -94,6 +94,7 @@ const italiantrans = {
     "System Info": "Informazioni di Sistema",
     "Available:": "a disposizione:",
     "min": "min",
+    " min": " min",
     " job": " lavoro",
     "Target Sign": "Segno Target",
     "Don't Mark": "Son Segnare",

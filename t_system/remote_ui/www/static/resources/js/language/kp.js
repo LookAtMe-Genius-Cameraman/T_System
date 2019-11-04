@@ -94,6 +94,7 @@ const koreantrans = {
     "System Info": "시스템 정보",
     "Available:": "이용할 수 있는:",
     "min": "분",
+    " min": " 분",
     " job": " 작업",
     "Target Sign": "대상 기호",
     "Don't Mark": "서명하지 마십시오",

@@ -94,6 +94,7 @@ const frenchtrans = {
     "System Info": "Information Systéme",
     "Available:": "Disponible",
     "min": "min",
+    " min": " min",
     " job": " Travail",
     "Target Sign": "Cible Signe",
     "Don't Mark": "Ne Marque Pas",

@@ -107,6 +107,7 @@ const germantrans = {
     "System Info": "Systeminformationen",
     "Available:": "Verfügbar:",
     "min": "min",
+    " min": " min",
     " job": " job",
     "Target Sign": "Zielscheibe Unterzeichnen",
     "Don't Mark": "Nicht Markieren",

@@ -107,6 +107,7 @@ const turkishtrans = {
     "System Info": "Sistem Bilgisi",
     "Available:": "Kullanılabilir:",
     "min": "dk",
+    " min": " dk",
     " job": " iş",
     "Target Sign": "Hedefi işaretle",
     "Don't Mark": "İşaretleme",
