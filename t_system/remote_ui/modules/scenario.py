@@ -23,15 +23,17 @@ from t_system import log_manager
 logger = log_manager.get_logger(__name__, "DEBUG")
 
 
-def create_scenario(admin_id, db_name, data):
+def create_scenario(admin_id, root, db_name, data):
     """Method to create new scenario.
 
     Args:
         admin_id (str):                 Admin privileges flag.
+        root (bool):                    Root privileges flag.
         db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
         data (dict):                    Scenario data structure.
     """
-    root = is_admin(admin_id)
+    if not is_admin(admin_id):
+        root = False
 
     scenario = Scenario(name=data['name'], root=root, db_name=db_name)
 
@@ -52,15 +54,19 @@ def create_scenario(admin_id, db_name, data):
     return result, scenario_id
 
 
-def get_scenarios(admin_id, db_name):
+def get_scenarios(admin_id, root, db_name):
     """Method to return existing scenarios.
 
     Args:
         admin_id (str):                 Root privileges flag.
+        root (bool):                    Root privileges flag.
         db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
     """
     try:
-        table = get_db_table(is_admin(admin_id), db_name)
+        if not is_admin(admin_id):
+            root = False
+
+        table = get_db_table(root, db_name)
 
         result = table.all()  # result = scenarios
 
@@ -71,16 +77,20 @@ def get_scenarios(admin_id, db_name):
     return result
 
 
-def get_scenario(admin_id, db_name, scenario_id):
+def get_scenario(admin_id, root, db_name, scenario_id):
     """Method to return existing scenario with given id.
 
     Args:
         admin_id (str):                 Root privileges flag.
+        root (bool):                    Root privileges flag.
         db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
         scenario_id (str):              The id of the scenario.
     """
     try:
-        table = get_db_table(is_admin(admin_id), db_name)
+        if not is_admin(admin_id):
+            root = False
+
+        table = get_db_table(root, db_name)
 
         scenario = table.search((Query().id == scenario_id))
 
@@ -97,16 +107,19 @@ def get_scenario(admin_id, db_name, scenario_id):
     return result
 
 
-def update_scenario(admin_id, db_name, scenario_id, data):
+def update_scenario(admin_id, root, db_name, scenario_id, data):
     """Method to update the scenario that is recorded in database with given parameters.
 
     Args:
         admin_id (str):                 Root privileges flag.
+        root (bool):                    Root privileges flag.
         db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
         scenario_id (str):              The id of the scenario.
         data (dict):                    Position data structure.
     """
-    root = is_admin(admin_id)
+    if not is_admin(admin_id):
+        root = False
+
     table = get_db_table(root, db_name)
 
     scenario = table.search((Query().id == scenario_id))
@@ -127,15 +140,17 @@ def update_scenario(admin_id, db_name, scenario_id, data):
     return result
 
 
-def delete_scenario(admin_id, db_name, scenario_id):
+def delete_scenario(admin_id, root, db_name, scenario_id):
     """Method to remove existing position with given id.
 
     Args:
         admin_id (str):                 Root privileges flag.
+        root (bool):                    Root privileges flag.
         db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
         scenario_id (str):              The id of the position.
     """
-    root = is_admin(admin_id)
+    if not is_admin(admin_id):
+        root = False
 
     table = get_db_table(root, db_name)
 
@@ -149,15 +164,15 @@ def delete_scenario(admin_id, db_name, scenario_id):
     return result
 
 
-def get_db_table(is_admin, db_name):
+def get_db_table(root, db_name):
     """Method to set work database by root.
 
     Args:
-        is_admin (bool):                Root privileges flag.
+        root (bool):                    Root privileges flag.
         db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
     """
     table = "scenarios"
-    if is_admin:
+    if root:
         db_folder = f'{T_SYSTEM_PATH}/motion/action'
         return DBFetcher(db_folder, db_name, table).fetch()
     else:

@@ -44,14 +44,15 @@ class ScenarioApi(Resource):
         db_name = request.args.get('db')
         scenario_id = request.args.get('id', None)
         admin_id = request.args.get('admin_id', None)
+        root = request.args.get('root', None)
 
         if not db_name:
             return {'status': 'ERROR', 'message': '\'db\' parameter is missing'}
         if scenario_id:
-            scenario = get_scenario(admin_id, db_name, scenario_id)
+            scenario = get_scenario(admin_id, root, db_name, scenario_id)
             return {'status': 'OK', 'data': scenario}
 
-        scenarios = get_scenarios(admin_id, db_name)
+        scenarios = get_scenarios(admin_id, root, db_name)
 
         return {'status': 'OK', 'data': scenarios}
 
@@ -60,6 +61,7 @@ class ScenarioApi(Resource):
         """
         db_name = request.args.get('db')
         admin_id = request.args.get('admin_id', None)
+        root = request.args.get('root', None)
 
         if not db_name:
             return {'status': 'ERROR', 'message': '\'db\' parameter is missing'}
@@ -69,7 +71,7 @@ class ScenarioApi(Resource):
 
         except SchemaError as e:
             return {'status': 'ERROR', 'message': e.code}
-        result, scenario_id = create_scenario(admin_id, db_name, data)
+        result, scenario_id = create_scenario(admin_id,root, db_name, data)
 
         return {'status': 'OK' if result else 'ERROR', 'id': scenario_id}
 
@@ -79,6 +81,7 @@ class ScenarioApi(Resource):
         db_name = request.args.get('db')
         scenario_id = request.args.get('id')
         admin_id = request.args.get('admin_id', None)
+        root = request.args.get('root', None)
 
         if not db_name:
             return {'status': 'ERROR', 'message': '\'db\' parameter is missing'}
@@ -90,7 +93,7 @@ class ScenarioApi(Resource):
         except SchemaError as e:
             return {'status': 'ERROR', 'message': e.code}
 
-        result = update_scenario(admin_id, db_name, scenario_id, data)
+        result = update_scenario(admin_id, root, db_name, scenario_id, data)
         return {'status': 'OK' if result else 'ERROR'}
 
     def delete(self):
@@ -99,6 +102,7 @@ class ScenarioApi(Resource):
         db_name = request.args.get('db')
         scenario_id = request.args.get('id')
         admin_id = request.args.get('admin_id', None)
+        root = request.args.get('root', None)
 
         if not db_name:
             return {'status': 'ERROR', 'message': '\'db\' parameter is missing'}
@@ -106,7 +110,7 @@ class ScenarioApi(Resource):
         if not scenario_id:
             return {'status': 'ERROR', 'message': '\'id\' parameter is missing'}
 
-        result = delete_scenario(admin_id, db_name, scenario_id)
+        result = delete_scenario(admin_id, root, db_name, scenario_id)
 
         return {'status': 'OK' if result else 'ERROR'}
 
