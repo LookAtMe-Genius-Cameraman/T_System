@@ -45,15 +45,16 @@ class PositionApi(Resource):
         db_name = request.args.get('db')
         position_id = request.args.get('id', None)
         admin_id = request.args.get('admin_id', None)
+        root = request.args.get('root', None)
 
         if not db_name:
             return {'status': 'ERROR', 'message': '\'db\' parameter is missing'}
 
         if position_id:
-            position = get_position(admin_id, db_name, position_id)
+            position = get_position(admin_id, root, db_name, position_id)
             return {'status': 'OK', 'data': position}
 
-        positions = get_positions(admin_id, db_name)
+        positions = get_positions(admin_id, root, db_name)
 
         return {'status': 'OK', 'data': positions}
 
@@ -62,6 +63,7 @@ class PositionApi(Resource):
         """
         db_name = request.args.get('db')
         admin_id = request.args.get('admin_id', None)
+        root = request.args.get('root', None)
 
         if not db_name:
             return {'status': 'ERROR', 'message': '\'db\' parameter is missing'}
@@ -73,7 +75,7 @@ class PositionApi(Resource):
 
         logger.debug("position creation starting...")
 
-        result, position_id = create_position(admin_id, db_name, data)
+        result, position_id = create_position(admin_id, root, db_name, data)
 
         return {'status': 'OK' if result else 'ERROR', 'id': position_id}
 
@@ -83,6 +85,7 @@ class PositionApi(Resource):
         db_name = request.args.get('db')
         position_id = request.args.get('id')
         admin_id = request.args.get('admin_id', None)
+        root = request.args.get('root', None)
 
         if not db_name:
             return {'status': 'ERROR', 'message': '\'db\' parameter is missing'}
@@ -94,7 +97,7 @@ class PositionApi(Resource):
         except SchemaError as e:
             return {'status': 'ERROR', 'message': e.code}
 
-        result = update_position(admin_id, db_name, position_id, data)
+        result = update_position(admin_id, root, db_name, position_id, data)
         return {'status': 'OK' if result else 'ERROR'}
 
     def delete(self):
@@ -104,6 +107,7 @@ class PositionApi(Resource):
         db_name = request.args.get('db')
         position_id = request.args.get('id')
         admin_id = request.args.get('admin_id', None)
+        root = request.args.get('root', None)
 
         if not db_name:
             return {'status': 'ERROR', 'message': '\'db\' parameter is missing'}
@@ -111,7 +115,7 @@ class PositionApi(Resource):
         if not position_id:
             return {'status': 'ERROR', 'message': '\'id\' parameter is missing'}
 
-        result = delete_position(admin_id, db_name, position_id)
+        result = delete_position(admin_id, root, db_name, position_id)
 
         return {'status': 'OK' if result else 'ERROR'}
 

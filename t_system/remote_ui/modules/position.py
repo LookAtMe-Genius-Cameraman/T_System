@@ -22,20 +22,24 @@ from t_system import log_manager
 logger = log_manager.get_logger(__name__, "DEBUG")
 
 
-def create_position(admin_id, db_name, data):
+def create_position(admin_id, root, db_name, data):
     """Method to create new position.
 
     Args:
-        admin_id (str):                 Root privileges flag.
+        admin_id (str):                 Admin privileges flag.
+        root (bool):                    Root privileges flag.
         db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
         data (dict):                    Position data structure.
     """
 
     try:
-        position = Position(name=data['name'], cartesian_coords=data['cartesian_coords'], polar_params=data['polar_params'], root=is_admin(admin_id), db_name=db_name)
+        if not is_admin(admin_id):
+            root = False
+
+        position = Position(name=data['name'], cartesian_coords=data['cartesian_coords'], polar_params=data['polar_params'], root=root, db_name=db_name)
         position_id = position.id
 
-        deterfresh_manager(is_admin(admin_id), db_name)
+        deterfresh_manager(root, db_name)
 
         result = True
     except Exception:
@@ -45,15 +49,19 @@ def create_position(admin_id, db_name, data):
     return result, position_id
 
 
-def get_positions(admin_id, db_name):
+def get_positions(admin_id, root, db_name):
     """Method to return existing positions.
 
     Args:
         admin_id (str):                 Root privileges flag.
+        root (bool):                    Root privileges flag.
         db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
     """
     try:
-        table = get_db_table(is_admin(admin_id), db_name)
+        if not is_admin(admin_id):
+            root = False
+
+        table = get_db_table(root, db_name)
 
         result = table.all()  # result = positions
 
@@ -64,16 +72,20 @@ def get_positions(admin_id, db_name):
     return result
 
 
-def get_position(admin_id, db_name, position_id):
+def get_position(admin_id, root, db_name, position_id):
     """Method to return existing position with given id.
 
     Args:
         admin_id (str):                 Root privileges flag.
+        root (bool):                    Root privileges flag.
         db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
         position_id (str):              The id of the position.
     """
     try:
-        table = get_db_table(is_admin(admin_id), db_name)
+        if not is_admin(admin_id):
+            root = False
+
+        table = get_db_table(root, db_name)
         position = table.search((Query().id == position_id))
 
         if not position:
@@ -87,17 +99,19 @@ def get_position(admin_id, db_name, position_id):
     return result
 
 
-def update_position(admin_id, db_name, position_id, data):
+def update_position(admin_id, root, db_name, position_id, data):
     """Method to update the position that is recorded in database with given parameters.
 
     Args:
         admin_id (str):                 Root privileges flag.
+        root (bool):                    Root privileges flag.
         db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
         position_id (str):              The id of the position.
         data (dict):                    Position data structure.
     """
 
-    root = is_admin(admin_id)
+    if not is_admin(admin_id):
+        root = False
 
     table = get_db_table(root, db_name)
     position = table.search((Query().id == position_id))
@@ -115,15 +129,17 @@ def update_position(admin_id, db_name, position_id, data):
     return result
 
 
-def delete_position(admin_id, db_name, position_id):
+def delete_position(admin_id, root, db_name, position_id):
     """Method to remove existing position with given id.
 
     Args:
         admin_id (str):                 Root privileges flag.
+        root (bool):                    Root privileges flag.
         db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
         position_id (str):              The id of the position.
     """
-    root = is_admin(admin_id)
+    if not is_admin(admin_id):
+        root = False
 
     table = get_db_table(root, db_name)
 
@@ -137,15 +153,15 @@ def delete_position(admin_id, db_name, position_id):
     return result
 
 
-def get_db_table(is_admin, db_name):
+def get_db_table(root, db_name):
     """Method to set work database by root.
 
     Args:
-        is_admin (bool):                 Root privileges flag.
+        root (bool):                    Root privileges flag.
         db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
     """
     table = "positions"
-    if is_admin:
+    if root:
         db_folder = f'{T_SYSTEM_PATH}/motion/action'
         return DBFetcher(db_folder, db_name, table).fetch()
     else:
@@ -154,15 +170,15 @@ def get_db_table(is_admin, db_name):
         return DBFetcher(db_folder, db_name, table).fetch()
 
 
-def deterfresh_manager(is_admin, db_name):
+def deterfresh_manager(root, db_name):
     """Method to determine the manager that is mission or emotion manager and refresh it with using given database name and administration flag.
 
     Args:
-        is_admin (bool):                 Root privileges flag.
+        root (bool):                    Root privileges flag.
         db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
     """
 
-    if is_admin:
+    if root:
         if db_name in ["predicted_missions", "missions"]:
             mission_manager.refresh_members()
         elif db_name == "emotions":
