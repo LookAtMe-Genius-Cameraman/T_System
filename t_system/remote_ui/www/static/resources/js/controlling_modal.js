@@ -1260,6 +1260,7 @@ record_in_sce_btn.addEventListener("click", function () {
                                 'application/json; charset=UTF-8', scenarios[i], function (req, err, response) {
                                     if (err === "success") {
                                         let response_data = JSON.parse(response.responseText);
+                                        swal(translate_text_item("Position Added in Scenario: ") + scenarios[i]["name"], "", "success");
                                     }
                                 });
                         });
