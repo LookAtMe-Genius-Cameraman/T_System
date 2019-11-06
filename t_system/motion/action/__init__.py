@@ -200,6 +200,15 @@ class EmotionManager:
 
         self.actor.expand()
 
+    def revert_the_expand_actor(self):
+        """Method to revert back the expansion.
+        """
+        from t_system import seer
+
+        self.actor.revert_the_expand()
+
+        seer.reload_target_locker(arm_expansion=False)
+
 
 class Actor:
     """Class to define an actor to fulfill tasks with given positions and scenarios.
