@@ -28,12 +28,14 @@ def create_scenario(admin_id, root, db_name, data):
 
     Args:
         admin_id (str):                 Admin privileges flag.
-        root (bool):                    Root privileges flag.
+        root (str):                    Root privileges flag.
         db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
         data (dict):                    Scenario data structure.
     """
     if not is_admin(admin_id):
         root = False
+    else:
+        root = root in ["true", "True"]
 
     scenario = Scenario(name=data['name'], root=root, db_name=db_name)
 
@@ -59,12 +61,14 @@ def get_scenarios(admin_id, root, db_name):
 
     Args:
         admin_id (str):                 Root privileges flag.
-        root (bool):                    Root privileges flag.
+        root (str):                    Root privileges flag.
         db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
     """
     try:
         if not is_admin(admin_id):
             root = False
+        else:
+            root = root in ["true", "True"]
 
         table = get_db_table(root, db_name)
 
@@ -82,13 +86,15 @@ def get_scenario(admin_id, root, db_name, scenario_id):
 
     Args:
         admin_id (str):                 Root privileges flag.
-        root (bool):                    Root privileges flag.
+        root (str):                    Root privileges flag.
         db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
         scenario_id (str):              The id of the scenario.
     """
     try:
         if not is_admin(admin_id):
             root = False
+        else:
+            root = root in ["true", "True"]
 
         table = get_db_table(root, db_name)
 
@@ -112,13 +118,15 @@ def update_scenario(admin_id, root, db_name, scenario_id, data):
 
     Args:
         admin_id (str):                 Root privileges flag.
-        root (bool):                    Root privileges flag.
+        root (str):                    Root privileges flag.
         db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
         scenario_id (str):              The id of the scenario.
         data (dict):                    Position data structure.
     """
     if not is_admin(admin_id):
         root = False
+    else:
+        root = root in ["true", "True"]
 
     table = get_db_table(root, db_name)
 
@@ -145,12 +153,15 @@ def delete_scenario(admin_id, root, db_name, scenario_id):
 
     Args:
         admin_id (str):                 Root privileges flag.
-        root (bool):                    Root privileges flag.
+        root (str):                    Root privileges flag.
         db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
         scenario_id (str):              The id of the position.
     """
+
     if not is_admin(admin_id):
         root = False
+    else:
+        root = root in ["true", "True"]
 
     table = get_db_table(root, db_name)
 

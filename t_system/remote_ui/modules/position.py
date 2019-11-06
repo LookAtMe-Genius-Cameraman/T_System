@@ -27,7 +27,7 @@ def create_position(admin_id, root, db_name, data):
 
     Args:
         admin_id (str):                 Admin privileges flag.
-        root (bool):                    Root privileges flag.
+        root (str):                    Root privileges flag.
         db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
         data (dict):                    Position data structure.
     """
@@ -35,6 +35,8 @@ def create_position(admin_id, root, db_name, data):
     try:
         if not is_admin(admin_id):
             root = False
+        else:
+            root = root in ["true", "True"]
 
         position = Position(name=data['name'], cartesian_coords=data['cartesian_coords'], polar_params=data['polar_params'], root=root, db_name=db_name)
         position_id = position.id
@@ -54,12 +56,14 @@ def get_positions(admin_id, root, db_name):
 
     Args:
         admin_id (str):                 Root privileges flag.
-        root (bool):                    Root privileges flag.
+        root (str):                    Root privileges flag.
         db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
     """
     try:
         if not is_admin(admin_id):
             root = False
+        else:
+            root = root in ["true", "True"]
 
         table = get_db_table(root, db_name)
 
@@ -77,13 +81,15 @@ def get_position(admin_id, root, db_name, position_id):
 
     Args:
         admin_id (str):                 Root privileges flag.
-        root (bool):                    Root privileges flag.
+        root (str):                    Root privileges flag.
         db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
         position_id (str):              The id of the position.
     """
     try:
         if not is_admin(admin_id):
             root = False
+        else:
+            root = root in ["true", "True"]
 
         table = get_db_table(root, db_name)
         position = table.search((Query().id == position_id))
@@ -104,7 +110,7 @@ def update_position(admin_id, root, db_name, position_id, data):
 
     Args:
         admin_id (str):                 Root privileges flag.
-        root (bool):                    Root privileges flag.
+        root (str):                    Root privileges flag.
         db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
         position_id (str):              The id of the position.
         data (dict):                    Position data structure.
@@ -112,6 +118,8 @@ def update_position(admin_id, root, db_name, position_id, data):
 
     if not is_admin(admin_id):
         root = False
+    else:
+        root = root in ["true", "True"]
 
     table = get_db_table(root, db_name)
     position = table.search((Query().id == position_id))
@@ -134,12 +142,14 @@ def delete_position(admin_id, root, db_name, position_id):
 
     Args:
         admin_id (str):                 Root privileges flag.
-        root (bool):                    Root privileges flag.
+        root (str):                    Root privileges flag.
         db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
         position_id (str):              The id of the position.
     """
     if not is_admin(admin_id):
         root = False
+    else:
+        root = root in ["true", "True"]
 
     table = get_db_table(root, db_name)
 
