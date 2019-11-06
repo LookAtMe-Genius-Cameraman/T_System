@@ -7,7 +7,7 @@
  */
 
 let admin_id = false;
-let root = false;
+let allow_root = false;
 
 let interval = 0;
 

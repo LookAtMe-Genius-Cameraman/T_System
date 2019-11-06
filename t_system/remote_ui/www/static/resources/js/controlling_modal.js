@@ -92,7 +92,7 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
     let scenarios = [];
 
 
-    request_asynchronous('/api/position?db=' + action_db_name + '&admin_id=' + admin_id + '&root=' + root, 'GET',
+    request_asynchronous('/api/position?db=' + action_db_name + '&admin_id=' + admin_id + '&root=' + allow_root, 'GET',
         'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
             // err = "success"
             // requested_data = {"status": "OK", "data": [{"id": "j470138f-agcb-11e9-b130-ce4f744661fd", "name": "position_name", "cartesian_coords": [30, 25, 42], "polar_params": {"coords": [1.5, 1.02, 0.5], "delays": [1, 0.5, 1], "divide_counts": [3, 2, 1]}}]};
@@ -143,7 +143,7 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
                                         if (position_input.value !== position_span.innerHTML && position_input.value !== "") {
                                             let data = {"name": position_input.value, "cartesian_coords": positions[c]["cartesian_coords"], "polar_params": positions[c]["polar_params"]};
 
-                                            request_asynchronous('/api/position?db=' + action_db_name + '&id=' + positions[c]["id"] + '&admin_id=' + admin_id + '&root=' + root, 'PUT',
+                                            request_asynchronous('/api/position?db=' + action_db_name + '&id=' + positions[c]["id"] + '&admin_id=' + admin_id + '&root=' + allow_root, 'PUT',
                                                 'application/json; charset=UTF-8', data, function (req, err, response) {
                                                     if (err === "success") {
                                                         let response_data = JSON.parse(response.responseText);
@@ -203,7 +203,7 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
                             JSalert(translate_text_item("Position Deleting!"),
                                 translate_text_item("You are about to delete the position: ") + "\n" + positions[c]["name"],
                                 translate_text_item("OK"), translate_text_item("CANCEL"), function () {
-                                    request_asynchronous('/api/position?db=' + action_db_name + '&id=' + positions[c]["id"] + '&admin_id=' + admin_id + '&root=' + root, 'DELETE',
+                                    request_asynchronous('/api/position?db=' + action_db_name + '&id=' + positions[c]["id"] + '&admin_id=' + admin_id + '&root=' + allow_root, 'DELETE',
                                         'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
                                             if (err === "success") {
                                                 let response_data = JSON.parse(response.responseText);
@@ -223,7 +223,7 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
             }
         });
 
-    request_asynchronous('/api/scenario?db=' + action_db_name + '&admin_id=' + admin_id + '&root=' + root, 'GET',
+    request_asynchronous('/api/scenario?db=' + action_db_name + '&admin_id=' + admin_id + '&root=' + allow_root, 'GET',
         'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
             // err = "success"
             // requested_data = {"status": "OK", "data": [{"id": "b97tr40a-alcb-31w9-b150-ce2f6156l1ed", "name": "scenario_name1", "positions": [{"name": "pos1"}, {"name": "pos2"}]}, {"id": "b97dr48a-aecb-11e9-b130-cc2f7156l1ed", "name": "scenario_name2", "positions": [{}, {}]}]};
@@ -232,7 +232,7 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
                 if (requested_data["status"] === "OK") {
 
                     scenarios = requested_data["data"];
-                    // console.log(scenarios);
+                    console.log(scenarios);
 
                     for (let c = 0; c < scenarios.length; c++) {
 
@@ -259,7 +259,7 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
                             JSalert(translate_text_item("Scenario Deleting!"),
                                 translate_text_item("You are about to delete this scenario: ") + "\n" + scenarios[c]["name"],
                                 translate_text_item("OK"), translate_text_item("CANCEL"), function () {
-                                    request_asynchronous('/api/scenario?db=' + action_db_name + '&id=' + scenarios[c]["id"] + '&admin_id=' + admin_id + '&root=' + root, 'DELETE',
+                                    request_asynchronous('/api/scenario?db=' + action_db_name + '&id=' + scenarios[c]["id"] + '&admin_id=' + admin_id + '&root=' + allow_root, 'DELETE',
                                         'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
                                             if (err === "success") {
                                                 let response_data = JSON.parse(response.responseText);
@@ -443,7 +443,7 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
                             advance_sce_ok_btn.addEventListener("click", function () {
                                 let data = {"name": scenarios[c]["name"], "positions": scenarios[c]["positions"]};
 
-                                request_asynchronous('/api/scenario?db=' + action_db_name + '&id=' + scenarios[c]["id"] + '&admin_id=' + admin_id + '&root=' + root, 'PUT',
+                                request_asynchronous('/api/scenario?db=' + action_db_name + '&id=' + scenarios[c]["id"] + '&admin_id=' + admin_id + '&root=' + allow_root, 'PUT',
                                     'application/json; charset=UTF-8', data, function (req, err, response) {
                                         if (err === "success") {
                                             let response_data = JSON.parse(response.responseText);
@@ -483,7 +483,7 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
 
                         scenario_btn.classList.add("btn", "btn-dark");
                         scenario_btn.type = "button";
-                        scenario_btn.id = scenarios[c]["id"] + "_btn";
+                        scenario_btn.id = scenarios[c]["name"] + "_btn";
                         scenario_btn.innerHTML = scenarios[c]["name"];
 
                         interact('#' + scenario_btn.id).dropzone({
@@ -530,7 +530,7 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
                                         if (scenario_input.value !== scenario_btn.innerHTML && scenario_input.value !== "") {
                                             let data = {"name": scenario_input.value, "positions": scenarios[c]["positions"]};
 
-                                            request_asynchronous('/api/scenario?db=' + action_db_name + '&id=' + scenarios[c]["id"] + '&admin_id=' + admin_id + '&root=' + root, 'PUT',
+                                            request_asynchronous('/api/scenario?db=' + action_db_name + '&id=' + scenarios[c]["id"] + '&admin_id=' + admin_id + '&root=' + allow_root, 'PUT',
                                                 'application/json; charset=UTF-8', data, function (req, err, response) {
                                                     if (err === "success") {
                                                         let response_data = JSON.parse(response.responseText);
@@ -606,7 +606,7 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
                         scenario_dd_span.classList.add("sr-only");
 
                         scenario_dropdown_container_div.classList.add("dropdown-menu", "dropdown-menu-right", "container", "dropdown_menu", "scenario_dropdown_menu", "keep-open");
-                        scenario_dropdown_container_div.id = scenarios[c]["id"] + "_container_div";
+                        scenario_dropdown_container_div.id = scenarios[c]["name"] + "_container_div";
 
                         let drop_timeout;
                         interact('#' + scenario_dropdown_container_div.id).dropzone({
@@ -645,7 +645,7 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
 
                                     let data = {"name": scenario_btn.innerHTML, "positions": existing_positions};
 
-                                    request_asynchronous('/api/scenario?db=' + action_db_name + '&id=' + scenarios[c]["id"] + '&admin_id=' + admin_id + '&root=' + root, 'PUT',
+                                    request_asynchronous('/api/scenario?db=' + action_db_name + '&id=' + scenarios[c]["id"] + '&admin_id=' + admin_id + '&root=' + allow_root, 'PUT',
                                         'application/json; charset=UTF-8', data, function (req, err, response) {
                                             if (err === "success") {
 
@@ -718,7 +718,7 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
                                                 scenarios[c]["positions"][i]["name"] = position_input.value;
                                                 let data = {"name": scenarios[c]["name"], "positions": scenarios[c]["positions"]};
 
-                                                request_asynchronous('/api/scenario?db=' + action_db_name + '&id=' + scenarios[c]["id"] + '&admin_id=' + admin_id + '&root=' + root, 'PUT',
+                                                request_asynchronous('/api/scenario?db=' + action_db_name + '&id=' + scenarios[c]["id"] + '&admin_id=' + admin_id + '&root=' + allow_root, 'PUT',
                                                     'application/json; charset=UTF-8', data, function (req, err, response) {
                                                         if (err === "success") {
                                                             let response_data = JSON.parse(response.responseText);
@@ -778,7 +778,7 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
                                     translate_text_item("OK"), translate_text_item("CANCEL"), function () {
                                         scenarios[c]["positions"].splice(i, 1);
                                         let data = {"name": scenarios[c]["name"], "positions": scenarios[c]["positions"]};
-                                        request_asynchronous('/api/scenario?db=' + action_db_name + '&id=' + scenarios[c]["id"] + '&admin_id=' + admin_id + '&root=' + root, 'PUT',
+                                        request_asynchronous('/api/scenario?db=' + action_db_name + '&id=' + scenarios[c]["id"] + '&admin_id=' + admin_id + '&root=' + allow_root, 'PUT',
                                             'application/json; charset=UTF-8', data, function (req, err, response) {
                                                 if (err === "success") {
                                                     let response_data = JSON.parse(response.responseText);
@@ -866,7 +866,7 @@ interact('#position_list_ul').dropzone({
                     }
                 };
 
-                request_asynchronous('/api/position?db=' + action_db_name + '&admin_id=' + admin_id + '&root=' + root, 'POST',
+                request_asynchronous('/api/position?db=' + action_db_name + '&admin_id=' + admin_id + '&root=' + allow_root, 'POST',
                     'application/x-www-form-urlencoded; charset=UTF-8', data, function (req, err, response) {
                         if (err === "success") {
                             let response_data = JSON.parse(response.responseText);
@@ -977,7 +977,7 @@ video_area_div.addEventListener("dblclick", function () {
     }
 });
 
-
+// prismatic_menu_control_input.disabled = true;     // Todo: prismatic control is a broken point. Solve this.
 prismatic_menu_control_input.addEventListener("change", function () {
     prismatic_control_div.classList.toggle("focused");
     rotational_control_div.classList.toggle("hidden_element");
@@ -1207,7 +1207,7 @@ create_pos_btn.addEventListener("click", function () {
 
     console.log(data);
 
-    request_asynchronous('/api/position?db=' + action_db_name + '&admin_id=' + admin_id + '&root=' + root, 'POST',
+    request_asynchronous('/api/position?db=' + action_db_name + '&admin_id=' + admin_id + '&root=' + allow_root, 'POST',
         'application/json; charset=UTF-8', data, function (req, err, response) {
             if (err === "success") {
                 let response_data = JSON.parse(response.responseText);
@@ -1231,7 +1231,7 @@ record_in_sce_btn.addEventListener("click", function () {
 
     clearElement(record_in_scenario_list_ul);
 
-    request_asynchronous('/api/scenario?db=' + action_db_name + '&admin_id=' + admin_id + '&root=' + root, 'GET',
+    request_asynchronous('/api/scenario?db=' + action_db_name + '&admin_id=' + admin_id + '&root=' + allow_root, 'GET',
         'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
             // err = "success"
             // requested_data = {"status": "OK", "data": [{"id": "b97tr40a-alcb-31w9-b150-ce2f6156l1ed", "name": "scenario_name1", "positions": [{}, {}]}, {"id": "b97dr48a-aecb-11e9-b130-cc2f7156l1ed", "name": "scenario_name2_name2", "positions": [{}, {}]}]};
@@ -1256,7 +1256,7 @@ record_in_sce_btn.addEventListener("click", function () {
 
                             scenarios[i]["positions"].push(position);
 
-                            request_asynchronous('/api/scenario?db=' + action_db_name + "&id=" + scenarios[i]["id"] + '&admin_id=' + admin_id + '&root=' + root, 'PUT',
+                            request_asynchronous('/api/scenario?db=' + action_db_name + "&id=" + scenarios[i]["id"] + '&admin_id=' + admin_id + '&root=' + allow_root, 'PUT',
                                 'application/json; charset=UTF-8', scenarios[i], function (req, err, response) {
                                     if (err === "success") {
                                         let response_data = JSON.parse(response.responseText);
@@ -1290,7 +1290,7 @@ create_sce_btn.addEventListener("click", function () {
     let divide_counts = [];
 
     for (let i = 0; i < current_arm_position["polar_coords"].length; i++) {
-        delays.push(0);
+        delays.push(0.2);
         divide_counts.push(1);
     }
 
@@ -1298,7 +1298,7 @@ create_sce_btn.addEventListener("click", function () {
 
     let data = {"name": scenario_name_input.value, "positions": [position]};
 
-    request_asynchronous('/api/scenario?db=' + action_db_name + '&admin_id=' + admin_id + '&root=' + root, 'POST',
+    request_asynchronous('/api/scenario?db=' + action_db_name + '&admin_id=' + admin_id + '&root=' + allow_root, 'POST',
         'application/json; charset=UTF-8', data, function (req, err, response) {
             console.log(response.responseText);
             if (err === "success") {

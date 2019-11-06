@@ -6,10 +6,10 @@ const administration_selected_task_div = document.getElementById("administration
 const administration_div = document.getElementById("administration_div");
 
 const create_emotion_checkbox = document.getElementById("create_emotion_checkbox");
-const create_emotion_label = document.getElementById("create_emotion_label");
+const create_emotion_cb_label = document.getElementById("create_emotion_cb_label");
 
 const predict_mission_checkbox = document.getElementById("predict_mission_checkbox");
-const predict_mission_label = document.getElementById("predict_mission_label");
+const predict_mission_cb_label = document.getElementById("predict_mission_cb_label");
 
 function show_selected_tasks(elements, dest) {
     selected_spans = [];
@@ -92,28 +92,43 @@ administration_div.addEventListener("click", function (event) {
 
 
 create_emotion_checkbox.addEventListener("change", function () {
-    predict_mission_label.disabled = predict_mission_checkbox.disabled = create_emotion_checkbox.checked;
+    predict_mission_cb_label.disabled = predict_mission_checkbox.disabled = create_emotion_checkbox.checked;
     predict_mission_checkbox.checked = false;
 
     if (create_emotion_checkbox.checked) {
+        request_asynchronous('/api/move?expand=true' + '&admin_id=' + admin_id, 'POST',
+        'application/x-www-form-urlencoded; charset=UTF-8', {}, function (req, err, response) {
+            if (err === "success") {
+                let response_data = JSON.parse(response.responseText);
+            }
+        });
+
         action_db_name = "emotions";
-        root = true;
+        allow_root = true;
+        console.log("checked");
     } else {
+        request_asynchronous('/api/move?expand=false' + '&admin_id=' + admin_id, 'POST',
+        'application/x-www-form-urlencoded; charset=UTF-8', {}, function (req, err, response) {
+            if (err === "success") {
+                let response_data = JSON.parse(response.responseText);
+            }
+        });
+
         action_db_name = "missions";
-        root = false;
+        allow_root = false;
     }
 });
 
 
 predict_mission_checkbox.addEventListener("change", function () {
-    create_emotion_label.disabled = create_emotion_checkbox.disabled = predict_mission_checkbox.checked;
+    create_emotion_cb_label.disabled = create_emotion_checkbox.disabled = predict_mission_checkbox.checked;
     create_emotion_checkbox.checked = false;
 
     if (predict_mission_checkbox.checked) {
         action_db_name = "predicted_missions";
-        root = true;
+        allow_root = true;
     } else {
         action_db_name = "missions";
-        root = false;
+        allow_root = false;
     }
 });
