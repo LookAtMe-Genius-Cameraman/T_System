@@ -145,6 +145,8 @@ class ServoMotor:
                     self.current_duty_cy = self.current_duty_cy + increase
                     self.current_duty_cy = round(self.current_duty_cy, 4)
                     self.__change_duty_cycle(self.current_duty_cy)
+                else:
+                    break
 
             else:
                 if self.min_duty_cy <= self.current_duty_cy <= self.max_duty_cy:
@@ -152,6 +154,8 @@ class ServoMotor:
                     self.current_duty_cy = self.current_duty_cy - increase
                     self.current_duty_cy = round(self.current_duty_cy, 4)
                     self.__change_duty_cycle(self.current_duty_cy)
+                else:
+                    break
             timeout += 1
 
             time.sleep(0.2)
@@ -271,6 +275,8 @@ class ExtServoMotor:
                     self.current_angle += delta_angle / divide_count  # Divide the increasing to 50 parse.
                     time.sleep(delay)
                     time.sleep(0.1)
+                else:
+                    break
 
         elif ta_in_degree < self.current_angle:
             delta_angle = self.current_angle - ta_in_degree
@@ -281,12 +287,13 @@ class ExtServoMotor:
                     self.current_angle -= delta_angle / divide_count  # Each 0.055 decrease decreases the angle as 1 degree.
                     time.sleep(delay)
                     time.sleep(0.1)
+                else:
+                    break
         else:
             time.sleep(0.1)
             pass
 
         self.servo.angle = ta_in_degree
-
 
     def change_position_incregular(self, stop, direction):
         """Method to changing position to the given direction as regularly and incremental when the stop flag is not triggered yet.
