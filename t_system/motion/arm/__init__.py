@@ -204,15 +204,17 @@ class Arm:
         with open(self.config_file) as conf_file:
             expansion_joint_configs = json.load(conf_file)[self.expansion_name]  # config file returns the arms.
 
-            for joint_conf in expansion_joint_configs:
+        for joint_conf in expansion_joint_configs:
+        
+            joint_conf['joint_number'] = len(self.joints) + 1
+            joint = Joint(joint_conf, self.use_ext_driver)
+        
+            self.joints.append(joint)
+        
+            if joint.structure != "constant":
+                self.current_pos_as_theta.append(joint.current_angle)
 
-                joint_conf['joint_number'] = len(self.joints) + joint_conf['joint_number']
-
-                joint = Joint(joint_conf, self.use_ext_driver)
-                self.joints.append(joint)
-
-                if joint.structure != "constant":
-                    self.current_pos_as_theta.append(joint.current_angle)
+        self.joint_count = len(self.joints)
 
         self.__prepare_dh_params()
         self.__set_dh_params(self.joints)
@@ -228,21 +230,26 @@ class Arm:
         with open(self.config_file) as conf_file:
             expansion_joints = json.load(conf_file)[self.expansion_name]  # config file returns the arms.
 
-            for joint in expansion_joints:
+        for joint in expansion_joints:
+
+            if self.joints[-1].structure != "constant":
                 self.joints[-1].stop()
                 self.joints[-1].gpio_cleanup()
-                del self.joints[-1]
 
                 del self.current_pos_as_theta[-1]
+
+            del self.joints[-1]
 
         with open(self.config_file) as conf_file:
             arm = json.load(conf_file)[self.name]  # config file returns the arms.
 
-            self.joints.append(Joint(arm["joints"][-1], self.use_ext_driver))
+        self.joints.append(Joint(arm["joints"][-1], self.use_ext_driver))
+
+        self.joint_count = len(self.joints)
 
         self.__prepare_dh_params()
         self.__set_dh_params(self.joints)
-
+        logger.debug(f'after expansion reverting polar coords are: {self.current_pos_as_theta}')
         self.current_pos_as_coord = self.get_coords_from_forward_kinematics(self.__forward_kinematics(self.current_pos_as_theta)[-1])
 
         self.__is_expanded = False
@@ -286,6 +293,8 @@ class Arm:
         Args:
             joints (list):    The arm's joints list for preparing parameters of Denavit-Hartenberg chart.
         """
+        self.dh_params = {}
+
         for i in range(len(joints)):
             self.dh_params[self.alpha[i]] = joints[i].alpha
 
@@ -313,6 +322,7 @@ class Arm:
     def __set_tranform_matrices(self):
         """Method to setting D-H transform matrices.
         """
+        self.tf_matrices_list = []
 
         transform_matrix = eye(4)  # creates a unit matrix via passing argument.
         for i in range(self.joint_count):
@@ -498,7 +508,7 @@ class Arm:
 
         for joint in self.joints:
             if joint.structure != "constant":
-                threading.Thread(target=joint.move_to_angle, args=(pos_thetas[joint.number - 1],)).start()
+                threading.Thread(target=joint.move_to_angle, args=(float(pos_thetas[joint.number - 1]),)).start()
 
     @dispatch(dict)
     def __rotate_joints(self, polar_params):
@@ -510,8 +520,7 @@ class Arm:
 
         for joint in self.joints:
             if joint.structure != "constant":
-                joint.move_to_angle(polar_params["coords"][joint.number - 1], polar_params["divide_counts"][joint.number - 1], float(polar_params["delays"][joint.number - 1]))
-                # threading.Thread(target=joint.move_to_angle, args=(polar_params["coords"][joint.number - 1], polar_params["divide_counts"][joint.number - 1], float(polar_params["delays"][joint.number - 1]))).start()
+                threading.Thread(target=joint.move_to_angle, args=(polar_params["coords"][joint.number - 1], polar_params["divide_counts"][joint.number - 1], float(polar_params["delays"][joint.number - 1]))).start()
 
     def rotate_single_joint(self, joint_number, delta_angle, direction=None):
         """Method to move a single joint towards the given direction with the given variation.
