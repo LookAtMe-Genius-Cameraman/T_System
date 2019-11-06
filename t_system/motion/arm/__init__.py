@@ -9,7 +9,6 @@
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
 
-import time  # Time access and conversions
 import numpy as np
 import json
 import threading
@@ -528,7 +527,7 @@ class Arm:
 
         for joint in self.joints:
             if joint.structure != "constant":
-                joint_thread = threading.Thread(target=joint.move_to_angle, args=(polar_params["coords"][joint.number - 1], polar_params["divide_counts"][joint.number - 1], float(polar_params["delays"][joint.number - 1])))
+                joint_thread = threading.Thread(target=joint.move_to_angle, args=(polar_params["coords"][joint.number - 1], int(polar_params["divide_counts"][joint.number - 1]), float(polar_params["delays"][joint.number - 1])))
                 joint_threads.append(joint_thread)
                 joint_thread.start()
 
