@@ -57,7 +57,6 @@ class ServoMotor:
             init_angel (float):     Initialization angle value for servo motor in radian unit.
         """
         init_duty_cy = self.__angle_to_duty_cy(init_angel)
-        logger.debug(f'motor started at {init_duty_cy}')
         self.servo.start(init_duty_cy)
         self.current_duty_cy = init_duty_cy
 
@@ -83,14 +82,12 @@ class ServoMotor:
         """
 
         target_duty_cy = self.__angle_to_duty_cy(target_angle)
-        logger.debug(f' Target duty cycle of Motor in GPIO {self.gpio_pin} is {target_duty_cy}')
 
         if self.min_duty_cy <= target_duty_cy <= self.max_duty_cy:
             target_duty_cy = round(target_duty_cy, 5)
 
             self.__change_duty_cycle(target_duty_cy)
             self.current_duty_cy = target_duty_cy
-            logger.debug(f'Move of motor in GPIO {self.gpio_pin} completed')
 
     def softly_goto_position(self, target_angle, divide_count=1, delay=0):
         """Method to changing position to the target angle step by step for more softly than direct_goto_position func.
@@ -111,17 +108,19 @@ class ServoMotor:
             delta_duty_cy = target_duty_cy - self.current_duty_cy
 
             while self.current_duty_cy < target_duty_cy:
-                self.__change_duty_cycle(self.current_duty_cy)
-                self.current_duty_cy += delta_duty_cy / divide_count  # Divide the increasing to 50 parse.
-                time.sleep(delay)
+                if self.min_duty_cy <= self.current_duty_cy <= self.max_duty_cy:
+                    self.__change_duty_cycle(self.current_duty_cy)
+                    self.current_duty_cy += delta_duty_cy / divide_count  # Divide the increasing to 50 parse.
+                    time.sleep(delay)
 
         elif target_duty_cy < self.current_duty_cy:
             delta_duty_cy = self.current_duty_cy - target_duty_cy
 
             while self.current_duty_cy > target_duty_cy:
-                self.__change_duty_cycle(self.current_duty_cy)
-                self.current_duty_cy -= delta_duty_cy / divide_count  # Each 0.055 decrease decreases the angle as 1 degree.
-                time.sleep(delay)
+                if self.min_duty_cy <= self.current_duty_cy <= self.max_duty_cy:
+                    self.__change_duty_cycle(self.current_duty_cy)
+                    self.current_duty_cy -= delta_duty_cy / divide_count  # Each 0.055 decrease decreases the angle as 1 degree.
+                    time.sleep(delay)
         else:
             pass
 
@@ -229,7 +228,6 @@ class ExtServoMotor:
             init_angel (float):     Initialization angle value for servo motor in radian unit.
         """
         init_angel = radian_to_degree(init_angel)
-        logger.debug(f'motor started at {init_angel}')
 
         self.servo.angle = init_angel
         self.current_angle = init_angel
@@ -242,15 +240,12 @@ class ExtServoMotor:
         """
         ta_in_degree = radian_to_degree(target_angle)
 
-        logger.debug(f' Target duty cycle of Motor in channel {self.channel} is {ta_in_degree}')
-
         if self.min_angle <= ta_in_degree <= self.max_angle:
             ta_in_degree = round(ta_in_degree, 1)
 
             self.servo.angle = ta_in_degree
 
             self.current_angle = ta_in_degree
-            logger.debug(f'Move of motor in GPIO {self.channel} completed')
 
     def softly_goto_position(self, target_angle, divide_count=1, delay=0):
         """Method to changing position to the target angle step by step for more softly than direct_goto_position func.
@@ -271,21 +266,27 @@ class ExtServoMotor:
             delta_angle = ta_in_degree - self.current_angle
 
             while self.current_angle < ta_in_degree:
-                self.servo.angle = self.current_angle
-                self.current_angle += delta_angle / divide_count  # Divide the increasing to 50 parse.
-                time.sleep(delay)
+                if self.min_angle <= self.current_angle <= self.max_angle:
+                    self.servo.angle = self.current_angle
+                    self.current_angle += delta_angle / divide_count  # Divide the increasing to 50 parse.
+                    time.sleep(delay)
+                    time.sleep(0.1)
 
         elif ta_in_degree < self.current_angle:
             delta_angle = self.current_angle - ta_in_degree
 
             while self.current_angle > ta_in_degree:
-                self.servo.angle = self.current_angle
-                self.current_angle -= delta_angle / divide_count  # Each 0.055 decrease decreases the angle as 1 degree.
-                time.sleep(delay)
+                if self.min_angle <= self.current_angle <= self.max_angle:
+                    self.servo.angle = self.current_angle
+                    self.current_angle -= delta_angle / divide_count  # Each 0.055 decrease decreases the angle as 1 degree.
+                    time.sleep(delay)
+                    time.sleep(0.1)
         else:
+            time.sleep(0.1)
             pass
 
         self.servo.angle = ta_in_degree
+
 
     def change_position_incregular(self, stop, direction):
         """Method to changing position to the given direction as regularly and incremental when the stop flag is not triggered yet.

@@ -88,8 +88,6 @@ class MissionManager:
         while True:
             self.execute(mission, m_type, root)
             if stop():
-                logger.debug(f'mission loop break.')
-
                 break
 
     def execute(self, mission, m_type, root):
@@ -239,7 +237,6 @@ class Actor:
 
         for scenario in scenarios:
             for position in scenario.positions:
-                logger.debug(f'position {position.name} is running...')
                 self.arm.goto_position(polar_params={"coords": position.polar_coords,
                                                      "delays": position.polar_delays,
                                                      "divide_counts": position.polar_divide_counts}, cartesian_coords=position.cartesian_coords)

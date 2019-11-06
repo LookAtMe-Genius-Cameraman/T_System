@@ -250,7 +250,6 @@ class Arm:
 
         self.__prepare_dh_params()
         self.__set_dh_params(self.joints)
-        logger.debug(f'after expansion reverting polar coords are: {self.current_pos_as_theta}')
         self.current_pos_as_coord = self.get_coords_from_forward_kinematics(self.__forward_kinematics(self.current_pos_as_theta)[-1])
 
         self.__is_expanded = False
