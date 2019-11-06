@@ -161,9 +161,6 @@ def prepare(args):
 
     logger.info("Package preparation completed.")
 
-    # t_system.mission_manager.execute("initial", "position", True)
-    logger.info("Initial position taken.")
-
 
 def initiate():
     """The top-level method to serve as the entry point of T_System.

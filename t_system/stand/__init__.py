@@ -14,6 +14,7 @@ import threading
 import time  # Time access and conversions
 
 from t_system.accession.__init__ import NetworkConnector, AccessPoint
+from t_system import mission_manager
 from t_system import log_manager
 
 logger = log_manager.get_logger(__name__, "DEBUG")
@@ -329,6 +330,12 @@ class Stand:
         self.cooler = Cooler([args["stand_gpios"][2]])
 
         self.stop_thread = False
+
+        mission_manager.expand_actor()
+        mission_manager.execute("initial", "position", True)
+        mission_manager.revert_the_expand_actor()
+
+        logger.info("Initial position taken.")
 
     def run(self):
         """The top-level method to managing members of stand interface.
