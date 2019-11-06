@@ -134,6 +134,9 @@ class JobManager:
 
         self.__stop_mission_thread()
 
+        if seer.record:
+            seer.record = False
+
         return True
 
     @staticmethod
