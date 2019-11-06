@@ -9,6 +9,7 @@
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
 
+import time  # Time access and conversions
 import numpy as np
 import json
 import threading
@@ -506,9 +507,15 @@ class Arm:
             pos_thetas (list):          Angular position list to go. List length equals to joint count.
         """
 
+        joint_threads = []
+
         for joint in self.joints:
             if joint.structure != "constant":
-                threading.Thread(target=joint.move_to_angle, args=(float(pos_thetas[joint.number - 1]),)).start()
+                joint_thread = threading.Thread(target=joint.move_to_angle, args=(float(pos_thetas[joint.number - 1]),))
+                joint_threads.append(joint_thread)
+                joint_thread.start()
+
+        return self.__check_until_threads_ends(joint_threads)
 
     @dispatch(dict)
     def __rotate_joints(self, polar_params):
@@ -518,9 +525,29 @@ class Arm:
             polar_params (dict):          Angular position list to go. List length equals to joint count.
         """
 
+        joint_threads = []
+
         for joint in self.joints:
             if joint.structure != "constant":
-                threading.Thread(target=joint.move_to_angle, args=(polar_params["coords"][joint.number - 1], polar_params["divide_counts"][joint.number - 1], float(polar_params["delays"][joint.number - 1]))).start()
+                joint_thread = threading.Thread(target=joint.move_to_angle, args=(polar_params["coords"][joint.number - 1], polar_params["divide_counts"][joint.number - 1], float(polar_params["delays"][joint.number - 1])))
+                joint_threads.append(joint_thread)
+                joint_thread.start()
+
+        return self.__check_until_threads_ends(joint_threads)
+
+    @staticmethod
+    def __check_until_threads_ends(threads):
+        """Method to check given threads recursively until all of them ends.
+
+        Args:
+            threads (list):               Thread list that been checked.
+        """
+
+        for thread in threads:
+            if thread.is_alive():
+                thread.join()
+
+        return True
 
     def rotate_single_joint(self, joint_number, delta_angle, direction=None):
         """Method to move a single joint towards the given direction with the given variation.
