@@ -153,7 +153,7 @@ def delete_scenario(admin_id, root, db_name, scenario_id):
 
     Args:
         admin_id (str):                 Root privileges flag.
-        root (str):                    Root privileges flag.
+        root (str):                     Root privileges flag.
         db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
         scenario_id (str):              The id of the position.
     """
