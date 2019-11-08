@@ -16,6 +16,11 @@
     display: block !important;
 }
 
+.advance_sce_close_a {
+    right: 0 !important;
+    top: 0 !important;
+}
+
 .advanced_title_div {
     left: 50%;
     transform: translate(-50%);
@@ -75,12 +80,12 @@
 .advance_sce_btns_div {
     left: 50%;
     transform: translate(-50%);
-    width: 180px !important;
+    min-width: 280px !important;
     bottom: 10px;
 }
 
 .advance_sce_btns_div button {
-    width: 80px !important;
+    min-width: 80px !important;
 }
 
 .advance_small_font {
