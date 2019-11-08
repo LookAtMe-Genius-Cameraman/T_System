@@ -26,9 +26,8 @@ from t_system.remote_ui.api.system_info import api_bp as system_info_api_bp
 from t_system.remote_ui.api.update import api_bp as update_api_bp
 
 from t_system import T_SYSTEM_PATH, dot_t_system_dir
-# dot_t_system_dir = "/home/baybars/.t_system"
-# T_SYSTEM_PATH = "/home/baybars/T_System/t_system"
-__version__ = '0.9.99'
+
+__version__ = '1.0.0'
 
 
 class RemoteUI:

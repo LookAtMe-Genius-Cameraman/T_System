@@ -19,7 +19,7 @@ from t_system import log_manager
 
 logger = log_manager.get_logger(__name__, "DEBUG")
 
-__version__ = '0.6'
+__version__ = '0.6.1'
 
 
 class Button:
