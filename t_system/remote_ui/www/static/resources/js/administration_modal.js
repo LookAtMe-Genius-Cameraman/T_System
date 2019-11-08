@@ -105,7 +105,6 @@ create_emotion_checkbox.addEventListener("change", function () {
 
         action_db_name = "emotions";
         allow_root = true;
-        console.log("checked");
     } else {
         request_asynchronous('/api/move?expand=false' + '&admin_id=' + admin_id, 'PATCH',
         'application/x-www-form-urlencoded; charset=UTF-8', {}, function (req, err, response) {
