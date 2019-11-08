@@ -363,10 +363,13 @@ $('#create_wifi_checkbox').change(function () {
 });
 
 network_pass_eye_span.addEventListener("click", function () {
-    network_pass_eye_span.classList.toggle("fa-eye fa-eye-slash");
     if (network_password_input.type === 'password') {
+        network_pass_eye_span.classList.remove("fa-eye");
+        network_pass_eye_span.classList.add("fa-eye-slash");
         network_password_input.setAttribute('type', 'text');
     } else {
+        network_pass_eye_span.classList.remove("fa-eye-slash");
+        network_pass_eye_span.classList.add("fa-eye");
         network_password_input.setAttribute('type', 'password');
     }
 });
