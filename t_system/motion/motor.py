@@ -274,7 +274,6 @@ class ExtServoMotor:
                     self.servo.angle = self.current_angle
                     self.current_angle += delta_angle / divide_count  # Divide the increasing to 50 parse.
                     time.sleep(delay)
-                    time.sleep(0.1)
                 else:
                     break
 
@@ -286,11 +285,9 @@ class ExtServoMotor:
                     self.servo.angle = self.current_angle
                     self.current_angle -= delta_angle / divide_count  # Each 0.055 decrease decreases the angle as 1 degree.
                     time.sleep(delay)
-                    time.sleep(0.1)
                 else:
                     break
         else:
-            time.sleep(0.1)
             pass
 
         self.servo.angle = ta_in_degree
