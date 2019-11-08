@@ -27,7 +27,7 @@ function show_selected_tasks(elements, dest) {
 
                     selected_div.classList.add("position-relative", "mb-1");
 
-                    selected_span.innerHTML = labels[a].innerHTML;
+                    selected_span.innerHTML = translate_text_item(labels[a].innerHTML);
                     selected_span.classList.toggle("administrator_selected_shine");
 
                     selected_div.appendChild(selected_span);
@@ -96,7 +96,7 @@ create_emotion_checkbox.addEventListener("change", function () {
     predict_mission_checkbox.checked = false;
 
     if (create_emotion_checkbox.checked) {
-        request_asynchronous('/api/move?expand=true' + '&admin_id=' + admin_id, 'POST',
+        request_asynchronous('/api/move?expand=true' + '&admin_id=' + admin_id, 'PATCH',
         'application/x-www-form-urlencoded; charset=UTF-8', {}, function (req, err, response) {
             if (err === "success") {
                 let response_data = JSON.parse(response.responseText);
@@ -107,7 +107,7 @@ create_emotion_checkbox.addEventListener("change", function () {
         allow_root = true;
         console.log("checked");
     } else {
-        request_asynchronous('/api/move?expand=false' + '&admin_id=' + admin_id, 'POST',
+        request_asynchronous('/api/move?expand=false' + '&admin_id=' + admin_id, 'PATCH',
         'application/x-www-form-urlencoded; charset=UTF-8', {}, function (req, err, response) {
             if (err === "success") {
                 let response_data = JSON.parse(response.responseText);
