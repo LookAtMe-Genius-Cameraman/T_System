@@ -152,7 +152,7 @@ $(document).ready(function () {
     set_language_processes();
 
     swiper = new Swiper('.swiper-container', {
-        effect: 'cube',
+        effect: 'coverflow',
         grabCursor: true,
         cubeEffect: {
             shadow: true,
