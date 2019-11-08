@@ -52,8 +52,8 @@ setup(
         'Development Status :: 3 - Alpha',
 
         # Indicate who your project is intended for
-        'Intended Audience :: End Users/Showmen, Military/Object Tracking',
-        'Topic :: Scientific/Engineering :: Tracking around objects',
+        'Intended Audience :: End Users/Desktop',
+        'Topic :: Adaptive Technologies',
 
         # Pick your license as you wish (should match "license" above)
         'License :: OSI Approved :: MIT License',
