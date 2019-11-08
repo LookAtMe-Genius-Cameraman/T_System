@@ -5,7 +5,7 @@ Returns an error if the DB is empty.
 
 ## Request
 ```http
-POST /api/position?db=<DB>&admin_id=<ADMIN_ID>
+POST /api/position?db=<DB>&admin_id=<ADMIN_ID>&root=<ROOT>
 Host: domain
 Content-Type: application/json; charset=UTF-8
 
@@ -39,7 +39,7 @@ Content-Type: application/json; charset=UTF-8
 
 ## Request
 ```http
-GET /api/position?db=<DB>&id=<ID>&admin_id=<ADMIN_ID>
+GET /api/position?db=<DB>&id=<ID>&admin_id=<ADMIN_ID>&root=<ROOT>
 Host: domain
 ```
 
@@ -72,7 +72,7 @@ Returns an error if the DB or ID is empty.
 
 ## Request
 ```http
-PUT /api/position?db=<DB>&id=<ID>&admin_id=<ADMIN_ID>
+PUT /api/position?db=<DB>&id=<ID>&admin_id=<ADMIN_ID>&root=<ROOT>
 Host: domain
 Content-Type: application/json; charset=UTF-8
 
@@ -110,7 +110,7 @@ Returns an error if the DB is empty.
 
 ## Request
 ```http
-DEL /api/position?db=<DB>&id=<ID>&admin_id=<ADMIN_ID>
+DEL /api/position?db=<DB>&id=<ID>&admin_id=<ADMIN_ID>&root=<ROOT>
 Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 ```
 

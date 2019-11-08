@@ -1,9 +1,9 @@
-# Setting the Arm 
-Returns an error if the EXPAND is empty.
+# Moving the arm by action 
+Returns an error if the DB_NAME, ACTION or A_TYPE are empty.
 
 ## Request
 ```http
-POST /api/move?expand=<EXPAND>&admin_id=<ADMIN_ID>
+POST /api/move?db_name=<DB_NAME>&actıon=<ACTION>&a_type=<A_TYPE>&root=<ROOT>&admin_id=<ADMIN_ID>
 Host: domain
 Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 ```
@@ -49,6 +49,32 @@ Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 ```
 
 ### On Failure
+```json
+{
+    "status": "ERROR",
+    "message": "Missing or incorrect parameters"
+}
+```
+
+# Setting the Arm 
+Returns an error if the EXPAND is empty.
+
+## Request
+```http
+PATCH /api/move?expand=<EXPAND>&admin_id=<ADMIN_ID>
+Host: domain
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+```
+## Response
+
+### On Success
+```json
+{
+  "status": "OK"
+}
+```
+
+### On failure
 ```json
 {
     "status": "ERROR",
