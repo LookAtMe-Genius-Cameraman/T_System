@@ -14,7 +14,7 @@ import threading
 import time  # Time access and conversions
 
 from t_system.accession.__init__ import NetworkConnector, AccessPoint
-from t_system import mission_manager
+from t_system import mission_manager, emotion_manager
 from t_system import log_manager
 
 logger = log_manager.get_logger(__name__, "DEBUG")
@@ -331,11 +331,7 @@ class Stand:
 
         self.stop_thread = False
 
-        mission_manager.expand_actor()
-        mission_manager.execute("initial", "position", True)
-        mission_manager.revert_the_expand_actor()
-
-        logger.info("Initial position taken.")
+        emotion_manager.make_feel("greeting", "scenario")
 
     def run(self):
         """The top-level method to managing members of stand interface.
@@ -351,12 +347,11 @@ class Stand:
         if not is_connected_to_network:
             self.access_point.start()
 
-        try:
-            self.remote_ui.run()
-        except KeyboardInterrupt:
-            # TODO: After keyboard interrupt access point still active. so restarting the t_system is being corrupted. Following solution is not working. Fix this.
-            if self.access_point.is_working():
-                self.access_point.stop()
+        mission_manager.execute("initial", "position", True)
+        mission_manager.revert_the_expand_actor()
+        logger.info("Initial position taken.")
+
+        self.remote_ui.run()
 
     def blink_led(self, stop_thread, led, delay_time=None):
         """Method to blinking the LEDs with different on/off combinations.
