@@ -33,7 +33,7 @@ function JSalert(title, text, confirm_btn_text, cancel_btn_text, confirm_functio
     ).then(function (isConfirm) {
         if (isConfirm) {
             confirm_function();
-            if (confirm_text !== null) {
+            if (confirm_text === null) {
                 swal(translate_text_item("Process Completed!"), "", "success");
             } else {
                 swal(confirm_text, "", "success");
