@@ -76,9 +76,16 @@ const scenario_name_input = document.getElementById("scenario_name_input");
 const create_sce_btn = document.getElementById("create_sce_btn");
 const record_in_scenario_list_ul = document.getElementById("record_in_scenario_list_ul");
 
-sidebar_toggle_btn.addEventListener("click", function (x) {
+let sidebar_interacts = [];
+
+sidebar_toggle_btn.addEventListener("click", function () {
 
     setSwiperSwiping(false);
+
+    for (let i = 0; i < sidebar_interacts.length; i++) {
+        sidebar_interacts[i].unset();
+    }
+    sidebar_interacts = [];
 
     clearElement(position_list_ul);
     clearElement(scenario_list_ul);
@@ -90,7 +97,6 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
 
     let positions = [];
     let scenarios = [];
-
 
     request_asynchronous('/api/position?db=' + action_db_name + '&admin_id=' + admin_id + '&root=' + allow_root, 'GET',
         'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
@@ -128,7 +134,7 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
                             document.removeEventListener("click", hide_context_menu);
                         }
 
-                        interact('#' + position_span.id)
+                        let position_interact = interact('#' + position_span.id)
                             .on('tap', function (event) {
                                 if (!position_context_menu.classList.contains("show")) {
                                     let data = {};
@@ -171,6 +177,8 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
                             })
                             .on('up', function (event) {
                             });
+
+                        sidebar_interacts.push(position_interact);
 
                         position_context_menu.classList.add("position-relative", "dropdown-menu", "dropdown-menu-sm");
                         position_context_menu.id = positions[c]["name"] + "context-menu_" + c;
@@ -292,37 +300,37 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
 
                         scenario_cm_rename_a.addEventListener("click", function () {
                             scenario_dropdown_div.removeChild(scenario_btn);
-                                    scenario_dropdown_div.removeChild(scenario_dd_btn);
-                                    scenario_dropdown_div.removeChild(scenario_dropdown_container_div);
-                                    scenario_dropdown_div.removeChild(scenario_context_menu);
+                            scenario_dropdown_div.removeChild(scenario_dd_btn);
+                            scenario_dropdown_div.removeChild(scenario_dropdown_container_div);
+                            scenario_dropdown_div.removeChild(scenario_context_menu);
 
-                                    let scenario_input = document.createElement('input');
+                            let scenario_input = document.createElement('input');
 
-                                    scenario_input.type = "text";
-                                    scenario_input.placeholder = scenario_btn.innerHTML;
-                                    scenario_input.classList.add("action_name_input");
+                            scenario_input.type = "text";
+                            scenario_input.placeholder = scenario_btn.innerHTML;
+                            scenario_input.classList.add("action_name_input");
 
-                                    scenario_input.addEventListener("focusout", function () {
-                                        if (scenario_input.value !== scenario_btn.innerHTML && scenario_input.value !== "") {
-                                            let data = {"name": scenario_input.value, "positions": scenarios[c]["positions"]};
+                            scenario_input.addEventListener("focusout", function () {
+                                if (scenario_input.value !== scenario_btn.innerHTML && scenario_input.value !== "") {
+                                    let data = {"name": scenario_input.value, "positions": scenarios[c]["positions"]};
 
-                                            request_asynchronous('/api/scenario?db=' + action_db_name + '&id=' + scenarios[c]["id"] + '&admin_id=' + admin_id + '&root=' + allow_root, 'PUT',
-                                                'application/json; charset=UTF-8', data, function (req, err, response) {
-                                                    if (err === "success") {
-                                                        let response_data = JSON.parse(response.responseText);
-                                                    }
-                                                });
-                                            scenario_btn.innerHTML = scenario_input.value
-                                        }
-                                        scenario_dropdown_div.removeChild(scenario_input);
+                                    request_asynchronous('/api/scenario?db=' + action_db_name + '&id=' + scenarios[c]["id"] + '&admin_id=' + admin_id + '&root=' + allow_root, 'PUT',
+                                        'application/json; charset=UTF-8', data, function (req, err, response) {
+                                            if (err === "success") {
+                                                let response_data = JSON.parse(response.responseText);
+                                            }
+                                        });
+                                    scenario_btn.innerHTML = scenario_input.value
+                                }
+                                scenario_dropdown_div.removeChild(scenario_input);
 
-                                        scenario_dropdown_div.appendChild(scenario_btn);
-                                        scenario_dropdown_div.appendChild(scenario_dd_btn);
-                                        scenario_dropdown_div.appendChild(scenario_dropdown_container_div);
-                                        scenario_dropdown_div.appendChild(scenario_context_menu);
-                                    });
-                                    scenario_dropdown_div.appendChild(scenario_input);
-                                    scenario_input.focus();
+                                scenario_dropdown_div.appendChild(scenario_btn);
+                                scenario_dropdown_div.appendChild(scenario_dd_btn);
+                                scenario_dropdown_div.appendChild(scenario_dropdown_container_div);
+                                scenario_dropdown_div.appendChild(scenario_context_menu);
+                            });
+                            scenario_dropdown_div.appendChild(scenario_input);
+                            scenario_input.focus();
                         });
 
                         scenario_cm_advanced_a.classList.add("dropdown-item");
@@ -573,7 +581,7 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
                         scenario_btn.id = scenarios[c]["name"] + "_btn";
                         scenario_btn.innerHTML = scenarios[c]["name"];
 
-                        interact('#' + scenario_btn.id).dropzone({
+                        let scenario_d_interact = interact('#' + scenario_btn.id).dropzone({
                             accept: '.draggable_position',
                             overlap: 0.75,
 
@@ -593,24 +601,29 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
                             }
                         });
 
+                        sidebar_interacts.push(scenario_d_interact);
+
                         function hide_context_menu() {
                             $("#" + scenario_context_menu.id).removeClass("show").hide();
                             document.removeEventListener("click", hide_context_menu);
                         }
 
-                        interact('#' + scenario_btn.id)
+                        let scenario_interact = interact('#' + scenario_btn.id)
                             .on('tap', function (event) {
 
                                 if (!scenario_context_menu.classList.contains("show")) {
+                                    console.log("scenario clicked");
                                     let data = {};
 
-                                request_asynchronous('/api/move?db=' + action_db_name + '&action=' + scenarios[c]["name"] + '&a_type=scenario' + '&admin_id=' + admin_id + '&root=' + allow_root, 'POST',
-                                    'application/json; charset=UTF-8', data, function (req, err, response) {
-                                        if (err === "success") {
-                                            let response_data = JSON.parse(response.responseText);
-                                            if (response_data["status"] === "OK") {} else {}
-                                        }
-                                    });
+                                    request_asynchronous('/api/move?db=' + action_db_name + '&action=' + scenarios[c]["name"] + '&a_type=scenario' + '&admin_id=' + admin_id + '&root=' + allow_root, 'POST',
+                                        'application/json; charset=UTF-8', data, function (req, err, response) {
+                                            if (err === "success") {
+                                                let response_data = JSON.parse(response.responseText);
+                                                if (response_data["status"] === "OK") {
+                                                } else {
+                                                }
+                                            }
+                                        });
                                 }
                             })
                             .on('doubletap', function (event) {
@@ -641,6 +654,8 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
                             })
                             .on('up', function (event) {
                             });
+
+                        sidebar_interacts.push(scenario_interact);
 
                         $("#" + scenario_context_menu.id + " a").on("click", function () {
                             $(this).parent().removeClass("show").hide();
@@ -673,7 +688,7 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
                         scenario_dropdown_container_div.id = scenarios[c]["name"] + "_container_div";
 
                         let drop_timeout;
-                        interact('#' + scenario_dropdown_container_div.id).dropzone({
+                        let scenario_dr_interact = interact('#' + scenario_dropdown_container_div.id).dropzone({
                             // only accept elements matching this CSS selector
                             accept: '.draggable_position',
                             // Require a 75% element overlap for a drop to be possible
@@ -740,6 +755,8 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
                             }
                         });
 
+                        sidebar_interacts.push(scenario_dr_interact);
+
                         for (let i = 0; i < scenarios[c]["positions"].length; i++) {
                             let position_div = document.createElement('div');
                             let position_span = document.createElement('span');
@@ -764,7 +781,7 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
                                 document.removeEventListener("click", hide_context_menu);
                             }
 
-                            interact('#' + position_span.id)
+                            let scenario_pos_interact = interact('#' + position_span.id)
                                 .on('tap', function (event) {
 
                                     if (!position_context_menu.classList.contains("show")) {
@@ -825,6 +842,8 @@ sidebar_toggle_btn.addEventListener("click", function (x) {
                                 })
                                 .on('up', function (event) {
                                 });
+
+                            sidebar_interacts.push(scenario_pos_interact);
 
                             position_context_menu.classList.add("position-relative", "dropdown-menu", "dropdown-menu-sm");
                             position_context_menu.id = scenarios[c]["name"] + "_" + scenarios[c]["positions"][i]["name"] + "context-menu_" + i;
@@ -1057,7 +1076,7 @@ prismatic_menu_control_input.addEventListener("change", function () {
     }
 });
 
-
+let rotational_menu_interacts = [];
 rotational_menu_control_input.addEventListener("change", function () {
 
     rotational_ccw_menu_control_label.click();
@@ -1070,6 +1089,11 @@ rotational_menu_control_input.addEventListener("change", function () {
 
     rotational_menu_control_label.classList.toggle("fa-sync-alt");
     rotational_menu_control_label.classList.toggle("fa-times");
+
+    for (let i = 0; i < rotational_menu_interacts.length; i++) {
+        rotational_menu_interacts[i].unset();
+    }
+    rotational_menu_interacts = [];
 
     if (rotational_menu_control_input.checked) {
         setSwiperSwiping(false);
@@ -1098,7 +1122,7 @@ rotational_menu_control_input.addEventListener("change", function () {
                             arm_joint_right_btn.id = "joint_" + joint_number + "cw_btn";
                             arm_joint_right_btn.innerHTML = translate_text_item("j-") + joint_number + " ";
 
-                            interact('#' + arm_joint_right_btn.id)
+                            let right_interact = interact('#' + arm_joint_right_btn.id)
                                 .on('tap', function (event) {
                                     let route = "/api/move?id=" + joint_number + "&admin_id=" + admin_id;
                                     let data = {"type": "joint", "id": joint_number.toString(), "quantity": 5};
@@ -1132,6 +1156,8 @@ rotational_menu_control_input.addEventListener("change", function () {
                                 .on('up', function (event) {
                                     clearInterval(interval);
                                 });
+
+                            rotational_menu_interacts.push(right_interact);
 
                             arm_joint_right_i.classList.add("fas", "fa-redo");
 
@@ -1139,7 +1165,7 @@ rotational_menu_control_input.addEventListener("change", function () {
                             arm_joint_left_btn.id = "joint_" + joint_number + "ccw_btn";
                             arm_joint_left_btn.innerHTML = translate_text_item("j-") + joint_number + " ";
 
-                            interact('#' + arm_joint_left_btn.id)
+                            let left_interact = interact('#' + arm_joint_left_btn.id)
                                 .on('tap', function (event) {
                                     let route = "/api/move?id=" + joint_number + "&admin_id=" + admin_id;
                                     let data = {"type": "joint", "id": joint_number.toString(), "quantity": -5};
@@ -1173,6 +1199,8 @@ rotational_menu_control_input.addEventListener("change", function () {
                                 .on('up', function (event) {
                                     clearInterval(interval);
                                 });
+
+                            rotational_menu_interacts.push(left_interact);
 
                             arm_joint_left_i.classList.add("fas", "fa-undo");
 
