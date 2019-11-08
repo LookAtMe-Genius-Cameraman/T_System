@@ -254,15 +254,13 @@ class Actor:
         """Method to expand arm with using axes and motors of target_locker of t_system's vision.
         """
 
-        if not self.arm.is_expanded():
-            self.arm.expand()
+        self.arm.expand()
 
     def revert_the_expand(self):
         """Method to revert back the expansion.
         """
 
-        if self.arm.is_expanded():
-            self.arm.revert_the_expand()
+        self.arm.revert_the_expand()
 
 
 class Scenario:
