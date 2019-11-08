@@ -51,7 +51,7 @@ class Collimator:
             self.motor.start(round(self.current_angle, 4))
         else:
             self.motor = ServoMotor(out_number[0])
-            self.motor.start(init_angle)
+            self.motor.start(self.current_angle)
 
         self.motor_thread_stop = None
         self.motor_thread_direction = None
@@ -177,8 +177,10 @@ class Collimator:
         Args:
             angle:              	 Restarting angle value for servo motor as radian unit.
         """
-
-        self.motor.__init__(self.motor.gpio_pin)
+        if self.use_ext_driver:
+            self.motor.__init__(self.motor.channel)
+        else:
+            self.motor.__init__(self.motor.gpio_pin)
 
         if angle:
             self.motor.start(angle)
