@@ -57,6 +57,10 @@ class MissionManager:
     def refresh_members(self):
         """Method to refreshing the members
         """
+        self.predicted_scenarios = []
+        self.predicted_positions = []
+        self.scenarios = []
+        self.positions = []
 
         predicted_scenarios = self.predicted_scenarios_table.all()
         for scenario in predicted_scenarios:
@@ -162,6 +166,8 @@ class EmotionManager:
     def refresh_members(self):
         """Method to refreshing the members
         """
+        self.scenarios = []
+        self.positions = []
 
         scenarios = self.scenarios_table.all()
         for scenario in scenarios:
