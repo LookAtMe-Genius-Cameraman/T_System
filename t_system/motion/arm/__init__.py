@@ -199,59 +199,71 @@ class Arm:
     def expand(self):
         """Method to expand arm with using target_locker of t_system's vision.
         """
-        self.joints.pop(-1)
+        if not self.__is_expanded:
+            try:
+                self.__is_expanded = True
 
-        with open(self.config_file) as conf_file:
-            expansion_joint_configs = json.load(conf_file)[self.expansion_name]  # config file returns the arms.
+                self.joints.pop(-1)
 
-        for joint_conf in expansion_joint_configs:
-        
-            joint_conf['joint_number'] = len(self.joints) + 1
-            joint = Joint(joint_conf, self.use_ext_driver)
-        
-            self.joints.append(joint)
-        
-            if joint.structure != "constant":
-                self.current_pos_as_theta.append(joint.current_angle)
+                with open(self.config_file) as conf_file:
+                    expansion_joint_configs = json.load(conf_file)[self.expansion_name]  # config file returns the arms.
 
-        self.joint_count = len(self.joints)
+                for joint_conf in expansion_joint_configs:
 
-        self.__prepare_dh_params()
-        self.__set_dh_params(self.joints)
+                    joint_conf['joint_number'] = len(self.joints) + 1
+                    joint = Joint(joint_conf, self.use_ext_driver)
 
-        self.current_pos_as_coord = self.get_coords_from_forward_kinematics(self.__forward_kinematics(self.current_pos_as_theta)[-1])
+                    self.joints.append(joint)
 
-        self.__is_expanded = True
+                    if joint.structure != "constant":
+                        self.current_pos_as_theta.append(joint.current_angle)
+
+                self.joint_count = len(self.joints)
+
+                self.__prepare_dh_params()
+                self.__set_dh_params(self.joints)
+
+                self.current_pos_as_coord = self.get_coords_from_forward_kinematics(self.__forward_kinematics(self.current_pos_as_theta)[-1])
+
+            except Exception as e:
+                logger.warning(f'{e}')
+                self.__is_expanded = False
 
     def revert_the_expand(self):
         """Method to revert back the expansion.
         """
 
-        with open(self.config_file) as conf_file:
-            expansion_joints = json.load(conf_file)[self.expansion_name]  # config file returns the arms.
+        if self.__is_expanded:
+            try:
+                self.__is_expanded = False
 
-        for joint in expansion_joints:
+                with open(self.config_file) as conf_file:
+                    expansion_joints = json.load(conf_file)[self.expansion_name]  # config file returns the arms.
 
-            if self.joints[-1].structure != "constant":
-                self.joints[-1].stop()
-                self.joints[-1].gpio_cleanup()
+                for joint in expansion_joints:
 
-                del self.current_pos_as_theta[-1]
+                    if self.joints[-1].structure != "constant":
+                        self.joints[-1].stop()
+                        self.joints[-1].gpio_cleanup()
 
-            del self.joints[-1]
+                        del self.current_pos_as_theta[-1]
 
-        with open(self.config_file) as conf_file:
-            arm = json.load(conf_file)[self.name]  # config file returns the arms.
+                    del self.joints[-1]
 
-        self.joints.append(Joint(arm["joints"][-1], self.use_ext_driver))
+                with open(self.config_file) as conf_file:
+                    arm = json.load(conf_file)[self.name]  # config file returns the arms.
 
-        self.joint_count = len(self.joints)
+                self.joints.append(Joint(arm["joints"][-1], self.use_ext_driver))
 
-        self.__prepare_dh_params()
-        self.__set_dh_params(self.joints)
-        self.current_pos_as_coord = self.get_coords_from_forward_kinematics(self.__forward_kinematics(self.current_pos_as_theta)[-1])
+                self.joint_count = len(self.joints)
 
-        self.__is_expanded = False
+                self.__prepare_dh_params()
+                self.__set_dh_params(self.joints)
+                self.current_pos_as_coord = self.get_coords_from_forward_kinematics(self.__forward_kinematics(self.current_pos_as_theta)[-1])
+
+            except Exception as e:
+                logger.warning(f'{e}')
+                self.__is_expanded = True
 
     def is_expanded(self):
         """Method to return expansion flag of the arm.
@@ -571,7 +583,7 @@ class Arm:
                     except IndexError:
                         logger.critical(f'current_pos_as_theta list of Arm has IndexError!')
 
-        self.current_pos_as_coord = self.get_coords_from_forward_kinematics(self.__forward_kinematics(self.current_pos_as_theta)[-1])
+        # self.current_pos_as_coord = self.get_coords_from_forward_kinematics(self.__forward_kinematics(self.current_pos_as_theta)[-1])
 
     def move_endpoint(self, axis, distance):
         """Method to move endpoint of the arm with the given axis and the distance.
@@ -594,6 +606,8 @@ class Arm:
         Returns:
             dict: Response
         """
+
+        self.current_pos_as_coord = self.get_coords_from_forward_kinematics(self.__forward_kinematics(self.current_pos_as_theta)[-1])
 
         return {"cartesian_coords": self.current_pos_as_coord, "polar_coords": self.current_pos_as_theta}
 
