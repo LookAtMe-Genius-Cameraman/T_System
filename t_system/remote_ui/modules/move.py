@@ -9,8 +9,14 @@
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
 
+from t_system.administration import is_admin
+
 from t_system import arm
 from t_system import seer
+from t_system import mission_manager, emotion_manager
+from t_system import log_manager
+
+logger = log_manager.get_logger(__name__, "DEBUG")
 
 
 def set_arm(admin_id, expand):
@@ -18,15 +24,15 @@ def set_arm(admin_id, expand):
 
     Args:
         admin_id (str):                Admin privileges flag.
-        expand (bool):                 Expansion flag of the arm.
+        expand (str):                  Expansion flag of the arm.
     """
 
-    if expand:
+    if expand in ["true", "True"]:
         if not arm.is_expanded():
             seer.reload_target_locker(arm_expansion=True)
             arm.expand()
     else:
-        if not arm.is_expanded():
+        if arm.is_expanded():
             arm.revert_the_expand()
             seer.reload_target_locker(arm_expansion=False)
 
@@ -36,7 +42,7 @@ def move_arm(admin_id, move_id, data):
 
     Args:
         admin_id (str):                Admin privileges flag.
-        data (dict):                    Move data structure.
+        data (dict):                   Move data structure.
     """
     result = True
 
@@ -48,6 +54,28 @@ def move_arm(admin_id, move_id, data):
         result = False
 
     return result
+
+
+def move_arm_by(admin_id, root, db_name, action, a_type):
+    """Method to get coordinates of T_System's arm current position as polar and cartesian.
+
+    Args:
+        admin_id (str):                Admin privileges flag.
+        root (str):                    Root privileges flag.
+        db_name (str):                 Name of the registered Database. It uses if administration privileges activated.
+        action (str):                  Name of the position or scenario that will simulated.
+        a_type (str):                  The type of the action. Position or Scenario
+    """
+
+    if not is_admin(admin_id):
+        root = False
+    else:
+        root = root in ["true", "True"]
+
+    if db_name == "emotions":
+        emotion_manager.make_feel(action, a_type)
+    elif db_name in ["missions", "predicted_missions"]:
+        mission_manager.execute(action, a_type, root)
 
 
 def get_arm_current_position(admin_id):

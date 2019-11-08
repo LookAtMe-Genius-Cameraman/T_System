@@ -13,7 +13,7 @@ from flask import Blueprint, request
 from flask_restful import Api, Resource
 from schema import SchemaError
 
-from t_system.remote_ui.modules.move import set_arm, move_arm, get_arm_current_position, get_arm_joint_count
+from t_system.remote_ui.modules.move import set_arm, move_arm, move_arm_by, get_arm_current_position, get_arm_joint_count
 from t_system.remote_ui.api.data_schema import MOVE_SCHEMA
 
 api_bp = Blueprint('move_api', __name__)
@@ -53,13 +53,22 @@ class MoveApi(Resource):
         """The API method to POST request for flask.
         """
 
-        expand = request.args.get('expand')
+        db_name = request.args.get('db')
+        action = request.args.get('action')
+        a_type = request.args.get('a_type')
         admin_id = request.args.get('admin_id', None)
+        root = request.args.get('root', None)
 
-        if not expand:
+        if not db_name:
             return {'status': 'ERROR', 'message': '\'id\' parameter is missing'}
 
-        set_arm(admin_id, expand)
+        if not action:
+            return {'status': 'ERROR', 'message': '\'id\' parameter is missing'}
+
+        if not a_type:
+            return {'status': 'ERROR', 'message': '\'id\' parameter is missing'}
+
+        move_arm_by(admin_id, root, db_name, action, a_type)
 
         return {'status': 'OK'}
 
@@ -79,6 +88,19 @@ class MoveApi(Resource):
 
         result = move_arm(admin_id, move_id, data)
         return {'status': 'OK' if result else 'ERROR'}
+
+    def patch(self):
+        """The API method to PATCH request for flask.
+        """
+        expand = request.args.get('expand')
+        admin_id = request.args.get('admin_id', None)
+
+        if not expand:
+            return {'status': 'ERROR', 'message': '\'id\' parameter is missing'}
+
+        set_arm(admin_id, expand)
+
+        return {'status': 'OK'}
 
     def delete(self):
         """The API method to DELETE request for flask.
