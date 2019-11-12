@@ -53,6 +53,13 @@ class Hearer:
         self.listen_thread_stop = False
         self.listen_thread = threading.Thread(target=self.__listen_async, args=(lambda: self.listen_thread_stop,))
 
+    def __reset_listen_thread(self):
+        """Method to set parallel listening thread for reusing.
+        """
+
+        self.listen_thread_stop = False
+        self.listen_thread = threading.Thread(target=self.__listen_async, args=(lambda: self.listen_thread_stop,))
+
     def start_recording(self, record_name, format="wav"):
         """Method to start audio recording.
 
@@ -73,6 +80,8 @@ class Hearer:
 
         self.__save_frames()
         self.frames.clear()
+
+        self.__reset_listen_thread()
 
     def __listen_async(self, stop):
         """Method to provide listening ability physical around of t_system as asynchronous to vision its ability. Powered by multi threading method.
