@@ -8,8 +8,11 @@
 
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
+import os  # Miscellaneous operating system interfaces
+import time  # Time access and conversions
 
 import psutil
+
 from gpiozero import CPUTemperature
 
 from t_system import log_manager
@@ -99,21 +102,21 @@ def get_versions(is_admin):
         return {"versions": {"t_system": None, "stand": None, "remote_ui": None}}
 
 
-def shutdown(time=0, force=False):
+def shutdown(s_time=0, force=False):
     """Method to provide power off the sub-system of T_System.
 
     Args:
-        time:   	         Shutting down time.
+        s_time:   	         Shutting down time.
         force:   	         Force shutdown flag.
 
     Returns:
             dict:  Response.
     """
-    from shutdown import shutdown
 
     result = True
     try:
-        shutdown(time, force)
+        time.sleep(s_time)
+        os.system("shutdown /s /t 1")
     except Exception as e:
         logger.warning(f'Shutdown error: {e}')
         result = False
@@ -121,21 +124,21 @@ def shutdown(time=0, force=False):
     return result
 
 
-def restart(time=0, force=False):
+def restart(r_time=0, force=False):
     """Method to provide reboot the sub-system of T_System.
 
     Args:
-        time:   	         Shutting down time.
+        r_time:   	         Shutting down time.
         force:   	         Force shutdown flag.
 
     Returns:
             dict:  Response.
     """
-    from shutdown import restart
 
     result = True
     try:
-        restart(time, force)
+        time.sleep(r_time)
+        os.system("shutdown /r /t 1")
     except Exception as e:
         logger.warning(f'Restart error: {e}')
         result = False

@@ -117,7 +117,6 @@ setup(
         'adafruit-blinka',
         'adafruit-circuitpython-pca9685',
         'adafruit-circuitpython-servokit',
-        'shutdown'
     ],
 
     # List additional groups of dependencies here (e.g. development
