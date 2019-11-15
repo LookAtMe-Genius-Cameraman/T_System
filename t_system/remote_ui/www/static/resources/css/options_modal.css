@@ -139,6 +139,10 @@
 
 
 #close_options_player_btn {
+    top: 0 !important;
+    right: 0 !important;
+    border-radius: 0 !important;
+
     z-index: 62;
 }
 
