@@ -220,7 +220,7 @@ def initiate():
 
     lock_sys_gr = motion_gr.add_argument_group('Target Locking System')
     lock_sys_gr.add_argument("--ls-gpios", help="GPIO pin numbers of the 2 axis target locking system's servo motors. 23(as pan) and 24(as tilt) GPIO pins are default.", nargs=2, default=[23, 24], type=int, metavar=('PAN', 'TILT'))
-    lock_sys_gr.add_argument("--ls-channels", help="Servo driver channels of the 2 axis target locking system's servo motors. 3(as pan) and 4(as tilt) channels are default.", nargs=2, default=[3, 4], type=int, metavar=('PAN', 'TILT'))
+    lock_sys_gr.add_argument("--ls-channels", help="Servo driver channels of the 2 axis target locking system's servo motors. 4(as pan) and 3(as tilt) channels are default.", nargs=2, default=[4, 3], type=int, metavar=('PAN', 'TILT'))
     lock_sys_usage_gr = lock_sys_gr.add_mutually_exclusive_group()
     lock_sys_usage_gr.add_argument("--AI", help="Specify the learning method of how to move to the target position from the current. When the nothing chosen, learn mode and decision mechanisms will be deprecated. to use: either `official_ai`", action="store", type=str, default=None)
     lock_sys_usage_gr.add_argument("--non-moving-target", help="Track the non-moving objects. Don't use AI or OpenCv's object detection methods. Just try to stay focused on the current focus point with changing axis angles by own position.", action="store_true")
