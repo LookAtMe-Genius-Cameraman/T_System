@@ -98,6 +98,24 @@ sidebar_toggle_btn.addEventListener("click", function () {
     let positions = [];
     let scenarios = [];
 
+    let drag_drop_interact = interact('.drag-drop')
+    .draggable({
+        inertia: true,
+        modifiers: [
+            interact.modifiers.restrictRect({
+                restriction: 'parent',
+                endOnly: true
+            })
+        ],
+        autoScroll: true,
+        // dragMoveListener from the dragging demo above
+        onmove: function (event) {
+            dragMoveListener(event);
+        }
+    });
+
+    sidebar_interacts.push(drag_drop_interact);
+
     request_asynchronous('/api/position?db=' + action_db_name + '&admin_id=' + admin_id + '&root=' + allow_root, 'GET',
         'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
             // err = "success"
@@ -198,6 +216,11 @@ sidebar_toggle_btn.addEventListener("click", function () {
                                         'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
                                             if (err === "success") {
                                                 let response_data = JSON.parse(response.responseText);
+                                                if (response_data["status"] === "OK") {
+                                                    controlling_template_sidebar_close_btn.click();
+                                                    sidebar_toggle_btn.click();
+                                                }
+
                                             }
                                         });
                                 })
@@ -290,6 +313,10 @@ sidebar_toggle_btn.addEventListener("click", function () {
                                         'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
                                             if (err === "success") {
                                                 let response_data = JSON.parse(response.responseText);
+                                                if (response_data["status"] === "OK") {
+                                                    controlling_template_sidebar_close_btn.click();
+                                                    sidebar_toggle_btn.click();
+                                                }
                                             }
                                         });
                                 })
@@ -376,7 +403,9 @@ sidebar_toggle_btn.addEventListener("click", function () {
                             for (let i = 0; i < scenarios[c]["positions"].length; i++) {
 
                                 let advance_position_dd_div = document.createElement('div');
-                                let advance_position_dd_a = document.createElement('a');
+                                let advance_position_btn = document.createElement('button');
+                                let advance_position_dd_btn = document.createElement('button');
+                                let advance_position_dd_span = document.createElement('span');
                                 let advance_position_dd_container_div = document.createElement('div');
 
                                 let advance_po_ca_co_div = document.createElement('div');
@@ -388,23 +417,40 @@ sidebar_toggle_btn.addEventListener("click", function () {
                                 advance_position_dd_div.classList.add("dropdown", "mb-2");
                                 // advance_position_dd_div.classList.add("dropdown", "show", "draggable_position", "drag-drop");
 
-                                advance_position_dd_a.classList.add("dropdown-toggle", "btn", "btn-outline-info");
+                                advance_position_btn.classList.add("btn", "btn-outline-info");
+                                advance_position_btn.innerHTML = scenarios[c]["positions"][i]["name"];
 
-                                advance_position_dd_a.role = "button";
-                                advance_position_dd_a.id = scenarios[c]["positions"][i]["id"] + "_a";
-                                advance_position_dd_a.setAttribute("data-toggle", "dropdown");
-                                advance_position_dd_a.setAttribute("aria-haspopup", "true");
-                                advance_position_dd_a.setAttribute("aria-expanded", "false");
-                                advance_position_dd_a.innerHTML = scenarios[c]["positions"][i]["name"];
-                                advance_position_dd_a.title = advance_position_dd_a.innerHTML;
+                                advance_position_btn.addEventListener("click", function () {
+                                    let data = {};
+                                    request_asynchronous('/api/move?db=' + action_db_name + '&action=' + scenarios[c]["positions"][i]["name"] + '&a_type=position' + '&admin_id=' + admin_id + '&root=' + allow_root, 'POST',
+                                        'application/json; charset=UTF-8', data, function (req, err, response) {
+                                            if (err === "success") {
+                                                let response_data = JSON.parse(response.responseText);
+                                                if (response_data["status"] === "OK") {
+                                                } else {
+                                                }
+                                            }
+                                        });
+                                });
 
-                                advance_position_dd_a.addEventListener("click", function () {
+                                advance_position_dd_btn.classList.add("dropdown-toggle", "dropdown-toggle-split", "btn", "btn-outline-info");
+
+                                advance_position_dd_btn.type = "button";
+                                advance_position_dd_btn.id = scenarios[c]["positions"][i]["id"] + "_a";
+                                advance_position_dd_btn.setAttribute("data-toggle", "dropdown");
+                                advance_position_dd_btn.setAttribute("aria-haspopup", "true");
+                                advance_position_dd_btn.setAttribute("aria-expanded", "false");
+                                advance_position_dd_btn.title = advance_position_dd_btn.innerHTML;
+
+                                advance_position_dd_btn.addEventListener("click", function () {
                                     advance_position_dd_container_div.classList.toggle("show")
                                 });
 
+                                advance_position_dd_span.classList.add("sr-only");
+
                                 advance_position_dd_container_div.classList.add("position-relative", "dropdown-menu", "dropdown-menu-right", "dropdown_menu", "advanced_pos_dropdown_menu");
                                 advance_position_dd_container_div.classList.add("container");
-                                advance_position_dd_container_div.setAttribute("aria-labelledby", advance_position_dd_a.id);
+                                advance_position_dd_container_div.setAttribute("aria-labelledby", advance_position_dd_btn.id);
 
                                 advance_po_ca_co_div.classList.add("dropdown-item", "ml-0", "advanced_cartesian_div");
 
@@ -459,14 +505,14 @@ sidebar_toggle_btn.addEventListener("click", function () {
 
                                     ad_po_joint_speed_input.classList.add("custom-range", "advance_slider");
                                     ad_po_joint_speed_input.type = "range";
-                                    ad_po_joint_speed_input.value = (scenarios[c]["positions"][i]["polar_params"]["delays"][a] * 10) / 2;
+                                    ad_po_joint_speed_input.value = 21 - ((scenarios[c]["positions"][i]["polar_params"]["delays"][a] * 20));
                                     ad_po_joint_speed_input.id = scenarios[c]["name"] + "_" + scenarios[c]["positions"][i]["name"] + "_speed_slider_" + a;
                                     ad_po_joint_speed_input.setAttribute("min", "1");
-                                    ad_po_joint_speed_input.setAttribute("max", "5");
+                                    ad_po_joint_speed_input.setAttribute("max", "21");
                                     ad_po_joint_speed_input.setAttribute("step", "1");
 
                                     ad_po_joint_speed_input.addEventListener("change", function () {
-                                        scenarios[c]["positions"][i]["polar_params"]["delays"][a] = (ad_po_joint_speed_input.value / 10) * 2;
+                                        scenarios[c]["positions"][i]["polar_params"]["delays"][a] = ((21 - ad_po_joint_speed_input.value) / 20) ;
                                     });
 
                                     ad_po_joint_precision_div.classList.add("row", "mt-2", "advance_slider_div");
@@ -479,7 +525,7 @@ sidebar_toggle_btn.addEventListener("click", function () {
                                     ad_po_joint_precision_input.value = scenarios[c]["positions"][i]["polar_params"]["divide_counts"][a];
                                     ad_po_joint_precision_input.id = scenarios[c]["name"] + "_" + scenarios[c]["positions"][i]["name"] + "_precision_slider_" + a;
                                     ad_po_joint_precision_input.setAttribute("min", "1");
-                                    ad_po_joint_precision_input.setAttribute("max", "5");
+                                    ad_po_joint_precision_input.setAttribute("max", "60");
                                     ad_po_joint_precision_input.setAttribute("step", "1");
 
                                     ad_po_joint_precision_input.addEventListener("change", function () {
@@ -506,7 +552,10 @@ sidebar_toggle_btn.addEventListener("click", function () {
                                 advance_po_ca_co_div.appendChild(advance_po_ca_co_header_a);
                                 advance_po_ca_co_div.appendChild(advance_po_ca_co_name_span);
 
-                                advance_position_dd_div.appendChild(advance_position_dd_a);
+                                advance_position_dd_btn.appendChild(advance_position_dd_span);
+
+                                advance_position_dd_div.appendChild(advance_position_btn);
+                                advance_position_dd_div.appendChild(advance_position_dd_btn);
                                 advance_position_dd_div.appendChild(advance_position_dd_container_div);
 
                                 advance_positions_list_ul.appendChild(advance_position_dd_div);
@@ -549,6 +598,7 @@ sidebar_toggle_btn.addEventListener("click", function () {
                                             let response_data = JSON.parse(response.responseText);
 
                                             if (response_data["status"] === "OK") {
+                                                scenario_backup = scenarios[c];
                                                 scenario_cm_advanced_a.click();
                                                 swal(translate_text_item("Changes saved."), "", "success");
                                             } else {
@@ -778,7 +828,7 @@ sidebar_toggle_btn.addEventListener("click", function () {
 
                             function hide_position_context_menu() {
                                 $("#" + position_context_menu.id).removeClass("show").hide();
-                                document.removeEventListener("click", hide_context_menu);
+                                document.removeEventListener("click", hide_position_context_menu);
                             }
 
                             let scenario_pos_interact = interact('#' + position_span.id)
@@ -865,6 +915,10 @@ sidebar_toggle_btn.addEventListener("click", function () {
                                             'application/json; charset=UTF-8', data, function (req, err, response) {
                                                 if (err === "success") {
                                                     let response_data = JSON.parse(response.responseText);
+                                                    if (response_data["status"] === "OK") {
+                                                        controlling_template_sidebar_close_btn.click();
+                                                        sidebar_toggle_btn.click();
+                                                    }
                                                 }
                                             });
                                     });
@@ -978,23 +1032,6 @@ interact('#position_list_ul').dropzone({
         event.relatedTarget.classList.remove('action-can-drop');
     }
 });
-
-interact('.drag-drop')
-    .draggable({
-        inertia: true,
-        modifiers: [
-            interact.modifiers.restrictRect({
-                restriction: 'parent',
-                endOnly: true
-            })
-        ],
-        autoScroll: true,
-        // dragMoveListener from the dragging demo above
-        onmove: function (event) {
-            dragMoveListener(event);
-        }
-    });
-
 
 stream_area_img.addEventListener("mouseover", function () {
 
@@ -1125,7 +1162,7 @@ rotational_menu_control_input.addEventListener("change", function () {
                             let right_interact = interact('#' + arm_joint_right_btn.id)
                                 .on('tap', function (event) {
                                     let route = "/api/move?id=" + joint_number + "&admin_id=" + admin_id;
-                                    let data = {"type": "joint", "id": joint_number.toString(), "quantity": 5};
+                                    let data = {"type": "joint", "id": joint_number.toString(), "quantity": 3};
 
                                     request_asynchronous(route, 'PUT',
                                         'application/x-www-form-urlencoded; charset=UTF-8', data, function (req, err, response) {
@@ -1138,7 +1175,7 @@ rotational_menu_control_input.addEventListener("change", function () {
                                 })
                                 .on('hold', function (event) {
                                     let route = "/api/move?id=" + joint_number + "&admin_id=" + admin_id;
-                                    let data = {"type": "joint", "id": joint_number.toString(), "quantity": 5};
+                                    let data = {"type": "joint", "id": joint_number.toString(), "quantity": 3};
 
                                     interval = setInterval(function () {
 
@@ -1148,7 +1185,7 @@ rotational_menu_control_input.addEventListener("change", function () {
                                                     let response_data = JSON.parse(response.responseText);
                                                 }
                                             });
-                                    }, 300);
+                                    }, 100);
 
                                 })
                                 .on('down', function (event) {
@@ -1191,7 +1228,7 @@ rotational_menu_control_input.addEventListener("change", function () {
                                                     let response_data = JSON.parse(response.responseText);
                                                 }
                                             });
-                                    }, 300);
+                                    }, 100);
 
                                 })
                                 .on('down', function (event) {
