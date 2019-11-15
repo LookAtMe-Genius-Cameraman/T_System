@@ -68,7 +68,8 @@ class Recorder:
         """Method to stop audio and video recording
         """
 
-        self.camera.stop_recording()
+        if self.camera.recording:
+            self.camera.stop_recording()
         self.hearer.stop_recording()
 
         # Todo: This is disgusting way to merging audio and silent video. Fix this.
