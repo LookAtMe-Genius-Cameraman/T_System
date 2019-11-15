@@ -25,7 +25,7 @@ NETWORK_SCHEMA = Schema({
 
 JOB_SCHEMA = Schema({
     'job_type': And(str, Use(str.lower), lambda s: s in ('track', 'learn', 'secure')),
-    'scenario': Use(str),
+    'scenario': Or(None, Use(str)),
     'predicted_mission': Use(bool),
     'recognized_persons': Or(None, Use(list)),
     'non_moving_target': Or(None, Use(bool)),
