@@ -8,12 +8,16 @@
 
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
+import threading
 
 from math import pi
 
 from t_system.motion.locking_system.collimator import Collimator
 
 from t_system import arm
+from t_system import log_manager
+
+logger = log_manager.get_logger(__name__, "DEBUG")
 
 
 class LockingSystem:
@@ -43,7 +47,7 @@ class LockingSystem:
         self.decider = decider
         self.current_k_fact = 0.01
 
-        self.pan = Collimator((args["ls_gpios"][0], args["ls_channels"][0]), self.frame_width, init_angles[0], use_ext_driver=args["ext_servo_driver"])      # pan means rotate right and left ways.
+        self.pan = Collimator((args["ls_gpios"][0], args["ls_channels"][0]), self.frame_width, init_angles[0], False, use_ext_driver=args["ext_servo_driver"])      # pan means rotate right and left ways.
         self.tilt = Collimator((args["ls_gpios"][1], args["ls_channels"][1]), self.frame_height, init_angles[1], False, use_ext_driver=args["ext_servo_driver"])   # tilt means rotate up and down ways.
 
         self.current_target_obj_width = 0
@@ -53,16 +57,22 @@ class LockingSystem:
         self.check_error = None
         self.get_physically_distance = None
 
-        self.load_locker(args["AI"], args["non_moving_target"], args["arm_expansion"])
+        self.scan_thread_stop = False
 
-    def load_locker(self, ai, non_moving_target, arm_expansion):
+        self.load_locker(args["AI"], args["non_moving_target"], args["arm_expansion"], init_angles)
+
+    def load_locker(self, ai, non_moving_target, arm_expansion, current_angles):
         """Method to set locking system's locker as given AI and target object status parameters.
 
         Args:
             ai (str):                       AI type that will using during locking the target.
             non_moving_target (bool):       Non-moving target flag.
             arm_expansion (bool):           Flag for the loading locker as expansion of the T_System's robotic arm.
+            current_angles (list):          Current angles of the target locking system's collimators.
         """
+        if arm_expansion == False:
+            self.pan.restart(current_angles[0])
+            self.tilt.restart(current_angles[1])
 
         if ai == "official_ai":
             self.locker = self.OfficialAILocker(self)
@@ -77,6 +87,8 @@ class LockingSystem:
             self.locker = self.RegularLocker(self)
             self.lock = self.locker.lock
             self.get_physically_distance = self.locker.get_physically_distance
+
+        return [pi - self.tilt.current_angle, pi - self.pan.current_angle]
 
     class OfficialAILocker:
         """Class to define a official AI method of the t_system's motion ability.
@@ -170,10 +182,6 @@ class LockingSystem:
 
             self.root_system = locking_system
 
-            if arm.is_expanded():
-                self.root_system.pan.restart()
-                self.root_system.tilt.restart()
-
         def lock(self, x, y, w, h):
             """Method for locking to the target in the frame.
 
@@ -184,7 +192,7 @@ class LockingSystem:
                 h           :       	 the height of found object from haarcascade.
             """
 
-            precision_ratio = 0.10
+            precision_ratio = 0.2
             obj_middle_x = x + w / 2  # middle point's x axis coordinate of detected object
             obj_middle_y = y + h / 2  # middle point's y axis coordinate of detected object
 
@@ -196,7 +204,7 @@ class LockingSystem:
                 self.root_system.pan.move(True, False)
 
             if obj_middle_y < self.root_system.frame_middle_y - self.root_system.frame_middle_y * precision_ratio:
-                self.root_system.tilt.move(False, True)  # last parameter True is for the clockwise and False is can't clockwise directionx
+                self.root_system.tilt.move(False, True)  # last parameter True is for the clockwise and False is can't clockwise direction
             elif obj_middle_y > self.root_system.frame_middle_y + self.root_system.frame_middle_y * precision_ratio:
                 self.root_system.tilt.move(False, False)  # First parameter is the stop flag.
             else:
@@ -247,6 +255,48 @@ class LockingSystem:
             """
             kp = 28.5823  # gain rate with the width of object and physically distance.
             return obj_width * kp  # physically distance is equal to obj_width * kp in px unit. 1 px length is equal to 0.164 mm
+
+    def scan(self, stop):
+        """Method to scan around for detecting the object that will be locked before lock process.
+
+        Args:
+            stop:       	         Stop flag of the tread about terminating it outside of the function's loop.
+        """
+
+        self.scan_thread_stop = stop
+
+        threading.Thread(target=self.__scan).start()
+
+    def __scan(self):
+        """Method to cycle collimator respectively clockwise and can't clockwise.
+        """
+
+        precision_ratio = 0.95
+
+        while not self.scan_thread_stop:
+            while not self.tilt.current_angle >= self.tilt.max_angle * precision_ratio and not self.scan_thread_stop:
+                self.tilt.move(False, 5, 30)
+
+                while not self.pan.current_angle >= self.pan.max_angle * precision_ratio and not self.scan_thread_stop:
+                    self.pan.move(False, 2, 30)
+
+                self.tilt.move(False, 5, 30)
+
+                while not self.pan.current_angle <= self.pan.min_angle / precision_ratio and not self.scan_thread_stop:
+                    self.pan.move(True, 2, 30)
+
+            while not self.tilt.current_angle <= self.tilt.min_angle / precision_ratio and not self.scan_thread_stop:
+                self.tilt.move(True, 5, 30)
+
+                while not self.pan.current_angle >= self.pan.max_angle * precision_ratio and not self.scan_thread_stop:
+                    self.pan.move(False, 2, 30)
+
+                self.tilt.move(True, 5, 30)
+
+                while not self.pan.current_angle <= self.pan.min_angle / precision_ratio and not self.scan_thread_stop:
+                    self.pan.move(True, 2, 30)
+
+        self.scan_thread_stop = False
 
     def stop(self):
         """Method to provide stop the GPIO.PWM services that are reserved for the locking system's servo motors.

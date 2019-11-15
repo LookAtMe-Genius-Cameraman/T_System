@@ -85,11 +85,12 @@ class Joint:
         Args:
             target_angle (float):       	The target angle of servo motors. In radian Unit.
         """
+        target_ang = target_angle
         if self.is_reverse:
-            target_angle = pi - target_angle
+            target_ang = pi - target_angle
 
-        self.motor.directly_goto_position(target_angle)
-        self.current_angle = target_angle
+        self.motor.directly_goto_position(target_ang)
+        self.current_angle = target_ang
 
     @dispatch(float, int, float)
     def move_to_angle(self, target_angle, divide_count, delay):
@@ -100,11 +101,12 @@ class Joint:
             divide_count (int):             The count that specify motor how many steps will use.
             delay (float):                  delay time between motor steps.
         """
+        target_ang = target_angle
         if self.is_reverse:
-            target_angle = pi - target_angle
+            target_ang = pi - target_angle
 
-        self.motor.softly_goto_position(target_angle, divide_count, delay)
-        self.current_angle = target_angle
+        self.motor.softly_goto_position(target_ang, divide_count, delay)
+        self.current_angle = target_ang
 
     def change_angle_by(self, delta_angle, direction):
         """The top-level method to provide servo motors moving.
@@ -113,7 +115,7 @@ class Joint:
             delta_angle (float):            Angle to rotate. In degree.
             direction (bool):               Rotate direction. True means CW, otherwise CCW.
         """
-        target_angle = self.__calc_target_angle(degree_to_radian(delta_angle), direction)
+        target_angle = round(self.__calc_target_angle(degree_to_radian(delta_angle), direction), 5)
 
         self.move_to_angle(target_angle)
         self.current_angle = target_angle
@@ -192,12 +194,15 @@ class Arm:
         self.__set_joints(arm_configs["joints"])
         self.__set_dh_params(self.joints)
 
-        self.current_pos_as_coord = self.get_coords_from_forward_kinematics(self.__forward_kinematics(self.current_pos_as_theta)[-1])
+        # self.current_pos_as_coord = self.get_coords_from_forward_kinematics(self.__forward_kinematics(self.current_pos_as_theta)[-1])
 
         logger.info(f'{self.name} arm started successfully.')
 
-    def expand(self):
+    def expand(self, current_angles=None):
         """Method to expand arm with using target_locker of t_system's vision.
+
+        Args:
+            current_angles (list):          Current angles of the arm's expanded joints.
         """
         if not self.__is_expanded:
             try:
@@ -208,9 +213,13 @@ class Arm:
                 with open(self.config_file) as conf_file:
                     expansion_joint_configs = json.load(conf_file)[self.expansion_name]  # config file returns the arms.
 
-                for joint_conf in expansion_joint_configs:
+                for (i, joint_conf) in enumerate(expansion_joint_configs):
 
                     joint_conf['joint_number'] = len(self.joints) + 1
+
+                    if current_angles and (joint_conf['structure'] != "constant"):
+                        joint_conf['init_q'] = current_angles[i]
+
                     joint = Joint(joint_conf, self.use_ext_driver)
 
                     self.joints.append(joint)
@@ -223,7 +232,7 @@ class Arm:
                 self.__prepare_dh_params()
                 self.__set_dh_params(self.joints)
 
-                self.current_pos_as_coord = self.get_coords_from_forward_kinematics(self.__forward_kinematics(self.current_pos_as_theta)[-1])
+                # self.current_pos_as_coord = self.get_coords_from_forward_kinematics(self.__forward_kinematics(self.current_pos_as_theta)[-1])
 
             except Exception as e:
                 logger.warning(f'{e}')
@@ -232,6 +241,8 @@ class Arm:
     def revert_the_expand(self):
         """Method to revert back the expansion.
         """
+
+        released_angles = []
 
         if self.__is_expanded:
             try:
@@ -246,6 +257,8 @@ class Arm:
                         self.joints[-1].stop()
                         self.joints[-1].gpio_cleanup()
 
+                        released_angles.append(self.current_pos_as_theta[-1])
+
                         del self.current_pos_as_theta[-1]
 
                     del self.joints[-1]
@@ -259,11 +272,14 @@ class Arm:
 
                 self.__prepare_dh_params()
                 self.__set_dh_params(self.joints)
-                self.current_pos_as_coord = self.get_coords_from_forward_kinematics(self.__forward_kinematics(self.current_pos_as_theta)[-1])
+                # self.current_pos_as_coord = self.get_coords_from_forward_kinematics(self.__forward_kinematics(self.current_pos_as_theta)[-1])
 
             except Exception as e:
                 logger.warning(f'{e}')
+                released_angles = [None, None]
                 self.__is_expanded = True
+
+        return released_angles
 
     def is_expanded(self):
         """Method to return expansion flag of the arm.
@@ -506,8 +522,14 @@ class Arm:
         else:
             raise Exception('Going to position requires angle or coordinate!')
 
-        self.current_pos_as_theta = polar_params["coords"]
-        self.current_pos_as_coord = cartesian_coords
+        self.current_pos_as_theta = []
+        self.current_pos_as_coord = []
+
+        for coord in polar_params["coords"]:
+            self.current_pos_as_theta.append(coord)
+
+        for coord in cartesian_coords:
+            self.current_pos_as_coord.append(coord)
 
     @dispatch(list)
     def __rotate_joints(self, pos_thetas):
@@ -542,6 +564,9 @@ class Arm:
                 joint_thread = threading.Thread(target=joint.move_to_angle, args=(polar_params["coords"][joint.number - 1], int(polar_params["divide_counts"][joint.number - 1]), float(polar_params["delays"][joint.number - 1])))
                 joint_threads.append(joint_thread)
                 joint_thread.start()
+
+        # for joint_thread in joint_threads:
+        #     joint_thread.start()
 
         return self.__check_until_threads_ends(joint_threads)
 

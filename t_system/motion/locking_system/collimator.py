@@ -40,8 +40,11 @@ class Collimator:
         """
 
         self.frame_width = frame_width
-        self.current_angle = init_angle
         self.previous_dis_to_des = 0.0
+
+        self.max_angle = pi
+        self.min_angle = 0
+        self.current_angle = init_angle
 
         self.is_reverse = is_reverse
         self.use_ext_driver = use_ext_driver
@@ -73,7 +76,7 @@ class Collimator:
 
         delta_angle = self.__calc_delta_angle(obj_width, dis_to_des, k_fact)
 
-        target_angle = self.__calc_target_angle(delta_angle)
+        target_angle = round(self.__calc_target_angle(delta_angle), 5)
         logger.debug(f'{target_angle}')
 
         if abs(target_angle - self.current_angle) < 0.01:  # 0.01 radian is equal to .5 degree.
@@ -120,7 +123,23 @@ class Collimator:
                 self.motor_thread = threading.Thread(target=self.motor.change_position_incregular, args=(lambda: self.motor_thread_stop, lambda: self.motor_thread_direction))
                 self.motor_thread.start()
 
-    def __calc_target_angle(self, delta_angle):
+    @dispatch(bool, int, int)
+    def move(self, direction=True, delta_angle=2, divide_count=1):
+        """The top-level method to provide servo motors moving by given angle difference.
+
+        Args:
+            direction:       	     Direction of the moving.
+            delta_angle:       	     angular difference amount of the collimator.
+            divide_count (int):       The count that specify motor how many steps will use.
+        """
+
+        target_angle = round(self.__calc_target_angle(degree_to_radian(delta_angle), direction), 5)
+
+        self.motor.softly_goto_position(target_angle, divide_count)
+
+        self.current_angle = target_angle
+
+    def __calc_target_angle(self, delta_angle, direction=True):
         """Method to calculate what are going to be servo motors duty cycles.
 
         Args:
@@ -128,12 +147,15 @@ class Collimator:
         """
 
         if self.is_reverse:
-            if self.current_angle - delta_angle < 0 or self.current_angle - delta_angle > pi:
-                return self.current_angle
+            direction = not direction
+
+        if direction:
+            if self.current_angle - delta_angle <= self.min_angle:
+                return self.min_angle
             return self.current_angle - delta_angle  # this mines (-) for the camera's mirror effect.
         else:
-            if self.current_angle + delta_angle < 0 or self.current_angle + delta_angle > pi:
-                return self.current_angle
+            if self.current_angle + delta_angle >= self.max_angle:
+                return self.max_angle
             return self.current_angle + delta_angle
 
     def current_dis_to_des(self, obj_first_px, obj_last_px):
@@ -182,9 +204,10 @@ class Collimator:
         else:
             self.motor.__init__(self.motor.gpio_pin)
 
-        if angle:
-            self.motor.start(angle)
+        if angle is None:
+            self.motor.start(self.current_angle)
         else:
+            self.current_angle = pi - angle
             self.motor.start(self.current_angle)
 
     def stop(self):
