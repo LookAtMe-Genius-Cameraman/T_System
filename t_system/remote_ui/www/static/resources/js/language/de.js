@@ -88,6 +88,7 @@ const germantrans = {
     "Position Created!": "Position erstellt!",
     "Click to monitoring job": "Klicken Sie hier, um den Job zu überwachen",
     "Specify Scenarios": "Spezifizieren Szenarien",
+    "Don't Use": "Nicht verwenden",
     "Specify Parameters": "Parameter Angeben",
     "Scenarios": "Szenarien",
     "Parameters": "Parameter",

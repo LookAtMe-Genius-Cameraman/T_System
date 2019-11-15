@@ -88,6 +88,7 @@ const koreantrans = {
     "Position Created!": "포지션이 만들어졌습니다!",
     "Click to monitoring job": "모니터링 작업을 클릭",
     "Specify Scenarios": "시나리오를 지정하다",
+    "Don't Use": "사용하지 마십시오",
     "Specify Parameters": "시나리오를 매개 변수화하다",
     "Scenarios": "시나리오",
     "Parameters": "매개 변수",

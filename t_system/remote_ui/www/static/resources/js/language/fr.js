@@ -88,6 +88,7 @@ const frenchtrans = {
     "Position Created!": "Position créée!",
     "Click to monitoring job": "Cliquer pour surveiller le travail",
     "Specify Scenarios": "Spécifier des Scénarios",
+    "Don't Use": "Ne Pas Utiliser",
     "Specify Parameters": "Spécifier les paramétres",
     "Scenarios": "Des Scénarios",
     "Parameters": "Paramétres",

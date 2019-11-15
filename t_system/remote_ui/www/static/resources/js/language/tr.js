@@ -88,6 +88,7 @@ const turkishtrans = {
     "Position Created!": "Pozisyon oluşturuldu!",
     "Click to monitoring job": "İşi izlemek için tıkla",
     "Specify Scenarios": "Senaryoları Belirle",
+    "Don't Use": "Kullanma",
     "Specify Parameters": "Parametreleri Belirle",
     "Scenarios": "Senaryolar",
     "Parameters": "Parametreler",

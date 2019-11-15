@@ -88,6 +88,7 @@ const italiantrans = {
     "Position Created!": "Posizione creata!",
     "Click to monitoring job": "Fare clic per monitorare il lavoro",
     "Specify Scenarios": "Specificare scenari",
+    "Don't Use": "Non Usare",
     "Specify Parameters": "Specificare Posizioni",
     "Scenarios": "scenari",
     "Parameters": "parametri",
