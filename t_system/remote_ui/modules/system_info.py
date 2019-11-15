@@ -8,9 +8,19 @@
 
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
+import threading
 
 from t_system.foundation import *
 from t_system.administration import is_admin
+
+from t_system import emotion_manager
+
+
+def i_am_ready():
+    """Method to make feel like 'I am ready'.
+    """
+    emotion_manager.make_feel("I_am_ready", "scenario")
+    emotion_manager.revert_the_expand_actor()
 
 
 def get_system_info(admin_id):
@@ -19,6 +29,10 @@ def get_system_info(admin_id):
     Args:
         admin_id (str):                 Admin privileges flag.
     """
+
+    emotion_thread = threading.Thread(target=i_am_ready)
+    emotion_thread.start()
+
     root = is_admin(admin_id)
 
     result = {}
