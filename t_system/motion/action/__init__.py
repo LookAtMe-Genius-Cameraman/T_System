@@ -10,6 +10,7 @@
 """
 
 import uuid  # The random id generator
+import time  # Time access and conversions
 
 from multipledispatch import dispatch
 from tinydb import Query  # TinyDB is a lightweight document oriented database
@@ -130,14 +131,19 @@ class MissionManager:
     def expand_actor(self):
         """Method to expand actor with using axes and motors of target_locker of t_system's vision.
         """
-
-        self.actor.expand()
+        from t_system import seer
+        expansion_angles = seer.reload_target_locker(arm_expansion=True)
+        self.actor.expand(current_angles=expansion_angles)
 
     def revert_the_expand_actor(self):
         """Method to revert back the expansion.
         """
 
-        self.actor.revert_the_expand()
+        from t_system import seer
+
+        locker_angles = self.actor.revert_the_expand()  # locker angles respectively are pan and tilt
+
+        seer.reload_target_locker(arm_expansion=False, current_angles=locker_angles)
 
 
 class EmotionManager:
@@ -202,18 +208,18 @@ class EmotionManager:
         """Method to expand actor with using axes and motors of target_locker of t_system's vision.
         """
         from t_system import seer
-        seer.reload_target_locker(arm_expansion=True)
+        expansion_angles = seer.reload_target_locker(arm_expansion=True)
 
-        self.actor.expand()
+        self.actor.expand(current_angles=expansion_angles)
 
     def revert_the_expand_actor(self):
         """Method to revert back the expansion.
         """
         from t_system import seer
 
-        self.actor.revert_the_expand()
+        locker_angles = self.actor.revert_the_expand()  # locker angles respectively are pan and tilt
 
-        seer.reload_target_locker(arm_expansion=False)
+        seer.reload_target_locker(arm_expansion=False, current_angles=locker_angles)
 
 
 class Actor:
@@ -238,6 +244,7 @@ class Actor:
         Args:
             position (Position):            A Position object
         """
+
         self.arm.goto_position(polar_params={"coords": position.polar_coords,
                                              "delays": position.polar_delays,
                                              "divide_counts": position.polar_divide_counts}, cartesian_coords=position.cartesian_coords)
@@ -256,17 +263,20 @@ class Actor:
                                                      "delays": position.polar_delays,
                                                      "divide_counts": position.polar_divide_counts}, cartesian_coords=position.cartesian_coords)
 
-    def expand(self):
+    def expand(self, current_angles=None):
         """Method to expand arm with using axes and motors of target_locker of t_system's vision.
+
+        Args:
+            current_angles (list):          Current angles of the arm's expanded joints.
         """
 
-        self.arm.expand()
+        self.arm.expand(current_angles=current_angles)
 
     def revert_the_expand(self):
         """Method to revert back the expansion.
         """
 
-        self.arm.revert_the_expand()
+        return self.arm.revert_the_expand()
 
 
 class Scenario:
