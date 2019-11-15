@@ -263,7 +263,12 @@
                     <div id="specify_sce_div" class="pl-1 specify_div">
                         <span id="specify_sce_span" class="mb-3 fas fa-chevron-left specify_span" title="Open scenario selection" translate></span>
                         <div id="available_sce_div" class="specify_select_div">
-                                <ul id="available_sce_ul" class="network_list"></ul>
+                            <div id="dont_use_sce_div" class="form-check mb-1">
+                                <input id="dont_use_sce_checkbox" class="form-check-input" type="radio" name="scenario_select" value="">
+                                <label id="dont_use_sce_cb_label" class="form-check-label btn btn-outline-warning" for="dont_use_sce_checkbox" translate>Don't Use</label>
+                            </div>
+                            <ul id="available_sce_ul" class="network_list">
+                            </ul>
                         </div>
                     </div>
                     <div id="specify_param_div" class="pl-1 ml-1 specify_div">
@@ -369,6 +374,10 @@
             <div id="predict_mission_check_div" class="form-check mb-1 specify_checkbox_div">
                 <input id="predict_mission_checkbox" class="form-check-input" type="checkbox" value="">
                 <label id="predict_mission_cb_label" class="form-check-label btn btn-outline-warning" for="predict_mission_checkbox" translate>Predict Mission</label>
+            </div>
+            <div id="nmt_action_check_div" class="form-check mb-1 specify_checkbox_div">
+                <input id="nmt_action_checkbox" class="form-check-input" type="checkbox" value="">
+                <label id="nmt_action_cb_label" class="form-check-label btn btn-outline-warning" for="nmt_action_checkbox" translate>Set NMT Action</label>
             </div>
         </div>
     </div>

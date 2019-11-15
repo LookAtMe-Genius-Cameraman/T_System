@@ -5,6 +5,11 @@ const specify_sce_span = document.getElementById("specify_sce_span");
 const available_sce_div = document.getElementById("available_sce_div");
 const available_sce_ul = document.getElementById("available_sce_ul");
 
+const dont_use_sce_div = document.getElementById("dont_use_sce_div");
+const dont_use_sce_checkbox = document.getElementById("dont_use_sce_checkbox");
+const dont_use_sce_cb_label = document.getElementById("dont_use_sce_cb_label");
+
+
 const specify_param_div = document.getElementById("specify_param_div");
 const specify_param_span = document.getElementById("specify_param_span");
 const select_param_cb_div = document.getElementById("select_param_cb_div");
@@ -32,6 +37,9 @@ const time_laps_checkbox = document.getElementById("time_laps_checkbox");
 const time_laps_cb_label = document.getElementById("time_laps_cb_label");
 
 let scenario_checkboxes = [];
+scenario_checkboxes.push(dont_use_sce_checkbox);
+
+dont_use_sce_checkbox.click();
 
 specify_sce_div.addEventListener("click", function (e) {
 
@@ -76,23 +84,21 @@ specify_sce_div.addEventListener("click", function (e) {
                             scenario_select_checkbox.type = "radio";
                             scenario_select_checkbox.name = "scenario_select";
 
-                            let face_exist = false;
+                            let sce_exist = false;
 
                             for (let i = 0; i < scenario_checkboxes.length; i++) {
                                 if (scenario_checkboxes[i].id === scenario_select_checkbox.id) {
                                     scenario_select_checkbox = scenario_checkboxes[i];
-                                    face_exist = true;
+                                    sce_exist = true;
                                     break;
                                 }
                             }
 
-                            if (!face_exist) {
+                            if (!sce_exist) {
                                 scenario_checkboxes.push(scenario_select_checkbox);
+
+                                scenario_select_checkbox.addEventListener("change", function () {});
                             }
-
-                            scenario_select_checkbox.addEventListener("change", function () {
-
-                            });
 
                             scenario_select_label.classList.add("form-check-label", "btn", "btn-outline-dark");
                             scenario_select_label.setAttribute("for", scenario_select_checkbox.id);
@@ -237,13 +243,13 @@ recognize_select_dd_btn.addEventListener("click", function () {
 
                         if (!face_exist) {
                             recognize_checkboxes.push(recognize_select_checkbox);
+
+                            recognize_select_checkbox.addEventListener("change", function () {
+                                recognize_all_select_checkbox.checked = !recognize_select_checkbox.checked === false;
+
+                                recognize_checkbox.click();
+                            });
                         }
-
-                        recognize_select_checkbox.addEventListener("change", function () {
-                            recognize_all_select_checkbox.checked = !recognize_select_checkbox.checked === false;
-
-                            recognize_checkbox.click();
-                        });
 
                         recognize_select_label.classList.add("form-check-label");
                         recognize_select_label.setAttribute("for", recognize_select_checkbox.id);
