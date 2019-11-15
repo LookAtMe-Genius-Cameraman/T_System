@@ -611,7 +611,7 @@ encode_new_face_btn.addEventListener("click", function () {
 
 });
 
-
+let record_interacts = [];
 let record_control_btn_click_count = 0;
 let record_control_btn_lis_bind = close_opened_option.bind(null, record_control_btn);
 
@@ -649,6 +649,7 @@ record_control_btn.addEventListener("click", function () {
                             let date_dropdown_container_div = document.createElement('div');
 
                             date_dropdown_div.classList.add("dropdown", "mt-1");
+                            date_dropdown_div.id = "record_div_" + c;
 
                             date_btn.classList.add("btn", "btn-secondary", "dropdown-toggle");
                             date_btn.type = "button";
@@ -663,12 +664,13 @@ record_control_btn.addEventListener("click", function () {
 
                             let date_btn_click_count = 0;
                             date_btn.addEventListener("click", function () {
-
                                 date_btn_click_count++;
+                                if (date_btn_click_count <= 1) {
+                                    date_dropdown_container_div.classList.add("show");
 
-                                clearElement(date_dropdown_container_div);
+                                    clearElement(date_dropdown_container_div);
 
-                                request_asynchronous('/api/record?date=' + record_dates[c] + '&admin_id=' + admin_id, 'GET',
+                                    request_asynchronous('/api/record?date=' + record_dates[c] + '&admin_id=' + admin_id, 'GET',
                                     'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
                                         // err = "success"
                                         // requested_data = {"status": "OK", "data": [{"id": "b970138a-argb-11e9-b145-cc2f844671ed", "name": "record_name", "time": "12_27_54", "length": 180, "extension": "mp4"}]};
@@ -682,12 +684,17 @@ record_control_btn.addEventListener("click", function () {
                                                     let record_time_span = document.createElement('span');
                                                     let record_length_span = document.createElement('span');
 
+                                                    let record_context_menu = document.createElement('div');
+                                                    let record_cm_remove_a = document.createElement('a');
+                                                    let record_cm_download_a = document.createElement('a');
+
                                                     record_div.classList.add("dropdown-item", "position-relative");
                                                     record_div.id = records[i]["id"];
 
+                                                    record_a.classList.add("record_a");
                                                     record_a.role = "button";
                                                     record_a.innerHTML = records[i]["name"];
-                                                    record_a.classList.add("record_a");
+                                                    record_a.id = "record_a_" + c + "_" + i;
 
                                                     record_time_span.innerHTML = records[i]["time"].replace(/_/gi, ":");
                                                     record_time_span.classList.add("record_time_span");
@@ -696,26 +703,114 @@ record_control_btn.addEventListener("click", function () {
                                                     record_length_span.classList.add("record_length_span");
 
                                                     record_a.addEventListener("click", function () {
-
                                                         record_control_div.classList.toggle("hidden_element");
-                                                        options_player_div.classList.toggle("focused");
+                                                                options_player_div.classList.toggle("focused");
 
-                                                        options_player_source.type = "video/" + records[i]["extension"];
-                                                        options_player_source.src = "/api/record?id=" + records[i]["id"] + "&admin_id=" + admin_id;
+                                                                options_player_source.type = "video/" + records[i]["extension"];
+                                                                options_player_source.src = "/api/record?id=" + records[i]["id"] + "&admin_id=" + admin_id;
 
-                                                        // options_player_source.src = "static/resources/images/mov_bbb.mp4"+ "# " + new Date().getTime();
-                                                        options_video.load()
+                                                                // options_player_source.src = "static/resources/images/mov_bbb.mp4"+ "# " + new Date().getTime();
+                                                                options_video.load()
                                                     });
+
+                                                    function hide_record_context_menu() {
+                                                        $("#" + record_context_menu.id).removeClass("show").hide();
+                                                        document.removeEventListener("click", hide_record_context_menu);
+                                                    }
+
+                                                    let record_interact = interact('#' + record_a.id)
+                                                        .on('tap', function (event) {
+
+                                                            if (!record_context_menu.classList.contains("show")) {
+                                                            }
+                                                        })
+                                                        .on('doubletap', function (event) {
+                                                        })
+                                                        .on('hold', function (event) {
+                                                            record_a.classList.add("disable_pointer");
+
+                                                            let target = event.target;
+                                                            let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+                                                            let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+                                                            record_context_menu.setAttribute('data-x', x);
+                                                            record_context_menu.setAttribute('data-y', y);
+
+                                                            $("#" + record_context_menu.id).css({
+                                                                display: "block",
+                                                                transform: 'translate(' + x + 'px, ' + y + 'px)',
+                                                            }).addClass("show");
+
+                                                            setTimeout(function () {
+                                                                record_a.classList.remove("disable_pointer");
+                                                                document.addEventListener("click", hide_record_context_menu);
+                                                            }, 500);
+
+                                                            return false; //blocks default WebBrowser right click menu
+                                                        })
+                                                        .on('down', function (event) {
+                                                        })
+                                                        .on('up', function (event) {
+                                                        });
+
+                                                    record_interacts.push(record_interact);
+
+                                                    record_context_menu.classList.add("position-relative", "dropdown-menu", "dropdown-menu-sm");
+                                                    record_context_menu.id = record_dates[c] + records[i]["name"] + "_context_menu";
+
+                                                    $("#" + record_context_menu.id + " a").on("click", function () {
+                                                        $(this).parent().removeClass("show").hide();
+                                                    });
+
+                                                    record_cm_remove_a.classList.add("dropdown-item");
+                                                    record_cm_remove_a.innerHTML = translate_text_item("remove");
+
+                                                    record_cm_remove_a.addEventListener("click", function () {
+
+                                                        request_asynchronous('/api/record?id=' + records[i]["id"] + '&admin_id=' + admin_id, 'DELETE',
+                                                            'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
+                                                                if (err === "success") {
+                                                                    let response_data = JSON.parse(response.responseText);
+                                                                    record_control_btn.click();
+                                                                    record_control_btn.click();
+                                                                    date_btn.click();
+                                                                }
+                                                            });
+
+                                                    });
+
+                                                    record_cm_download_a.classList.add("dropdown-item");
+                                                    record_cm_download_a.innerHTML = translate_text_item("download");
+
+                                                    record_cm_download_a.addEventListener("click", function () {
+                                                        record_cm_download_a.href = "/api/record?date=" + record_dates[c] + "&id=" + records[i]["id"] + "&admin_id=" + admin_id;
+                                                    });
+
+
+                                                    record_context_menu.appendChild(record_cm_remove_a);
+                                                    record_context_menu.appendChild(record_cm_download_a);
 
                                                     record_div.appendChild(record_a);
                                                     record_div.appendChild(record_time_span);
                                                     record_div.appendChild(record_length_span);
+
+                                                    record_div.appendChild(record_context_menu);
 
                                                     date_dropdown_container_div.appendChild(record_div);
                                                 }
                                             }
                                         }
                                     });
+
+
+                                } else {
+                                    date_btn_click_count = 0;
+                                    for (let i = 0; i < record_interacts.length; i++) {
+                                        record_interacts[i].unset();
+                                    }
+                                    record_interacts = [];
+                                    date_dropdown_container_div.classList.remove("show");
+                                }
                             });
                             date_dropdown_div.appendChild(date_btn);
                             date_dropdown_div.appendChild(date_dropdown_container_div);
@@ -731,6 +826,11 @@ record_control_btn.addEventListener("click", function () {
         if (options_player_div.classList.contains("focused")) {
             close_options_player_btn.click();
         }
+
+        // for (let i = 0; i < record_interacts.length; i++) {
+        //     record_interacts[i].unset();
+        // }
+        // record_interacts = [];
 
         dark_deep_background_div.removeEventListener("click", record_control_btn_lis_bind);
         options_template_container.removeEventListener("click", record_control_btn_lis_bind);
