@@ -51,7 +51,7 @@ class RecordApi(Resource):
             if not record:
                 return {'status': 'ERROR', 'message': 'parameter invalid'}
 
-            return send_file(record)
+            return send_file(record, as_attachment=True)
 
         elif not records_date and not record_id:
             record_dates = get_record_dates(admin_id)
