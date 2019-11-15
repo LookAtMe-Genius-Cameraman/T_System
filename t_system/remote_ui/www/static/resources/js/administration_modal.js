@@ -11,6 +11,9 @@ const create_emotion_cb_label = document.getElementById("create_emotion_cb_label
 const predict_mission_checkbox = document.getElementById("predict_mission_checkbox");
 const predict_mission_cb_label = document.getElementById("predict_mission_cb_label");
 
+const nmt_action_checkbox = document.getElementById("nmt_action_checkbox");
+const nmt_action_cb_label = document.getElementById("nmt_action_cb_label");
+
 function show_selected_tasks(elements, dest) {
     selected_spans = [];
 
@@ -92,8 +95,8 @@ administration_div.addEventListener("click", function (event) {
 
 
 create_emotion_checkbox.addEventListener("change", function () {
-    predict_mission_cb_label.disabled = predict_mission_checkbox.disabled = create_emotion_checkbox.checked;
-    predict_mission_checkbox.checked = false;
+    predict_mission_cb_label.disabled = predict_mission_checkbox.disabled = nmt_action_cb_label.disabled = nmt_action_checkbox.disabled = create_emotion_checkbox.checked;
+    predict_mission_checkbox.checked = nmt_action_checkbox.checked= false;
 
     if (create_emotion_checkbox.checked) {
         request_asynchronous('/api/move?expand=true' + '&admin_id=' + admin_id, 'PATCH',
@@ -120,8 +123,8 @@ create_emotion_checkbox.addEventListener("change", function () {
 
 
 predict_mission_checkbox.addEventListener("change", function () {
-    create_emotion_cb_label.disabled = create_emotion_checkbox.disabled = predict_mission_checkbox.checked;
-    create_emotion_checkbox.checked = false;
+    create_emotion_cb_label.disabled = create_emotion_checkbox.disabled = nmt_action_cb_label.disabled = nmt_action_checkbox.disabled = predict_mission_checkbox.checked;
+    create_emotion_checkbox.checked = nmt_action_checkbox.checked = false;
 
     if (predict_mission_checkbox.checked) {
         action_db_name = "predicted_missions";
@@ -129,5 +132,26 @@ predict_mission_checkbox.addEventListener("change", function () {
     } else {
         action_db_name = "missions";
         allow_root = false;
+    }
+});
+
+nmt_action_checkbox.addEventListener("change", function () {
+    predict_mission_cb_label.disabled = predict_mission_checkbox.disabled = create_emotion_cb_label.disabled = create_emotion_checkbox.disabled = nmt_action_checkbox.checked;
+    predict_mission_checkbox.checked = create_emotion_checkbox.checked = false;
+
+    if (nmt_action_checkbox.checked) {
+        request_asynchronous('/api/move?expand=true' + '&admin_id=' + admin_id, 'PATCH',
+        'application/x-www-form-urlencoded; charset=UTF-8', {}, function (req, err, response) {
+            if (err === "success") {
+                let response_data = JSON.parse(response.responseText);
+            }
+        });
+    } else {
+        request_asynchronous('/api/move?expand=false' + '&admin_id=' + admin_id, 'PATCH',
+        'application/x-www-form-urlencoded; charset=UTF-8', {}, function (req, err, response) {
+            if (err === "success") {
+                let response_data = JSON.parse(response.responseText);
+            }
+        });
     }
 });
