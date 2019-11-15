@@ -29,12 +29,12 @@ def set_arm(admin_id, expand):
 
     if expand in ["true", "True"]:
         if not arm.is_expanded():
-            seer.reload_target_locker(arm_expansion=True)
-            arm.expand()
+            expansion_angles = seer.reload_target_locker(arm_expansion=True)
+            arm.expand(current_angles=expansion_angles)
     else:
         if arm.is_expanded():
-            arm.revert_the_expand()
-            seer.reload_target_locker(arm_expansion=False)
+            locker_angles = arm.revert_the_expand()
+            seer.reload_target_locker(arm_expansion=False, current_angles=locker_angles)
 
 
 def move_arm(admin_id, move_id, data):
