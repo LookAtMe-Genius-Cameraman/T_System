@@ -76,7 +76,8 @@ class Hearer:
         """Method to stop audio recording.
         """
         self.listen_thread_stop = True
-        self.listen_thread.join()
+        if self.listen_thread.is_alive():
+            self.listen_thread.join()
 
         self.__save_frames()
         self.frames.clear()
