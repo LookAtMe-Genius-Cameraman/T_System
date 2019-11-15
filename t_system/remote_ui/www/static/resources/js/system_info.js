@@ -12,7 +12,7 @@ const system_info_template_container = document.getElementById("system_info_temp
 const system_info_div = document.getElementById("system_info_div");
 const system_info_btn = document.getElementById("system_info_btn");
 const system_info_chart_div = document.getElementById("system_info_chart_div");
-const system_info_chart = document.getElementById('system_info_chart').getContext('2d');
+const system_info_chart_cnv = document.getElementById('system_info_chart_cnv').getContext('2d');
 
 const disk_usage_div = document.getElementById('disk_usage_div');
 const d_u_title = document.getElementById('d_u_title');
@@ -23,6 +23,7 @@ const stand_version_p = document.getElementById('stand_version_p');
 const remote_ui_version_p = document.getElementById('remote_ui_version_p');
 const t_system_version_p = document.getElementById('t_system_version_p');
 
+let system_info_chart;
 
 function toggle_system_info_modal() {
     system_info_template_container.classList.toggle("focused");
@@ -47,6 +48,7 @@ function toggle_system_info_modal() {
             dark_deep_background_div.classList.toggle("focused");
             dark_overlay_active = false
         }
+        system_info_chart.destroy();
     }
 
     options_template_container.classList.toggle("hidden_element");
@@ -84,7 +86,7 @@ function set_system_info() {
                     if (ram_usage_percentage === null) {
 
                         versions_div.classList.remove("active");
-                        new Chart(system_info_chart, {
+                        system_info_chart = new Chart(system_info_chart_cnv, {
                             "type": "doughnut",
                             "data": {
                                 "labels": ["Disk Usage(%)", "Free(%)"],
@@ -123,7 +125,7 @@ function set_system_info() {
 
                         });
                     } else {
-                        new Chart(system_info_chart, {
+                        system_info_chart = new Chart(system_info_chart_cnv, {
                             "type": "doughnut",
                             "data": {
                                 "labels": ["Disk Usage(%)", "Ram Usage(%)", "CPU Usage(%)", "CPU temp.(*C)"],
