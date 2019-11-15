@@ -19,7 +19,7 @@ from t_system import emotion_manager
 def i_am_ready():
     """Method to make feel like 'I am ready'.
     """
-    emotion_manager.make_feel("I_am_ready", "scenario")
+    emotion_manager.make_feel("i_am_ready", "scenario")
     emotion_manager.revert_the_expand_actor()
 
 
