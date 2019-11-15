@@ -8,8 +8,9 @@
 
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
-import os  # Miscellaneous operating system interfaces
+
 import time  # Time access and conversions
+import subprocess  # Subprocess managements
 
 import psutil
 
@@ -116,7 +117,7 @@ def shutdown(s_time=0, force=False):
     result = True
     try:
         time.sleep(s_time)
-        os.system("shutdown /s /t 1")
+        subprocess.call("shutdown -h now", shell=True)
     except Exception as e:
         logger.warning(f'Shutdown error: {e}')
         result = False
@@ -138,7 +139,7 @@ def restart(r_time=0, force=False):
     result = True
     try:
         time.sleep(r_time)
-        os.system("shutdown /r /t 1")
+        subprocess.call("reboot -h now", shell=True)
     except Exception as e:
         logger.warning(f'Restart error: {e}')
         result = False
