@@ -13,14 +13,20 @@ const job_simulate_btn = document.getElementById("job_simulate_btn");
 const job_ready_btn = document.getElementById("job_ready_btn");
 const job_cancel_btn = document.getElementById("job_cancel_btn");
 
+const mark_target_dd_div = document.getElementById("mark_target_dd_div");
 const mark_target_dd_btn = document.getElementById("mark_target_dd_btn");
 const no_mark_div = document.getElementById("no_mark_div");
 const no_mark_checkbox = document.getElementById("no_mark_checkbox");
 const mark_target_list_ul = document.getElementById("mark_target_list_ul");
 
-const mark_target_dd_div = document.getElementById("mark_target_dd_div");
 const monitor_area_div = document.getElementById("monitor_area_div");
 const monitor_stream_area_img = document.getElementById("monitor_stream_area_img");
+
+function terminate_monitoring_stream() {
+    if (monitor_area_div.classList.contains("active")) {
+        monitor_area_div.click();
+    }
+}
 
 function post_job_data() {
     let data = {
@@ -55,7 +61,6 @@ function post_job_data() {
 
     if (ai_checkbox.checked) {
         data["ai"] = "official_ai"
-
     }
 
     let labels = document.getElementsByTagName('label');
@@ -65,7 +70,9 @@ function post_job_data() {
             for (let a = 0; a < labels.length; a++) {
                 if (labels[a].htmlFor === scenario_checkboxes[i].id) {
                     data["scenario"] = labels[a].innerHTML;
-                    console.log(labels[a].innerHTML);
+                    if (labels[a].innerHTML === translate_text_item("Don't Use")) {
+                        data["scenario"] = null;
+                    }
                 }
             }
         }
@@ -134,6 +141,10 @@ function toggle_job_modal() {
         selected_spans = [];
         show_checked_boxes([security_mode_checkbox, learn_mode_checkbox, non_moving_target_checkbox, time_laps_checkbox].concat(recognize_checkboxes).concat(ai_checkboxes), selected_params_div);
         show_checked_boxes([].concat(scenario_checkboxes), selected_scenarios_div);
+        
+        job_div.addEventListener("click", toggle_job_modal_by);
+        dark_deep_background_div.addEventListener("click", toggle_job_modal_by);
+
 
     } else {  // 2. click
         if (dark_overlay_active === false) {
@@ -144,6 +155,11 @@ function toggle_job_modal() {
             dark_overlay_active = false
         }
         job_btn_i.innerHTML = "";
+
+        terminate_monitoring_stream();
+
+        job_div.removeEventListener("click", toggle_job_modal_by);
+        dark_deep_background_div.removeEventListener("click", toggle_job_modal_by);
     }
 
     options_template_container.classList.toggle("hidden_element");
@@ -153,12 +169,12 @@ function toggle_job_modal() {
 
 }
 
-job_div.addEventListener("click", function (event) {
+function toggle_job_modal_by(event) {
     if (event.target === event.currentTarget) {
         toggle_job_modal()
     } else {
     }
-});
+}
 
 setInterval(function () {
     if (!job_btn.classList.contains("clicked")) {
@@ -236,7 +252,6 @@ job_ready_btn.addEventListener("click", function () {
         job_cancel_btn.classList.add("btn-dark");
         job_cancel_btn.innerHTML = translate_text_item("PAUSE");
 
-        mark_target_dd_div.classList.add("focused");
         monitor_area_div.classList.add("focused");
 
         for (let i = 0; i < selected_spans.length; i++) {
@@ -250,6 +265,11 @@ job_ready_btn.addEventListener("click", function () {
                     let response_data = JSON.parse(response.responseText);
                 }
             });
+
+        job_div.removeEventListener("click", toggle_job_modal_by);
+        dark_deep_background_div.removeEventListener("click", toggle_job_modal_by);
+
+
 
     } else if (job_ready_btn.innerHTML === translate_text_item("FINISH")) {
         job_ready_btn.innerHTML = translate_text_item("READY");
@@ -266,8 +286,7 @@ job_ready_btn.addEventListener("click", function () {
 
         job_simulate_btn.classList.remove("inactive");
 
-        mark_target_dd_div.classList.remove("focused");
-
+        terminate_monitoring_stream();
         monitor_area_div.classList.remove("focused");
         monitor_area_div.classList.remove("active");
 
@@ -280,13 +299,15 @@ job_ready_btn.addEventListener("click", function () {
             selected_spans[i].classList.add("shine_in_dark");
             selected_spans[i].classList.remove("hidden_element");
         }
-        console.log("finish clicked");
         request_asynchronous('/api/job?admin_id=' + admin_id, 'DELETE',
             'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
                 if (err === "success") {
                     let response_data = JSON.parse(response.responseText);
                 }
+
             });
+        job_div.addEventListener("click", toggle_job_modal_by);
+        dark_deep_background_div.addEventListener("click", toggle_job_modal_by);
     }
 });
 
@@ -348,8 +369,6 @@ job_simulate_btn.addEventListener("click", function () {
 
         job_ready_btn.classList.add("hidden_element");
 
-        mark_target_dd_div.classList.add("focused");
-
         monitor_area_div.classList.add("focused");
 
         selected_sce_span.classList.add("hidden_element");
@@ -367,6 +386,9 @@ job_simulate_btn.addEventListener("click", function () {
                 }
             });
 
+        job_div.removeEventListener("click", toggle_job_modal_by);
+        dark_deep_background_div.removeEventListener("click", toggle_job_modal_by);
+
     } else if (job_simulate_btn.innerText === translate_text_item("HOLD TO PAUSE")) {
         job_simulate_btn.innerHTML = translate_text_item("SIMULATE");
         job_simulate_btn.classList.remove("active");
@@ -375,8 +397,7 @@ job_simulate_btn.addEventListener("click", function () {
 
         job_ready_btn.classList.remove("hidden_element");
 
-        mark_target_dd_div.classList.remove("focused");
-
+        terminate_monitoring_stream();
         monitor_area_div.classList.remove("focused");
         monitor_area_div.classList.remove("active");
 
@@ -396,10 +417,12 @@ job_simulate_btn.addEventListener("click", function () {
                     let response_data = JSON.parse(response.responseText);
                 }
             });
+
+        job_div.addEventListener("click", toggle_job_modal_by);
+        dark_deep_background_div.addEventListener("click", toggle_job_modal_by);
     }
 });
 
-no_mark_checkbox.click();
 
 no_mark_checkbox.addEventListener("change", function () {
     if (no_mark_checkbox.checked) {
@@ -411,6 +434,11 @@ no_mark_checkbox.addEventListener("change", function () {
             });
     }
 });
+
+let mark_select_checkboxes = [];
+mark_select_checkboxes.push(no_mark_checkbox);
+
+no_mark_checkbox.click();
 
 mark_target_dd_btn.addEventListener("click", function () {
     clearElement(mark_target_list_ul);
@@ -439,16 +467,30 @@ mark_target_dd_btn.addEventListener("click", function () {
                             mark_select_checkbox.type = "radio";
                             mark_select_checkbox.name = "mark_select";
 
-                            mark_select_checkbox.addEventListener("change", function () {
-                                if (mark_select_checkbox.checked) {
-                                    request_asynchronous('/api/job?mark=' + items[c] + '&admin_id=' + admin_id, 'POST',
-                                        'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
-                                            if (err === "success") {
-                                                let response_data = JSON.parse(response.responseText);
-                                            }
-                                        });
+                            let mark_exist = false;
+
+                            for (let i = 0; i < mark_select_checkboxes.length; i++) {
+                                if (mark_select_checkboxes[i].id === mark_select_checkbox.id) {
+                                    mark_select_checkbox = mark_select_checkboxes[i];
+                                    mark_exist = true;
+                                    break;
                                 }
-                            });
+                            }
+
+                            if (!mark_exist) {
+                                mark_select_checkboxes.push(mark_select_checkbox);
+
+                                mark_select_checkbox.addEventListener("change", function () {
+                                    if (mark_select_checkbox.checked) {
+                                        request_asynchronous('/api/job?mark=' + items[c] + '&admin_id=' + admin_id, 'POST',
+                                            'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
+                                                if (err === "success") {
+                                                    let response_data = JSON.parse(response.responseText);
+                                                }
+                                            });
+                                    }
+                                });
+                            }
 
                             mark_select_label.classList.add("form-check-label");
                             mark_select_label.setAttribute("for", mark_select_checkbox.id);
@@ -476,14 +518,21 @@ let monitor_area_div_click_count = 0;
 monitor_area_div.addEventListener("click", function () {
     monitor_area_div_click_count++;
     if (monitor_area_div_click_count <= 1) {
+
+        selected_params_div.classList.add("hidden_element");
+        selected_scenarios_div.classList.add("hidden_element");
+
         monitor_stream_area_img.src = "/api/stream?type=monitoring&admin_id=" + admin_id;   // this url assigning creates a GET request.
         monitor_stream_area_img.classList.add("focused");
 
-        mark_target_dd_div.classList.remove("focused");
+        mark_target_dd_div.classList.add("focused");
 
         monitor_area_div.classList.add("active");
 
     } else {
+
+        selected_params_div.classList.remove("hidden_element");
+        selected_scenarios_div.classList.remove("hidden_element");
 
         request_asynchronous('/api/stream?type=monitoring&admin_id=' + admin_id, 'DELETE',
             'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
@@ -495,7 +544,7 @@ monitor_area_div.addEventListener("click", function () {
         monitor_stream_area_img.src = "";
         monitor_stream_area_img.classList.remove("focused");
 
-        mark_target_dd_div.classList.add("focused");
+        mark_target_dd_div.classList.remove("focused");
 
         monitor_area_div.classList.remove("active");
 

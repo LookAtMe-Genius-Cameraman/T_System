@@ -113,8 +113,8 @@
 #mark_target_dd_div {
     display: none;
 
-    top: 30%;
-    left: 25%;
+    top: 2%;
+    left: 15%;
     transform: translate(-50%);
 }
 
@@ -124,19 +124,18 @@
 }
 
 #monitor_area_div {
-    visibility: hidden;
-    opacity: 0;
+    display: none;
 
-    max-width: 720px;
-    max-height: 640px;
+    max-width: 1080px;
+    max-height: 720px;
 
     /*alignment*/
     top: 60%;
     left: 50%;
     transform: translate(-50%);
 
-    width: 44%;
-    height: 20%;
+    width: 0;
+    height: 0;
 
     background-color: #fff;
     border-radius: 10px;
@@ -147,8 +146,7 @@
 
 
 #monitor_area_div.focused {
-    visibility: visible !important;
-    opacity:1 !important;
+    display: inherit;
 
     height: 20% !important;
     width: 85% !important;
@@ -157,7 +155,7 @@
 }
 
 #monitor_area_div.active {
-    width: 90% !important;
+    width: 99% !important;
     height: 70% !important;
     top: 10% !important;
 
