@@ -8,7 +8,7 @@
 
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
-import threading
+import multiprocessing
 
 from t_system.foundation import *
 from t_system.administration import is_admin
@@ -30,8 +30,7 @@ def get_system_info(admin_id):
         admin_id (str):                 Admin privileges flag.
     """
 
-    emotion_thread = threading.Thread(target=i_am_ready)
-    emotion_thread.start()
+    multiprocessing.Process(target=i_am_ready).start()
 
     root = is_admin(admin_id)
 
