@@ -28,7 +28,7 @@ But there is few important feature those need the  detailed explanation:
     
       You can be create your own secret administration entry.
       
-    - `face-encoding`
+    - `encode-face`
     
     - `self-update`
 
@@ -61,17 +61,17 @@ usage: t_system [-h] [--interface {official_stand,augmented,remote_ui,None}]
                 [--no-emotion] [-S]
                 [-m {single_rect,rotating_arcs,partial_rect,animation_1,None}]
                 [-r] [-v] [--version]
-                {id,remote-ui-authentication,face-encoding,self-update} ...
+                {id,remote-ui-authentication,encode-face,self-update} ...
 
 positional arguments:
-  {id,remote-ui-authentication,face-encoding,self-update}
+  {id,remote-ui-authentication,encode-face,self-update}
                         officiate the sub-jobs
     id                  Make identification jobs of T_System.
     remote-ui-authentication
                         Remote UI administrator authority settings of the
                         secret entry point that is the new network connection
                         panel.
-    face-encoding       Generate encoded data from the dataset folder to
+    encode-face       Generate encoded data from the dataset folder to
                         recognize the man T_System is monitoring during
                         operation.
     self-update         Update source code of t_system itself via `git pull`
@@ -158,7 +158,7 @@ Video Options:
 
 Motion Mechanism:
   --robotic-arm ARM     One of the robotic arm names those are defined in
-                        arm_config.json file. The arm is for relocating the 2
+                        config.json file of arm module. The arm is for relocating the 2
                         axis target locking system hybrid-synchronously.
 
 Target Locking System:

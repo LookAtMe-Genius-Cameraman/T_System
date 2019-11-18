@@ -79,11 +79,20 @@ def start_sub(args):
             t_system.identifier.change_keys(args["public_id"], args["private_id"], args["name"])
         elif args["id_sub_jobs"] == "show":
             t_system.identifier.show_keys()
+    
+    elif args["sub_jobs"] == "arm":
+
+        from t_system.motion.arm.modelisation import ArmModeler
+
+        if args["arm_sub_jobs"] == "create":
+            ArmModeler().create(args["name"])
+        elif args["arm_sub_jobs"] == "list":
+            ArmModeler().show(args["name"])
 
     elif args["sub_jobs"] == "remote-ui-authentication":
         t_system.administrator.change_keys(args["ssid"], args["password"])
 
-    elif args["sub_jobs"] == "face-encoding":
+    elif args["sub_jobs"] == "encode-face":
         from t_system.face_encoding import FaceEncodeManager
 
         face_encode_manager = FaceEncodeManager(args["detection_method"])
@@ -111,7 +120,7 @@ def prepare(args):
 
     from t_system.presentation import startup_banner
     startup_banner()
-        
+
     t_system.log_manager = LogManager(args)
 
     global logger
@@ -216,7 +225,7 @@ def initiate():
     motion_gr.add_argument("--sd-channels", help="Number of external servo driver's channels. Default value is 16.", action="store", default=16, type=int)
 
     robotic_arm_gr = ap.add_argument_group('Robotic Arm')
-    robotic_arm_gr.add_argument("--arm-name", help="One of the robotic arm names those are defined in arm_config.json file. The arm is for relocating the 2 axis target locking system hybrid-synchronously.", default="Senior", type=str, metavar=('ARM',))
+    robotic_arm_gr.add_argument("--arm-name", help="One of the robotic arm names those are defined in config.json file. The arm is for relocating the 2 axis target locking system hybrid-synchronously.", default="Senior", type=str, metavar=('ARM',))
 
     lock_sys_gr = motion_gr.add_argument_group('Target Locking System')
     lock_sys_gr.add_argument("--ls-gpios", help="GPIO pin numbers of the 2 axis target locking system's servo motors. 23(as pan) and 24(as tilt) GPIO pins are default.", nargs=2, default=[23, 24], type=int, metavar=('PAN', 'TILT'))
@@ -267,13 +276,22 @@ def initiate():
     ap_r_ui_auth.add_argument('--ssid', help='Secret administrator ssid flag', type=str)
     ap_r_ui_auth.add_argument('--password', help='Secret administrator password flag', type=str)
 
-    ap_face_encode = sub_p.add_parser('face-encoding', help='Generate encoded data from the dataset folder to recognize the man T_System is monitoring during operation.')
+    ap_face_encode = sub_p.add_parser('encode-face', help='Generate encoded data from the dataset folder to recognize the man T_System is monitoring during operation.')
     ap_face_encode.add_argument("-i", "--dataset", help="Path to input directory of faces + images.", required=True)
-    ap_face_encode.add_argument("-n", "--owner-name", default=None, help="Name of the images owner. If there is single man who has the images, give the name of that man with dataset", type=str)
+    ap_face_encode.add_argument("-n", "--owner-name", help="Name of the images owner. If there is single man who has the images, give the name of that man with dataset", type=str, default=None)
     ap_face_encode.add_argument("-d", "--detection-method", help="Face detection model to use: either `hog` or `cnn` default is `hog`", type=str, default="hog")
 
     ap_self_update = sub_p.add_parser('self-update', help='Update source code of t_system itself via `git pull` command from the remote git repo.')
     ap_self_update.add_argument("-e", "--editable", help="Update the T_System in editable mode (i.e. setuptools'develop mode')", action="store_true")
+
+    ap_arm = sub_p.add_parser('arm', help='Management jobs of Denavit-Hartenberg transform matrix models of robotic arms of T_System.')
+    arm_sub_p = ap_arm.add_subparsers(dest="arm_sub_jobs", help='officiate the identification sub-jobs')  # if sub-commands not used their arguments create raise.
+
+    ap_arm_create = arm_sub_p.add_parser('create', help='Create the D-H transform matrix model of given robotic arm name via configuration file.')
+    ap_arm_create.add_argument('--name', help='The name of robotic arm in arm module\'s config.json file.', type=str, required=True)
+
+    ap_arm_list = arm_sub_p.add_parser('list', help='List the robotic arms with their model and features')
+    ap_arm_list.add_argument('--name', help='The name of robotic arm in arm module\'s config.json file.', type=str, default=None)
 
     args = vars(ap.parse_args())
 
