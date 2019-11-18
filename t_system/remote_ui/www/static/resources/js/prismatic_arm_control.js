@@ -63,7 +63,7 @@ interact('.prismatic_control_button')
         let route = "/api/move?id=" + button.getAttribute("data-id") + "&admin_id=" + admin_id;
         let data = {"type": button.getAttribute("data-move-type"), "id": button.getAttribute("data-id"), "quantity": button.getAttribute("data-quantity")};
 
-        request_asynchronous(route, 'POST',
+        request_asynchronous(route, 'PUT',
             'application/x-www-form-urlencoded; charset=UTF-8', data, function (req, err, response) {  // .serialize returns the dictionary form data.
                 if (err === "success") {
                     let response_data = JSON.parse(response.responseText);
@@ -80,7 +80,7 @@ interact('.prismatic_control_button')
 
         interval = setInterval(function () {
 
-            request_asynchronous(route, 'POST',
+            request_asynchronous(route, 'PUT',
                 'application/x-www-form-urlencoded; charset=UTF-8', data, function (req, err, response) {  // .serialize returns the dictionary form data.
                     if (err === "success") {
                         let response_data = JSON.parse(response.responseText);
