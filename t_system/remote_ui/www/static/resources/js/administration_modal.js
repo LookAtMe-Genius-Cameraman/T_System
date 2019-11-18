@@ -14,6 +14,9 @@ const predict_mission_cb_label = document.getElementById("predict_mission_cb_lab
 const nmt_action_checkbox = document.getElementById("nmt_action_checkbox");
 const nmt_action_cb_label = document.getElementById("nmt_action_cb_label");
 
+const administration_exit_btn = document.getElementById("administration_exit_btn");
+
+
 function show_selected_tasks(elements, dest) {
     selected_spans = [];
 
@@ -136,7 +139,7 @@ predict_mission_checkbox.addEventListener("change", function () {
 });
 
 nmt_action_checkbox.addEventListener("change", function () {
-    predict_mission_cb_label.disabled = predict_mission_checkbox.disabled = create_emotion_cb_label.disabled = create_emotion_checkbox.disabled = nmt_action_checkbox.checked;
+    create_emotion_cb_label.disabled = create_emotion_checkbox.disabled = predict_mission_cb_label.disabled = predict_mission_checkbox.disabled = nmt_action_checkbox.checked;
     predict_mission_checkbox.checked = create_emotion_checkbox.checked = false;
 
     if (nmt_action_checkbox.checked) {
@@ -154,4 +157,18 @@ nmt_action_checkbox.addEventListener("change", function () {
             }
         });
     }
+});
+
+administration_exit_btn.addEventListener("click", function () {
+    create_emotion_cb_label.disabled = create_emotion_checkbox.disabled =
+        predict_mission_cb_label.disabled = predict_mission_checkbox.disabled =
+            nmt_action_cb_label.disabled = nmt_action_checkbox.disabled =
+                create_emotion_checkbox.checked = predict_mission_checkbox.checked = nmt_action_checkbox.checked = false;
+
+    admin_id = false;
+    allow_root = false;
+
+    activateAdminAuthorityBy(admin_id);
+
+    administration_btn.click();
 });
