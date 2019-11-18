@@ -118,7 +118,8 @@ const italiantrans = {
     " job": " lavoro",
     "Target Sign": "Segno Target",
     "Don't Mark": "Son Segnare",
-    "administration" : "amministrazione",
+    " administration" : " amministrazione",
+    " Exit": " Uscita",
     "Create Emotion" : "Crea emozione",
     "Predict Mission" : "Prevedi la missione"
 };

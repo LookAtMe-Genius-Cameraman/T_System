@@ -119,6 +119,7 @@ const turkishtrans = {
     "Target Sign": "Hedefi işaretle",
     "Don't Mark": "İşaretleme",
     " administration": " özel yetki",
+    " Exit": " Çık",
     "Create Emotion": "Duygu Yarat",
     "Predict Mission": "Görev öngör"
 };

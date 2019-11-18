@@ -119,6 +119,7 @@ const koreantrans = {
     "Target Sign": "대상 기호",
     "Don't Mark": "서명하지 마십시오",
     " administration": " 행정",
+    " Exit": " 출구",
     "Create Emotion": "감정 만들기",
     "Predict Mission": "미션 예측"
 };

@@ -119,6 +119,7 @@ const frenchtrans = {
     "Target Sign": "Cible Signe",
     "Don't Mark": "Ne Marque Pas",
     " administration": " administration",
+    " Exit": " Sortie",
     "Create Emotion": "Creer Émotion",
     "Predict Mission": "Prédire Mission",
 };

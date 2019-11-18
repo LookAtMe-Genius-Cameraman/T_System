@@ -119,6 +119,7 @@ const germantrans = {
     "Target Sign": "Zielscheibe Unterzeichnen",
     "Don't Mark": "Nicht Markieren",
     " administration": " Verwaltung",
+    " Exit": " Ausfahrt",
     "Create Emotion": "Emotionen Schaffen",
     "Predict Mission": "Mission Vorhersagen"
 };
