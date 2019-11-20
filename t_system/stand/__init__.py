@@ -34,7 +34,7 @@ class Button:
         """Initialization method of :class:`t_system.stand.Button` class.
 
         Args:
-            gpio_pin (int):       	    GPIO pin to use for button.
+                gpio_pin (int):       	    GPIO pin to use for button.
         """
 
         self.gpio_pin = gpio_pin
@@ -103,7 +103,7 @@ class Led:
         """Initialization method of :class:`t_system.stand.Button` class.
 
         Args:
-            gpio_pin (int):       	    GPIO pin to use for button.
+                gpio_pin (int):       	    GPIO pin to use for button.
         """
 
         self.gpio_pin = gpio_pin
@@ -138,7 +138,7 @@ class Fan:
         """Initialization method of :class:`t_system.stand.Fan` class.
 
         Args:
-            gpio_pin (int):       	    GPIO pin to use for Fan.
+                gpio_pin (int):       	    GPIO pin to use for Fan.
         """
 
         self.gpio_pin = gpio_pin
@@ -159,7 +159,7 @@ class Fan:
         """Method to start of the fan initially.
 
         Args:
-            init_percent (float):     Initialization percentage speed value for the fan.
+                init_percent (float):     Initialization percentage speed value for the fan.
         """
         init_duty_cy = self.__percent_to_duty_cy(init_percent)
 
@@ -170,7 +170,7 @@ class Fan:
         """Method to change of fan speed.
 
         Args:
-            speed_percent (float):     Percentage speed value for the fan to set to it.
+                speed_percent (float):     Percentage speed value for the fan to set to it.
         """
 
         if speed_percent == 0:
@@ -182,7 +182,7 @@ class Fan:
         """Method to handle changing duty-cycle of fan by given duty cycle value.
 
         Args:
-            duty_cycle:               Cycle parameter of PWM signal.
+                duty_cycle:               Cycle parameter of PWM signal.
         """
 
         self.servo.ChangeDutyCycle(duty_cycle)
@@ -191,7 +191,7 @@ class Fan:
         """Method to convert percentage to the duty cycle.
 
         Args:
-            percent (float):     The speed percentage of the cooler fan.
+                percent (float):     The speed percentage of the cooler fan.
         """
 
         return (percent / 100) * (self.max_duty_cy - self.min_duty_cy) + self.min_duty_cy
@@ -227,7 +227,7 @@ class Cooler:
         """Initialization method of :class:`t_system.stand.Button` class.
 
         Args:
-            fan_pins (list):       	    GPIO pins to use for fans.
+                fan_pins (list):       	    GPIO pins to use for fans.
         """
 
         self.fans = []
@@ -282,7 +282,7 @@ class Cooler:
         """Method to convert temperature to percentage.
 
         Args:
-            temperature (float):     The temperature value of the cpu. Taken as celsius.
+                temperature (float):     The temperature value of the cpu. Taken as celsius.
         """
 
         return ((temperature - self.min_temperature) / (self.max_temperature - self.min_temperature)) * 100
@@ -312,7 +312,7 @@ class Stand:
         """Initialization method of :class:`t_system.stand.Stand` class.
 
         Args:
-            args:                       Command-line arguments.
+                args:                       Command-line arguments.
         """
 
         from t_system.remote_ui import RemoteUI
@@ -347,8 +347,7 @@ class Stand:
         if not is_connected_to_network:
             self.access_point.start()
 
-        mission_manager.execute("initial", "position", True)
-        mission_manager.revert_the_expand_actor()
+        emotion_manager.revert_the_expand_actor()
         logger.info("Initial position taken.")
 
         self.remote_ui.run()
@@ -357,9 +356,9 @@ class Stand:
         """Method to blinking the LEDs with different on/off combinations.
 
         Args:
-            stop_thread:   	            Stop flag of the tread about terminating it outside of the function's loop.
-            led:       	                The Led object that is going be blinking.
-            delay_time (list):          The delay time list in seconds, between blinks. Index 0 is time after led on and index 1 is after led off.
+                stop_thread:   	            Stop flag of the tread about terminating it outside of the function's loop.
+                led:       	                The Led object that is going be blinking.
+                delay_time (list):          The delay time list in seconds, between blinks. Index 0 is time after led on and index 1 is after led off.
         """
         self.reset_leds()
 
@@ -386,9 +385,9 @@ class Stand:
         """Method to starting new thread.
 
         Args:
-            job:                        The function that is going to applied with multiprocessing.
-            job_args (tuple):           Arguments of the job.
-            working_threads (list):     List of working threads.
+                job:                        The function that is going to applied with multiprocessing.
+                job_args (tuple):           Arguments of the job.
+                working_threads (list):     List of working threads.
         """
 
         thread = threading.Thread(target=job, args=job_args)
@@ -399,7 +398,7 @@ class Stand:
         """Method to killing existing threads/running modes.
 
         Args:
-            working_threads (list):     List of working threads.
+                working_threads (list):     List of working threads.
         """
 
         self.stop_thread = True
