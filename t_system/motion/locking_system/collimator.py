@@ -29,17 +29,17 @@ class Collimator:
 
     """
 
-    def __init__(self, out_number, frame_width, init_angle=pi / 2, is_reverse=True, use_ext_driver=None):
+    def __init__(self, out_number, frame_length, init_angle=pi / 2, is_reverse=True, use_ext_driver=None):
         """Initialization method of :class:`t_system.motion.LockingSystem` class.
 
         Args:
-            out_number (tuple):     GPIO pin and servo driver channel to use for servo motor.
-            frame_width:       	    Width of the camera's frame.
-            init_angle:       	    Initialization angle value for servo motor as radian unit.
-            use_ext_driver (bool):  The flag of external PWM driver activation.
+                out_number (tuple):     GPIO pin and servo driver channel to use for servo motor.
+                frame_length:       	    Width of the camera's frame.
+                init_angle:       	    Initialization angle value for servo motor as radian unit.
+                use_ext_driver (bool):  The flag of external PWM driver activation.
         """
 
-        self.frame_width = frame_width
+        self.frame_length = frame_length
         self.previous_dis_to_des = 0.0
 
         self.max_angle = pi
@@ -47,6 +47,10 @@ class Collimator:
         self.current_angle = init_angle
 
         self.is_reverse = is_reverse
+
+        if self.is_reverse:
+            self.current_angle = pi - init_angle
+
         self.use_ext_driver = use_ext_driver
 
         if self.use_ext_driver:
@@ -65,11 +69,10 @@ class Collimator:
         """The top-level method to provide servo motors moving.
 
         Args:
-            obj_first_px:       	 initial pixel value of found object from haarcascade.
-            obj_last_px:       	     last pixel value of found object from haarcascade.
-            obj_width (int):         Width of the found object from haarcascade for measurement inferencing.
-            k_fact (float):          The factor related to object width for measurement inferencing.
-
+                obj_first_px:       	 initial pixel value of found object from haarcascade.
+                obj_last_px:       	     last pixel value of found object from haarcascade.
+                obj_width (int):         Width of the found object from haarcascade for measurement inferencing.
+                k_fact (float):          The factor related to object width for measurement inferencing.
         """
 
         dis_to_des = self.current_dis_to_des(obj_first_px, obj_last_px)
@@ -91,8 +94,8 @@ class Collimator:
         """The top-level method to provide servo motors moving via given angles.
 
         Args:
-            angle:       	         Servo motor's angle. Between 0 - 180 Degree.
-            max_angle:       	     Servo motor's upper edge of the angle range.
+                angle:       	         Servo motor's angle. Between 0 - 180 Degree.
+                max_angle:       	     Servo motor's upper edge of the angle range.
         """
 
         if angle <= max_angle:
@@ -105,8 +108,8 @@ class Collimator:
         """The top-level method to provide servo motors moving as incrementally and regular via threading.
 
         Args:
-            stop:       	         Stop flag of the tread about terminating it outside of the function's loop.
-            direction:       	     Direction of the moving.
+                stop:       	         Stop flag of the tread about terminating it outside of the function's loop.
+                direction:       	     Direction of the moving.
         """
 
         self.motor_thread_stop = stop
@@ -128,9 +131,9 @@ class Collimator:
         """The top-level method to provide servo motors moving by given angle difference.
 
         Args:
-            direction:       	     Direction of the moving.
-            delta_angle:       	     angular difference amount of the collimator.
-            divide_count (int):       The count that specify motor how many steps will use.
+                direction:       	     Direction of the moving.
+                delta_angle:       	     angular difference amount of the collimator.
+                divide_count (int):       The count that specify motor how many steps will use.
         """
 
         target_angle = round(self.__calc_target_angle(degree_to_radian(delta_angle), direction), 5)
@@ -143,7 +146,7 @@ class Collimator:
         """Method to calculate what are going to be servo motors duty cycles.
 
         Args:
-            delta_angle (float):     Calculated theta angle for going to object position. In radian type.
+                delta_angle (float):     Calculated theta angle for going to object position. In radian type.
         """
 
         if self.is_reverse:
@@ -162,11 +165,11 @@ class Collimator:
         """Method to calculate the distance to the destination at that moment.
 
         Args:
-            obj_first_px:       	 initial pixel value of found object from haarcascade.
-            obj_last_px:       	     last pixel value of found object from haarcascade.
+                obj_first_px:       	 initial pixel value of found object from haarcascade.
+                obj_last_px:       	     last pixel value of found object from haarcascade.
         """
         obj_middle_px = (obj_first_px + obj_last_px) / 2
-        frame_middle_px = self.frame_width / 2 - 1
+        frame_middle_px = self.frame_length / 2 - 1
 
         return float(obj_middle_px - frame_middle_px)
 
@@ -178,9 +181,9 @@ class Collimator:
         And there is a relationship as the object's area / k factor with physical distance and object's area.
 
         Args:
-            obj_width (int):         The width of the found object from haarcascade for measurement inference.
-            dis_to_des:       	     distance from 'frame middle point' to ' object middle point' (distance to destination.)
-            k_fact (float):          The factor related to object width for measurement inference.
+                obj_width (int):         The width of the found object from haarcascade for measurement inference.
+                dis_to_des:       	     distance from 'frame middle point' to ' object middle point' (distance to destination.)
+                k_fact (float):          The factor related to object width for measurement inference.
         """
 
         return dis_to_des / (obj_width / k_fact)
@@ -197,7 +200,7 @@ class Collimator:
         """Method to provide stop the GPIO.PWM services that are reserved for the collimator's servo motor.
 
         Args:
-            angle:              	 Restarting angle value for servo motor as radian unit.
+                angle:              	 Restarting angle value for servo motor as radian unit.
         """
         if self.use_ext_driver:
             self.motor.__init__(self.motor.channel)
@@ -207,7 +210,7 @@ class Collimator:
         if angle is None:
             self.motor.start(self.current_angle)
         else:
-            self.current_angle = pi - angle
+            self.current_angle = angle
             self.motor.start(self.current_angle)
 
     def stop(self):

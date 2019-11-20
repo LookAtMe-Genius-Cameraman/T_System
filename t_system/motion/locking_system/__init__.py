@@ -32,10 +32,10 @@ class LockingSystem:
         """Initialization method of :class:`t_system.motion.LockingSystem` class.
 
         Args:
-            args:                   Command-line arguments.
-            frame_w_h (tuple):      The tuple that is contain width and height info of the vision limits.
-            decider:                decider object of Decider class.
-            init_angles:       	    Initialization angle values for pan and tilt's servo motors as radian unit.
+                args:                   Command-line arguments.
+                frame_w_h (tuple):      The tuple that is contain width and height info of the vision limits.
+                decider:                decider object of Decider class.
+                init_angles:       	    Initialization angle values for pan and tilt's servo motors as radian unit.
         """
 
         self.frame_width = frame_w_h[0]
@@ -65,12 +65,12 @@ class LockingSystem:
         """Method to set locking system's locker as given AI and target object status parameters.
 
         Args:
-            ai (str):                       AI type that will using during locking the target.
-            non_moving_target (bool):       Non-moving target flag.
-            arm_expansion (bool):           Flag for the loading locker as expansion of the T_System's robotic arm.
-            current_angles (list):          Current angles of the target locking system's collimators.
+                ai (str):                       AI type that will using during locking the target.
+                non_moving_target (bool):       Non-moving target flag.
+                arm_expansion (bool):           Flag for the loading locker as expansion of the T_System's robotic arm.
+                current_angles (list):          Current angles of the target locking system's collimators.
         """
-        if arm_expansion == False:
+        if arm_expansion is False:
             self.pan.restart(current_angles[0])
             self.tilt.restart(current_angles[1])
 
@@ -88,7 +88,7 @@ class LockingSystem:
             self.lock = self.locker.lock
             self.get_physically_distance = self.locker.get_physically_distance
 
-        return [pi - self.tilt.current_angle, pi - self.pan.current_angle]
+        return [self.tilt.current_angle, self.pan.current_angle]
 
     class OfficialAILocker:
         """Class to define a official AI method of the t_system's motion ability.
@@ -96,14 +96,13 @@ class LockingSystem:
             This class provides necessary initiations and a function named
             :func:`t_system.motion.LockingSystem.OfficialAILocker.lock`
             for the provide move of servo motor during locking to the target.
-
         """
 
         def __init__(self, locking_system):
             """Initialization method of :class:`t_system.motion.LockingSystem.OfficialAILocker` class.
 
             Args:
-                locking_system:         The LockingSystem Object.
+                    locking_system:         The LockingSystem Object.
             """
 
             self.root_system = locking_system
@@ -120,10 +119,10 @@ class LockingSystem:
             """Method for locking to the target in the frame.
 
             Args:
-                x           :       	 the column number of the top left point of found object from haarcascade.
-                y           :       	 the row number of the top left point of found object from haarcascade.
-                w           :       	 the width of found object from haarcascade.
-                h           :       	 the height of found object from haarcascade.
+                    x           :       	 the column number of the top left point of found object from haarcascade.
+                    y           :       	 the row number of the top left point of found object from haarcascade.
+                    w           :       	 the width of found object from haarcascade.
+                    h           :       	 the height of found object from haarcascade.
             """
 
             # obj_width is equal to w
@@ -137,10 +136,10 @@ class LockingSystem:
             """Method for checking error during locking to the target in the frame.
 
             Args:
-                ex           :       	 the column number of the top left point of found object from haarcascade.
-                ey           :       	 the row number of the top left point of found object from haarcascade.
-                ew           :       	 the width of found object from haarcascade.
-                eh           :       	 the height of found object from haarcascade.
+                    ex           :       	 the column number of the top left point of found object from haarcascade.
+                    ey           :       	 the row number of the top left point of found object from haarcascade.
+                    ew           :       	 the width of found object from haarcascade.
+                    eh           :       	 the height of found object from haarcascade.
             """
 
             err_rate_pan = float(self.root_system.pan.current_dis_to_des(ex, ex + ew) / self.root_system.pan.get_previous_dis_to_des()) * 100
@@ -177,7 +176,7 @@ class LockingSystem:
             """Initialization method of :class:`t_system.motion.LockingSystem.RegularLocker` class.
 
             Args:
-                locking_system:         The LockingSystem Object.
+                    locking_system:         The LockingSystem Object.
             """
 
             self.root_system = locking_system
@@ -186,10 +185,10 @@ class LockingSystem:
             """Method for locking to the target in the frame.
 
             Args:
-                x           :       	 the column number of the top left point of found object from haarcascade.
-                y           :       	 the row number of the top left point of found object from haarcascade.
-                w           :       	 the width of found object from haarcascade.
-                h           :       	 the height of found object from haarcascade.
+                    x           :       	 the column number of the top left point of found object from haarcascade.
+                    y           :       	 the row number of the top left point of found object from haarcascade.
+                    w           :       	 the width of found object from haarcascade.
+                    h           :       	 the height of found object from haarcascade.
             """
 
             precision_ratio = 0.2
@@ -229,7 +228,7 @@ class LockingSystem:
             """Initialization method of :class:`t_system.motion.LockingSystem.ArmExpansionLocker` class.
 
             Args:
-                locking_system:         The LockingSystem Object.
+                    locking_system:         The LockingSystem Object.
             """
 
             self.root_system = locking_system
@@ -242,10 +241,10 @@ class LockingSystem:
             """Method for locking to the target in the frame.
 
             Args:
-                x           :       	 the column number of the top left point of found object from haarcascade.
-                y           :       	 the row number of the top left point of found object from haarcascade.
-                w           :       	 the width of found object from haarcascade.
-                h           :       	 the height of found object from haarcascade.
+                    x           :       	 the column number of the top left point of found object from haarcascade.
+                    y           :       	 the row number of the top left point of found object from haarcascade.
+                    w           :       	 the width of found object from haarcascade.
+                    h           :       	 the height of found object from haarcascade.
             """
             pass
 
@@ -260,7 +259,7 @@ class LockingSystem:
         """Method to scan around for detecting the object that will be locked before lock process.
 
         Args:
-            stop:       	         Stop flag of the tread about terminating it outside of the function's loop.
+                stop:       	         Stop flag of the tread about terminating it outside of the function's loop.
         """
 
         self.scan_thread_stop = stop

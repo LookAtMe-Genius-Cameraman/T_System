@@ -18,8 +18,10 @@ from sympy import symbols, eye, Matrix, cos, sin, diff
 from math import pi
 from multipledispatch import dispatch
 
+from t_system.motion.arm.modelisation import ArmModeler
 from t_system.motion.motor import ServoMotor, ExtServoMotor
-from t_system.motion import degree_to_radian
+from t_system.motion import degree_to_radian, radian_to_degree
+
 from t_system import T_SYSTEM_PATH
 from t_system import log_manager
 
@@ -38,13 +40,17 @@ class Joint:
         """Initialization method of :class:`t_system.motion.arm.Joint` class.
 
         Args:
-            joint (dict):                   The requested_data that is contain joint's properties from the config file.
-            use_ext_driver (bool):          The flag of external PWM driver activation.
+                joint (dict):                   The requested_data that is contain joint's properties from the config file.
+                use_ext_driver (bool):          The flag of external PWM driver activation.
         """
         self.number = joint['joint_number']
         self.is_reverse = joint['reverse']
 
         self.motor = None
+
+        self.motor_thread_stop = None
+        self.motor_thread_direction = None
+        self.motor_thread = None
 
         self.structure = joint['structure']
         self.rotation_type = joint['rotation_type']
@@ -76,6 +82,10 @@ class Joint:
                 self.motor = ServoMotor(joint['motor_gpio_pin'])
                 self.motor.start(round(self.current_angle, 4))
 
+            self.motor_thread_stop = None
+            self.motor_thread_direction = None
+            self.motor_thread = threading.Thread(target=self.motor.change_position_incregular, args=(lambda: self.motor_thread_stop, lambda: self.motor_thread_direction))
+
         logger.info(f'Joint{self.number} started successfully. As {self.structure}, in {self.rotation_type} rotation type, on {round(self.current_angle,4)} radian.')
 
     @dispatch(float)
@@ -83,49 +93,60 @@ class Joint:
         """The top-level method to provide servo motors moving.
 
         Args:
-            target_angle (float):       	The target angle of servo motors. In radian Unit.
+                target_angle (float):       	The target angle of servo motors. In radian Unit.
         """
-        target_ang = target_angle
-        if self.is_reverse:
-            target_ang = pi - target_angle
 
-        self.motor.directly_goto_position(target_ang)
-        self.current_angle = target_ang
+        self.motor.directly_goto_position(target_angle)
+        self.current_angle = target_angle
 
     @dispatch(float, int, float)
     def move_to_angle(self, target_angle, divide_count, delay):
         """The top-level method to provide servo motors moving.
 
         Args:
-            target_angle (float):       	The target angle of servo motors. In radian Unit.
-            divide_count (int):             The count that specify motor how many steps will use.
-            delay (float):                  delay time between motor steps.
+                target_angle (float):       	The target angle of servo motors. In radian Unit.
+                divide_count (int):             The count that specify motor how many steps will use.
+                delay (float):                  delay time between motor steps.
         """
-        target_ang = target_angle
-        if self.is_reverse:
-            target_ang = pi - target_angle
 
-        self.motor.softly_goto_position(target_ang, divide_count, delay)
-        self.current_angle = target_ang
+        self.motor.softly_goto_position(target_angle, divide_count, delay)
+        self.current_angle = target_angle
 
+    @dispatch(float, bool)
     def change_angle_by(self, delta_angle, direction):
         """The top-level method to provide servo motors moving.
 
         Args:
-            delta_angle (float):            Angle to rotate. In degree.
-            direction (bool):               Rotate direction. True means CW, otherwise CCW.
+                delta_angle (float):            Angle to rotate. In degree.
+                direction (bool):               Rotate direction. True means CW, otherwise CCW.
         """
         target_angle = round(self.__calc_target_angle(degree_to_radian(delta_angle), direction), 5)
 
         self.move_to_angle(target_angle)
         self.current_angle = target_angle
 
+    @dispatch(float, int, float, bool)
+    def change_angle_by(self, delta_angle, divide_count, delay, direction):
+        """The top-level method to provide servo motors moving.
+
+        Args:
+                delta_angle (float):            Angle to rotate. In degree.
+                divide_count (int):             The count that specify motor how many steps will use.
+                delay (float):                  delay time between motor steps.
+                direction (bool):               Rotate direction. True means CW, otherwise CCW.
+        """
+
+        target_angle = round(self.__calc_target_angle(degree_to_radian(delta_angle), direction), 5)
+
+        self.move_to_angle(target_angle, divide_count, delay)
+        self.current_angle = target_angle
+
     def __calc_target_angle(self, delta_angle, direction):
         """Method to calculate target angle with the given variation angle value.
 
         Args:
-            delta_angle (float):            Calculated theta angle for going to object position. In radian type.
-            direction (bool):               Rotate direction. True means CW, otherwise CCW.
+                delta_angle (float):            Calculated theta angle for going to object position. In radian type.
+                direction (bool):               Rotate direction. True means CW, otherwise CCW.
         """
         if self.is_reverse:
             direction = not direction
@@ -162,7 +183,7 @@ class Arm:
         """Initialization method of :class:`t_system.motion.arm.Arm` class.
 
         Args:
-            arm_name (str):         Name of the arm. From config file or user choice.
+                arm_name (str):         Name of the arm. From config file or user choice.
         """
         self.name = arm_name
         self.expansion_name = f'{self.name}-Expansion'
@@ -171,7 +192,7 @@ class Arm:
 
         self.joints = []
 
-        self.config_file = f'{T_SYSTEM_PATH}/motion/arm/arm_config.json'
+        self.config_file = f'{T_SYSTEM_PATH}/motion/arm/config.json'
 
         self.joint_count = 0
         self.alpha = None
@@ -202,7 +223,7 @@ class Arm:
         """Method to expand arm with using target_locker of t_system's vision.
 
         Args:
-            current_angles (list):          Current angles of the arm's expanded joints.
+                current_angles (list):          Current angles of the arm's expanded joints.
         """
         if not self.__is_expanded:
             try:
@@ -218,7 +239,7 @@ class Arm:
                     joint_conf['joint_number'] = len(self.joints) + 1
 
                     if current_angles and (joint_conf['structure'] != "constant"):
-                        joint_conf['init_q'] = current_angles[i]
+                        joint_conf['init_q'] = radian_to_degree(current_angles[i])
 
                     joint = Joint(joint_conf, self.use_ext_driver)
 
@@ -291,7 +312,7 @@ class Arm:
         """Method to setting joints with D-H parameters.
 
         Args:
-            joint_configs (list):          The joint list from the config file.
+                joint_configs (list):          The joint list from the config file.
         """
 
         self.joint_count = len(joint_configs)
@@ -306,6 +327,26 @@ class Arm:
 
         self.__prepare_dh_params()
 
+    def __pull_model(self):
+        """Method to pull arm D-H model from database via an ArmModeller instance.
+        """
+
+        model = ArmModeler().get(self.name)
+
+        if model:
+            logger.debug("model creating...")
+            self.alpha = model["alpha"]
+            self.a = model["a"]
+            self.q = model["q"]
+            self.d = model["d"]
+            self.dh_params = model["dh_params"]
+            self.tf_matrices_list = model["transform_matrices"]
+            self.jacobian_matrix = model["jacobian_matrix"]
+
+        else:
+            ArmModeler().create(self.name)
+            self.__pull_model()
+
     def __prepare_dh_params(self):
         """Method to preparing D-H parameters of Arm.
         """
@@ -318,7 +359,7 @@ class Arm:
         """Method to setting joint's D-H parameters.
 
         Args:
-            joints (list):    The arm's joints list for preparing parameters of Denavit-Hartenberg chart.
+                joints (list):    The arm's joints list for preparing parameters of Denavit-Hartenberg chart.
         """
         self.dh_params = {}
 
@@ -339,14 +380,14 @@ class Arm:
                 self.dh_params[self.q[i]] = joints[i].q
                 self.dh_params[self.d[i]] = joints[i].d
 
-        self.__set_tranform_matrices()
+        self.__set_transform_matrices()
 
     def show_dh_params(self):
         """Method to getting D-H parameters of joints of Arm as string message.
         """
         print(f'DH Parameters are: {self.dh_params}')
 
-    def __set_tranform_matrices(self):
+    def __set_transform_matrices(self):
         """Method to setting D-H transform matrices.
         """
         self.tf_matrices_list = []
@@ -387,10 +428,10 @@ class Arm:
         """Method to get cartesian coords from calculated forward kinematics result of the Arm.
 
         Args:
-            forward_kinematics_result (list):   result of the forward kinematics calculation.
+                forward_kinematics_result (list):   result of the forward kinematics calculation.
 
         Returns:
-            list:                               The cartesian coordinate position of Arm's farthest point as millimeter list.
+                list:                               The cartesian coordinate position of Arm's farthest point as millimeter list.
         """
 
         return [current_pos[0] for current_pos in forward_kinematics_result]
@@ -399,10 +440,10 @@ class Arm:
         """Method to calculate forward kinematics of the Arm.
 
         Args:
-            theta_list (list):          The list of current joints angles.
+                theta_list (list):          The list of current joints angles.
 
         Returns:
-            list:                       The cartesian coordinate position of Arm's farthest point as theta list.
+                list:                       The cartesian coordinate position of Arm's farthest point as theta list.
         """
 
         to_current_pos = []
@@ -411,6 +452,8 @@ class Arm:
 
         for i in range(len(theta_list)):
             theta_dict[self.q[i]] = theta_list[i]
+
+        theta_dict[self.q[-1]] = self.q[-1]
 
         temp = tf_matrix_first_to_last.evalf(subs=theta_dict, chop=True, maxn=4)
 
@@ -434,18 +477,18 @@ class Arm:
         """Method to calculate inverse kinematics of the Arm.
 
         Args:
-            guess:                      The twist angle. Axis angle between consecutive two axes.
-            target_point (list):              Target point's coordinates as X, Y, Z respectively.
+                guess:                      The twist angle. Axis angle between consecutive two axes.
+                target_point (list):              Target point's coordinates as X, Y, Z respectively.
 
         Returns:
-            list:                       The angular position list of joints by the target point. (unit: radian)
+                list:                       The angular position list of joints by the target point. (unit: radian)
         """
 
         error = 1.0
         tolerance = 0.05
 
         # Initial Guess - Joint Angles
-        thetas = guess  # thetas is list which is contain all axes theta angles.
+        thetas = np.matrix(guess)  # thetas is list which is contain all axes theta angles.
         target_point = np.matrix(target_point)  # X, Y, Z list to matrix for Target Position
         # print(target_point.shape)
         # Jacobian
@@ -458,15 +501,21 @@ class Arm:
 
         lr = 0.2
         while error > tolerance:
-            for i in range(len(thetas)):
-                theta_dict[self.q[i]] = thetas[i]
+            for i in range(len(np.array(thetas)[0])):
+                theta_dict[self.q[i]] = np.array(thetas)[0][i]
 
-            calculated_target_point = np.matrix(self.__forward_kinematics(thetas)[-1])
+            theta_dict[self.q[-1]] = self.q[-1]
+
+            calculated_target_point = np.matrix(self.get_coords_from_forward_kinematics(self.__forward_kinematics(np.array(thetas)[0])[-1]))
+            logger.debug(f'calculated target point is \n{calculated_target_point}')
 
             diff_wanted_calculated = target_point - calculated_target_point
 
-            thetas = thetas + lr * (np.matrix(self.jacobian_matrix.evalf(subs=theta_dict, chop=True, maxn=4)).astype(np.float64).T * diff_wanted_calculated).T
-            thetas = np.array(thetas)[0]  # this line's purpose is changing Q from matrix level to array level.
+            jacob_mat = np.matrix(self.jacobian_matrix.evalf(subs=theta_dict, chop=True, maxn=4)).astype(np.float64).T
+            logger.debug(f'jacobian matrix is\n{jacob_mat} \n\n diff is \n {diff_wanted_calculated}')
+
+            thetas = thetas + lr * (jacob_mat * diff_wanted_calculated.T)
+            # thetas = np.array(thetas)[0]  # this line's purpose is changing Q from matrix level to array level.
 
             prev_error = error
 
@@ -479,7 +528,7 @@ class Arm:
             error_grad.append((error - prev_error))
 
         # print(error)
-        return thetas
+        return np.array(thetas)[0]
 
     def path_plan(self, guess, target_list, time, acceleration):
         Q_list = []
@@ -501,9 +550,8 @@ class Arm:
            else cartesian coordinates given the joints angles create.
 
         Args:
-            polar_params (dict):          Angular position dictionary to go. Keeps theta, divide_count and delay lists and the length of this lists equals to joint count.
-            cartesian_coords (list):          Cartesian position list to go. List length equals to 3 for 3 dimensions of the cartesian coordinate system.
-
+                polar_params (dict):          Angular position dictionary to go. Keeps theta, divide_count and delay lists and the length of this lists equals to joint count.
+                cartesian_coords (list):          Cartesian position list to go. List length equals to 3 for 3 dimensions of the cartesian coordinate system.
         """
 
         if cartesian_coords and polar_params:
@@ -515,7 +563,7 @@ class Arm:
             cartesian_coords = self.get_coords_from_forward_kinematics(self.__forward_kinematics(polar_params["coords"])[-1])
 
         elif cartesian_coords:
-            polar_params["coords"] = self.__inverse_kinematics(self.current_pos_as_theta, cartesian_coords)
+            polar_params["coords"] = self.__inverse_kinematics([0, 0, 0], cartesian_coords)
 
             self.__rotate_joints(polar_params)
 
@@ -536,7 +584,7 @@ class Arm:
         """Method to rotate all joints according to given position theta angles.
 
         Args:
-            pos_thetas (list):          Angular position list to go. List length equals to joint count.
+                pos_thetas (list):          Angular position list to go. List length equals to joint count.
         """
 
         joint_threads = []
@@ -554,7 +602,7 @@ class Arm:
         """Method to rotate all joints according to given position theta angles.
 
         Args:
-            polar_params (dict):          Angular position list to go. List length equals to joint count.
+                polar_params (dict):          Angular position list to go. List length equals to joint count.
         """
 
         joint_threads = []
@@ -570,12 +618,44 @@ class Arm:
 
         return self.__check_until_threads_ends(joint_threads)
 
+    def rotate_joints(self, pan_params, tilt_params):
+        """Method to rotate all joints according to given position theta angles.
+
+        Args:
+                pan_params (dict):            Control parameters for pan rotation joints.
+                tilt_params (dict):           Control parameters for tilt rotation joints.
+        """
+
+        for joint in self.joints:
+            if joint.structure != 'constant':
+
+                thread_direction = None
+                if joint.rotation_type == "pan":
+                    thread_direction = pan_params["direction"]
+                    joint.motor_thread_stop = pan_params["stop"]
+
+                elif joint.rotation_type == "tilt":
+                    thread_direction = tilt_params["direction"]
+                    joint.motor_thread_stop = tilt_params["stop"]
+
+                if not joint.is_reverse:
+                    joint.motor_thread_direction = not thread_direction
+                else:
+                    joint.motor_thread_direction = thread_direction
+
+                if joint.motor_thread.is_alive():
+                    pass
+                else:
+                    if not joint.motor_thread_stop:
+                        joint.motor_thread = threading.Thread(target=joint.motor.change_position_incregular, args=(lambda: joint.motor_thread_stop, lambda: joint.motor_thread_direction, 3))
+                        joint.motor_thread.start()
+
     @staticmethod
     def __check_until_threads_ends(threads):
         """Method to check given threads recursively until all of them ends.
 
         Args:
-            threads (list):               Thread list that been checked.
+                threads (list):               Thread list that been checked.
         """
 
         for thread in threads:
@@ -588,9 +668,9 @@ class Arm:
         """Method to move a single joint towards the given direction with the given variation.
 
         Args:
-            joint_number (int):        Number of one of arm's joints.
-            delta_angle (float):       Angle to rotate. In degree.
-            direction (bool):          Rotate direction. True means CW, otherwise CCW.
+                joint_number (int):        Number of one of arm's joints.
+                delta_angle (float):       Angle to rotate. In degree.
+                direction (bool):          Rotate direction. True means CW, otherwise CCW.
         """
         if direction is None:
             direction = False
@@ -602,7 +682,7 @@ class Arm:
         for i in range(len(self.joints)):
             if self.joints[i].structure != "constant":
                 if self.joints[i].number == joint_number:
-                    self.joints[i].change_angle_by(delta_angle, direction)
+                    self.joints[i].change_angle_by(float(delta_angle), direction)
                     try:
                         self.current_pos_as_theta[i] = self.joints[i].current_angle
                     except IndexError:
@@ -614,8 +694,8 @@ class Arm:
         """Method to move endpoint of the arm with the given axis and the distance.
 
         Args:
-            axis (str):                Number of one of arm's joints.
-            distance (int):            Moving distance.
+                axis (str):                Number of one of arm's joints.
+                distance (int):            Moving distance.
         """
 
         current_pos_as_coord = self.current_pos_as_coord
@@ -629,7 +709,7 @@ class Arm:
         """Method to send current positions.
 
         Returns:
-            dict: Response
+                dict: Response
         """
 
         self.current_pos_as_coord = self.get_coords_from_forward_kinematics(self.__forward_kinematics(self.current_pos_as_theta)[-1])
