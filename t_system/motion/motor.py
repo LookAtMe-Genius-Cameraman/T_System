@@ -14,7 +14,7 @@ import threading
 from math import pi
 from RPi import GPIO as GPIO
 
-from t_system.motion import radian_to_degree
+from t_system.motion import radian_to_degree, degree_to_radian
 from t_system import log_manager
 
 logger = log_manager.get_logger(__name__, "DEBUG")
@@ -32,7 +32,7 @@ class ServoMotor:
         """Initialization method of :class:`t_system.motion.motor.ServoMotor` class.
 
         Args:
-            gpio_pin:       	    GPIO pin to use for servo motor.
+                gpio_pin:       	    GPIO pin to use for servo motor.
         """
 
         self.gpio_pin = gpio_pin
@@ -54,9 +54,15 @@ class ServoMotor:
         """Method to start of the motor initially.
 
         Args:
-            init_angel (float):     Initialization angle value for servo motor in radian unit.
+                init_angel (float):     Initialization angle value for servo motor in radian unit.
         """
         init_duty_cy = self.__angle_to_duty_cy(init_angel)
+
+        if init_duty_cy < self.min_duty_cy:
+            init_duty_cy = self.min_duty_cy
+        elif init_duty_cy > self.max_duty_cy:
+            init_duty_cy = self.max_duty_cy
+
         self.servo.start(init_duty_cy)
         self.current_duty_cy = init_duty_cy
 
@@ -69,16 +75,25 @@ class ServoMotor:
         """Method to convert theta angle to the duty cycle.
 
         Args:
-            theta_radian (float):     The position angle of servo motor. In radian type.
+                theta_radian (float):     The position angle of servo motor. In radian type.
         """
 
         return (theta_radian / pi) * (self.max_duty_cy - self.min_duty_cy) + self.min_duty_cy
+
+    def __duty_cy_to_angle(self, duty_cycle):
+        """Method to convert duty cycle to radian angle.
+
+        Args:
+                duty_cycle:               Cycle parameter of PWM signal.
+        """
+
+        return ((duty_cycle - self.min_duty_cy) / (self.max_duty_cy - self.min_duty_cy)) * pi
 
     def directly_goto_position(self, target_angle):
         """Method to changing position to the target angle.
 
         Args:
-            target_angle (float):     The target position angle of servo motor. In radian type.
+                target_angle (float):     The target position angle of servo motor. In radian type.
         """
 
         target_duty_cy = self.__angle_to_duty_cy(target_angle)
@@ -93,10 +108,11 @@ class ServoMotor:
         """Method to changing position to the target angle step by step for more softly than direct_goto_position func.
 
         Args:
-            target_angle (float):     The target position angle of servo motor. In radian type.
-            divide_count (int):       The count that specify motor how many steps will use.
-            delay (float):            delay time between motor steps.
+                target_angle (float):     The target position angle of servo motor. In radian type.
+                divide_count (int):       The count that specify motor how many steps will use.
+                delay (float):            delay time between motor steps.
         """
+        current_duty_cy = self.current_duty_cy
 
         if not divide_count:
             divide_count = 1
@@ -108,30 +124,44 @@ class ServoMotor:
             delta_duty_cy = target_duty_cy - self.current_duty_cy
 
             while self.current_duty_cy < target_duty_cy:
-                if self.min_duty_cy <= self.current_duty_cy <= self.max_duty_cy:
+
+                current_duty_cy += delta_duty_cy / divide_count  # Divide the increasing to 50 parse.
+
+                if self.min_duty_cy <= current_duty_cy <= self.max_duty_cy:
+
+                    self.current_duty_cy = current_duty_cy
                     self.__change_duty_cycle(self.current_duty_cy)
-                    self.current_duty_cy += delta_duty_cy / divide_count  # Divide the increasing to 50 parse.
+
+                    time.sleep((delta_duty_cy * 0.00028) / divide_count)
                     time.sleep(delay)
+                else:
+                    break
 
         elif target_duty_cy < self.current_duty_cy:
             delta_duty_cy = self.current_duty_cy - target_duty_cy
 
             while self.current_duty_cy > target_duty_cy:
-                if self.min_duty_cy <= self.current_duty_cy <= self.max_duty_cy:
+
+                current_duty_cy -= delta_duty_cy / divide_count  # Each 0.055 decrease decreases the angle as 1 degree.
+
+                if self.min_duty_cy <= current_duty_cy <= self.max_duty_cy:
+
+                    self.current_duty_cy = current_duty_cy
                     self.__change_duty_cycle(self.current_duty_cy)
-                    self.current_duty_cy -= delta_duty_cy / divide_count  # Each 0.055 decrease decreases the angle as 1 degree.
+
+                    time.sleep((delta_duty_cy * 0.00028) / divide_count)
                     time.sleep(delay)
+                else:
+                    break
         else:
             pass
-
-        self.__change_duty_cycle(target_duty_cy)
 
     def change_position_incregular(self, stop, direction):
         """Method to changing position to the given direction as regularly and incremental when the stop flag is not triggered yet.
 
         Args:
-            stop:                     The motion interrupt flag.
-            direction:                The rotation way of servo motor. True is for clockwise, false is for can't clockwise.
+                stop:                     The motion interrupt flag.
+                direction:                The rotation way of servo motor. True is for clockwise, false is for can't clockwise.
         """
         increase = 0.11  # Each 0.055 increase of duty cycle value increases the angle as 1 degree. increase = 0.055 * 2
         timeout = 0
@@ -139,32 +169,23 @@ class ServoMotor:
         while not stop():
             if timeout >= 5:  # 5 * 0.2 millisecond is equal to 1 second.
                 break
+            elif timeout >= 1:
+                time.sleep(0.2)
+
             if direction():  # true direction is the left way
-                if self.min_duty_cy <= self.current_duty_cy <= self.max_duty_cy:
-
-                    self.current_duty_cy = self.current_duty_cy + increase
-                    self.current_duty_cy = round(self.current_duty_cy, 4)
-                    self.__change_duty_cycle(self.current_duty_cy)
-                else:
-                    break
-
+                target_duty_cy = round(self.current_duty_cy + increase, 4)
             else:
-                if self.min_duty_cy <= self.current_duty_cy <= self.max_duty_cy:
+                target_duty_cy = round(self.current_duty_cy - increase, 4)
 
-                    self.current_duty_cy = self.current_duty_cy - increase
-                    self.current_duty_cy = round(self.current_duty_cy, 4)
-                    self.__change_duty_cycle(self.current_duty_cy)
-                else:
-                    break
+            self.softly_goto_position(self.__duty_cy_to_angle(target_duty_cy), 10)
+
             timeout += 1
-
-            time.sleep(0.2)
 
     def __change_duty_cycle(self, duty_cycle):
         """Method to handle changing duty-cycle of motor with listening __sleep status for sending signal on unnecessary moments.
 
         Args:
-            duty_cycle:               Cycle parameter of PWM signal.
+                duty_cycle:               Cycle parameter of PWM signal.
         """
 
         self.servo.ChangeDutyCycle(duty_cycle)
@@ -213,7 +234,7 @@ class ExtServoMotor:
         """Initialization method of :class:`t_system.motor.Motor` class.
 
         Args:
-            channel:       	    Driver channel to use for servo motor.
+                channel:       	    Driver channel to use for servo motor.
         """
         from t_system import motor_driver
 
@@ -229,9 +250,14 @@ class ExtServoMotor:
         """Method to start of the motor initially.
 
         Args:
-            init_angel (float):     Initialization angle value for servo motor in radian unit.
+                init_angel (float):     Initialization angle value for servo motor in radian unit.
         """
         init_angel = radian_to_degree(init_angel)
+
+        if init_angel < self.min_angle:
+            init_angel = self.min_angle
+        elif init_angel > self.max_angle:
+            init_angel = self.max_angle
 
         self.servo.angle = init_angel
         self.current_angle = init_angel
@@ -240,7 +266,7 @@ class ExtServoMotor:
         """Method to changing position to the target angle.
 
         Args:
-            target_angle (float):     The target position angle of servo motor. In radian type.
+                target_angle (float):     The target position angle of servo motor. In radian type.
         """
         ta_in_degree = radian_to_degree(target_angle)
 
@@ -248,6 +274,7 @@ class ExtServoMotor:
             ta_in_degree = round(ta_in_degree, 1)
 
             self.servo.angle = ta_in_degree
+            time.sleep(abs(self.current_angle - ta_in_degree) * 0.005)
 
             self.current_angle = ta_in_degree
 
@@ -255,10 +282,12 @@ class ExtServoMotor:
         """Method to changing position to the target angle step by step for more softly than direct_goto_position func.
 
         Args:
-            target_angle (float):     The target position angle of servo motor. In radian type.
-            divide_count (int):       The count that specify motor how many steps will use.
-            delay (float):            delay time between motor steps.
+                target_angle (float):     The target position angle of servo motor. In radian type.
+                divide_count (int):       The count that specify motor how many steps will use.
+                delay (float):            delay time between motor steps.
         """
+
+        current_angle = self.current_angle
 
         if not divide_count:
             divide_count = 1
@@ -270,9 +299,13 @@ class ExtServoMotor:
             delta_angle = ta_in_degree - self.current_angle
 
             while self.current_angle < ta_in_degree:
-                if self.min_angle <= self.current_angle <= self.max_angle:
+
+                current_angle += delta_angle / divide_count  # Divide the increasing to 50 parse.
+
+                if self.min_angle <= current_angle <= self.max_angle:
+                    self.current_angle = current_angle
                     self.servo.angle = self.current_angle
-                    self.current_angle += delta_angle / divide_count  # Divide the increasing to 50 parse.
+                    time.sleep((delta_angle * 0.005) / divide_count)
                     time.sleep(delay)
                 else:
                     break
@@ -281,45 +314,44 @@ class ExtServoMotor:
             delta_angle = self.current_angle - ta_in_degree
 
             while self.current_angle > ta_in_degree:
-                if self.min_angle <= self.current_angle <= self.max_angle:
+
+                current_angle -= delta_angle / divide_count  # Each 0.055 decrease decreases the angle as 1 degree.
+
+                if self.min_angle <= current_angle <= self.max_angle:
+                    self.current_angle = current_angle
                     self.servo.angle = self.current_angle
-                    self.current_angle -= delta_angle / divide_count  # Each 0.055 decrease decreases the angle as 1 degree.
+                    time.sleep((delta_angle * 0.005) / divide_count)
                     time.sleep(delay)
                 else:
                     break
         else:
             pass
 
-        self.servo.angle = ta_in_degree
-
-    def change_position_incregular(self, stop, direction):
+    def change_position_incregular(self, stop, direction, increase=2):
         """Method to changing position to the given direction as regularly and incremental when the stop flag is not triggered yet.
 
         Args:
-            stop:                     The motion interrupt flag.
-            direction:                The rotation way of servo motor. True is for clockwise, false is for can't clockwise.
+                stop:                     The motion interrupt flag.
+                direction:                The rotation way of servo motor. True is for clockwise, false is for can't clockwise.
+                increase:       	     Increase amount of the collimator angle.
         """
-        increase = 2  # increase unit is degree.
+
         timeout = 0
 
         while not stop():
             if timeout >= 5:  # 5 * 0.2 millisecond is equal to 1 second.
                 break
+            elif timeout >= 1:
+                time.sleep(0.2)
+
             if direction():  # true direction is the left way
-                if self.min_angle <= self.current_angle <= self.max_angle:
-
-                    self.current_angle = self.current_angle + increase
-                    self.current_angle = round(self.current_angle, 1)
-                    self.servo.angle = self.current_angle
+                target_angle = round(self.current_angle + increase, 1)
             else:
-                if self.min_angle <= self.current_angle <= self.max_angle:
+                target_angle = round(self.current_angle - increase, 1)
 
-                    self.current_angle = self.current_angle - increase
-                    self.current_angle = round(self.current_angle, 1)
-                    self.servo.angle = self.current_angle
+            self.softly_goto_position(degree_to_radian(target_angle), 10)
+
             timeout += 1
-
-            time.sleep(0.2)
 
     def stop(self):
         """Method to provide stop the GPIO.PWM service that is reserved the servo motor.
