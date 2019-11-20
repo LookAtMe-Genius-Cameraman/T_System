@@ -95,14 +95,13 @@ class Vision:
 
         self.raw_capture = PiRGBArray(self.camera, size=resolution)
 
-        ccade_xml_file = f'{T_SYSTEM_PATH}/haarcascade/{args["cascade_file"]}.xml'
-        self.object_cascade = cv2.CascadeClassifier(ccade_xml_file)
+        self.object_cascades = self.set_object_cascades(args["cascades"])
 
         (self.frame_width, self.frame_height) = resolution
 
         self.decider = None
         if args["AI"] == "official_ai":
-            self.decider = Decider(args["cascade_file"])
+            self.decider = Decider(args["cascades"][0])
 
         self.target_locker = LockingSystem(args, resolution, self.decider)
 
@@ -130,7 +129,7 @@ class Vision:
         self.obj_detected = False
 
         # Allow the camera to warm up
-        time.sleep(0.1)
+        # time.sleep(0.1)
 
     def watch(self, stop_thread, format="bgr", caller="security"):
         """The top-level method to provide the video stream for security mode of T_System.
@@ -574,16 +573,19 @@ class Vision:
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         # gray = cv2.equalizeHist(gray)
 
-        detected_boxes = self.object_cascade.detectMultiScale(gray, 1.3, 5)
-
-        # Following list's member change is for face recognition format compatibility.
         reworked_boxes = []
-        for box in detected_boxes:
-            # box[3] is x,
-            # box[0] is y,
-            # box[1] is x + w,
-            # box[2] is y + h.
-            reworked_boxes.append((box[1], box[0] + box[2], box[1] + box[3], box[0]))
+
+        for object_cascade in self.object_cascades:
+
+            detected_boxes = object_cascade.detectMultiScale(gray, 1.3, 5)
+
+            # Following list's member change is for face recognition format compatibility.
+            for box in detected_boxes:
+                # box[3] is x,
+                # box[0] is y,
+                # box[1] is x + w,
+                # box[2] is y + h.
+                reworked_boxes.append((box[1], box[0] + box[2], box[1] + box[3], box[0]))
 
         rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # For __recognize_things compatibility.
 
@@ -681,9 +683,11 @@ class Vision:
          Args:
                 file:       	        The haarcascade trained xml file.
         """
-        ccade_xml_file = T_SYSTEM_PATH + "/haarcascade/" + file + ".xml"
+        self.object_cascades = []
 
-        self.object_cascade = cv2.CascadeClassifier(ccade_xml_file)
+        ccade_xml_file = T_SYSTEM_PATH + "/haarcascade/" + file + ".xml"
+        self.object_cascades.append(cv2.CascadeClassifier(ccade_xml_file))
+
         self.decider.set_db(file)
 
     @staticmethod
@@ -844,6 +848,21 @@ class Vision:
             self.recognition_data["names"].extend(recognition_data["names"])
 
         self.track = self.__track_with_recognizing
+        
+    @staticmethod
+    def set_object_cascades(cascade_files):
+        """The top-level method to set recognition status and parameters of Vision.
+
+         Args:
+                cascade_files (list):   Name list that keep name of haarcascade files.
+        """
+        object_cascades = []
+        
+        for cascade_file in cascade_files:
+            ccade_xml_file = f'{T_SYSTEM_PATH}/haarcascade/{cascade_file}.xml'
+            object_cascades.append(cv2.CascadeClassifier(ccade_xml_file))
+            
+        return object_cascades
 
     def get_current_frame(self):
         """Method to get current working camera frame.

@@ -203,7 +203,7 @@ def initiate():
 
     tool_gr = ap.add_argument_group('Running Tools')
     tool_gr.add_argument("--detection-model", help="Object detection model to use: either `haarcascade`, `hog` or `cnn`. `hog` and `cnn` can only use for detecting human faces. `haarcascade` is default.", action="store", type=str, default="haarcascade")
-    tool_gr.add_argument("--cascade-file", help="Specify the trained detection algorithm file for the object detection ability. Sample: 'frontalface_default' for frontalface_default.xml file under the 'haarcascade' folder.", action="store", type=str, default="frontalface_default")
+    tool_gr.add_argument("--cascades", help="Specify the trained detection algorithm file for the object detection ability. Sample: 'frontalface_default' for frontalface_default.xml file under the 'haarcascade' folder.", action="store", type=list, default=["frontalface_default", "profileface"])
     tool_gr.add_argument("-j", "--no-recognize", help="Do not recognize the things.(faces, objects etc.)", action="store_true")
     tool_gr.add_argument("--encoding-file", help="Specify the trained recognition encoding pickle file for recognize object. Sample: 'jane_encoding' for jane_encoding.pickle file under the '.t_system/recognition/encodings' folder in your Home directory. "
                                                  "If `main_encoding` chosen, `main_encoding.pickle` file that creates from merging all encoding files under `.../encodings` folder will used. Default is `main_encoding`", action="store", type=str, default="main_encoding")
