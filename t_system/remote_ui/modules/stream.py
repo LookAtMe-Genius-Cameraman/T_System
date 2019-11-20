@@ -10,12 +10,8 @@
 """
 
 import threading
-import time  # Time access and conversions
-import numpy as np
 
 from t_system import seer
-from t_system import dot_t_system_dir
-
 from t_system import log_manager
 
 logger = log_manager.get_logger(__name__, "DEBUG")
@@ -40,8 +36,8 @@ class StreamManager:
         """Method to start video streaming.
 
         Args:
-            admin_id (str):                 Root privileges flag.
-            stream_type (str):               Stream's purpose. Preview, track-learn mode etc.
+                admin_id (str):                 Root privileges flag.
+                stream_type (str):               Stream's purpose. Preview, track-learn mode etc.
         """
         if not seer.is_watching:
             self.watch_thread = threading.Thread(target=seer.watch, args=(lambda: self.stop_thread, "bgr", stream_type))
@@ -53,8 +49,8 @@ class StreamManager:
         """Method to stop continuing video stream.
 
         Args:
-            admin_id (str):                 Root privileges flag.
-            stream_type (str):               Stream's purpose. Preview, track-learn mode etc.
+                admin_id (str):                 Root privileges flag.
+                stream_type (str):               Stream's purpose. Preview, track-learn mode etc.
         """
         result = False
 

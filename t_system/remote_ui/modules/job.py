@@ -8,11 +8,11 @@
 
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
-import threading
 
-from t_system.administration import is_admin
+import multiprocessing
+import time  # Time access and conversions
+
 from t_system import seer
-from t_system import arm
 from t_system import mission_manager
 
 from t_system import record_manager
@@ -40,14 +40,14 @@ class JobManager:
 
         self.stop_mission = False
         self.pause_mission = False
-        self.mission_thread = threading.Thread(target=mission_manager.execute, args=(lambda: self.stop_mission, lambda: self.pause_mission, "initial", "scenario",  self.predicted_mission))
+        self.mission_proc = multiprocessing.Process(target=mission_manager.execute, args=(lambda: self.stop_mission, lambda: self.pause_mission, "initial", "scenario", self.predicted_mission))
 
     def set_seer(self, admin_id, data):
         """The top-level method to set seer's work parameters.
 
         Args:
-            admin_id (str):                 Root privileges flag.
-            data (dict):                    Job data structure.
+                admin_id (str):                 Root privileges flag.
+                data (dict):                    Job data structure.
         """
 
         self.job_type = data["job_type"]
@@ -64,9 +64,11 @@ class JobManager:
         """The top-level method to change mark type of found object.
 
         Args:
-            admin_id (str):                 Root privileges flag.
-            mark (dict):                    The mark type of the detected object.
+                admin_id (str):                 Root privileges flag.
+                mark (str):                    The mark type of the detected object.
         """
+        if mark in ["false", "False"]:
+            mark = False
 
         seer.change_mark_object_to(mark)
 
@@ -75,7 +77,7 @@ class JobManager:
         """The top-level method to change mark type of found object.
 
         Args:
-            admin_id (str):                 Root privileges flag.
+                admin_id (str):                 Root privileges flag.
         """
 
         return seer.target_mark_types
@@ -84,30 +86,34 @@ class JobManager:
         """The top-level method to start seer's work.
 
         Args:
-            admin_id (str):                 Root privileges flag.
-            running_type (str):             Specifier of running type. Either `simulation` or `real`.
+                admin_id (str):                 Root privileges flag.
+                running_type (str):             Specifier of running type. Either `simulation` or `real`.
         """
-        result = True
 
         if running_type == "simulation":
             seer.record = False
         elif running_type == "real":
             seer.record = True
         else:
-            result = False
+            return False
 
-        self.mission_thread = threading.Thread(target=mission_manager.continuous_execute, args=(lambda: self.stop_mission, lambda: self.pause_mission, self.scenario, "scenario",  self.predicted_mission))
-        self.mission_thread.start()
+        rgb, detected_boxes = seer.detect_initiate(lambda: self.stop_mission)
 
-        seer.watch_and(self.job_type)
+        if detected_boxes:
+            seer.watch_and(self.job_type)
 
-        return result
+            time.sleep(0.5)
+
+            self.mission_proc = multiprocessing.Process(target=mission_manager.continuous_execute, args=(lambda: self.stop_mission, lambda: self.pause_mission, self.scenario, "scenario", self.predicted_mission))
+            self.mission_proc.start()
+
+        return True
 
     def resume_job(self, admin_id):
         """Method to resume the paused work of seer.
 
         Args:
-            admin_id (str):                 Root privileges flag.
+                admin_id (str):                 Root privileges flag.
         """
 
         return True
@@ -116,7 +122,7 @@ class JobManager:
         """Method to pause the work of seer.
 
         Args:
-            admin_id (str):                 Root privileges flag.
+                admin_id (str):                 Root privileges flag.
         """
 
         return True
@@ -125,17 +131,20 @@ class JobManager:
         """Method to stop the work of seer.
 
         Args:
-            admin_id (str):                 Root privileges flag.
+                admin_id (str):                 Root privileges flag.
         """
 
         seer.terminate_active_threads()
+        seer.stop_thread = True
 
         record_manager.refresh_records()
 
-        self.__stop_mission_thread()
+        self.__stop_mission_proc()
 
         if seer.record:
             seer.record = False
+
+        seer.stop_thread = False
 
         return True
 
@@ -144,7 +153,7 @@ class JobManager:
         """Method to set seer's recognition status.
 
         Args:
-            recognized_persons (list):        The name it's owner will recognized by seer.
+                recognized_persons (list):        The name it's owner will recognized by seer.
         """
 
         if not recognized_persons:
@@ -160,10 +169,9 @@ class JobManager:
         """Method to set mission scenarios of the job.
 
         Args:
-            ai (str):                       AI type that will using during job.
-            non_moving_target (bool):       Non-moving target flag.
+                ai (str):                       AI type that will using during job.
+                non_moving_target (bool):       Non-moving target flag.
         """
-
         if ai:
             mission_manager.revert_the_expand_actor()
 
@@ -172,11 +180,11 @@ class JobManager:
         if non_moving_target:
             mission_manager.expand_actor()
 
-    def __stop_mission_thread(self):
+    def __stop_mission_proc(self):
         """Method to stop the mission_thread.
         """
 
-        if self.mission_thread.is_alive():
+        if self.mission_proc.is_alive():
             self.stop_mission = True
-            self.mission_thread.join()
+            self.mission_proc.terminate()
             self.stop_mission = False
