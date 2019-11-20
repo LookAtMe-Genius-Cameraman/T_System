@@ -212,7 +212,7 @@ def initiate():
 
     video_gr = ap.add_argument_group('Video Options')
     video_gr.add_argument("--camera-rotation", help="Specify the camera's ratational position. 180 degree is default.", action="store", default=180, type=int)
-    video_gr.add_argument("--resolution", help="Specify the camera's resolution of vision ability. 320x240 is default", nargs=2, default=[320, 240], type=int, metavar=('WIDTH', 'HEIGHT'))
+    video_gr.add_argument("--resolution", help="Specify the camera's resolution of vision ability. 320x240 is default", nargs=2, default=[480, 360], type=int, metavar=('WIDTH', 'HEIGHT'))
     video_gr.add_argument("--framerate", help="Specify the camera's framerate. of vision ability. 32 fps is default.", action="store", default=32, type=int)
     video_gr.add_argument("--chunk", help="Smallest unit of audio. 1024*8=8192 bytes are default.", action="store", default=8192, type=int)
     video_gr.add_argument("--rate", help="Bit Rate of audio stream / Frame Rate. 44100 Hz sample rate is default.", action="store", default=44100, type=int)
