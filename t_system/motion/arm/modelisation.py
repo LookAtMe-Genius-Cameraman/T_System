@@ -9,7 +9,9 @@
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
 import json
+import numpy as np
 
+from cloudpickle import dumps, loads
 from numpy import linalg
 from sympy import symbols, eye, Matrix, cos, sin, diff
 from math import pi
@@ -83,12 +85,24 @@ class ArmModeler:
             model = self.db.search((Query().name == arm_name))
 
             if model:
-                return {'alpha': model[0]["alpha"], 'a': model[0]["a"], 'q': model[0]["q"], 'd': model[0]["d"], "dh_params": model[0]["dh_params"], "transform_matrices": model[0]["transform_matrices"], "jacobian_matrix": model[0]["jacobian_matrix"]}
+                return {"alpha": loads(model[0]["alpha"].encode("raw_unicode_escape")),
+                        "a": loads(model[0]["a"].encode("raw_unicode_escape")),
+                        "q": loads(model[0]["q"].encode("raw_unicode_escape")),
+                        "d": loads(model[0]["d"].encode("raw_unicode_escape")),
+                        "dh_params": loads(model[0]["dh_params"].encode("raw_unicode_escape")),
+                        "transform_matrices": loads(model[0]["transform_matrices"].encode("raw_unicode_escape")),
+                        "jacobian_matrix": loads(model[0]["jacobian_matrix"].encode("raw_unicode_escape"))}
             return None
         else:
             arms = []
             for model in self.db.all():
-                arms.append({'alpha': model[0]["alpha"], 'a': model[0]["a"], 'q': model[0]["q"], 'd': model[0]["d"], "dh_params": model[0]["dh_params"], "transform_matrices": model[0]["transform_matrices"], "jacobian_matrix": model[0]["jacobian_matrix"]})
+                arms.append({"alpha": loads(model[0]["alpha"].encode("raw_unicode_escape")),
+                             "a": loads(model[0]["a"].encode("raw_unicode_escape")),
+                             "q": loads(model[0]["q"].encode("raw_unicode_escape")),
+                             "d": loads(model[0]["d"].encode("raw_unicode_escape")),
+                             "dh_params": loads(model[0]["dh_params"].encode("raw_unicode_escape")),
+                             "transform_matrices": loads(model[0]["transform_matrices"].encode("raw_unicode_escape")),
+                             "jacobian_matrix": loads(model[0]["jacobian_matrix"].encode("raw_unicode_escape"))})
             return arms
 
     def show(self, arm_name=None):
@@ -149,7 +163,7 @@ class ArmModeler:
 
             elif joints[i]["structure"] == "constant":
                 self.dh_params[self.q[i]] = joints[i]["init_q"]
-                self.dh_params[self.d[i]] = joints[i][["init_d"]]
+                self.dh_params[self.d[i]] = joints[i]["init_d"]
 
         self.__set_transform_matrices()
 
@@ -214,19 +228,28 @@ class ArmModeler:
 
         if self.db.search((Query().name == self.name)):
             if force_insert:
-                self.db.update({'name': self.name, 'alpha': self.alpha, 'a': self.a, 'q': self.q, 'd': self.d, 'dh_params': self.dh_params, 'transform_matrices': self.tf_matrices, 'jacobian_matrix': self.jacobian_matrix}, Query().name == self.name)
+                self.db.update({
+                    'name': self.name,
+                    'alpha': dumps(self.alpha).decode("raw_unicode_escape"),
+                    'a': dumps(self.a).decode("raw_unicode_escape"),
+                    'q': dumps(self.q).decode("raw_unicode_escape"),
+                    'd': dumps(self.d).decode("raw_unicode_escape"),
+                    'dh_params': dumps(self.dh_params).decode("raw_unicode_escape"),
+                    'transform_matrices': dumps(self.tf_matrices).decode("raw_unicode_escape"),
+                    'jacobian_matrix': dumps(self.jacobian_matrix).decode("raw_unicode_escape")
+                }, Query().name == self.name)
             else:
                 return "Already Exist"
         else:
             self.db.insert({
                 'name': self.name,
-                'alpha': self.alpha,
-                'a': self.a,
-                'q': self.q,
-                'd': self.d,
-                'dh_params': self.dh_params,
-                'transform_matrices': self.tf_matrices,
-                'jacobian_matrix': self.jacobian_matrix
+                'alpha': dumps(self.alpha).decode("raw_unicode_escape"),
+                'a': dumps(self.a).decode("raw_unicode_escape"),
+                'q': dumps(self.q).decode("raw_unicode_escape"),
+                'd': dumps(self.d).decode("raw_unicode_escape"),
+                'dh_params': dumps(self.dh_params).decode("raw_unicode_escape"),
+                'transform_matrices': dumps(self.tf_matrices).decode("raw_unicode_escape"),
+                'jacobian_matrix': dumps(self.jacobian_matrix).decode("raw_unicode_escape")
             })  # insert the given data
 
         return ""
