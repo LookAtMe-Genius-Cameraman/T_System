@@ -1130,8 +1130,14 @@ switching_disconnect_btn.addEventListener("click", function () {
                         let response_data = JSON.parse(response.responseText);
                     }
                 });
-            window.close();
+
+            if (window.leaveDevice !== undefined) {
+                window.leaveDevice.postMessage("disconnect");
+            } else {
+                console.debug('not running inside a Flutter webview');
+            }
         }, translate_text_item("disconnecting..."));
+
 });
 
 
@@ -1146,6 +1152,12 @@ switching_reboot_btn.addEventListener("click", function () {
                         let response_data = JSON.parse(response.responseText);
                     }
                 });
+
+            if (window.leaveDevice !== undefined) {
+                window.leaveDevice.postMessage("reboot");
+            } else {
+                console.debug('not running inside a Flutter webview');
+            }
         }, translate_text_item("restarting..."));
 });
 
@@ -1160,5 +1172,11 @@ switching_shutdown_btn.addEventListener("click", function () {
                         let response_data = JSON.parse(response.responseText);
                     }
                 });
+
+            if (window.shutdownDevice !== undefined) {
+                window.shutdownDevice.postMessage("shutdown");
+            } else {
+                console.debug('not running inside a Flutter webview');
+            }
         }, translate_text_item("shutting down..."));
 });
