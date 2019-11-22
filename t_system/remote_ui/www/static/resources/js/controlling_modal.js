@@ -1205,7 +1205,7 @@ rotational_menu_control_input.addEventListener("change", function () {
                             let left_interact = interact('#' + arm_joint_left_btn.id)
                                 .on('tap', function (event) {
                                     let route = "/api/move?id=" + joint_number + "&admin_id=" + admin_id;
-                                    let data = {"type": "joint", "id": joint_number.toString(), "quantity": -5};
+                                    let data = {"type": "joint", "id": joint_number.toString(), "quantity": -3};
 
                                     request_asynchronous(route, 'PUT',
                                         'application/x-www-form-urlencoded; charset=UTF-8', data, function (req, err, response) {
@@ -1218,7 +1218,7 @@ rotational_menu_control_input.addEventListener("change", function () {
                                 })
                                 .on('hold', function (event) {
                                     let route = "/api/move?id=" + joint_number + "&admin_id=" + admin_id;
-                                    let data = {"type": "joint", "id": joint_number.toString(), "quantity": -5};
+                                    let data = {"type": "joint", "id": joint_number.toString(), "quantity": -3};
 
                                     interval = setInterval(function () {
 
