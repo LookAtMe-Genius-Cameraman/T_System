@@ -21,7 +21,7 @@ def get_record_dates(admin_id):
     """Method to return existing positions.
 
     Args:
-        admin_id (str):                 Root privileges flag.
+            admin_id (str):                 Root privileges flag.
     """
     try:
         result = record_manager.get_record_dates()
@@ -36,8 +36,8 @@ def get_records(admin_id, records_date):
     """Method to return existing position with given id.
 
     Args:
-        admin_id (str):                 Root privileges flag.
-        records_date (str):             Date of the wanted records.
+            admin_id (str):                 Root privileges flag.
+            records_date (str):             Date of the wanted records.
     """
     result = []
 
@@ -56,8 +56,8 @@ def get_record(admin_id, record_id):
     """Method to return existing position with given id.
 
     Args:
-        admin_id (str):                 Root privileges flag.
-        record_id (str):                The id of the record.
+            admin_id (str):                 Root privileges flag.
+            record_id (str):                The id of the record.
     """
 
     record = record_manager.get_record(record_id)
@@ -72,8 +72,8 @@ def download_record(admin_id, record_id):
     """Method to return existing face and copying its images under the static folder with given id.
 
     Args:
-        admin_id (str):                 Root privileges flag.
-        record_id (str):                The id of the record.
+            admin_id (str):                 Root privileges flag.
+            record_id (str):                The id of the record.
     """
 
     record = record_manager.get_record(record_id)
@@ -88,8 +88,9 @@ def update_record(admin_id, record_id, data):
     """Method to remove existing position with given id.
 
     Args:
-        admin_id (str):                 Root privileges flag.
-        record_id (str):                The id of the record.
+            admin_id (str):                 Root privileges flag.
+            record_id (str):                The id of the record.
+            data (dict):                    Record data structure.
     """
 
     result = record_manager.update_record(record_id, data["name"])
@@ -101,8 +102,8 @@ def delete_record(admin_id, record_id):
     """Method to remove existing position with given id.
 
     Args:
-        admin_id (str):                 Root privileges flag.
-        record_id (str):                The id of the record.
+            admin_id (str):                 Root privileges flag.
+            record_id (str):                The id of the record.
     """
 
     result = record_manager.delete_record(record_id)

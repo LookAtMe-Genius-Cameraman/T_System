@@ -692,6 +692,7 @@ record_control_btn.addEventListener("click", function () {
 
                                                         let record_context_menu = document.createElement('div');
                                                         let record_cm_remove_a = document.createElement('a');
+                                                        let record_cm_rename_a = document.createElement('a');
                                                         let record_cm_download_a = document.createElement('a');
 
                                                         record_div.classList.add("dropdown-item", "position-relative");
@@ -785,6 +786,46 @@ record_control_btn.addEventListener("click", function () {
 
                                                         });
 
+                                                        record_cm_rename_a.classList.add("dropdown-item");
+                                                        record_cm_rename_a.innerHTML = translate_text_item("rename");
+
+                                                        record_cm_rename_a.addEventListener("click", function () {
+
+                                                            record_div.removeChild(record_a);
+                                                            record_div.removeChild(record_time_span);
+                                                            record_div.removeChild(record_length_span);
+                                                            record_div.removeChild(record_context_menu);
+
+                                                            let record_input = document.createElement('input');
+
+                                                            record_input.type = "text";
+                                                            record_input.placeholder = record_a.innerHTML;
+                                                            record_input.classList.add("action_name_input");
+
+                                                            record_input.addEventListener("focusout", function () {
+                                                                if (record_input.value !== record_a.innerHTML && record_input.value !== "") {
+                                                                    let data = {"name": record_input.value};
+
+                                                                    request_asynchronous('/api/record?id=' + records[i]["id"] + '&admin_id=' + admin_id, 'PUT',
+                                                                        'application/x-www-form-urlencoded; charset=UTF-8', data, function (req, err, response) {
+                                                                            if (err === "success") {
+                                                                                let response_data = JSON.parse(response.responseText);
+                                                                            }
+                                                                        });
+                                                                    record_a.innerHTML = record_input.value
+                                                                }
+                                                                record_div.removeChild(record_input);
+                                                                record_div.appendChild(record_a);
+                                                                record_div.appendChild(record_time_span);
+                                                                record_div.appendChild(record_length_span);
+                                                                record_div.appendChild(record_context_menu);
+
+                                                            });
+                                                            record_div.appendChild(record_input);
+                                                            record_input.focus();
+
+                                                        });
+
                                                         record_cm_download_a.classList.add("dropdown-item");
                                                         record_cm_download_a.innerHTML = translate_text_item("download");
 
@@ -794,6 +835,7 @@ record_control_btn.addEventListener("click", function () {
 
 
                                                         record_context_menu.appendChild(record_cm_remove_a);
+                                                        record_context_menu.appendChild(record_cm_rename_a);
                                                         record_context_menu.appendChild(record_cm_download_a);
 
                                                         record_div.appendChild(record_a);
