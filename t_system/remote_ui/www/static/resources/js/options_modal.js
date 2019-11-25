@@ -830,6 +830,9 @@ record_control_btn.addEventListener("click", function () {
                                                         record_cm_download_a.innerHTML = translate_text_item("download");
 
                                                         record_cm_download_a.addEventListener("click", function () {
+                                                            if (window.downloadRecord !== undefined) {
+                                                                window.downloadRecord.postMessage("/api/record?date=" + record_dates[c] + "&id=" + records[i]["id"] + "&admin_id=" + admin_id);
+                                                            }
                                                             record_cm_download_a.href = "/api/record?date=" + record_dates[c] + "&id=" + records[i]["id"] + "&admin_id=" + admin_id;
                                                         });
 
@@ -1166,7 +1169,7 @@ switching_disconnect_btn.addEventListener("click", function () {
     JSalert(translate_text_item("Disconnection"),
         translate_text_item("You are about to disconnect!"),
         translate_text_item("OK"), translate_text_item("CANCEL"), function () {
-            request_asynchronous('/api/access?', 'DELETE',
+            request_asynchronous('/api/access', 'DELETE',
                 'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
                     if (err === "success") {
                         let response_data = JSON.parse(response.responseText);
