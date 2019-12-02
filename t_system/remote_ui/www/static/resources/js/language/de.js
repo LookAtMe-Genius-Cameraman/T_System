@@ -93,7 +93,7 @@ const germantrans = {
     "Scenarios": "Szenarien",
     "Parameters": "Parameter",
     "Recognize": "Erkenne",
-    "Them all": "Erkenne sie alle",
+    "Them all": "sie alle",
     "AI": "Künstliche Intelligenz",
     "Official AI": "Amtlich Künstliche Intelligenz",
     "Secure": "Sichern",
