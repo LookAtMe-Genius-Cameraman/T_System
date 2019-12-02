@@ -93,7 +93,7 @@ const spanishtrans = {
     "Scenarios": "Escenarios",
     "Parameters": "Parámetros",
     "Recognize": "Reconocer",
-    "Them all": "them all",
+    "Them all": "Todos ellos",
     "AI": "IA",
     "Official AI": "Oficial IA",
     "Secure": "Seguro",
