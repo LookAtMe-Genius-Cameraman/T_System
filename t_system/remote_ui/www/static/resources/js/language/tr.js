@@ -30,6 +30,8 @@ const turkishtrans = {
     "Device Private ID changing failed!": "Cihaz Özel İD'si değiştirilemedi!",
     "Language": "Dil",
     "Help": "Yardım",
+    "Advanced": "Gelişmiş",
+    "active": "aktif",
     "Exit": "Çıkış",
     " Disconnect": " Bağlantıyı Kopar",
     " Restart": " Yeniden başlat",

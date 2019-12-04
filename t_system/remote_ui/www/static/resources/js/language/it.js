@@ -30,6 +30,8 @@ const italiantrans = {
     "Device Private ID changing failed!": "la modifica dell'ID privato del dispositivo non è riuscita!",
     "Language": "Linguaggio",
     "Help": "Aiuto",
+    "Advanced": "avanzati",
+    "active": "attivo",
     "Exit": "Uscita",
     " Disconnect": " Disconnect",
     " Restart": " Ricomincia",

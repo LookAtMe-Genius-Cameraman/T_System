@@ -30,6 +30,8 @@ const germantrans = {
     "Device Private ID changing failed!": "Die private Geräte-ID Änderung fehlgeschlagen!",
     "Language": "Sprache",
     "Help": "Hilfe",
+    "Advanced": "Fortgeschritten",
+    "active": "aktiv",
     "Exit": "Ausgang",
     " Disconnect": " Trennen",
     " Restart": " Neustart",

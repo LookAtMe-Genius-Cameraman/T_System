@@ -30,6 +30,8 @@ const frenchtrans = {
     "Device Private ID changing failed!": "La modification de l'ID privé du périphérique a échoué!!",
     "Language": "Langue",
     "Help": "Aide",
+    "Advanced": "Avancé",
+    "active": "actif",
     "Exit": "Sortie",
     " Disconnect": " Déconnecter",
     " Restart": " Redémarrer",

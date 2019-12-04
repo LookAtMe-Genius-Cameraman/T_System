@@ -30,6 +30,8 @@ const koreantrans = {
     "Device Private ID changing failed!": "기기 개인 ID 변경 실패!",
     "Language": "언어",
     "Help": "도움",
+    "Advanced": "진본한",
+    "active": "능동의",
     "Exit": "출구",
     " Disconnect": " 연락을 끊다",
     " Restart": " 재시작",
