@@ -28,14 +28,22 @@
 }
 
 .specify_div {
-    width: 20px;
+    width: 190px;
+    height: 30px !important;
+
     border-radius: 25px;
     background: rgba(0, 0, 0, 0.3);
     transition: all 300ms;
 }
 
 .specify_div.focused {
-    width: 100%
+    width: 100%;
+    height: 100% !important;
+}
+
+.specify_div.inactive {
+    width: 0 !important;
+    height: 0 !important;
 }
 
 .specify_span {

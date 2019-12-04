@@ -41,123 +41,136 @@ scenario_checkboxes.push(dont_use_sce_checkbox);
 
 dont_use_sce_checkbox.click();
 
-specify_sce_div.addEventListener("click", function (e) {
+let specify_sce_toggles = [specify_sce_div, specify_sce_span];
 
-    if (e.target !== e.currentTarget) return;
+specify_sce_toggles.forEach(function (element) {
+    element.addEventListener("click", function (e) {
+        if (e.target !== e.currentTarget) return;
 
-    if (specify_sce_span.innerHTML === "") {
-        specify_sce_span.innerHTML = translate_text_item("Specify Scenarios");
-        specify_param_span.innerHTML = "";
+        if (specify_param_span.innerHTML !== "") {
+            specify_param_span.innerHTML = "";
 
-        main_specify_div.classList.remove("center");
-        main_specify_div.classList.remove("left");
-        main_specify_div.classList.add("right");
+            main_specify_div.classList.remove("center");
+            main_specify_div.classList.remove("left");
+            main_specify_div.classList.add("right");
 
-        specify_sce_div.classList.add("focused");
-        specify_param_div.classList.remove("focused");
+            specify_sce_div.classList.add("focused");
 
-        available_sce_div.classList.add("focused");
-        select_param_cb_div.classList.remove("focused");
+            specify_param_div.classList.remove("focused");
+            specify_param_div.classList.add("inactive");
 
-        clearElement(available_sce_ul);
+            available_sce_div.classList.add("focused");
+            select_param_cb_div.classList.remove("focused");
 
-        request_asynchronous('/api/scenario?db=' + action_db_name + '&admin_id=' + admin_id + '&root=' + allow_root, 'GET',
-            'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
-                // err = "success"
-                // requested_data = {"status": "OK", "data": [{"id": "b97tr40a-alcb-31w9-b150-ce2f6156l1ed", "name": "scenario_name1", "positions": [{"name": "pos1"}, {"name": "pos2"}]}, {"id": "b97dr48a-aecb-11e9-b130-cc2f7156l1ed", "name": "scenario_name2", "positions": [{}, {}]}]};
-                if (err === "success") {
-                    if (requested_data["status"] === "OK") {
+            clearElement(available_sce_ul);
 
-                        let scenarios = requested_data["data"];
+            request_asynchronous('/api/scenario?db=' + action_db_name + '&admin_id=' + admin_id + '&root=' + allow_root, 'GET',
+                'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
+                    // err = "success"
+                    // requested_data = {"status": "OK", "data": [{"id": "b97tr40a-alcb-31w9-b150-ce2f6156l1ed", "name": "scenario_name1", "positions": [{"name": "pos1"}, {"name": "pos2"}]}, {"id": "b97dr48a-aecb-11e9-b130-cc2f7156l1ed", "name": "scenario_name2", "positions": [{}, {}]}]};
+                    if (err === "success") {
+                        if (requested_data["status"] === "OK") {
 
-                        for (let c = 0; c < scenarios.length; c++) {
+                            let scenarios = requested_data["data"];
 
-                            let scenario_select_div = document.createElement('div');
-                            let scenario_select_checkbox = document.createElement('input');
-                            let scenario_select_label = document.createElement('label');
+                            for (let c = 0; c < scenarios.length; c++) {
 
-                            scenario_select_div.classList.add("form-check", "mb-1");
-                            // class="dropdown-item"
+                                let scenario_select_div = document.createElement('div');
+                                let scenario_select_checkbox = document.createElement('input');
+                                let scenario_select_label = document.createElement('label');
 
-                            scenario_select_checkbox.classList.add("form-check-input");
-                            scenario_select_checkbox.id = scenarios[c]["id"];
-                            scenario_select_checkbox.type = "radio";
-                            scenario_select_checkbox.name = "scenario_select";
+                                scenario_select_div.classList.add("form-check", "mb-1");
+                                // class="dropdown-item"
 
-                            let sce_exist = false;
+                                scenario_select_checkbox.classList.add("form-check-input");
+                                scenario_select_checkbox.id = scenarios[c]["id"];
+                                scenario_select_checkbox.type = "radio";
+                                scenario_select_checkbox.name = "scenario_select";
 
-                            for (let i = 0; i < scenario_checkboxes.length; i++) {
-                                if (scenario_checkboxes[i].id === scenario_select_checkbox.id) {
-                                    scenario_select_checkbox = scenario_checkboxes[i];
-                                    sce_exist = true;
-                                    break;
+                                let sce_exist = false;
+
+                                for (let i = 0; i < scenario_checkboxes.length; i++) {
+                                    if (scenario_checkboxes[i].id === scenario_select_checkbox.id) {
+                                        scenario_select_checkbox = scenario_checkboxes[i];
+                                        sce_exist = true;
+                                        break;
+                                    }
                                 }
+
+                                if (!sce_exist) {
+                                    scenario_checkboxes.push(scenario_select_checkbox);
+
+                                    scenario_select_checkbox.addEventListener("change", function () {
+                                    });
+                                }
+
+                                scenario_select_label.classList.add("form-check-label", "btn", "btn-outline-dark");
+                                scenario_select_label.setAttribute("for", scenario_select_checkbox.id);
+                                scenario_select_label.innerHTML = scenarios[c]["name"];
+
+                                scenario_select_div.appendChild(scenario_select_checkbox);
+                                scenario_select_div.appendChild(scenario_select_label);
+
+                                available_sce_ul.appendChild(scenario_select_div);
                             }
-
-                            if (!sce_exist) {
-                                scenario_checkboxes.push(scenario_select_checkbox);
-
-                                scenario_select_checkbox.addEventListener("change", function () {});
-                            }
-
-                            scenario_select_label.classList.add("form-check-label", "btn", "btn-outline-dark");
-                            scenario_select_label.setAttribute("for", scenario_select_checkbox.id);
-                            scenario_select_label.innerHTML = scenarios[c]["name"];
-
-                            scenario_select_div.appendChild(scenario_select_checkbox);
-                            scenario_select_div.appendChild(scenario_select_label);
-
-                            available_sce_ul.appendChild(scenario_select_div);
                         }
                     }
-                }
-            });
-    } else {
-        specify_sce_span.innerHTML = "";
+                });
+        } else {
+            specify_param_span.innerHTML = translate_text_item("Specify Parameters");
 
-        specify_sce_div.classList.remove("focused");
+            specify_sce_div.classList.remove("focused");
+            specify_param_div.classList.remove("inactive");
 
-        main_specify_div.classList.remove("right");
-        main_specify_div.classList.remove("left");
-        main_specify_div.classList.add("center");
 
-        available_sce_div.classList.remove("focused");
-        select_param_cb_div.classList.remove("focused");
-    }
+            main_specify_div.classList.remove("right");
+            main_specify_div.classList.remove("left");
+            main_specify_div.classList.add("center");
 
+            available_sce_div.classList.remove("focused");
+            select_param_cb_div.classList.remove("focused");
+        }
+
+    });
 });
 
-specify_param_div.addEventListener("click", function (e) {
+let specify_param_toggles = [specify_param_div, specify_param_span];
 
-    if (e.target !== e.currentTarget) return;
+specify_param_toggles.forEach(function (element) {
+    element.addEventListener("click", function (e) {
+        if (e.target !== e.currentTarget) return;
 
-    if (specify_param_span.innerHTML === "") {
-        specify_param_span.innerHTML = translate_text_item("Specify Parameters");
-        specify_sce_span.innerHTML = "";
+        if (specify_sce_span.innerHTML !== "") {
+            specify_sce_span.innerHTML = "";
 
-        main_specify_div.classList.remove("center");
-        main_specify_div.classList.remove("right");
-        main_specify_div.classList.add("left");
+            main_specify_div.classList.remove("center");
+            main_specify_div.classList.remove("right");
+            main_specify_div.classList.add("left");
 
-        specify_param_div.classList.add("focused");
-        specify_sce_div.classList.remove("focused");
+            specify_param_div.classList.add("focused");
 
-        select_param_cb_div.classList.add("focused");
-        available_sce_div.classList.remove("focused");
+            specify_sce_div.classList.remove("focused");
+            specify_sce_div.classList.add("inactive");
 
-        recognize_checkbox.click();
-        ai_checkbox.click();
-    } else {
-        specify_param_span.innerHTML = "";
-        specify_param_div.classList.remove("focused");
+            select_param_cb_div.classList.add("focused");
+            available_sce_div.classList.remove("focused");
 
-        main_specify_div.classList.remove("left");
-        main_specify_div.classList.remove("right");
-        main_specify_div.classList.add("center");
+            recognize_checkbox.click();
+            ai_checkbox.click();
+        } else {
+            specify_sce_span.innerHTML = translate_text_item("Specify Scenarios");
 
-        select_param_cb_div.classList.remove("focused");
-        available_sce_div.classList.remove("focused");
-    }
+            specify_param_div.classList.remove("focused");
+            specify_sce_div.classList.remove("inactive");
+
+            main_specify_div.classList.remove("left");
+            main_specify_div.classList.remove("right");
+            main_specify_div.classList.add("center");
+
+            select_param_cb_div.classList.remove("focused");
+            available_sce_div.classList.remove("focused");
+        }
+    });
 });
 
 let recognize_checkboxes = [];
