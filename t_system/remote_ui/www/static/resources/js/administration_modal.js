@@ -75,7 +75,7 @@ function toggle_administration_modal() {
         }
 
         administration_btn_i.innerHTML = "";
-        show_selected_tasks([create_emotion_checkbox, predict_mission_checkbox], administration_selected_task_div);
+        show_selected_tasks([create_emotion_checkbox, predict_mission_checkbox, nmt_action_checkbox], administration_selected_task_div);
     }
 
     options_template_container.classList.toggle("hidden_element");
