@@ -27,7 +27,7 @@ from t_system.remote_ui.api.update import api_bp as update_api_bp
 
 from t_system import T_SYSTEM_PATH, dot_t_system_dir
 
-__version__ = '1.1.4'
+__version__ = '1.1.6'
 
 
 class RemoteUI:
