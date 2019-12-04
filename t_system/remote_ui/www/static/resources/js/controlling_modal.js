@@ -144,7 +144,7 @@ sidebar_toggle_btn.addEventListener("click", function () {
                         position_div.setAttribute("data-polar-divide-counts", positions[c]["polar_params"]["divide_counts"]);
 
                         position_span.classList.add("shine_in_dark");
-                        position_span.innerHTML = positions[c]["name"];
+                        position_span.innerHTML = positions[c]["name"].replace(/_/gi, " ");
                         position_span.id = positions[c]["name"] + "_span_" + c;
 
                         function hide_context_menu() {
@@ -210,7 +210,7 @@ sidebar_toggle_btn.addEventListener("click", function () {
 
                         position_cm_remove_a.addEventListener("click", function () {
                             JSalert(translate_text_item("Position Deleting!"),
-                                translate_text_item("You are about to delete the position: ") + "\n" + positions[c]["name"],
+                                translate_text_item("You are about to delete the position: ") + "\n" + positions[c]["name"].replace(/ /gi, " "),
                                 translate_text_item("OK"), translate_text_item("CANCEL"), function () {
                                     request_asynchronous('/api/position?db=' + action_db_name + '&id=' + positions[c]["id"] + '&admin_id=' + admin_id + '&root=' + allow_root, 'DELETE',
                                         'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
@@ -241,7 +241,7 @@ sidebar_toggle_btn.addEventListener("click", function () {
 
                             position_input.addEventListener("focusout", function () {
                                 if (position_input.value !== position_span.innerHTML && position_input.value !== "") {
-                                    let data = {"name": position_input.value, "cartesian_coords": positions[c]["cartesian_coords"], "polar_params": positions[c]["polar_params"]};
+                                    let data = {"name": position_input.value.replace(/ /gi, "_"), "cartesian_coords": positions[c]["cartesian_coords"], "polar_params": positions[c]["polar_params"]};
 
                                     request_asynchronous('/api/position?db=' + action_db_name + '&id=' + positions[c]["id"] + '&admin_id=' + admin_id + '&root=' + allow_root, 'PUT',
                                         'application/json; charset=UTF-8', data, function (req, err, response) {
@@ -307,7 +307,7 @@ sidebar_toggle_btn.addEventListener("click", function () {
 
                         scenario_cm_remove_a.addEventListener("click", function () {
                             JSalert(translate_text_item("Scenario Deleting!"),
-                                translate_text_item("You are about to delete this scenario: ") + "\n" + scenarios[c]["name"],
+                                translate_text_item("You are about to delete this scenario: ") + "\n" + scenarios[c]["name"].replace(/_/gi, " "),
                                 translate_text_item("OK"), translate_text_item("CANCEL"), function () {
                                     request_asynchronous('/api/scenario?db=' + action_db_name + '&id=' + scenarios[c]["id"] + '&admin_id=' + admin_id + '&root=' + allow_root, 'DELETE',
                                         'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
@@ -339,7 +339,7 @@ sidebar_toggle_btn.addEventListener("click", function () {
 
                             scenario_input.addEventListener("focusout", function () {
                                 if (scenario_input.value !== scenario_btn.innerHTML && scenario_input.value !== "") {
-                                    let data = {"name": scenario_input.value, "positions": scenarios[c]["positions"]};
+                                    let data = {"name": scenario_input.value.replace(/ /gi, "_"), "positions": scenarios[c]["positions"]};
 
                                     request_asynchronous('/api/scenario?db=' + action_db_name + '&id=' + scenarios[c]["id"] + '&admin_id=' + admin_id + '&root=' + allow_root, 'PUT',
                                         'application/json; charset=UTF-8', data, function (req, err, response) {
@@ -397,7 +397,7 @@ sidebar_toggle_btn.addEventListener("click", function () {
                             advance_sce_header_a.innerHTML = translate_text_item("Scenario name: ");
 
                             advance_sce_name_span.classList.add("cut-text", "advanced_scenario_name");
-                            advance_sce_name_span.innerHTML = scenarios[c]["name"];
+                            advance_sce_name_span.innerHTML = scenarios[c]["name"].replace(/_/gi, " ");
                             advance_sce_name_span.title = scenarios[c]["name"];
 
                             for (let i = 0; i < scenarios[c]["positions"].length; i++) {
@@ -418,7 +418,7 @@ sidebar_toggle_btn.addEventListener("click", function () {
                                 // advance_position_dd_div.classList.add("dropdown", "show", "draggable_position", "drag-drop");
 
                                 advance_position_btn.classList.add("btn", "btn-outline-info");
-                                advance_position_btn.innerHTML = scenarios[c]["positions"][i]["name"];
+                                advance_position_btn.innerHTML = scenarios[c]["positions"][i]["name"].replace(/_/gi, " ");
 
                                 advance_position_btn.addEventListener("click", function () {
                                     let data = {};
@@ -598,7 +598,9 @@ sidebar_toggle_btn.addEventListener("click", function () {
                                             let response_data = JSON.parse(response.responseText);
 
                                             if (response_data["status"] === "OK") {
-                                                scenario_backup = scenarios[c];
+                                                // scenario_backup = scenarios[c];
+                                                controlling_template_sidebar_close_btn.click();
+                                                sidebar_toggle_btn.click();
                                                 scenario_cm_advanced_a.click();
                                                 swal(translate_text_item("Changes saved."), "", "success");
                                             } else {
@@ -629,7 +631,7 @@ sidebar_toggle_btn.addEventListener("click", function () {
                         scenario_btn.classList.add("btn", "btn-dark");
                         scenario_btn.type = "button";
                         scenario_btn.id = scenarios[c]["name"] + "_btn";
-                        scenario_btn.innerHTML = scenarios[c]["name"];
+                        scenario_btn.innerHTML = scenarios[c]["name"].replace(/_/gi, " ");
 
                         let scenario_d_interact = interact('#' + scenario_btn.id).dropzone({
                             accept: '.draggable_position',
@@ -716,7 +718,6 @@ sidebar_toggle_btn.addEventListener("click", function () {
                         scenario_dd_btn.setAttribute("data-toggle", "dropdown");
                         scenario_dd_btn.setAttribute("aria-haspopup", "true");
                         scenario_dd_btn.setAttribute("aria-expanded", "false");
-                        // scenario_dd_btn.innerHTML = "";
 
                         let scenario_dd_btn_click_count = 0;
                         scenario_dd_btn.addEventListener("click", function () {
@@ -822,7 +823,7 @@ sidebar_toggle_btn.addEventListener("click", function () {
                             position_div.setAttribute("data-polar-divide-counts", scenarios[c]["positions"][i]["polar_params"]["divide_counts"]);
 
                             position_span.classList.add("cut-text");
-                            position_span.innerHTML = scenarios[c]["positions"][i]["name"];
+                            position_span.innerHTML = scenarios[c]["positions"][i]["name"].replace(/_/gi, " ");
                             position_span.title = scenarios[c]["positions"][i]["name"];
                             position_span.id = scenarios[c]["name"] + "_" + scenarios[c]["positions"][i]["name"] + "_span_" + i;
 
@@ -846,7 +847,7 @@ sidebar_toggle_btn.addEventListener("click", function () {
                                         position_input.addEventListener("focusout", function () {
                                             if (position_input.value !== position_span.innerHTML && position_input.value !== "") {
 
-                                                scenarios[c]["positions"][i]["name"] = position_input.value;
+                                                scenarios[c]["positions"][i]["name"] = position_input.value.replace(/ /gi, "_");
                                                 let data = {"name": scenarios[c]["name"], "positions": scenarios[c]["positions"]};
 
                                                 request_asynchronous('/api/scenario?db=' + action_db_name + '&id=' + scenarios[c]["id"] + '&admin_id=' + admin_id + '&root=' + allow_root, 'PUT',
@@ -907,7 +908,7 @@ sidebar_toggle_btn.addEventListener("click", function () {
 
                             position_cm_remove_a.addEventListener("click", function () {
                                 JSalert(translate_text_item("Position Deleting!"),
-                                    translate_text_item("You are about to delete this scenario's position: ") + "\n" + scenarios[c]["positions"][i]["name"],
+                                    translate_text_item("You are about to delete this scenario's position: ") + "\n" + scenarios[c]["positions"][i]["name"].replace(/_/gi, " "),
                                     translate_text_item("OK"), translate_text_item("CANCEL"), function () {
                                         scenarios[c]["positions"].splice(i, 1);
                                         let data = {"name": scenarios[c]["name"], "positions": scenarios[c]["positions"]};
@@ -1337,9 +1338,7 @@ create_pos_btn.addEventListener("click", function () {
         divide_counts.push(1);
     }
 
-    data = {"name": position_name_input.value, "cartesian_coords": current_arm_position["cartesian_coords"], "polar_params": {"coords": current_arm_position["polar_coords"], "delays": delays, "divide_counts": divide_counts}};
-
-    console.log(data);
+    data = {"name": position_name_input.value.replace(/ /gi, "_"), "cartesian_coords": current_arm_position["cartesian_coords"], "polar_params": {"coords": current_arm_position["polar_coords"], "delays": delays, "divide_counts": divide_counts}};
 
     request_asynchronous('/api/position?db=' + action_db_name + '&admin_id=' + admin_id + '&root=' + allow_root, 'POST',
         'application/json; charset=UTF-8', data, function (req, err, response) {
@@ -1381,7 +1380,7 @@ record_in_sce_btn.addEventListener("click", function () {
                         scenario_div.id = scenarios[i]["id"];
 
                         scenario_btn.classList.add("btn", "btn-info");
-                        scenario_btn.innerHTML = scenarios[i]["name"];
+                        scenario_btn.innerHTML = scenarios[i]["name"].replace(/_/gi, " ");
 
                         scenario_btn.addEventListener("click", function () {
                             let position_init = {"id": null, "name": "position_of_" + scenarios[i]["name"]};
@@ -1394,7 +1393,7 @@ record_in_sce_btn.addEventListener("click", function () {
                                 'application/json; charset=UTF-8', scenarios[i], function (req, err, response) {
                                     if (err === "success") {
                                         let response_data = JSON.parse(response.responseText);
-                                        swal(translate_text_item("Position Added in Scenario: ") + scenarios[i]["name"], "", "success");
+                                        swal(translate_text_item("Position Added in Scenario: ") + scenarios[i]["name"].replace(/_/gi, " "), "", "success");
                                     }
                                 });
                         });
@@ -1430,7 +1429,7 @@ create_sce_btn.addEventListener("click", function () {
 
     let position = {"name": "position_1", "cartesian_coords": current_arm_position["cartesian_coords"], "polar_params": {"coords": current_arm_position["polar_coords"], "delays": delays, "divide_counts": divide_counts}};
 
-    let data = {"name": scenario_name_input.value, "positions": [position]};
+    let data = {"name": scenario_name_input.value.replace(/ /gi, "_"), "positions": [position]};
 
     request_asynchronous('/api/scenario?db=' + action_db_name + '&admin_id=' + admin_id + '&root=' + allow_root, 'POST',
         'application/json; charset=UTF-8', data, function (req, err, response) {

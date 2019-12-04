@@ -80,7 +80,6 @@ specify_sce_toggles.forEach(function (element) {
                                 let scenario_select_label = document.createElement('label');
 
                                 scenario_select_div.classList.add("form-check", "mb-1");
-                                // class="dropdown-item"
 
                                 scenario_select_checkbox.classList.add("form-check-input");
                                 scenario_select_checkbox.id = scenarios[c]["id"];
@@ -106,7 +105,7 @@ specify_sce_toggles.forEach(function (element) {
 
                                 scenario_select_label.classList.add("form-check-label", "btn", "btn-outline-dark");
                                 scenario_select_label.setAttribute("for", scenario_select_checkbox.id);
-                                scenario_select_label.innerHTML = scenarios[c]["name"];
+                                scenario_select_label.innerHTML = scenarios[c]["name"].replace(/_/gi, " ");
 
                                 scenario_select_div.appendChild(scenario_select_checkbox);
                                 scenario_select_div.appendChild(scenario_select_label);
