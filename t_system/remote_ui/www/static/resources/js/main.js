@@ -60,8 +60,10 @@ function hide_element(element) {
 function activateAdminAuthorityBy(admin_id) {
     if (admin_id !== false) {
         administration_template_container.classList.add("active");
+        toggle_controlling_modal(true);
     } else {
         administration_template_container.classList.remove("active");
+        toggle_controlling_modal(false);
     }
 }
 
@@ -80,8 +82,8 @@ function clearElement(element) {
  * @param {boolean} is_active: swipeablity flag
  */
 function setSwiperSwiping(is_active) {
-        swiper.allowSlideNext = is_active;
-        swiper.allowSlidePrev = is_active;
+    swiper.allowSlideNext = is_active;
+    swiper.allowSlidePrev = is_active;
 }
 
 function dragMoveListener(event) {
@@ -142,15 +144,9 @@ function set_language_processes() {
     translate_text(value, lang_select_dd_btn);
 }
 
-
 let swiper;
 
-$(document).ready(function () {
-    initial_loading_div.classList.add("inactive");
-    loading_animation_div.classList.remove("lds-dual-ring");
-
-    set_language_processes();
-
+function init_swiper() {
     swiper = new Swiper('.swiper-container', {
         effect: 'coverflow',
         grabCursor: true,
@@ -164,15 +160,50 @@ $(document).ready(function () {
             el: '.swiper-pagination',
         },
     });
+}
+
+function toggle_controlling_modal(activate = false) {
+    swiper.destroy(true, true);
+
+    if (activate) {
+        page_control_div.removeChild(prepare_btn);
+        page_control_div.appendChild(control_btn);
+        page_control_div.appendChild(prepare_btn);
+
+        swiper_wrapper.removeChild(prepare_template_container);
+        swiper_wrapper.appendChild(controlling_template_container);
+        swiper_wrapper.appendChild(prepare_template_container);
+
+    } else {
+        page_control_div.removeChild(control_btn);
+        swiper_wrapper.removeChild(controlling_template_container);
+    }
+
+    init_swiper();
+}
+
+
+
+$(document).ready(function () {
+    initial_loading_div.classList.add("inactive");
+    loading_animation_div.classList.remove("lds-dual-ring");
+
+    set_language_processes();
+
+    init_swiper();
 
     control_btn.click();
 
     document.addEventListener("contextmenu", function (e) {
         e.preventDefault();
     }, false);
+
+    no_mark_checkbox.click();
+    toggle_controlling_modal(false);
 });
 
-title_footer.addEventListener("click", function (e) {});
+title_footer.addEventListener("click", function (e) {
+});
 
 
 options_btn.addEventListener("click", function () {

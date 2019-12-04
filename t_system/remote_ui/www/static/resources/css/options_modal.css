@@ -441,6 +441,20 @@
     top: -480% !important;
 }
 
+/**********************************ADVANCED OPTION**********************************/
+#advanced_switch_div.higher {
+    top: -480% !important;
+}
+
+#advanced_switch_io_div {
+    overflow: hidden;
+}
+
+.advanced_checkbox {
+    left: 50% !important;
+    transform: translate(-50%) !important;
+}
+
 /**********************************SWITCHING OPTION**********************************/
 #switching_control_div.higher {
     top: -620% !important;

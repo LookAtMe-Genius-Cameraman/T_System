@@ -291,4 +291,8 @@ footer {
         pointer-events: all !important;
 }
 
+#advanced_activate_div {
+    bottom: 0;
+    left: 5%;
+}
 

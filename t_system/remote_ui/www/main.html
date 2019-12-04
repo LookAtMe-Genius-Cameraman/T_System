@@ -24,7 +24,7 @@
     <div id="title_div" class="text-center">
         <div id="page_control_div" class="btn-group justify-content-center">
             <button id="options_btn" class="btn btn-dark" translate>Options</button>
-            <button id="control_btn" class="btn btn-dark" translate>Control</button>
+            <button id="control_btn" class="btn btn-outline-dark" translate>Control</button>
             <button id="prepare_btn" class="btn btn-dark" translate>Prepare</button>
         </div>
     </div>
@@ -155,6 +155,17 @@
                     </div>
                 </div>
                 <div class="position-relative row mt-3">
+                    <div id="advanced_switch_div" class="position-relative col option_div">
+                        <button id="advanced_switch_btn" class="option_btn" translate>Advanced</button>
+                        <div id="advanced_switch_io_div" class="option_io_div">
+                            <div class="position-absolute form-check mb-1 advanced_checkbox">
+                                <input id="advanced_activate_checkbox" class="form-check-input" type="checkbox" value="">
+                                <label id="advanced_activate_cb_label" class="form-check-label btn btn-outline-danger" for="advanced_activate_checkbox" translate>active</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="position-relative row mt-3">
                     <div id="switching_control_div" class="position-relative col option_div">
                         <button id="switching_control_btn" class="option_btn" translate>Exit</button>
                         <div id="switching_control_io_div" class="option_io_div">
@@ -261,7 +272,7 @@
             <div id="prepare_template_container" class="swiper-slide template_container swiping_template_container">
                 <div id="main_specify_div" class="position-absolute d-flex justify-content-center center">
                     <div id="specify_sce_div" class="pl-1 specify_div">
-                        <span id="specify_sce_span" class="mb-3 fas fa-chevron-left specify_span" title="Open scenario selection" translate></span>
+                        <span id="specify_sce_span" class="mb-3 fas fa-chevron-right specify_span" title="Open scenario selection" translate>Specify Scenarios</span>
                         <div id="available_sce_div" class="specify_select_div">
                             <div id="dont_use_sce_div" class="form-check mb-1">
                                 <input id="dont_use_sce_checkbox" class="form-check-input" type="radio" name="scenario_select" value="">
@@ -272,7 +283,7 @@
                         </div>
                     </div>
                     <div id="specify_param_div" class="pl-1 ml-1 specify_div">
-                        <span id="specify_param_span" class="mb-3 fas fa-chevron-right specify_span" title="Open parameter selection" translate></span>
+                        <span id="specify_param_span" class="mb-3 fas fa-chevron-right specify_span" title="Open parameter selection" translate>Specify Parameters</span>
                         <div id="select_param_cb_div" class="specify_select_div">
                             <div class="form-check mb-1 specify_checkbox_div">
                                 <input id="recognize_checkbox" class="form-check-input" type="checkbox" value="">
@@ -326,7 +337,7 @@
 
 <!--        ======================================================JOB MODAL======================================================        -->
 <div id="job_template_container" class="position-absolute template_container">
-    <button id="job_btn" class="position-relative btn btn-dark"><i id="job_btn_i" class="fas fa-compact-disc"></i></button>
+    <button id="job_btn" class="position-relative btn btn-dark"><i id="job_btn_i" class="fas fa-video"></i></button>
     <div id="job_div" class="position-relative">
             <div id="mark_target_dd_div" class="position-absolute btn-group dropright">
                 <button id="mark_target_dd_btn" type="button" class="btn btn-outline-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" translate>Target Sign</button>
