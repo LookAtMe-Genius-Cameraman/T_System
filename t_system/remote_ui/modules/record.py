@@ -79,7 +79,7 @@ def download_record(admin_id, record_id):
     record = record_manager.get_record(record_id)
 
     if record:
-        return record.merged_file
+        return record.merged_file, f'{record.name}.{record.record_formats["merged"]}'
 
     return None
 

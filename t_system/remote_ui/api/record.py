@@ -47,11 +47,11 @@ class RecordApi(Resource):
         admin_id = request.args.get('admin_id', None)
 
         if records_date and record_id:
-            record = download_record(admin_id, record_id)
+            record, record_name = download_record(admin_id, record_id)
             if not record:
                 return {'status': 'ERROR', 'message': 'parameter invalid'}
 
-            return send_file(record, as_attachment=True)
+            return send_file(record, attachment_filename=record_name, as_attachment=True)
 
         elif not records_date and not record_id:
             record_dates = get_record_dates(admin_id)
