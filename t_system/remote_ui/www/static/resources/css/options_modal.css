@@ -134,12 +134,22 @@
 
 #options_image_viewer_img {
     width: 100%;
-    height: 100%;
+    height: 75%;
+
+    top: 12.5%;
 }
 
 
 #close_options_player_btn {
     top: 0 !important;
+    right: 0 !important;
+    border-radius: 0 !important;
+
+    z-index: 62;
+}
+
+#close_options_image_viewer_btn {
+    top: 12.5% !important;
     right: 0 !important;
     border-radius: 0 !important;
 
@@ -160,7 +170,7 @@
 
     z-index: 61 !important;
 
-    border: #8a6d3b solid;
+    /*border: #8a6d3b solid;*/
 }
 
 

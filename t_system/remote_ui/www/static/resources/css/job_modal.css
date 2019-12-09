@@ -68,6 +68,13 @@
     left: 100% !important;
 }
 
+#job_simulate_btn.take_shots_job {
+    left: 50% !important;
+    transform: translate(-50%) !important;
+
+    top: 93% !important;
+}
+
 #job_ready_btn {
     top: 90%;
     left: 10%;
@@ -154,12 +161,42 @@
     top: 40% !important;
 }
 
+#monitor_area_div.focused_shots_taking {
+    display: inherit;
+
+    height: 20% !important;
+    width: 85% !important;
+
+    top: 10% !important;
+
+    transition: all 500ms;
+}
+
 #monitor_area_div.active {
     width: 99% !important;
     height: 70% !important;
     top: 10% !important;
 
- }
+}
+
+/*Flash class and keyframe animation */
+#monitor_area_div.flashit{
+  color:#f2f;
+	-webkit-animation: flash linear 1s infinite;
+	animation: flash linear 1s infinite;
+}
+
+@-webkit-keyframes flash {
+	0% { opacity: 1; }
+	50% { opacity: .1; }
+	100% { opacity: 1; }
+}
+
+@keyframes flash {
+	0% { opacity: 1; }
+	50% { opacity: .1; }
+	100% { opacity: 1; }
+}
 
 #monitor_job_span {
     visibility: visible;

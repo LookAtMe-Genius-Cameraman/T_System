@@ -4,6 +4,7 @@ const close_options_player_btn = document.getElementById("close_options_player_b
 const options_player_source = document.getElementById("options_player_source");
 
 const options_image_viewer_div = document.getElementById("options_image_viewer_div");
+const close_options_image_viewer_btn = document.getElementById("close_options_image_viewer_btn");
 const options_image_viewer_img = document.getElementById("options_image_viewer_img");
 
 const update_control_div = document.getElementById("update_control_div");
@@ -687,9 +688,10 @@ record_control_btn.addEventListener("click", function () {
                                             // requested_data = {"status": "OK", "data": [{"id": "b970138a-argb-11e9-b145-cc2f844671ed", "name": "record_name", "time": "12_27_54", "length": 180, "extension": "mp4"}]};
                                             if (err === "success") {
                                                 if (requested_data["status"] === "OK") {
-                                                    let records = requested_data["data"];
+                                                    let shoots = requested_data["data"]["shoots"];
+                                                    let shots = requested_data["data"]["shots"];
 
-                                                    for (let i = 0; i < records.length; i++) {
+                                                    for (let i = 0; i < shoots.length; i++) {
                                                         let record_div = document.createElement('div');
                                                         let record_a = document.createElement('a');
                                                         let record_time_span = document.createElement('span');
@@ -701,25 +703,25 @@ record_control_btn.addEventListener("click", function () {
                                                         let record_cm_download_a = document.createElement('a');
 
                                                         record_div.classList.add("dropdown-item", "position-relative");
-                                                        record_div.id = records[i]["id"];
+                                                        record_div.id = shoots[i]["id"];
 
                                                         record_a.classList.add("record_a");
                                                         record_a.role = "button";
-                                                        record_a.innerHTML = records[i]["name"];
+                                                        record_a.innerHTML = shoots[i]["name"];
                                                         record_a.id = "record_a_" + c + "_" + i;
 
-                                                        record_time_span.innerHTML = records[i]["time"].replace(/_/gi, ":");
+                                                        record_time_span.innerHTML = shoots[i]["time"].replace(/_/gi, ":");
                                                         record_time_span.classList.add("record_time_span");
 
-                                                        record_length_span.innerHTML = records[i]["length"] + " min.";
+                                                        record_length_span.innerHTML = shoots[i]["length"] + " min.";
                                                         record_length_span.classList.add("record_length_span");
 
                                                         record_a.addEventListener("click", function () {
                                                             record_control_div.classList.toggle("hidden_element");
                                                             options_player_div.classList.toggle("focused");
 
-                                                            options_player_source.type = "video/" + records[i]["extension"];
-                                                            options_player_source.src = "/api/record?id=" + records[i]["id"] + "&admin_id=" + admin_id;
+                                                            options_player_source.type = "video/" + shoots[i]["extension"];
+                                                            options_player_source.src = "/api/record?id=" + shoots[i]["id"] + "&admin_id=" + admin_id;
 
                                                             // options_player_source.src = "static/resources/images/mov_bbb.mp4"+ "# " + new Date().getTime();
                                                             options_video.load()
@@ -768,7 +770,7 @@ record_control_btn.addEventListener("click", function () {
                                                         record_interacts.push(record_interact);
 
                                                         record_context_menu.classList.add("position-relative", "dropdown-menu", "dropdown-menu-sm");
-                                                        record_context_menu.id = record_dates[c] + records[i]["name"] + "_context_menu";
+                                                        record_context_menu.id = record_dates[c] + shoots[i]["name"] + "_context_menu";
 
                                                         $("#" + record_context_menu.id + " a").on("click", function () {
                                                             $(this).parent().removeClass("show").hide();
@@ -779,7 +781,7 @@ record_control_btn.addEventListener("click", function () {
 
                                                         record_cm_remove_a.addEventListener("click", function () {
 
-                                                            request_asynchronous('/api/record?id=' + records[i]["id"] + '&admin_id=' + admin_id, 'DELETE',
+                                                            request_asynchronous('/api/record?id=' + shoots[i]["id"] + '&admin_id=' + admin_id, 'DELETE',
                                                                 'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
                                                                     if (err === "success") {
                                                                         let response_data = JSON.parse(response.responseText);
@@ -811,7 +813,7 @@ record_control_btn.addEventListener("click", function () {
                                                                 if (record_input.value !== record_a.innerHTML && record_input.value !== "") {
                                                                     let data = {"name": record_input.value};
 
-                                                                    request_asynchronous('/api/record?id=' + records[i]["id"] + '&admin_id=' + admin_id, 'PUT',
+                                                                    request_asynchronous('/api/record?id=' + shoots[i]["id"] + '&admin_id=' + admin_id, 'PUT',
                                                                         'application/x-www-form-urlencoded; charset=UTF-8', data, function (req, err, response) {
                                                                             if (err === "success") {
                                                                                 let response_data = JSON.parse(response.responseText);
@@ -836,9 +838,9 @@ record_control_btn.addEventListener("click", function () {
 
                                                         record_cm_download_a.addEventListener("click", function () {
                                                             if (window.downloadRecord !== undefined) {
-                                                                window.downloadRecord.postMessage("/api/record?date=" + record_dates[c] + "&id=" + records[i]["id"] + "&admin_id=" + admin_id);
+                                                                window.downloadRecord.postMessage("/api/record?date=" + record_dates[c] + "&id=" + shoots[i]["id"] + "&admin_id=" + admin_id);
                                                             }
-                                                            record_cm_download_a.href = "/api/record?date=" + record_dates[c] + "&id=" + records[i]["id"] + "&admin_id=" + admin_id;
+                                                            record_cm_download_a.href = "/api/record?date=" + record_dates[c] + "&id=" + shoots[i]["id"] + "&admin_id=" + admin_id;
                                                         });
 
 
@@ -853,6 +855,123 @@ record_control_btn.addEventListener("click", function () {
                                                         record_div.appendChild(record_context_menu);
 
                                                         date_dropdown_container_div.appendChild(record_div);
+                                                    }
+
+                                                    let shot_row_div;
+
+                                                    for (let i = 0; i < shots.length; i++) {
+
+                                                        if (i % 4 === 0) {
+                                                            shot_row_div = document.createElement('div');
+                                                            shot_row_div.classList.add("row", "mb-1", "face_row");
+                                                        }
+
+                                                        let shot_col_div = document.createElement('div');
+                                                        shot_col_div.classList.add("col-*", "ml-2");
+
+                                                        let shot_div = document.createElement('div');
+                                                        let shot_img = document.createElement('img');
+
+                                                        let shot_context_menu = document.createElement('div');
+                                                        let shot_cm_remove_a = document.createElement('a');
+                                                        let shot_cm_download_a = document.createElement('a');
+
+                                                        shot_div.id = "date_" + c + "_shot" + i;
+                                                        shot_div.classList.add("face_div");
+
+                                                        let src = "/api/record?id=" + shots[i]["id"] + "&admin_id=" + admin_id;   // this url assigning creates a GET request.
+                                                        resize_image(src, 25, 40, shot_img);
+
+                                                        shot_img.id = "date_" + c + "_shot_img" + i;
+
+                                                        function hide_shot_context_menu() {
+                                                            $("#" + shot_context_menu.id).removeClass("show").hide();
+                                                            document.removeEventListener("click", hide_shot_context_menu);
+                                                        }
+
+                                                        shot_img.addEventListener("click", function () {
+                                                            record_control_div.classList.add("hidden_element");
+                                                            options_image_viewer_div.classList.add("focused");
+                                                            options_image_viewer_img.src = src;
+                                                        });
+
+                                                        let shot_interact = interact('#' + shot_img.id)
+                                                            .on('tap', function (event) {
+                                                                if (!shot_context_menu.classList.contains("show")) {
+                                                                }
+                                                            })
+                                                            .on('doubletap', function (event) {
+
+                                                            })
+                                                            .on('hold', function (event) {
+                                                                shot_img.classList.add("disable_pointer");
+
+                                                                let target = event.target;
+                                                                let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+                                                                let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+                                                                shot_context_menu.setAttribute('data-x', x);
+                                                                shot_context_menu.setAttribute('data-y', y);
+
+                                                                $("#" + shot_context_menu.id).css({
+                                                                    display: "block",
+                                                                    transform: 'translate(' + x + 'px, ' + y + 'px)',
+                                                                }).addClass("show");
+
+                                                                setTimeout(function () {
+                                                                    shot_img.classList.remove("disable_pointer");
+                                                                    document.addEventListener("click", hide_shot_context_menu);
+                                                                }, 500);
+
+                                                                return false; //blocks default WebBrowser right click menu
+                                                            })
+                                                            .on('up', function (event) {
+                                                            });
+
+                                                        record_interacts.push(shot_interact);
+
+                                                        shot_context_menu.classList.add("position-relative", "dropdown-menu", "dropdown-menu-sm");
+                                                        shot_context_menu.id = record_dates[c] + shots[i]["name"] + "_context_menu";
+
+                                                        $("#" + shot_context_menu.id + " a").on("click", function () {
+                                                            $(this).parent().removeClass("show").hide();
+                                                        });
+
+                                                        shot_cm_remove_a.classList.add("dropdown-item");
+                                                        shot_cm_remove_a.innerHTML = translate_text_item("remove");
+
+                                                        shot_cm_remove_a.addEventListener("click", function () {
+
+                                                            request_asynchronous('/api/record?id=' + shots[i]["id"] + '&admin_id=' + admin_id, 'DELETE',
+                                                                'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
+                                                                    if (err === "success") {
+                                                                        let response_data = JSON.parse(response.responseText);
+                                                                        record_control_btn.click();
+                                                                        record_control_btn.click();
+                                                                        date_btn.click();
+                                                                    }
+                                                                });
+                                                        });
+
+                                                        shot_cm_download_a.classList.add("dropdown-item");
+                                                        shot_cm_download_a.innerHTML = translate_text_item("download");
+
+                                                        shot_cm_download_a.addEventListener("click", function () {
+                                                            if (window.downloadRecord !== undefined) {
+                                                                window.downloadRecord.postMessage("/api/record?date=" + record_dates[c] + "&id=" + shots[i]["id"] + "&admin_id=" + admin_id);
+                                                            }
+                                                            shot_cm_download_a.href = "/api/record?date=" + record_dates[c] + "&id=" + shots[i]["id"] + "&admin_id=" + admin_id;
+                                                        });
+
+                                                        shot_context_menu.appendChild(shot_cm_remove_a);
+                                                        shot_context_menu.appendChild(shot_cm_download_a);
+
+                                                        shot_div.appendChild(shot_img);
+                                                        shot_div.appendChild(shot_context_menu);
+
+                                                        shot_col_div.appendChild(shot_div);
+                                                        shot_row_div.appendChild(shot_col_div);
+                                                        date_dropdown_container_div.appendChild(shot_row_div);
                                                     }
                                                 }
                                             }
@@ -903,6 +1022,12 @@ close_options_player_btn.addEventListener("click", function () {
     options_player_div.classList.toggle("focused");
     options_player_source.src = "";
     record_control_div.classList.toggle("hidden_element");
+});
+
+close_options_image_viewer_btn.addEventListener("click", function () {
+    options_image_viewer_div.classList.remove("focused");
+    options_image_viewer_img.src = "";
+    record_control_div.classList.remove("hidden_element");
 });
 
 let identity_control_btn_click_count = 0;

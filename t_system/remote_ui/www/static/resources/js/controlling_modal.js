@@ -1135,6 +1135,9 @@ rotational_menu_control_input.addEventListener("change", function () {
 
     if (rotational_menu_control_input.checked) {
         setSwiperSwiping(false);
+        if (!ss_switch_checkbox.checked) {
+                rotational_control_div.classList.remove("take_shots_job");
+        }
 
         request_asynchronous('/api/move?cause=joint_count&admin_id=' + admin_id, 'GET',
             'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
@@ -1253,6 +1256,10 @@ rotational_menu_control_input.addEventListener("change", function () {
             });
     } else {
         setSwiperSwiping(true);
+
+        if (!ss_switch_checkbox.checked) {
+            rotational_control_div.classList.add("take_shots_job");
+        }
     }
 });
 

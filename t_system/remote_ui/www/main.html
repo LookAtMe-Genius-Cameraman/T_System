@@ -42,6 +42,7 @@
                     </video>
                 </div>
                 <div id="options_image_viewer_div" class="position-absolute">
+                    <a id="close_options_image_viewer_btn" class="close" title="Close">X</a>
                     <img id="options_image_viewer_img" class="position-relative" src="" alt="">
                 </div>
                 <div class="position-relative row mt-4">
@@ -339,6 +340,7 @@
 <div id="job_template_container" class="position-absolute template_container">
     <button id="job_btn" class="position-relative btn btn-dark"><i id="job_btn_i" class="fas fa-video"></i></button>
     <div id="job_div" class="position-relative">
+        <input id="ss_switch_checkbox" checked type="checkbox" data-toggle="toggle" data-on="Shooting" data-off="Take Shots" data-onstyle="info" data-offstyle="success" data-width="120" data-height="40">
             <div id="mark_target_dd_div" class="position-absolute btn-group dropright">
                 <button id="mark_target_dd_btn" type="button" class="btn btn-outline-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" translate>Target Sign</button>
                 <div class="dropdown-menu">

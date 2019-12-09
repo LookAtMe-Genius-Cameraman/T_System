@@ -23,6 +23,10 @@
     top: 45% !important;
 }
 
+#rotational_control_div.take_shots_job {
+    top: -42% !important;
+}
+
 #rotational_control_nav {
     /*border: #8a6d3b dashed;*/
     width: 70px;

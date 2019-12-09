@@ -200,6 +200,11 @@ $(document).ready(function () {
 
     no_mark_checkbox.click();
     toggle_controlling_modal(false);
+
+    if (!ss_switch_checkbox.checked) {
+        console.log("something_wrong");
+        ss_switch_checkbox.click();
+    }
 });
 
 title_footer.addEventListener("click", function (e) {

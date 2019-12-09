@@ -3,9 +3,15 @@ const job_btn = document.getElementById("job_btn");
 const job_btn_i = document.getElementById("job_btn_i");
 const job_div = document.getElementById("job_div");
 
+const ss_switch_checkbox = document.getElementById("ss_switch_checkbox");
+
+const main_selected_div = document.getElementById("main_selected_div");
+
+const selected_sce_div = document.getElementById("selected_sce_div");
 const selected_sce_span = document.getElementById("selected_sce_span");
 const selected_scenarios_div = document.getElementById("selected_scenarios_div");
 
+const selected_param_div = document.getElementById("selected_param_div");
 const selected_param_span = document.getElementById("selected_param_span");
 const selected_params_div = document.getElementById("selected_params_div");
 
@@ -21,6 +27,26 @@ const mark_target_list_ul = document.getElementById("mark_target_list_ul");
 
 const monitor_area_div = document.getElementById("monitor_area_div");
 const monitor_stream_area_img = document.getElementById("monitor_stream_area_img");
+
+function toggle_ss_switch_checkbox(activate = false) {
+    ss_switch_checkbox.disabled = !activate;
+
+    if (activate) {
+        $('#ss_switch_checkbox').bootstrapToggle('destroy');
+
+        ss_switch_checkbox.setAttribute("data-onstyle", "info");
+        ss_switch_checkbox.setAttribute("data-offstyle", "success");
+
+        $('#ss_switch_checkbox').bootstrapToggle();
+    } else {
+        $('#ss_switch_checkbox').bootstrapToggle('destroy');
+
+        ss_switch_checkbox.setAttribute("data-onstyle", "default");
+        ss_switch_checkbox.setAttribute("data-offstyle", "default");
+
+        $('#ss_switch_checkbox').bootstrapToggle();
+    }
+}
 
 function terminate_monitoring_stream() {
     if (monitor_area_div.classList.contains("active")) {
@@ -141,7 +167,7 @@ function toggle_job_modal() {
         selected_spans = [];
         show_checked_boxes([security_mode_checkbox, learn_mode_checkbox, non_moving_target_checkbox, time_laps_checkbox].concat(recognize_checkboxes).concat(ai_checkboxes), selected_params_div);
         show_checked_boxes([].concat(scenario_checkboxes), selected_scenarios_div);
-        
+
         job_div.addEventListener("click", toggle_job_modal_by);
         dark_deep_background_div.addEventListener("click", toggle_job_modal_by);
 
@@ -221,6 +247,50 @@ interact('#job_btn')
 
     });
 
+$('#ss_switch_checkbox').change(function () {
+    if (ss_switch_checkbox.checked) {  // shooting
+        if (job_div.contains(motion_control_div)) {
+            job_div.removeChild(motion_control_div);
+            motion_control_div.classList.remove("take_shots_job");
+            rotational_control_div.classList.remove("take_shots_job");
+
+            monitor_area_div.classList.remove("focused_shots_taking");
+            terminate_monitoring_stream();
+
+            selected_sce_div.classList.remove("hidden_element");
+            selected_param_div.classList.remove("hidden_element");
+
+            job_ready_btn.classList.remove("hidden_element");
+
+            job_simulate_btn.classList.remove("take_shots_job");
+            job_simulate_btn.classList.remove("btn-dark");
+            job_simulate_btn.classList.add("btn-info");
+            job_simulate_btn.innerHTML = translate_text_item("SIMULATE")
+        }
+
+    } else {  // take shots
+        if (!job_div.contains(motion_control_div)) {
+            job_div.appendChild(motion_control_div);
+            motion_control_div.classList.add("take_shots_job");
+            rotational_control_div.classList.add("take_shots_job");
+
+            monitor_area_div.classList.add("focused_shots_taking");
+            monitor_area_div.click();
+
+            selected_sce_div.classList.add("hidden_element");
+            selected_param_div.classList.add("hidden_element");
+
+            job_ready_btn.classList.add("hidden_element");
+
+            job_simulate_btn.classList.add("take_shots_job");
+            job_simulate_btn.classList.add("btn-dark");
+            job_simulate_btn.classList.remove("btn-info");
+            job_simulate_btn.innerHTML = translate_text_item("TAKE PHOTO")
+        }
+    }
+});
+
+
 job_ready_btn.addEventListener("click", function () {
     if (job_ready_btn.innerHTML === translate_text_item("READY")) {
         job_ready_btn.innerHTML = translate_text_item("START");
@@ -240,6 +310,7 @@ job_ready_btn.addEventListener("click", function () {
             selected_spans[i].classList.add("shine_as_red_in_dark");
         }
 
+        toggle_ss_switch_checkbox(false);
     } else if (job_ready_btn.innerHTML === translate_text_item("START")) {
         job_ready_btn.innerHTML = translate_text_item("FINISH");
         job_ready_btn.classList.remove("ready");
@@ -268,7 +339,6 @@ job_ready_btn.addEventListener("click", function () {
 
         job_div.removeEventListener("click", toggle_job_modal_by);
         dark_deep_background_div.removeEventListener("click", toggle_job_modal_by);
-
 
 
     } else if (job_ready_btn.innerHTML === translate_text_item("FINISH")) {
@@ -308,6 +378,8 @@ job_ready_btn.addEventListener("click", function () {
             });
         job_div.addEventListener("click", toggle_job_modal_by);
         dark_deep_background_div.addEventListener("click", toggle_job_modal_by);
+
+        toggle_ss_switch_checkbox(true);
     }
 });
 
@@ -331,6 +403,8 @@ job_cancel_btn.addEventListener("click", function () {
             selected_spans[i].classList.remove("shine_as_red_in_dark");
             selected_spans[i].classList.add("shine_in_dark");
         }
+
+        toggle_ss_switch_checkbox(true);
 
     } else if (job_cancel_btn.innerText === translate_text_item("PAUSE")) {
         job_cancel_btn.innerHTML = translate_text_item("RESUME");
@@ -389,6 +463,8 @@ job_simulate_btn.addEventListener("click", function () {
         job_div.removeEventListener("click", toggle_job_modal_by);
         dark_deep_background_div.removeEventListener("click", toggle_job_modal_by);
 
+        toggle_ss_switch_checkbox(false);
+
     } else if (job_simulate_btn.innerText === translate_text_item("HOLD TO PAUSE")) {
         job_simulate_btn.innerHTML = translate_text_item("SIMULATE");
         job_simulate_btn.classList.remove("active");
@@ -420,6 +496,21 @@ job_simulate_btn.addEventListener("click", function () {
 
         job_div.addEventListener("click", toggle_job_modal_by);
         dark_deep_background_div.addEventListener("click", toggle_job_modal_by);
+
+        toggle_ss_switch_checkbox(true);
+
+    } else if (job_simulate_btn.innerText === translate_text_item("TAKE PHOTO")) {
+        monitor_area_div.classList.add("flashit");
+        request_asynchronous('/api/job?type=take_shots&admin_id=' + admin_id, 'PUT',
+            'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
+                if (err === "success") {
+                    let response_data = JSON.parse(response.responseText);
+                }
+            });
+
+        setTimeout(function () {
+            monitor_area_div.classList.remove("flashit");
+        }, 1000);
     }
 });
 
@@ -525,7 +616,9 @@ monitor_area_div.addEventListener("click", function () {
         monitor_stream_area_img.src = "/api/stream?type=monitoring&admin_id=" + admin_id;   // this url assigning creates a GET request.
         monitor_stream_area_img.classList.add("focused");
 
-        mark_target_dd_div.classList.add("focused");
+        if (ss_switch_checkbox.checked) {
+            mark_target_dd_div.classList.add("focused");
+        }
 
         monitor_area_div.classList.add("active");
 
@@ -544,7 +637,9 @@ monitor_area_div.addEventListener("click", function () {
         monitor_stream_area_img.src = "";
         monitor_stream_area_img.classList.remove("focused");
 
-        mark_target_dd_div.classList.remove("focused");
+        if (ss_switch_checkbox.checked) {
+            mark_target_dd_div.classList.remove("focused");
+        }
 
         monitor_area_div.classList.remove("active");
 

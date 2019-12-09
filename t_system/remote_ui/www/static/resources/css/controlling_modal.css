@@ -204,9 +204,14 @@
 
     transition: all 500ms;
 
-    /*border: mediumvioletred solid;*/
+    border: mediumvioletred solid;
 
     z-index: 200;
+}
+
+#motion_control_div.take_shots_job {
+        height: 20% !important;
+        top: 62%; !important;
 }
 
 #record_pos_sce_btn {

@@ -141,8 +141,10 @@ footer {
 }
 
 #title_footer{ /* Powered by*/
-    bottom: 1%;
-    left: 70%;
+    bottom: 0;
+    left: 73%;
+
+    font-size: 9px;
 }
 
 #title_a{ /*T_System*/}
