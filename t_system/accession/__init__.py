@@ -16,7 +16,7 @@ import requests
 from PyAccessPoint import pyaccesspoint
 from wifi import Cell, Scheme, exceptions
 from tinydb import Query  # TinyDB is a lightweight document oriented database
-from subprocess import call, check_output # Subprocess managements
+from subprocess import call, check_output  # Subprocess managements
 from multipledispatch import dispatch
 from elevate import elevate  # partial root authentication interface
 
@@ -33,8 +33,8 @@ def set_local_ip_address(wlan, ip_address):
     """Method to set static local ip address.
 
     Args:
-        wlan (str):       	        wi-fi interface that will be used to connect to external network
-        ip_address (str):           Static ip address of this machine the network
+            wlan (str):       	        wi-fi interface that will be used to connect to external network
+            ip_address (str):           Static ip address of this machine the network
     """
     from pyroute2 import IPRoute, NetlinkError
     ip = IPRoute()
@@ -52,7 +52,7 @@ def restart_interface(interface):
     """Method to restart the network interface via subprocess.
 
     Args:
-        interface:       	        wi-fi interface that will be used to create hotSpot.
+            interface:       	        wi-fi interface that will be used to create hotSpot.
     """
 
     call(['ifdown', interface])
@@ -72,7 +72,7 @@ class AccessPoint:
         """Initialization method of :class:`t_system.accession.AccessPoint` class.
 
         Args:
-            args:                   Command-line arguments.
+                args:                   Command-line arguments.
         """
 
         self.wlan = args["ap_wlan"]
@@ -88,12 +88,12 @@ class AccessPoint:
         """Method to set access point parameters.
 
         Args:
-            wlan:       	        wi-fi interface that will be used to create hotSpot
-            inet:       	        forwarding interface
-            ip:       	            ip address of this machine in new network
-            netmask:       	        Netmask address.
-            ssid:       	        Preferred access point name.
-            password:       	    Password of the access point.
+                wlan:       	        wi-fi interface that will be used to create hotSpot
+                inet:       	        forwarding interface
+                ip:       	            ip address of this machine in new network
+                netmask:       	        Netmask address.
+                ssid:       	        Preferred access point name.
+                password:       	    Password of the access point.
         """
 
         if wlan:
@@ -147,7 +147,7 @@ class NetworkConnector:
         """Initialization method of :class:`t_system.accession.NetworkConnector` class.
 
         Args:
-            args:                   Command-line arguments.
+                args:                   Command-line arguments.
         """
 
         self.folder = f'{dot_t_system_dir}/network'
@@ -182,7 +182,7 @@ class NetworkConnector:
         """Method to scan around for searching available networks.
 
         Args:
-            wlan:       	        wi-fi interface that will be used to create hotSpot.
+                wlan:       	        wi-fi interface that will be used to create hotSpot.
         """
 
         if wlan:
@@ -215,8 +215,8 @@ class NetworkConnector:
         """Method to set network parameter for reaching it.
 
         Args:
-            ssid:       	        The name of the surrounding access point.
-            password:       	    The password of the surrounding access point.
+                ssid:       	        The name of the surrounding access point.
+                password:       	    The password of the surrounding access point.
         """
 
         admin_id = check_secret_root_entry(ssid, password)
@@ -240,7 +240,7 @@ class NetworkConnector:
         """Method to set network parameter for reaching it.
 
         Args:
-            ssid:       	        The name of the surrounding access point.
+                ssid:       	        The name of the surrounding access point.
         """
 
         self.login_table.remove((Query().ssid == ssid))
@@ -270,8 +270,8 @@ class NetworkConnector:
         """Method to try connect to one of available networks with using `wifi` library.
 
         Args:
-            ssid (str):       	        The name of the surrounding access point.
-            password (str):       	    The password of the surrounding access point.
+                ssid (str):       	        The name of the surrounding access point.
+                password (str):       	    The password of the surrounding access point.
         """
         result = False
         if self.activity:
@@ -300,12 +300,12 @@ class NetworkConnector:
         """Function to insert(or update) the connection info of new networks to the database.
 
         Args:
-            ssid:       	        The name of the surrounding access point.
-            password:       	    The password of the surrounding access point.
-            force_insert (bool):    Force insert flag.
+                ssid:       	        The name of the surrounding access point.
+                password:       	    The password of the surrounding access point.
+                force_insert (bool):    Force insert flag.
 
         Returns:
-            str:  Response.
+                str:  Response.
         """
 
         if self.login_table.search((Query().ssid == ssid)):
@@ -329,11 +329,11 @@ class NetworkConnector:
         """Function to insert(or update) the status of NetworkConnector to the database.
 
         Args:
-            activity (bool):        Activity flag of the NetworkConnector. If False, NetworkConnector not try connecting to surround networks.
-            force_insert (bool):    Force insert flag.
+                activity (bool):        Activity flag of the NetworkConnector. If False, NetworkConnector not try connecting to surround networks.
+                force_insert (bool):    Force insert flag.
 
         Returns:
-            str:  Response.
+                str:  Response.
         """
 
         status = self.status_table.all()
@@ -348,7 +348,7 @@ class NetworkConnector:
         return ""
 
     def __refresh_known_networks(self):
-        """Method to refresh known networks from the database (and creating objects for them.)
+        """Method to refresh_records known networks from the database (and creating objects for them.)
         """
 
         self.known_networks.clear()
@@ -364,7 +364,7 @@ class NetworkConnector:
         call("systemctl restart networking.service", shell=True)
 
     def __refresh_status(self):
-        """Method to refresh status from the database.
+        """Method to refresh_records status from the database.
         """
         status = self.status_table.all()
 
@@ -377,10 +377,10 @@ class NetworkConnector:
         """high-level method to change status of NetworkConnector via given parameters.
 
         Args:
-            activity (bool):              Activity flag of the NetworkConnector. If False, NetworkConnector not try connecting to surround networks.
+                activity (bool):              Activity flag of the NetworkConnector. If False, NetworkConnector not try connecting to surround networks.
 
         Returns:
-            str:  Response.
+                str:  Response.
         """
 
         self.status_upsert(activity)
@@ -391,7 +391,7 @@ class NetworkConnector:
         """The top-level method to check the internet access of the current network connection via sending request to Google. 
 
         Returns:
-            bool:  status.
+                bool:  status.
         """
         
         url = 'http://www.google.com/'
@@ -409,7 +409,7 @@ class NetworkConnector:
         """The top-level method to check network connection status using `hostname` command via subprocess.
 
         Returns:
-            bool:  status.
+                bool:  status.
         """
         wifi_ip = check_output(['hostname', '-I'])
 
@@ -422,7 +422,7 @@ class NetworkConnector:
         """The top-level method to check if T_System has the necessary information to connect to surrounding networks.
 
         Returns:
-            bool:  status.
+                bool:  status.
         """
 
         for known_network in self.known_networks:
@@ -443,7 +443,7 @@ class WpaSupplicant:
         """Initialization method of :class:`t_system.accession.WpaSupplicant` class.
 
         Args:
-            args:                   Command-line arguments.
+                args:                   Command-line arguments.
         """
 
         self.wpa_supp_conf_file = "/etc/wpa_supplicant/wpa_supplicant.conf"
@@ -509,9 +509,9 @@ class WpaSupplicant:
         """The high(and low)-level method to add new network ssid and psk information to wpa_supplicant.conf file.
 
         Args:
-            ssid:       	        The name of the surrounding access point.
-            password:       	    The password of the surrounding access point.
-            priority (int):         The priority flag.
+                ssid:       	        The name of the surrounding access point.
+                password:       	    The password of the surrounding access point.
+                priority (int):         The priority flag.
         """
 
         command_txt = f'sudo wpa_passphrase "{ssid}" "{password}"'
