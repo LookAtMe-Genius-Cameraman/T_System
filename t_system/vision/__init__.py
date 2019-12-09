@@ -91,7 +91,7 @@ class Vision:
         self.camera.framerate = args["framerate"]
         self.camera.rotation = args["camera_rotation"]
 
-        self.recorder = Recorder(args["record_formats"], self.camera, self.hearer)
+        self.recorder = Recorder(args["shot_format"], args["shoot_formats"], self.camera, self.hearer)
 
         self.raw_capture = PiRGBArray(self.camera, size=resolution)
 
@@ -143,7 +143,7 @@ class Vision:
         self.is_watching = True
 
         if self.record:
-            self.recorder.start(caller)
+            self.recorder.start_shoot(caller)
 
         logger.debug("stream starting with capture_continuous")
 
@@ -219,7 +219,6 @@ class Vision:
 
             if self.__check_loop_ended(stop_thread):
                 break
-
 
         self.stop_recording()
         self.is_watching = False
@@ -532,7 +531,7 @@ class Vision:
         self.raw_capture.truncate()
 
     def __check_loop_ended(self, stop_thread):
-        """Method to detecting FACES with hog or cnn methoda.
+        """Method to control end of the vision loop.
 
         Args:
                 stop_thread:   	        Stop flag of the tread about terminating it outside of the function's loop.
@@ -540,6 +539,7 @@ class Vision:
 
         # if the `q` key was pressed, break from the loop
         key = cv2.waitKey(1) & 0xFF
+
         if (key == ord("q") or stop_thread()) and (self.augmented or self.active_threads):
             logger.info("All threads killed. In progress...")
             return True
@@ -903,7 +903,7 @@ class Vision:
         """Method to stop recording video and audio stream.
         """
         if self.record:
-            self.recorder.stop()
+            self.recorder.stop_shoot()
 
     def start_recording(self, task):
         """Method to start recording video and audio stream.
@@ -912,7 +912,13 @@ class Vision:
                 task:             	    Task for the seer. Either `learn`, `track` or `secure`.
         """
         if self.record:
-            self.recorder.start(task)
+            self.recorder.start_shoot(task)
+
+    def take_shots(self):
+        """Method to take shot from camera.
+        """
+
+        self.recorder.take_shots()
 
     def __release_servos(self):
         """Method to stop sending signals to servo motors pins and clean up the gpio pins.
