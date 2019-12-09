@@ -39,16 +39,19 @@ def get_records(admin_id, records_date):
             admin_id (str):                 Root privileges flag.
             records_date (str):             Date of the wanted records.
     """
-    result = []
+    result = {"shoots": [], "shots": []}
 
-    records = record_manager.get_records(records_date)
+    shoots = record_manager.get_records("shoot", records_date)
+    shots = record_manager.get_records("shot", records_date)
 
-    if records:
-        for record in records:
-            result.append({"id": record.id, "name": record.name, "time": record.time, "length": record.length, "extension": record.record_formats["merged"]})
-                
-        return result
-        
+    if shoots:
+        for shoot in shoots:
+            result["shoots"].append({"id": shoot.id, "name": shoot.name, "time": shoot.time, "length": shoot.length, "extension": shoot.record_formats["merged"]})
+
+    if shots:
+        for shot in shots:
+            result["shots"].append({"id": shot.id, "name": shot.name, "time": shot.time, "size": shot.size, "extension": shot.shot_format})
+
     return result
 
 
@@ -60,12 +63,15 @@ def get_record(admin_id, record_id):
             record_id (str):                The id of the record.
     """
 
-    record = record_manager.get_record(record_id)
+    record, r_type = record_manager.get_record(record_id)
 
     if not record:
         return None, None
+    if r_type == "shoot":
+        return open(record.merged_file, 'rb'), f'video/{record.record_formats["merged"]};'
 
-    return open(record.merged_file, 'rb'), f'video/{record.record_formats["merged"]};'
+    elif r_type == "shot":
+        return open(record.shot_file, 'rb'), f'image/{record.shot_format};'
 
 
 def download_record(admin_id, record_id):
@@ -76,10 +82,14 @@ def download_record(admin_id, record_id):
             record_id (str):                The id of the record.
     """
 
-    record = record_manager.get_record(record_id)
+    record, r_type = record_manager.get_record(record_id)
 
     if record:
-        return record.merged_file, f'{record.name}.{record.record_formats["merged"]}'
+        if r_type == "shoot":
+            return record.merged_file, f'{record.name}.{record.record_formats["merged"]}'
+
+        elif r_type == "shot":
+            return record.shot_file, f'{record.name}.{record.shot_format}'
 
     return None
 

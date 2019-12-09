@@ -62,9 +62,9 @@ class RecordApi(Resource):
             return {'status': 'OK', 'data': records}
 
         elif record_id:
-            bytes_of_video, mimetype = get_record(admin_id, record_id)
-            if bytes_of_video and mimetype:
-                return Response(bytes_of_video, mimetype=mimetype)
+            bytes_of_record, mimetype = get_record(admin_id, record_id)
+            if bytes_of_record and mimetype:
+                return Response(bytes_of_record, mimetype=mimetype)
 
     def post(self):
         """The API method to POST request for flask.

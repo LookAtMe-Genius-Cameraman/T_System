@@ -10,6 +10,7 @@
 """
 
 import multiprocessing
+import threading
 import time  # Time access and conversions
 
 from t_system import seer
@@ -37,10 +38,14 @@ class JobManager:
         self.job_type = ""
         self.scenario = ""
         self.predicted_mission = False
+        self.non_moving_target = False
 
         self.stop_mission = False
         self.pause_mission = False
         self.mission_proc = multiprocessing.Process(target=mission_manager.execute, args=(lambda: self.stop_mission, lambda: self.pause_mission, "initial", "scenario", self.predicted_mission))
+
+        self.stop_watch = False
+        self.watch_thread = threading.Thread(target=seer.watch, args=(lambda: self.stop_mission, "bgr", self.job_type))
 
     def set_seer(self, admin_id, data):
         """The top-level method to set seer's work parameters.
@@ -89,23 +94,32 @@ class JobManager:
                 admin_id (str):                 Root privileges flag.
                 running_type (str):             Specifier of running type. Either `simulation` or `real`.
         """
-
-        if running_type == "simulation":
+        if running_type == "take_shots":
+            seer.take_shots()
+            time.sleep(0.3)
+            record_manager.refresh_records(r_type="shot")
+            return True
+        elif running_type == "simulation":
             seer.record = False
         elif running_type == "real":
             seer.record = True
         else:
             return False
 
-        rgb, detected_boxes = seer.detect_initiate(lambda: self.stop_mission)
+        if not self.non_moving_target:
+            rgb, detected_boxes = seer.detect_initiate(lambda: self.stop_mission)
 
-        if detected_boxes:
-            seer.watch_and(self.job_type)
+            if detected_boxes:
+                seer.watch_and(self.job_type)
 
             time.sleep(0.5)
 
-            self.mission_proc = multiprocessing.Process(target=mission_manager.continuous_execute, args=(lambda: self.stop_mission, lambda: self.pause_mission, self.scenario, "scenario", self.predicted_mission))
-            self.mission_proc.start()
+        else:
+            self.watch_thread = threading.Thread(target=seer.watch, args=(lambda: self.stop_watch, "bgr", self.job_type))
+            self.watch_thread.start()
+
+        self.mission_proc = multiprocessing.Process(target=mission_manager.continuous_execute, args=(lambda: self.stop_mission, lambda: self.pause_mission, self.scenario, "scenario", self.predicted_mission))
+        self.mission_proc.start()
 
         return True
 
@@ -140,6 +154,7 @@ class JobManager:
         record_manager.refresh_records()
 
         self.__stop_mission_proc()
+        self.__stop_watch_thread()
 
         if seer.record:
             seer.record = False
@@ -164,14 +179,15 @@ class JobManager:
             faces = face_encode_manager.get_faces(recognized_persons)
             seer.set_recognizing([face.pickle_file for face in faces])
 
-    @staticmethod
-    def __set_track_approach(ai, non_moving_target):
+    def __set_track_approach(self, ai, non_moving_target):
         """Method to set mission scenarios of the job.
 
         Args:
                 ai (str):                       AI type that will using during job.
                 non_moving_target (bool):       Non-moving target flag.
         """
+        self.non_moving_target = non_moving_target
+
         if ai:
             mission_manager.revert_the_expand_actor()
 
@@ -188,3 +204,12 @@ class JobManager:
             self.stop_mission = True
             self.mission_proc.terminate()
             self.stop_mission = False
+    
+    def __stop_watch_thread(self):
+        """Method to stop the watch_thread.
+        """
+
+        if self.watch_thread.is_alive():
+            self.stop_watch = True
+            self.watch_thread.join()
+            self.stop_watch = False
