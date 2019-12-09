@@ -348,7 +348,7 @@ class NetworkConnector:
         return ""
 
     def __refresh_known_networks(self):
-        """Method to refresh_records known networks from the database (and creating objects for them.)
+        """Method to refresh known networks from the database (and creating objects for them.)
         """
 
         self.known_networks.clear()
@@ -364,7 +364,7 @@ class NetworkConnector:
         call("systemctl restart networking.service", shell=True)
 
     def __refresh_status(self):
-        """Method to refresh_records status from the database.
+        """Method to refresh status from the database.
         """
         status = self.status_table.all()
 

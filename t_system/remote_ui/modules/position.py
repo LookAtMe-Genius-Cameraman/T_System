@@ -181,7 +181,7 @@ def get_db_table(root, db_name):
 
 
 def deterfresh_manager(root, db_name):
-    """Method to determine the manager that is mission or emotion manager and refresh_records it with using given database name and administration flag.
+    """Method to determine the manager that is mission or emotion manager and refresh it with using given database name and administration flag.
 
     Args:
             root (bool):                    Root privileges flag.
@@ -190,8 +190,8 @@ def deterfresh_manager(root, db_name):
 
     if root:
         if db_name in ["predicted_missions", "missions"]:
-            mission_manager.refresh_records()
+            mission_manager.refresh_memebers()
         elif db_name == "emotions":
-            emotion_manager.refresh_records()
+            emotion_manager.refresh_members()
     else:
-        mission_manager.refresh_records()
+        mission_manager.refresh_members()
