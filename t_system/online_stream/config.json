@@ -1,0 +1,49 @@
+{
+  "available_websites": [
+    {
+      "name": "localhost",
+      "url": "http://localhost",
+      "server": "rtmp://localhost"
+    },
+    {
+      "name": "youtube",
+      "url": "www.youtube.com/",
+      "server": "rtmp://a.rtmp.youtube.com/live2/"
+    },
+    {
+      "name": "periscope",
+      "url": "www.pscp.tv/",
+      "server": "rtmp://va.pscp.tv:80/x/"
+    },
+    {
+      "name": "facebook",
+      "url": "www.facebook.com/",
+      "server": "rtmps://live-api-s.facebook.com:443/rtmp/"
+    },
+    {
+      "name": "restream.io",
+      "url": "restream.io",
+      "server": "rtmp://us-east.restream.io/live/"
+    },
+    {
+      "name": "twitch",
+      "url": "www.twitch.tv/",
+      "server": "rtmp://live-jfk.twitch.tv/app/"
+    },
+    {
+      "name": "mixer",
+      "url": "mixer.com/",
+      "server": "rtmp://ingest-wdc.mixer.com:1935/beam"
+    },
+    {
+      "name": "ustream",
+      "url": "video.ibm.com/",
+      "server": ""
+    },
+    {
+      "name": "vimeo",
+      "url": "vimeo.com",
+      "server": "rtmp://rtmp.cloud.vimeo.com/"
+    }
+  ]
+}
