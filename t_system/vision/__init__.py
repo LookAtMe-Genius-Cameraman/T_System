@@ -27,6 +27,7 @@ from t_system.motion import calc_ellipsoidal_angle
 from t_system.decision import Decider
 from t_system.audition import Hearer
 from t_system.recordation import Recorder
+from t_system.online_stream import OnlineStreamer
 
 from t_system.high_tech_aim import Aimer
 from t_system import T_SYSTEM_PATH
@@ -92,6 +93,7 @@ class Vision:
         self.camera.rotation = args["camera_rotation"]
 
         self.recorder = Recorder(args["shot_format"], args["shoot_formats"], self.camera, self.hearer)
+        self.online_streamer = OnlineStreamer(self.camera, self.hearer)
 
         self.raw_capture = PiRGBArray(self.camera, size=resolution)
 
@@ -930,7 +932,7 @@ class Vision:
         """Method to stop receiving signals from the camera and stop video recording.
         """
         # self.camera.release()
-        pass
+        self.camera.close()
 
     def __release_hearer(self):
         """Method to stop sending signals to servo motors pins and clean up the gpio pins.
