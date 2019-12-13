@@ -55,3 +55,14 @@ IDENTITY_SCHEMA = Schema({
     'private_id': Or(None, Use(str)),
     'name': Or(None, Use(str))
 })
+
+L_STREAM_SCHEMA = Schema({
+    'account_name': Use(str),
+    'key': Use(str)
+})
+
+L_S_WEBSITE_SCHEMA = Schema({
+    'name': Use(str),
+    'url': Use(str),
+    'server': Use(str)
+})
