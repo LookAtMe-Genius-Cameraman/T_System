@@ -106,10 +106,9 @@ positional arguments:
 optional arguments:
   -h, --help            show this help message and exit
 ```
-<sup>For detailed output look at [Help](https://github.com/LookAtMe-Genius-Cameraman/T_System/blob/master/USAGE.md#help-output)</sup>
+<sup>For detailed output, look at [Help](https://github.com/LookAtMe-Genius-Cameraman/T_System/blob/master/USAGE.md#help-output)</sup>
 
 `t_system user-interfaces {official_stand,augmented,remote_ui,None}` is standard running command.
-
 `official_stand`, `augmented` and `remote_ui` are mentioned [here](#official-stand), [here](#augmented) and [here](#remote-ui) as respectively. 
 
 <sup>Detailed usage available inside [`USAGE.md`](https://github.com/LookAtMe-Genius-Cameraman/T_System/blob/master/USAGE.md)</sup>
@@ -165,7 +164,7 @@ Portable usage interface v0.6
 
 #### Remote UI
 
-The remotely controlling interface v1.1.6
+The remotely controlling interface v1.1.8
 
 - Properties
     -             
