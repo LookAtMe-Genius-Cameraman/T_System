@@ -12,6 +12,9 @@
 from tinydb import Query  # TinyDB is a lightweight document oriented database
 
 from t_system.db_fetching import DBFetcher
+
+from t_system import network_connector
+
 from t_system import dot_t_system_dir
 from t_system import log_manager
 
@@ -23,14 +26,13 @@ def change_nc_activity(admin_id, activity):
 
     Args:
         admin_id (str):                 Admin privileges flag.
-        activity (bool):                Activity status of network_connector of stand_ui.
+        activity (bool):                Activity status of network_connector of T_System.
     """
 
     result = True
 
     try:
-        from t_system import stand_ui
-        stand_ui.network_connector.change_status(activity)
+        network_connector.change_status(activity)
     except Exception as e:
         logger.error(e)
         result = False
@@ -45,9 +47,7 @@ def get_nc_activity(admin_id):
         admin_id (str):                 Admin privileges flag.
     """
 
-    from t_system import stand_ui
-
-    return stand_ui.network_connector.activity
+    return network_connector.activity
 
 
 def create_network(admin_id, data):
@@ -59,7 +59,7 @@ def create_network(admin_id, data):
     """
     try:
         from t_system import stand_ui
-        result, admin_id = stand_ui.network_connector.add_network(data["ssid"], data["password"])
+        result, admin_id = network_connector.add_network(data["ssid"], data["password"])
     except Exception as e:
         logger.error(e)
         result = False

@@ -28,7 +28,7 @@ def create_scenario(admin_id, root, db_name, data):
 
     Args:
         admin_id (str):                 Admin privileges flag.
-        root (str):                    Root privileges flag.
+        root (str):                     Root privileges activation flag.
         db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
         data (dict):                    Scenario data structure.
     """
@@ -61,7 +61,7 @@ def get_scenarios(admin_id, root, db_name):
 
     Args:
         admin_id (str):                 Root privileges flag.
-        root (str):                    Root privileges flag.
+        root (str):                     Root privileges activation flag.
         db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
     """
     try:
@@ -86,7 +86,7 @@ def get_scenario(admin_id, root, db_name, scenario_id):
 
     Args:
         admin_id (str):                 Root privileges flag.
-        root (str):                    Root privileges flag.
+        root (str):                     Root privileges activation flag.
         db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
         scenario_id (str):              The id of the scenario.
     """
@@ -118,7 +118,7 @@ def update_scenario(admin_id, root, db_name, scenario_id, data):
 
     Args:
         admin_id (str):                 Root privileges flag.
-        root (str):                    Root privileges flag.
+        root (str):                     Root privileges activation flag.
         db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
         scenario_id (str):              The id of the scenario.
         data (dict):                    Position data structure.
@@ -153,7 +153,7 @@ def delete_scenario(admin_id, root, db_name, scenario_id):
 
     Args:
         admin_id (str):                 Root privileges flag.
-        root (str):                     Root privileges flag.
+        root (str):                     Root privileges activation flag.
         db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
         scenario_id (str):              The id of the position.
     """

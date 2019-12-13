@@ -27,7 +27,7 @@ def create_position(admin_id, root, db_name, data):
 
     Args:
             admin_id (str):                 Admin privileges flag.
-            root (str):                    Root privileges flag.
+            root (str):                     Root privileges activation flag.
             db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
             data (dict):                    Position data structure.
     """
@@ -56,7 +56,7 @@ def get_positions(admin_id, root, db_name):
 
     Args:
             admin_id (str):                 Root privileges flag.
-            root (str):                    Root privileges flag.
+            root (str):                     Root privileges activation flag.
             db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
     """
     try:
@@ -81,7 +81,7 @@ def get_position(admin_id, root, db_name, position_id):
 
     Args:
             admin_id (str):                 Root privileges flag.
-            root (str):                    Root privileges flag.
+            root (str):                     Root privileges activation flag.
             db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
             position_id (str):              The id of the position.
     """
@@ -110,7 +110,7 @@ def update_position(admin_id, root, db_name, position_id, data):
 
     Args:
             admin_id (str):                 Root privileges flag.
-            root (str):                    Root privileges flag.
+            root (str):                     Root privileges activation flag.
             db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
             position_id (str):              The id of the position.
             data (dict):                    Position data structure.
@@ -142,7 +142,7 @@ def delete_position(admin_id, root, db_name, position_id):
 
     Args:
             admin_id (str):                 Root privileges flag.
-            root (str):                    Root privileges flag.
+            root (str):                     Root privileges activation flag.
             db_name (str):                  Name of the registered Database. It uses if administration privileges activated.
             position_id (str):              The id of the position.
     """
