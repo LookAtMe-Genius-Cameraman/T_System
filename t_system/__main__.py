@@ -89,6 +89,32 @@ def start_sub(args):
         elif args["arm_sub_jobs"] == "list":
             ArmModeler().show(args["name"])
 
+    elif args["sub_jobs"] == "live-stream":
+
+        from t_system.online_stream import OnlineStreamer
+
+        online_streamer = OnlineStreamer(None, None)
+
+        if args["live_st_sub_jobs"] == "website":
+            if args["live_st_website_sub_jobs"] == "upsert":
+                online_streamer.add_website(args["name"], args["url"], args["server"], force_insert=True)
+
+            elif args["live_st_website_sub_jobs"] == "remove":
+                online_streamer.remove_websites(args["website_ids"])
+
+            elif args["live_st_website_sub_jobs"] == "list":
+                online_streamer.show_websites()
+
+        elif args["arm_sub_jobs"] == "streaming":
+            if args["live_st_streaming_sub_jobs"] == "upsert":
+                online_streamer.set_website_stream(args["website_id"], {"account_name": args["account_name"], "key": args["key"]})
+
+            elif args["live_st_streaming_sub_jobs"] == "remove":
+                online_streamer.remove_website_stream(args["website_id"], args["account_name"])
+
+            elif args["live_st_streaming_sub_jobs"] == "list":
+                online_streamer.show_stream_ids()
+
     elif args["sub_jobs"] == "remote-ui-authentication":
         t_system.administrator.change_keys(args["ssid"], args["password"])
 
@@ -132,6 +158,7 @@ def prepare(args):
         t_system.motor_driver = ServoKit(channels=args["sd_channels"])
         logger.info("Motors running on external driver.")
 
+    from t_system.accession import NetworkConnector
     from t_system.administration import Identifier
     from t_system.administration import Administrator
     from t_system.updation import UpdateManager
@@ -140,6 +167,7 @@ def prepare(args):
     from t_system.recordation import RecordManager
     from t_system.face_encoding import FaceEncodeManager
 
+    t_system.network_connector = NetworkConnector(args)
     t_system.identifier = Identifier()
     t_system.administrator = Administrator()
     t_system.update_manager = UpdateManager()
@@ -297,6 +325,36 @@ def initiate():
 
     ap_arm_list = arm_sub_p.add_parser('list', help='List the robotic arms with their model and features')
     ap_arm_list.add_argument('--name', help='The name of robotic arm in arm module\'s config.json file.', type=str, default=None)
+
+    ap_live_st = sub_p.add_parser('live-stream', help='Make Online Stream Jobs of T_System.')
+    live_st_sub_p = ap_live_st.add_subparsers(dest="live_st_sub_jobs", help='officiate the Online Stream sub-jobs')  # if sub-commands not used their arguments create raise.
+
+    ap_live_st_website = live_st_sub_p.add_parser('website', help='Make jobs about Live Streaming available websites.')
+    l_s_website_sub_p = ap_live_st_website.add_subparsers(dest="live_st_website_sub_jobs", help='officiate the Online Stream\' sub-jobs about its websites')  # if sub-commands not used their arguments create raise.
+
+    ap_l_s_website_upsert = l_s_website_sub_p.add_parser('upsert', help='Insert new website for the live streaming point. If name of given website is exist, update its other parameters.')
+    ap_l_s_website_upsert.add_argument('--name', help='Name of the website.', type=str, required=True)
+    ap_l_s_website_upsert.add_argument('--url', help='Active Internet Link of the website.', type=str, required=True)
+    ap_l_s_website_upsert.add_argument('--server', help='Server rtmp Link of the website.', type=str, required=True)
+
+    ap_l_s_website_remove = l_s_website_sub_p.add_parser('remove', help='Remove existing online websites by their name.')
+    ap_l_s_website_remove.add_argument('--website-ids', help='ID list of websites that will remove.', type=list, required=True)
+
+    ap_l_s_website_list = l_s_website_sub_p.add_parser('list', help='List the existing websites.')
+
+    ap_live_st_streaming = live_st_sub_p.add_parser('streaming', help='Make jobs about online streaming runtime specifications and parameters')
+    l_s_streaming_sub_p = ap_live_st_streaming.add_subparsers(dest="live_st_streaming_sub_jobs", help='officiate the Online Stream\' sub-jobs about its streaming specifications')  # if sub-commands not used their arguments create raise.
+
+    ap_l_s_streaming_upsert = l_s_streaming_sub_p.add_parser('upsert', help='Insert new stream ID for the live streaming point. If name of given ID is exist, update its other parameters.')
+    ap_l_s_streaming_upsert.add_argument('--website-id', help='ID of the website that has stream IDs.', type=str, required=True)
+    ap_l_s_streaming_upsert.add_argument('--account-name', help='Name of the website personalized account.', type=str, required=True)
+    ap_l_s_streaming_upsert.add_argument('--key', help='Stream key of the account', type=str, required=True)
+
+    ap_l_s_streaming_remove = l_s_streaming_sub_p.add_parser('remove', help='Remove a stream ID for the live streaming point.')
+    ap_l_s_streaming_remove.add_argument('--website-id', help='ID of the website that has stream IDs.', type=str, required=True)
+    ap_l_s_streaming_remove.add_argument('--account-name', help='Name of the personalized account of a website that will be removed.', type=str, required=True)
+
+    ap_l_s_streaming_list = l_s_streaming_sub_p.add_parser('list', help='List the existing websites.')
 
     args = vars(ap.parse_args())
 

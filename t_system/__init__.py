@@ -23,6 +23,7 @@ log_manager = None
 seer = None
 augmenter = None
 stand_ui = None
+network_connector = None
 identifier = None
 administrator = None
 update_manager = None
