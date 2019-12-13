@@ -32,3 +32,4 @@ board
 adafruit-blinka==3.0.0
 adafruit-circuitpython-pca9685
 adafruit-circuitpython-servokit==1.1.0
+tabulate
