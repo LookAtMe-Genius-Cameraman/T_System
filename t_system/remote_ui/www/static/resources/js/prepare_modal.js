@@ -257,7 +257,9 @@ recognize_select_dd_btn.addEventListener("click", function () {
                             recognize_checkboxes.push(recognize_select_checkbox);
 
                             recognize_select_checkbox.addEventListener("change", function () {
-                                recognize_all_select_checkbox.checked = !recognize_select_checkbox.checked === false;
+                                if (recognize_all_select_checkbox.checked && !recognize_select_checkbox.checked) {
+                                    recognize_all_select_checkbox.checked = false;
+                                }
 
                                 recognize_checkbox.click();
                             });
