@@ -208,6 +208,6 @@ def delete_website(admin_id, root, website_id):
     if root:
         result = seer.online_setreamer.remove_websites([website_id])
     else:
-        result = True
+        result = False
 
     return result

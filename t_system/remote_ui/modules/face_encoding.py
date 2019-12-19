@@ -24,7 +24,7 @@ def create_face(admin_id, name, images):
         images (list):                 list of FileStorage object.
     """
 
-    from t_system.remote_ui import allowed_file
+    from t_system.remote_ui.__main__ import allowed_file
 
     for image in images:
         if not allowed_file(image.filename, {'png', 'jpg', 'jpeg'}):

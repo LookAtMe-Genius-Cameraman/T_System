@@ -48,7 +48,7 @@ def start(args):
             t_system.augmenter.run(lambda: False)
 
         elif args["interface"] == "remote_ui":
-            from t_system.remote_ui import RemoteUI
+            from t_system.remote_ui.__main__ import RemoteUI
 
             remote_ui = RemoteUI(args)
             remote_ui.run(host=args["host"], port=args["port"], debug=args["debug"])
