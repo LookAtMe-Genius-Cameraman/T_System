@@ -1,5 +1,16 @@
 {
   "_default": {},
-  "positions": {},
+  "positions": {
+    "1": {
+      "id": "",
+      "name": "initial",
+      "cartesian_coords": [5, 5, 45],
+      "polar_params": {
+        "coords": [2.618, 3.0, 3.1416, 0.5, 1.04],
+        "delays": [0, 0, 0, 0, 0],
+        "divide_counts": [1, 1, 1, 1, 1]
+      }
+    }
+  },
   "scenarios": {}
 }
