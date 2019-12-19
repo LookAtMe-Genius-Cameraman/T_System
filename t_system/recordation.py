@@ -128,8 +128,7 @@ class RecordManager:
 
         self.records_folder = f'{dot_t_system_dir}/records'
 
-        if not os.path.exists(self.records_folder):
-            os.mkdir(self.records_folder)
+        self.__check_folders()
 
         self.shoots_table = DBFetcher(self.records_folder, "db", "shoots").fetch()
         self.shot_table = DBFetcher(self.records_folder, "db", "shots").fetch()
@@ -285,6 +284,13 @@ class RecordManager:
                 return True
 
         return False
+
+    def __check_folders(self):
+        """Method to checking the necessary folders created before. If not created creates them.
+        """
+
+        if not os.path.exists(self.records_folder):
+            os.mkdir(self.records_folder)
 
 
 class Shoot:

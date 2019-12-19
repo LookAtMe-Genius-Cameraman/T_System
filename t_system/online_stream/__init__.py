@@ -43,6 +43,8 @@ class OnlineStreamer:
 
         self.folder = f'{dot_t_system_dir}/streaming'
 
+        self.__check_folders()
+
         self.websites_table = DBFetcher(self.folder, "db", "websites").fetch()
 
         self.websites = []
@@ -363,9 +365,9 @@ class StreamWebSite:
 
         self.key_file = f'{self.keys_folder}/{self.name}.key'
 
-        self.table = DBFetcher(self.folder, "db", "websites").fetch()
-
         self.__check_folders()
+
+        self.table = DBFetcher(self.folder, "db", "websites").fetch()
 
         self.__db_upsert()
 
@@ -523,6 +525,9 @@ class StreamWebSite:
 
         if not os.path.exists(self.parent_folder):
             os.mkdir(self.parent_folder)
+
+        if not os.path.exists(self.keys_folder):
+            os.mkdir(self.keys_folder)
 
         if not os.path.exists(self.folder):
             os.mkdir(self.folder)
