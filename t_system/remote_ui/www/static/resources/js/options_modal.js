@@ -69,6 +69,7 @@ const live_streaming_div = document.getElementById("live_streaming_div");
 const live_streaming_btn = document.getElementById("live_streaming_btn");
 const live_streaming_io_div = document.getElementById("live_streaming_io_div");
 const ls_websites_ul = document.getElementById("ls_websites_ul");
+const create_website_div = document.getElementById("create_website_div");
 const create_website_btn = document.getElementById("create_website_btn");
 
 const website_creation_div = document.getElementById("website_creation_div");
@@ -1320,7 +1321,7 @@ live_streaming_btn.addEventListener("click", function () {
                             let website_cm_rename_a = document.createElement('a');
                             let website_cm_add_account_a = document.createElement('a');
 
-                            website_dropdown_div.classList.add("dropdown", "mt-1", "website_div");
+                            website_dropdown_div.classList.add("dropdown", "mb-1", "website_div");
                             website_dropdown_div.id = "website_div_" + c;
 
                             website_context_menu.classList.add("position-relative", "dropdown-menu", "dropdown-menu-sm", "website_context_menu");
@@ -1382,9 +1383,9 @@ live_streaming_btn.addEventListener("click", function () {
                             website_cm_add_account_a.innerHTML = translate_text_item("add account");
 
                             website_cm_add_account_a.addEventListener("click", function () {
-                                    stream_id_creation_div.classList.add("focused");
-                                    stream_id_creation_div.setAttribute("website_id", websites[c]["id"]);
-                                    stream_cre_create_btn.disabled = true;
+                                stream_id_creation_div.classList.add("focused");
+                                stream_id_creation_div.setAttribute("website_id", websites[c]["id"]);
+                                stream_cre_create_btn.disabled = true;
                             });
 
                             website_btn.classList.add("btn", "btn-secondary", "website_btn");
@@ -1449,7 +1450,6 @@ live_streaming_btn.addEventListener("click", function () {
                                     clearElement(website_dropdown_container_div);
 
                                     for (let i = 0; i < websites[c]["stream_ids"].length; i++) {
-                                        let stream_id_checkbox = document.createElement('checkbox');
                                         let stream_id_dropdown_div = document.createElement('div');
                                         let stream_id_btn = document.createElement('button');
                                         let stream_id_dd_btn = document.createElement('button');
@@ -1464,22 +1464,7 @@ live_streaming_btn.addEventListener("click", function () {
                                         let stream_cm_rename_a = document.createElement('a');
                                         let stream_cm_change_key_a = document.createElement('a');
 
-                                        stream_id_checkbox.classList.add("form-check-input");
-                                        stream_id_checkbox.id = "website_" + c + "stream_id_" + i + "_checkbox";
-                                        stream_id_checkbox.type = "radio";
-                                        stream_id_checkbox.name = "stream_id";
-
-                                        stream_id_checkbox.addEventListener("change", function () {
-                                            request_asynchronous('/api/live_stream?cause=stream_id&in_use=' + stream_id_checkbox.checked + '&id=' + websites[c]["id"] + '&account_name=' + websites[c]["stream_ids"][i]["account_name"] + '&admin_id=' + admin_id, 'PATCH',
-                                                'application/x-www-form-urlencoded; charset=UTF-8', {}, function (req, err, response) {
-                                                    if (err === "success") {
-                                                        let response_data = JSON.parse(response.responseText);
-                                                    }
-                                                });
-                                        });
-
                                         stream_id_dropdown_div.classList.add("position-relative", "dropdown-item", "form-check-label", "dropdown");
-                                        stream_id_dropdown_div.setAttribute("for", stream_id_checkbox.id);
                                         stream_id_dropdown_div.id = websites[c]["stream_ids"][i]["id"];
 
                                         stream_context_menu.classList.add("position-relative", "dropdown-menu", "dropdown-menu-sm", "stream_context_menu");
@@ -1580,7 +1565,24 @@ live_streaming_btn.addEventListener("click", function () {
                                         stream_id_btn.classList.add("btn", "btn-dark");
                                         stream_id_btn.type = "button";
                                         stream_id_btn.id = websites[c]["name"] + websites[c]["stream_ids"][i]["account_name"] + "_btn";
-                                        stream_id_btn.innerHTML = websites[c]["stream_ids"][i]["account_name"];
+                                        stream_id_btn.innerHTML = websites[c]["stream_ids"][i]["account_name"].replace(/_/gi, " ");
+                                        stream_id_btn.setAttribute("is_active", websites[c]["stream_ids"][i]["is_active"]);
+
+
+                                        stream_id_btn.addEventListener("click", function () {
+                                            if (!stream_id_btn.classList.contains("btn-outline-dark")){
+                                                request_asynchronous('/api/live_stream?cause=stream_id&in_use=' + stream_id_btn.getAttribute("is_active") + '&id=' + websites[c]["id"] + '&account_name=' + websites[c]["stream_ids"][i]["account_name"] + '&admin_id=' + admin_id, 'PATCH',
+                                                'application/x-www-form-urlencoded; charset=UTF-8', {}, function (req, err, response) {
+                                                    if (err === "success") {
+                                                        let response_data = JSON.parse(response.responseText);
+                                                    }
+                                                });
+
+                                                live_streaming_btn.click();
+                                                live_streaming_btn.click();
+                                                website_dd_btn.click();
+                                            }
+                                        });
 
                                         function hide_stream_context_menu() {
                                             $("#" + stream_context_menu.id).removeClass("show").hide();
@@ -1644,10 +1646,20 @@ live_streaming_btn.addEventListener("click", function () {
                                             }
                                         });
 
+                                        if (websites[c]["stream_ids"][i]["is_active"]) {
+                                            stream_id_btn.classList.remove("btn-dark");
+                                            stream_id_btn.classList.add("btn-outline-dark");
+                                            stream_id_dd_btn.classList.remove("btn-dark");
+                                            stream_id_dd_btn.classList.add("btn-outline-dark");
+                                        }
+
                                         stream_id_dd_span.classList.add("sr-only");
 
-                                        stream_id_dropdown_container_div.classList.add("dropdown-menu", "dropdown-menu-right", "container", "dropdown_menu", "scenario_dropdown_menu", "keep-open");
+                                        stream_id_dropdown_container_div.classList.add("dropdown-menu", "dropdown-menu-right", "container", "dropdown_menu", "stream_id_dropdown_menu", "keep-open");
                                         stream_id_dropdown_container_div.id = websites[c]["name"] + websites[c]["stream_ids"][i]["account_name"] + "_container_div";
+
+                                        stream_key_div.classList.add("stream_key_div");
+                                        stream_key_div.classList.add("cut-text");
 
                                         stream_key_title_a.innerHTML = translate_text_item("stream key: ");
 
@@ -1683,7 +1695,7 @@ live_streaming_btn.addEventListener("click", function () {
 
                             website_dd_span.classList.add("sr-only");
 
-                            website_dropdown_container_div.classList.add("dropdown-menu", "dropdown-menu-right", "dropdown_menu", "record_dropdown_menu");
+                            website_dropdown_container_div.classList.add("dropdown-menu", "dropdown-menu-right", "dropdown_menu", "website_dropdown_menu");
                             website_dropdown_container_div.setAttribute("aria-labelledby", website_btn.id);
 
                             if (admin_id !== false) {
@@ -1709,6 +1721,8 @@ live_streaming_btn.addEventListener("click", function () {
         dark_deep_background_div.removeEventListener("click", live_streaming_btn_lis_bind);
         options_template_container.removeEventListener("click", live_streaming_btn_lis_bind);
 
+        clearElement(ls_websites_ul);
+
         setSwiperSwiping(true);
 
         live_streaming_btn_click_count = 0;
@@ -1722,12 +1736,20 @@ website_creation_div.addEventListener("click", function () {
 web_cre_create_btn.addEventListener("click", function () {
     if (website_name_input.value !== "" && website_url_input.value !== "" && website_server_input.value !== "") {
 
-        let data = {"name": website_name_input.value, "url": website_url_input.value, "server": website_server_input.value};
+        let data = {"name": website_name_input.value.replace(/ /gi, "_"), "url": website_url_input.value, "server": website_server_input.value};
 
         request_asynchronous('/api/live_stream?admin_id=' + admin_id + '&root=true', 'POST',
             'application/json; charset=UTF-8', data, function (req, err, response) {
                 if (err === "success") {
                     let response_data = JSON.parse(response.responseText);
+
+                    website_name_input.value = website_url_input.value = website_server_input.value = "";
+
+                    swal(translate_text_item("Website Added!"), "", "success");
+
+                    website_creation_div.classList.remove("focused");
+                    live_streaming_btn.click();
+                    live_streaming_btn.click();
                 }
             });
     }
@@ -1743,8 +1765,8 @@ web_cre_cancel_btn.addEventListener("click", function () {
 });
 
 create_website_btn.addEventListener("click", function () {
-    stream_id_creation_div.classList.add("focused");
-    stream_cre_create_btn.disabled = true;
+    website_creation_div.classList.add("focused");
+    web_cre_create_btn.disabled = true;
 });
 
 stream_id_creation_div.addEventListener("click", function () {
@@ -1754,12 +1776,20 @@ stream_id_creation_div.addEventListener("click", function () {
 stream_cre_create_btn.addEventListener("click", function (event) {
     if (stream_acc_name_input.value !== "" && stream_acc_key_input.value !== "") {
 
-        let data = {"account_name": stream_acc_name_input.value, "key": stream_acc_key_input.value};
+        let data = {"account_name": stream_acc_name_input.value.replace(/ /gi, "_"), "key": stream_acc_key_input.value};
 
         request_asynchronous('/api/live_stream?id=' + stream_id_creation_div.getAttribute("website_id") + '&admin_id=' + admin_id + '&root=true', 'POST',
             'application/json; charset=UTF-8', data, function (req, err, response) {
                 if (err === "success") {
                     let response_data = JSON.parse(response.responseText);
+
+                    stream_acc_name_input.value = stream_acc_key_input.value = "";
+
+                    swal(translate_text_item("Account Added!"), "", "success");
+
+                    stream_id_creation_div.classList.remove("focused");
+                    live_streaming_btn.click();
+                    live_streaming_btn.click();
                 }
             });
     }
