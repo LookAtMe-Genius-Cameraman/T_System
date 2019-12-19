@@ -75,13 +75,13 @@ class JobApi(Resource):
     def put(self):
         """The API method to PUT request for flask.
         """
-        running_type = request.args.get('type')
+        cause = request.args.get('cause')
         admin_id = request.args.get('admin_id', None)
 
-        if not running_type:
+        if not cause:
             return {'status': 'ERROR', 'message': '\'type\' parameter is missing'}
 
-        result = job_manager.start_job(admin_id, running_type)
+        result = job_manager.execute_job(admin_id, cause)
         return {'status': 'OK' if result else 'ERROR'}
 
     def patch(self):
@@ -96,12 +96,13 @@ class JobApi(Resource):
         """The API method to DELETE request for flask.
         """
         pause = request.args.get('pause', None)
+        cause = request.args.get('cause', None)
         admin_id = request.args.get('admin_id', None)
 
         if pause:
             result = job_manager.pause_job(admin_id)
         else:
-            result = job_manager.stop_job(admin_id)
+            result = job_manager.stop_job(admin_id, cause)
 
         return {'status': 'OK' if result else 'ERROR'}
 

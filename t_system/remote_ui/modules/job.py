@@ -87,40 +87,28 @@ class JobManager:
 
         return seer.target_mark_types
 
-    def start_job(self, admin_id, running_type):
+    def execute_job(self, admin_id, cause):
         """The top-level method to start seer's work.
 
         Args:
                 admin_id (str):                 Root privileges flag.
-                running_type (str):             Specifier of running type. Either `simulation` or `real`.
+                cause (str):                    Specifier of running type. Either `take_shots`, `track`, `record` or `mission`.
         """
-        if running_type == "take_shots":
+        if cause == "take_shots":
             seer.take_shots()
             time.sleep(0.3)
             record_manager.refresh_records(r_type="shot")
             return True
-        elif running_type == "simulation":
-            seer.record = False
-        elif running_type == "real":
-            seer.record = True
+        elif cause == "track":
+            self.__start_track()
+        elif cause == "record":
+            self.__start_record()
+        elif cause == "mission":
+            self.__start_mission()
+        elif cause == "live_stream":
+            self.__start_live_stream()
         else:
             return False
-
-        if not self.non_moving_target:
-            rgb, detected_boxes = seer.detect_initiate(lambda: self.stop_mission)
-
-            if detected_boxes:
-                seer.watch_and(self.job_type)
-
-            time.sleep(0.5)
-
-        else:
-            self.watch_thread = threading.Thread(target=seer.watch, args=(lambda: self.stop_watch, "bgr", self.job_type))
-            self.watch_thread.start()
-
-        self.mission_proc = multiprocessing.Process(target=mission_manager.continuous_execute, args=(lambda: self.stop_mission, lambda: self.pause_mission, self.scenario, "scenario", self.predicted_mission))
-        self.mission_proc.start()
-
         return True
 
     def resume_job(self, admin_id):
@@ -141,26 +129,24 @@ class JobManager:
 
         return True
 
-    def stop_job(self, admin_id):
+    def stop_job(self, admin_id, cause):
         """Method to stop the work of seer.
 
         Args:
                 admin_id (str):                 Root privileges flag.
+                cause (str):                 Specifier of running type. Either `simulation` or `real`.
         """
 
-        seer.terminate_active_threads()
-        seer.stop_thread = True
-
-        record_manager.refresh_records()
-
-        self.__stop_mission_proc()
-        self.__stop_watch_thread()
-
-        if seer.record:
-            seer.record = False
-
-        seer.stop_thread = False
-
+        if cause == "track":
+            self.__stop_track()
+        elif cause == "record":
+            self.__stop_record()
+        elif cause == "mission":
+            self.__stop_mission_proc()
+        elif cause == "live_stream":
+            self.__stop_live_stream()
+        else:
+            return False
         return True
 
     @staticmethod
@@ -195,6 +181,71 @@ class JobManager:
 
         if non_moving_target:
             mission_manager.expand_actor()
+
+    def __start_track(self):
+        """The top-level method to start seer's tracking work.
+        """
+        if not self.non_moving_target:
+            rgb, detected_boxes = seer.detect_initiate(lambda: self.stop_watch)
+
+            if detected_boxes:
+                seer.watch_and(self.job_type)
+
+            time.sleep(0.5)
+
+        else:
+            self.watch_thread = threading.Thread(target=seer.watch, args=(lambda: self.stop_watch, "bgr", self.job_type))
+            self.watch_thread.start()
+
+    def __stop_track(self):
+        """The top-level method to stop seer's tracking work.
+        """
+
+        seer.terminate_active_threads()
+        seer.stop_thread = True
+
+        self.__stop_watch_thread()
+
+        time.sleep(0.15)
+        seer.stop_thread = False
+
+    def __start_record(self):
+        """The top-level method to start seer's recording work.
+        """
+        self.__stop_track()
+        seer.record = True
+
+        seer.watch_and(self.job_type)
+
+    def __stop_record(self):
+        """The top-level method to stop seer's recording work.
+        """
+
+        self.__stop_track()
+
+        record_manager.refresh_records()
+        seer.record = False
+
+        seer.watch_and(self.job_type)
+
+    def __start_live_stream(self):
+        """The top-level method to start seer's live-streaming work.
+        """
+
+        seer.online_streamer.go_live()
+
+    def __stop_live_stream(self):
+        """The top-level method to stop seer's live-streaming work.
+        """
+
+        seer.online_streamer.stop_live()
+
+    def __start_mission(self):
+        """The top-level method to start T_System's MissionManager mission.
+        """
+
+        self.mission_proc = multiprocessing.Process(target=mission_manager.continuous_execute, args=(lambda: self.stop_mission, lambda: self.pause_mission, self.scenario, "scenario", self.predicted_mission))
+        self.mission_proc.start()
 
     def __stop_mission_proc(self):
         """Method to stop the mission_thread.
