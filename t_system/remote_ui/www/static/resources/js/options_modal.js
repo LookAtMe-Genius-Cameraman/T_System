@@ -65,6 +65,25 @@ const help_control_div = document.getElementById("help_control_div");
 const help_control_btn = document.getElementById("help_control_btn");
 const help_control_io_div = document.getElementById("help_control_io_div");
 
+const live_streaming_div = document.getElementById("live_streaming_div");
+const live_streaming_btn = document.getElementById("live_streaming_btn");
+const live_streaming_io_div = document.getElementById("live_streaming_io_div");
+const ls_websites_ul = document.getElementById("ls_websites_ul");
+const create_website_btn = document.getElementById("create_website_btn");
+
+const website_creation_div = document.getElementById("website_creation_div");
+const website_name_input = document.getElementById("website_name_input");
+const website_url_input = document.getElementById("website_url_input");
+const website_server_input = document.getElementById("website_server_input");
+const web_cre_create_btn = document.getElementById("web_cre_create_btn");
+const web_cre_cancel_btn = document.getElementById("web_cre_cancel_btn");
+
+const stream_id_creation_div = document.getElementById("stream_id_creation_div");
+const stream_acc_name_input = document.getElementById("stream_acc_name_input");
+const stream_acc_key_input = document.getElementById("stream_acc_key_input");
+const stream_cre_create_btn = document.getElementById("stream_cre_create_btn");
+const stream_cre_cancel_btn = document.getElementById("stream_cre_cancel_btn");
+
 const advanced_switch_div = document.getElementById("advanced_switch_div");
 const advanced_switch_btn = document.getElementById("advanced_switch_btn");
 const advanced_switch_io_div = document.getElementById("advanced_switch_io_div");
@@ -135,7 +154,7 @@ update_control_btn.addEventListener("click", function () {
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
 
-    toggle_elements([wifi_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, lang_select_div, help_control_div, advanced_switch_div, switching_control_div]);
+    toggle_elements([wifi_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, lang_select_div, help_control_div, live_streaming_div, advanced_switch_div, switching_control_div]);
     update_control_div.classList.toggle("col");
     update_control_div.classList.toggle("focused");
     update_control_div.classList.toggle("higher");
@@ -209,7 +228,7 @@ wifi_connections_btn.addEventListener("click", function () {
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
 
-    toggle_elements([update_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, lang_select_div, help_control_div, advanced_switch_div, switching_control_div]);
+    toggle_elements([update_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, lang_select_div, help_control_div, live_streaming_div, advanced_switch_div, switching_control_div]);
     wifi_control_div.classList.toggle("col");
     wifi_control_div.classList.toggle("focused");
     wifi_control_div.classList.toggle("higher");
@@ -424,7 +443,7 @@ audio_control_btn.addEventListener("click", function () {
 
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
-    toggle_elements([update_control_div, wifi_control_div, face_encoding_div, record_control_div, identity_control_div, lang_select_div, help_control_div, advanced_switch_div, switching_control_div]);
+    toggle_elements([update_control_div, wifi_control_div, face_encoding_div, record_control_div, identity_control_div, lang_select_div, help_control_div, live_streaming_div, advanced_switch_div, switching_control_div]);
     audio_control_div.classList.toggle("col");
     audio_control_div.classList.toggle("focused");
     audio_control_div.classList.toggle("higher");
@@ -454,7 +473,7 @@ face_encoding_btn.addEventListener("click", function () {
 
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
-    toggle_elements([update_control_div, wifi_control_div, audio_control_div, record_control_div, identity_control_div, lang_select_div, help_control_div, advanced_switch_div, switching_control_div]);
+    toggle_elements([update_control_div, wifi_control_div, audio_control_div, record_control_div, identity_control_div, lang_select_div, help_control_div, live_streaming_div, advanced_switch_div, switching_control_div]);
     face_encoding_div.classList.toggle("col");
     face_encoding_div.classList.toggle("focused");
     face_encoding_div.classList.toggle("higher");
@@ -632,7 +651,7 @@ record_control_btn.addEventListener("click", function () {
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
 
-    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, identity_control_div, lang_select_div, help_control_div, advanced_switch_div, switching_control_div]);
+    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, identity_control_div, lang_select_div, help_control_div, live_streaming_div, advanced_switch_div, switching_control_div]);
     record_control_div.classList.toggle("col");
     record_control_div.classList.toggle("focused");
     record_control_div.classList.toggle("higher");
@@ -1038,7 +1057,7 @@ identity_control_btn.addEventListener("click", function () {
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
 
-    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, lang_select_div, help_control_div, advanced_switch_div, switching_control_div]);
+    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, lang_select_div, help_control_div, live_streaming_div, advanced_switch_div, switching_control_div]);
     identity_control_div.classList.toggle("col");
     identity_control_div.classList.toggle("focused");
     identity_control_div.classList.toggle("higher");
@@ -1206,7 +1225,7 @@ lang_select_btn.addEventListener("click", function () {
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
 
-    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, help_control_div, advanced_switch_div, switching_control_div]);
+    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, help_control_div, live_streaming_div, advanced_switch_div, switching_control_div]);
     lang_select_div.classList.toggle("col");
     lang_select_div.classList.toggle("focused");
     lang_select_div.classList.toggle("higher");
@@ -1237,7 +1256,7 @@ help_control_btn.addEventListener("click", function () {
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
 
-    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, lang_select_div, advanced_switch_div, switching_control_div]);
+    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, lang_select_div, live_streaming_div, advanced_switch_div, switching_control_div]);
     help_control_div.classList.toggle("col");
     help_control_div.classList.toggle("focused");
     help_control_div.classList.toggle("higher");
@@ -1259,6 +1278,501 @@ help_control_btn.addEventListener("click", function () {
     }
 });
 
+let live_streaming_interacts = [];
+let live_streaming_btn_click_count = 0;
+let live_streaming_btn_lis_bind = close_opened_option.bind(null, live_streaming_btn);
+
+live_streaming_btn.addEventListener("click", function () {
+
+    dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
+    dark_deep_background_div.classList.toggle("focused");
+
+    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, lang_select_div, help_control_div, advanced_switch_div, switching_control_div]);
+    live_streaming_div.classList.toggle("col");
+    live_streaming_div.classList.toggle("focused");
+    live_streaming_div.classList.toggle("higher");
+    live_streaming_io_div.classList.toggle("focused");
+
+    live_streaming_btn_click_count++;
+    if (live_streaming_btn_click_count <= 1) {
+        dark_deep_background_div.addEventListener("click", live_streaming_btn_lis_bind);
+        options_template_container.addEventListener("click", live_streaming_btn_lis_bind);
+
+        setSwiperSwiping(false);
+
+        request_asynchronous('/api/live_stream?admin_id=' + admin_id, 'GET',
+            'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
+                if (err === "success") {
+                    if (requested_data["status"] === "OK") {
+
+                        let websites = requested_data["data"];
+
+                        for (let c = 0; c < websites.length; c++) {
+
+                            let website_dropdown_div = document.createElement('div');
+                            let website_btn = document.createElement('button');
+                            let website_dd_btn = document.createElement('button');
+                            let website_dd_span = document.createElement('span');
+                            let website_dropdown_container_div = document.createElement('div');
+
+                            let website_context_menu = document.createElement('div');
+                            let website_cm_remove_a = document.createElement('a');
+                            let website_cm_rename_a = document.createElement('a');
+                            let website_cm_add_account_a = document.createElement('a');
+
+                            website_dropdown_div.classList.add("dropdown", "mt-1", "website_div");
+                            website_dropdown_div.id = "website_div_" + c;
+
+                            website_context_menu.classList.add("position-relative", "dropdown-menu", "dropdown-menu-sm", "website_context_menu");
+                            website_context_menu.id = websites[c]["name"] + "_context_menu";
+
+                            $("#" + website_context_menu.id + " a").on("click", function () {
+                                $(this).parent().removeClass("show").hide();
+                            });
+
+                            website_cm_remove_a.classList.add("dropdown-item");
+                            website_cm_remove_a.innerHTML = translate_text_item("remove");
+
+                            website_cm_remove_a.addEventListener("click", function () {
+
+                                request_asynchronous('/api/live_stream?id=' + websites[c]["id"] + '&admin_id=' + admin_id + '&root=True', 'DELETE',
+                                    'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
+                                        if (err === "success") {
+                                            let response_data = JSON.parse(response.responseText);
+                                        }
+                                    });
+                            });
+
+                            website_cm_rename_a.classList.add("dropdown-item");
+                            website_cm_rename_a.innerHTML = translate_text_item("rename");
+
+                            website_cm_rename_a.addEventListener("click", function () {
+
+                                website_dropdown_div.removeChild(website_btn);
+                                website_dropdown_div.removeChild(website_dropdown_container_div);
+
+                                let website_name_input = document.createElement('input');
+
+                                website_name_input.type = "text";
+                                website_name_input.placeholder = website_btn.innerHTML;
+                                website_name_input.classList.add("action_name_input");
+
+                                website_name_input.addEventListener("focusout", function () {
+                                    if (website_name_input.value !== website_btn.innerHTML && website_name_input.value !== "") {
+                                        let data = {"name": website_name_input.value, "url": websites[c]["url"], "server": websites[c]["server"]};
+
+                                        request_asynchronous('/api/live_stream?id=' + websites[c]["id"] + '&admin_id=' + admin_id + '&root=True', 'PUT',
+                                            'application/x-www-form-urlencoded; charset=UTF-8', data, function (req, err, response) {
+                                                if (err === "success") {
+                                                    let response_data = JSON.parse(response.responseText);
+                                                }
+                                            });
+                                        website_btn.innerHTML = website_name_input.value
+                                    }
+                                    website_dropdown_div.removeChild(website_name_input);
+                                    website_dropdown_div.appendChild(website_btn);
+                                    website_dropdown_div.appendChild(website_dropdown_container_div);
+
+                                });
+                                website_dropdown_div.appendChild(website_name_input);
+                                website_name_input.focus();
+                            });
+
+                            website_cm_add_account_a.classList.add("dropdown-item");
+                            website_cm_add_account_a.innerHTML = translate_text_item("add account");
+
+                            website_cm_add_account_a.addEventListener("click", function () {
+                                    stream_id_creation_div.classList.add("focused");
+                                    stream_id_creation_div.setAttribute("website_id", websites[c]["id"]);
+                                    stream_cre_create_btn.disabled = true;
+                            });
+
+                            website_btn.classList.add("btn", "btn-secondary", "website_btn");
+                            website_btn.type = "button";
+                            website_btn.id = websites[c]["name"] + c + "_btn";
+                            website_btn.innerHTML = websites[c]["name"];
+
+                            function hide_website_context_menu() {
+                                $("#" + website_context_menu.id).removeClass("show").hide();
+                                document.removeEventListener("click", hide_website_context_menu);
+                            }
+
+                            let website_interact = interact('#' + website_btn.id)
+                                .on('tap', function (event) {
+
+                                    if (!website_context_menu.classList.contains("show")) {
+                                    }
+                                })
+                                .on('doubletap', function (event) {
+                                })
+                                .on('hold', function (event) {
+                                    website_btn.classList.add("disable_pointer");
+                                    let target = event.target;
+                                    let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+                                    let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+                                    website_context_menu.setAttribute('data-x', x);
+                                    website_context_menu.setAttribute('data-y', y);
+
+                                    $("#" + website_context_menu.id).css({
+                                        display: "block",
+                                        transform: 'translate(' + x + 'px, ' + y - 50 + 'px)',
+                                    }).addClass("show");
+
+                                    document.addEventListener("click", hide_website_context_menu);
+
+                                    setTimeout(function () {
+                                        website_btn.classList.remove("disable_pointer");
+                                    }, 500);
+
+                                    return false; //blocks default WebBrowser right click menu
+                                })
+                                .on('down', function (event) {
+                                })
+                                .on('up', function (event) {
+                                });
+
+                            live_streaming_interacts.push(website_interact);
+
+                            website_dd_btn.classList.add("btn", "btn-secondary", "dropdown-toggle", "dropdown-toggle-split");
+                            website_dd_btn.type = "button";
+                            website_dd_btn.setAttribute("data-toggle", "dropdown");
+                            website_dd_btn.setAttribute("aria-haspopup", "true");
+                            website_dd_btn.setAttribute("aria-expanded", "false");
+
+                            let website_dd_btn_click_count = 0;
+                            website_dd_btn.addEventListener("click", function () {
+                                website_dd_btn_click_count++;
+                                if (website_dd_btn_click_count <= 1) {
+                                    website_dropdown_container_div.classList.add("show");
+
+                                    clearElement(website_dropdown_container_div);
+
+                                    for (let i = 0; i < websites[c]["stream_ids"].length; i++) {
+                                        let stream_id_checkbox = document.createElement('checkbox');
+                                        let stream_id_dropdown_div = document.createElement('div');
+                                        let stream_id_btn = document.createElement('button');
+                                        let stream_id_dd_btn = document.createElement('button');
+                                        let stream_id_dd_span = document.createElement('span');
+                                        let stream_id_dropdown_container_div = document.createElement('div');
+                                        let stream_key_div = document.createElement('div');
+                                        let stream_key_title_a = document.createElement('a');
+                                        let stream_key_span = document.createElement('span');
+
+                                        let stream_context_menu = document.createElement('div');
+                                        let stream_cm_remove_a = document.createElement('a');
+                                        let stream_cm_rename_a = document.createElement('a');
+                                        let stream_cm_change_key_a = document.createElement('a');
+
+                                        stream_id_checkbox.classList.add("form-check-input");
+                                        stream_id_checkbox.id = "website_" + c + "stream_id_" + i + "_checkbox";
+                                        stream_id_checkbox.type = "radio";
+                                        stream_id_checkbox.name = "stream_id";
+
+                                        stream_id_checkbox.addEventListener("change", function () {
+                                            request_asynchronous('/api/live_stream?cause=stream_id&in_use=' + stream_id_checkbox.checked + '&id=' + websites[c]["id"] + '&account_name=' + websites[c]["stream_ids"][i]["account_name"] + '&admin_id=' + admin_id, 'PATCH',
+                                                'application/x-www-form-urlencoded; charset=UTF-8', {}, function (req, err, response) {
+                                                    if (err === "success") {
+                                                        let response_data = JSON.parse(response.responseText);
+                                                    }
+                                                });
+                                        });
+
+                                        stream_id_dropdown_div.classList.add("position-relative", "dropdown-item", "form-check-label", "dropdown");
+                                        stream_id_dropdown_div.setAttribute("for", stream_id_checkbox.id);
+                                        stream_id_dropdown_div.id = websites[c]["stream_ids"][i]["id"];
+
+                                        stream_context_menu.classList.add("position-relative", "dropdown-menu", "dropdown-menu-sm", "stream_context_menu");
+                                        stream_context_menu.id = websites[c]["name"] + websites[c]["stream_ids"][i]["account_name"] + "_context_menu";
+
+                                        $("#" + stream_context_menu.id + " a").on("click", function () {
+                                            $(this).parent().removeClass("show").hide();
+                                        });
+
+                                        stream_cm_remove_a.classList.add("dropdown-item");
+                                        stream_cm_remove_a.innerHTML = translate_text_item("remove");
+
+                                        stream_cm_remove_a.addEventListener("click", function () {
+
+                                            request_asynchronous('/api/live_stream?id=' + websites[c]["id"] + '&account_name=' + websites[c]["stream_ids"][i]["account_name"] + '&admin_id=' + admin_id, 'DELETE',
+                                                'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
+                                                    if (err === "success") {
+                                                        let response_data = JSON.parse(response.responseText);
+                                                    }
+                                                });
+                                        });
+
+                                        stream_cm_rename_a.classList.add("dropdown-item");
+                                        stream_cm_rename_a.innerHTML = translate_text_item("rename");
+
+                                        stream_cm_rename_a.addEventListener("click", function () {
+
+                                            stream_id_dropdown_div.removeChild(stream_id_btn);
+                                            stream_id_dropdown_div.removeChild(stream_id_dd_btn);
+                                            stream_id_dropdown_div.removeChild(stream_id_dropdown_container_div);
+                                            stream_id_dropdown_div.removeChild(stream_context_menu);
+
+                                            let stream_id_name_input = document.createElement('input');
+
+                                            stream_id_name_input.type = "text";
+                                            stream_id_name_input.placeholder = stream_id_btn.innerHTML;
+                                            stream_id_name_input.classList.add("action_name_input");
+
+                                            stream_id_name_input.addEventListener("focusout", function () {
+                                                if (stream_id_name_input.value !== stream_id_btn.innerHTML && stream_id_name_input.value !== "") {
+                                                    let data = {"account_name": stream_id_name_input.value, "key": websites[c]["stream_ids"][i]["key"]};
+
+                                                    request_asynchronous('/api/live_stream?id=' + websites[c]["id"] + '&account_name=' + websites[c]["stream_ids"][i]["account_name"] + '&admin_id=' + admin_id, 'PUT',
+                                                        'application/x-www-form-urlencoded; charset=UTF-8', data, function (req, err, response) {
+                                                            if (err === "success") {
+                                                                let response_data = JSON.parse(response.responseText);
+                                                            }
+                                                        });
+                                                    stream_id_btn.innerHTML = stream_id_name_input.value
+                                                }
+                                                stream_id_dropdown_div.removeChild(stream_id_name_input);
+                                                stream_id_dropdown_div.appendChild(stream_id_btn);
+                                                stream_id_dropdown_div.appendChild(stream_id_dd_btn);
+                                                stream_id_dropdown_div.appendChild(stream_id_dropdown_container_div);
+                                                stream_id_dropdown_div.appendChild(stream_context_menu);
+                                            });
+                                            stream_id_dropdown_div.appendChild(stream_id_name_input);
+                                            stream_id_name_input.focus();
+                                        });
+
+                                        stream_cm_change_key_a.classList.add("dropdown-item");
+                                        stream_cm_change_key_a.innerHTML = translate_text_item("change key");
+
+                                        stream_cm_change_key_a.addEventListener("click", function () {
+                                            stream_id_dropdown_container_div.classList.add("show");
+
+                                            stream_key_div.removeChild(stream_key_title_a);
+                                            stream_key_div.removeChild(stream_key_span);
+
+                                            let stream_id_key_input = document.createElement('input');
+
+                                            stream_id_key_input.type = "text";
+                                            stream_id_key_input.placeholder = stream_key_span.innerHTML;
+                                            stream_id_key_input.classList.add("action_name_input");
+
+                                            stream_id_key_input.addEventListener("focusout", function () {
+                                                if (stream_id_key_input.value !== stream_key_span.innerHTML && stream_id_key_input.value !== "") {
+                                                    let data = {"account_name": stream_id_key_input.value, "key": websites[c]["stream_ids"][i]["key"]};
+
+                                                    request_asynchronous('/api/live_stream?id=' + websites[c]["id"] + '&account_name=' + websites[c]["stream_ids"][i]["account_name"] + '&admin_id=' + admin_id, 'PUT',
+                                                        'application/x-www-form-urlencoded; charset=UTF-8', data, function (req, err, response) {
+                                                            if (err === "success") {
+                                                                let response_data = JSON.parse(response.responseText);
+                                                            }
+                                                        });
+                                                    stream_key_span.innerHTML = stream_id_key_input.value
+                                                }
+                                                stream_key_div.removeChild(stream_id_key_input);
+                                                stream_key_div.appendChild(stream_key_title_a);
+                                                stream_key_div.appendChild(stream_key_span);
+
+                                                stream_id_dropdown_container_div.classList.remove("show");
+                                            });
+                                            stream_key_div.appendChild(stream_id_key_input);
+                                            stream_id_key_input.focus();
+                                        });
+
+                                        stream_id_btn.classList.add("btn", "btn-dark");
+                                        stream_id_btn.type = "button";
+                                        stream_id_btn.id = websites[c]["name"] + websites[c]["stream_ids"][i]["account_name"] + "_btn";
+                                        stream_id_btn.innerHTML = websites[c]["stream_ids"][i]["account_name"];
+
+                                        function hide_stream_context_menu() {
+                                            $("#" + stream_context_menu.id).removeClass("show").hide();
+                                            document.removeEventListener("click", hide_stream_context_menu);
+                                        }
+
+                                        let stream_id_interact = interact('#' + stream_id_btn.id)
+                                            .on('tap', function (event) {
+
+                                                if (!stream_context_menu.classList.contains("show")) {
+                                                }
+                                            })
+                                            .on('doubletap', function (event) {
+                                            })
+                                            .on('hold', function (event) {
+                                                stream_id_btn.classList.add("disable_pointer");
+
+                                                let target = event.target;
+                                                let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+                                                let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+                                                stream_context_menu.setAttribute('data-x', x);
+                                                stream_context_menu.setAttribute('data-y', y);
+
+                                                $("#" + stream_context_menu.id).css({
+                                                    display: "block",
+                                                    transform: 'translate(' + x + 'px, ' + y + 'px)',
+                                                }).addClass("show");
+
+                                                setTimeout(function () {
+                                                    stream_id_btn.classList.remove("disable_pointer");
+                                                    document.addEventListener("click", hide_stream_context_menu);
+                                                }, 500);
+
+                                                return false; //blocks default WebBrowser right click menu
+                                            })
+                                            .on('down', function (event) {
+                                            })
+                                            .on('up', function (event) {
+                                            });
+
+                                        live_streaming_interacts.push(stream_id_interact);
+
+                                        stream_id_dd_btn.classList.add("btn", "btn-dark", "dropdown-toggle", "dropdown-toggle-split");
+                                        stream_id_dd_btn.type = "button";
+                                        stream_id_dd_btn.setAttribute("data-toggle", "dropdown");
+                                        stream_id_dd_btn.setAttribute("aria-haspopup", "true");
+                                        stream_id_dd_btn.setAttribute("aria-expanded", "false");
+
+                                        let stream_id_dd_btn_click_count = 0;
+                                        stream_id_dd_btn.addEventListener("click", function () {
+
+                                            stream_id_dropdown_container_div.classList.toggle("show");
+
+                                            stream_id_dd_btn_click_count++;
+                                            if (stream_id_dd_btn_click_count <= 1) {
+                                                stream_id_dropdown_container_div.classList.add("show");
+                                            } else {
+                                                // stream_id_dropdown_container_div.classList.remove("show");
+                                                stream_id_dd_btn_click_count = 0;
+                                            }
+                                        });
+
+                                        stream_id_dd_span.classList.add("sr-only");
+
+                                        stream_id_dropdown_container_div.classList.add("dropdown-menu", "dropdown-menu-right", "container", "dropdown_menu", "scenario_dropdown_menu", "keep-open");
+                                        stream_id_dropdown_container_div.id = websites[c]["name"] + websites[c]["stream_ids"][i]["account_name"] + "_container_div";
+
+                                        stream_key_title_a.innerHTML = translate_text_item("stream key: ");
+
+                                        stream_key_span.innerHTML = websites[c]["stream_ids"][i]["key"];
+
+                                        stream_context_menu.appendChild(stream_cm_remove_a);
+                                        stream_context_menu.appendChild(stream_cm_rename_a);
+                                        stream_context_menu.appendChild(stream_cm_change_key_a);
+
+                                        stream_id_dd_btn.appendChild(stream_id_dd_span);
+
+                                        stream_key_div.appendChild(stream_key_title_a);
+                                        stream_key_div.appendChild(stream_key_span);
+
+                                        stream_id_dropdown_container_div.appendChild(stream_key_div);
+
+                                        stream_id_dropdown_div.appendChild(stream_id_btn);
+                                        stream_id_dropdown_div.appendChild(stream_id_dd_btn);
+                                        stream_id_dropdown_div.appendChild(stream_id_dropdown_container_div);
+                                        stream_id_dropdown_div.appendChild(stream_context_menu);
+
+                                        website_dropdown_container_div.appendChild(stream_id_dropdown_div);
+                                    }
+                                } else {
+                                    website_dd_btn_click_count = 0;
+                                    for (let i = 0; i < live_streaming_interacts.length; i++) {
+                                        live_streaming_interacts[i].unset();
+                                    }
+                                    live_streaming_interacts = [];
+                                    website_dropdown_container_div.classList.remove("show");
+                                }
+                            });
+
+                            website_dd_span.classList.add("sr-only");
+
+                            website_dropdown_container_div.classList.add("dropdown-menu", "dropdown-menu-right", "dropdown_menu", "record_dropdown_menu");
+                            website_dropdown_container_div.setAttribute("aria-labelledby", website_btn.id);
+
+                            if (admin_id !== false) {
+                                website_context_menu.appendChild(website_cm_remove_a);
+                                website_context_menu.appendChild(website_cm_rename_a);
+                            }
+                            website_context_menu.appendChild(website_cm_add_account_a);
+
+                            website_dd_btn.appendChild(website_dd_span);
+
+                            website_dropdown_div.appendChild(website_btn);
+                            website_dropdown_div.appendChild(website_dd_btn);
+                            website_dropdown_div.appendChild(website_dropdown_container_div);
+                            website_dropdown_div.appendChild(website_context_menu);
+
+                            ls_websites_ul.appendChild(website_dropdown_div);
+                        }
+                    }
+                }
+            });
+
+    } else {
+        dark_deep_background_div.removeEventListener("click", live_streaming_btn_lis_bind);
+        options_template_container.removeEventListener("click", live_streaming_btn_lis_bind);
+
+        setSwiperSwiping(true);
+
+        live_streaming_btn_click_count = 0;
+    }
+});
+
+website_creation_div.addEventListener("click", function () {
+    web_cre_create_btn.disabled = website_name_input.value === "" || website_url_input.value === "" || website_server_input.value === "";
+});
+
+web_cre_create_btn.addEventListener("click", function () {
+    if (website_name_input.value !== "" && website_url_input.value !== "" && website_server_input.value !== "") {
+
+        let data = {"name": website_name_input.value, "url": website_url_input.value, "server": website_server_input.value};
+
+        request_asynchronous('/api/live_stream?admin_id=' + admin_id + '&root=true', 'POST',
+            'application/json; charset=UTF-8', data, function (req, err, response) {
+                if (err === "success") {
+                    let response_data = JSON.parse(response.responseText);
+                }
+            });
+    }
+});
+
+web_cre_cancel_btn.addEventListener("click", function () {
+    website_name_input.value = "";
+    website_url_input.value = "";
+    website_server_input.value = "";
+
+    website_creation_div.classList.remove("focused");
+
+});
+
+create_website_btn.addEventListener("click", function () {
+    stream_id_creation_div.classList.add("focused");
+    stream_cre_create_btn.disabled = true;
+});
+
+stream_id_creation_div.addEventListener("click", function () {
+    stream_cre_create_btn.disabled = stream_acc_name_input.value === "" || stream_acc_key_input.value === "";
+});
+
+stream_cre_create_btn.addEventListener("click", function (event) {
+    if (stream_acc_name_input.value !== "" && stream_acc_key_input.value !== "") {
+
+        let data = {"account_name": stream_acc_name_input.value, "key": stream_acc_key_input.value};
+
+        request_asynchronous('/api/live_stream?id=' + stream_id_creation_div.getAttribute("website_id") + '&admin_id=' + admin_id + '&root=true', 'POST',
+            'application/json; charset=UTF-8', data, function (req, err, response) {
+                if (err === "success") {
+                    let response_data = JSON.parse(response.responseText);
+                }
+            });
+    }
+});
+
+stream_cre_cancel_btn.addEventListener("click", function () {
+    stream_acc_name_input.value = "";
+    stream_acc_key_input.value = "";
+
+    stream_id_creation_div.classList.remove("focused");
+
+});
+
 let advanced_switch_btn_click_count = 0;
 let advanced_switch_btn_lis_bind = close_opened_option.bind(null, advanced_switch_btn);
 
@@ -1267,7 +1781,7 @@ advanced_switch_btn.addEventListener("click", function () {
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
 
-    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, lang_select_div, help_control_div, switching_control_div]);
+    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, lang_select_div, help_control_div, live_streaming_div, switching_control_div]);
     advanced_switch_div.classList.toggle("col");
     advanced_switch_div.classList.toggle("focused");
     advanced_switch_div.classList.toggle("higher");
@@ -1306,7 +1820,7 @@ switching_control_btn.addEventListener("click", function () {
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
 
-    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, lang_select_div, help_control_div, advanced_switch_div]);
+    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, lang_select_div, help_control_div, live_streaming_div, advanced_switch_div]);
     switching_control_div.classList.toggle("col");
     switching_control_div.classList.toggle("focused");
     switching_control_div.classList.toggle("higher");

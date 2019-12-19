@@ -36,6 +36,15 @@ const non_moving_target_cb_label = document.getElementById("non_moving_target_cb
 const time_laps_checkbox = document.getElementById("time_laps_checkbox");
 const time_laps_cb_label = document.getElementById("time_laps_cb_label");
 
+
+const specify_website_div = document.getElementById("specify_website_div");
+const specify_website_span = document.getElementById("specify_website_span");
+
+const available_website_div = document.getElementById("available_website_div");
+const available_website_ul = document.getElementById("available_website_ul");
+
+
+// SPECIFY SCENARIO
 let scenario_checkboxes = [];
 scenario_checkboxes.push(dont_use_sce_checkbox);
 
@@ -47,8 +56,9 @@ specify_sce_toggles.forEach(function (element) {
     element.addEventListener("click", function (e) {
         if (e.target !== e.currentTarget) return;
 
-        if (specify_param_span.innerHTML !== "") {
+        if (specify_param_span.innerHTML !== "" && specify_website_span.innerHTML !== "") {
             specify_param_span.innerHTML = "";
+            specify_website_span.innerHTML = "";
 
             main_specify_div.classList.remove("center");
             main_specify_div.classList.remove("left");
@@ -59,8 +69,12 @@ specify_sce_toggles.forEach(function (element) {
             specify_param_div.classList.remove("focused");
             specify_param_div.classList.add("inactive");
 
+            specify_website_div.classList.remove("focused");
+            specify_website_div.classList.add("inactive");
+
             available_sce_div.classList.add("focused");
             select_param_cb_div.classList.remove("focused");
+            available_website_div.classList.remove("focused");
 
             clearElement(available_sce_ul);
 
@@ -117,10 +131,11 @@ specify_sce_toggles.forEach(function (element) {
                 });
         } else {
             specify_param_span.innerHTML = translate_text_item("Specify Parameters");
+            specify_website_span.innerHTML = translate_text_item("Specify Live Stream");
 
             specify_sce_div.classList.remove("focused");
             specify_param_div.classList.remove("inactive");
-
+            specify_website_div.classList.remove("inactive");
 
             main_specify_div.classList.remove("right");
             main_specify_div.classList.remove("left");
@@ -128,10 +143,14 @@ specify_sce_toggles.forEach(function (element) {
 
             available_sce_div.classList.remove("focused");
             select_param_cb_div.classList.remove("focused");
+            available_website_div.classList.remove("focused");
+
         }
 
     });
 });
+
+// SPECIFY PARAMETERS
 
 let specify_param_toggles = [specify_param_div, specify_param_span];
 
@@ -139,8 +158,9 @@ specify_param_toggles.forEach(function (element) {
     element.addEventListener("click", function (e) {
         if (e.target !== e.currentTarget) return;
 
-        if (specify_sce_span.innerHTML !== "") {
+        if (specify_sce_span.innerHTML !== "" && specify_website_span.innerHTML !== "") {
             specify_sce_span.innerHTML = "";
+            specify_website_span.innerHTML = "";
 
             main_specify_div.classList.remove("center");
             main_specify_div.classList.remove("right");
@@ -151,16 +171,22 @@ specify_param_toggles.forEach(function (element) {
             specify_sce_div.classList.remove("focused");
             specify_sce_div.classList.add("inactive");
 
+            specify_website_div.classList.remove("focused");
+            specify_website_div.classList.add("inactive");
+
             select_param_cb_div.classList.add("focused");
             available_sce_div.classList.remove("focused");
+            available_website_div.classList.remove("focused");
 
             recognize_checkbox.click();
             ai_checkbox.click();
         } else {
             specify_sce_span.innerHTML = translate_text_item("Specify Scenarios");
+            specify_website_span.innerHTML = translate_text_item("Specify Live Stream");
 
             specify_param_div.classList.remove("focused");
             specify_sce_div.classList.remove("inactive");
+            specify_website_div.classList.remove("inactive");
 
             main_specify_div.classList.remove("left");
             main_specify_div.classList.remove("right");
@@ -168,6 +194,7 @@ specify_param_toggles.forEach(function (element) {
 
             select_param_cb_div.classList.remove("focused");
             available_sce_div.classList.remove("focused");
+            available_website_div.classList.remove("focused");
         }
     });
 });
@@ -364,4 +391,118 @@ non_moving_target_checkbox.addEventListener("change", function () {
     recognize_checkbox.click();
     ai_checkbox.click();
 });
+
+// SPECIFY LIVE STREAM
+let website_checkboxes = [];
+
+let specify_live_stream_toggles = [specify_website_div, specify_website_span];
+
+specify_live_stream_toggles.forEach(function (element) {
+    element.addEventListener("click", function (e) {
+        if (e.target !== e.currentTarget) return;
+
+        if (specify_sce_span.innerHTML !== "" && specify_param_span.innerHTML !== "") {
+            specify_sce_span.innerHTML = "";
+            specify_param_span.innerHTML = "";
+
+            main_specify_div.classList.remove("center");
+            main_specify_div.classList.remove("right");
+            main_specify_div.classList.add("left");
+
+            specify_website_div.classList.remove("active");
+            specify_website_div.classList.add("focused");
+
+            specify_param_div.classList.remove("focused");
+            specify_param_div.classList.add("inactive");
+
+            specify_sce_div.classList.remove("focused");
+            specify_sce_div.classList.add("inactive");
+
+            available_website_div.classList.add("focused");
+            select_param_cb_div.classList.remove("focused");
+            available_sce_div.classList.remove("focused");
+
+            clearElement(available_website_ul);
+
+            request_asynchronous('/api/live_stream?admin_id=' + admin_id, 'GET',
+                'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
+                    // err = "success"
+                    // requested_data = {"status": "OK", "data": [{"id": "b97tr40a-alcb-31w9-b150-ce2f6156l1ed", "name": "scenario_name1", "positions": [{"name": "pos1"}, {"name": "pos2"}]}, {"id": "b97dr48a-aecb-11e9-b130-cc2f7156l1ed", "name": "scenario_name2", "positions": [{}, {}]}]};
+                    if (err === "success") {
+                        if (requested_data["status"] === "OK") {
+
+                            let websites = requested_data["data"];
+
+                            for (let c = 0; c < websites.length; c++) {
+
+                                let website_select_div = document.createElement('div');
+                                let website_select_checkbox = document.createElement('input');
+                                let website_select_label = document.createElement('label');
+
+                                website_select_div.classList.add("form-check", "mb-1");
+
+                                website_select_checkbox.classList.add("form-check-input");
+                                website_select_checkbox.id = websites[c]["id"];
+                                website_select_checkbox.type = "checkbox";
+
+                                let sce_exist = false;
+
+                                for (let i = 0; i < website_checkboxes.length; i++) {
+                                    if (website_checkboxes[i].id === website_select_checkbox.id) {
+                                        website_select_checkbox = website_checkboxes[i];
+                                        sce_exist = true;
+                                        break;
+                                    }
+                                }
+
+                                if (!sce_exist) {
+                                    website_select_checkbox.checked = websites[c]["to_be_used"];
+                                    website_checkboxes.push(website_select_checkbox);
+
+                                    website_select_checkbox.addEventListener("change", function () {
+                                    });
+                                }
+
+                                website_select_checkbox.addEventListener("change", function () {
+                                            request_asynchronous('/api/live_stream?cause=stream_id&in_use=' + website_select_checkbox.checked + '&id=' + websites[c]["id"] + '&admin_id=' + admin_id, 'PATCH',
+                                                'application/x-www-form-urlencoded; charset=UTF-8', {}, function (req, err, response) {
+                                                    if (err === "success") {
+                                                        let response_data = JSON.parse(response.responseText);
+                                                    }
+                                                });
+                                        });
+
+                                website_select_label.classList.add("form-check-label", "btn", "btn-outline-dark");
+                                website_select_label.setAttribute("for", website_select_checkbox.id);
+                                website_select_label.innerHTML = websites[c]["name"].replace(/_/gi, " ");
+
+                                website_select_div.appendChild(website_select_checkbox);
+                                website_select_div.appendChild(website_select_label);
+
+                                available_website_ul.appendChild(website_select_div);
+                            }
+                        }
+                    }
+                });
+        } else {
+            specify_sce_span.innerHTML = translate_text_item("Specify Scenarios");
+            specify_param_span.innerHTML = translate_text_item("Specify Parameters");
+
+            specify_website_div.classList.remove("focused");
+            specify_website_div.classList.add("active");
+            specify_param_div.classList.remove("inactive");
+            specify_sce_div.classList.remove("inactive");
+
+            main_specify_div.classList.remove("left");
+            main_specify_div.classList.remove("right");
+            main_specify_div.classList.add("center");
+
+            available_website_div.classList.remove("focused");
+            select_param_cb_div.classList.remove("focused");
+            available_sce_div.classList.remove("focused");
+        }
+    });
+});
+
+
 

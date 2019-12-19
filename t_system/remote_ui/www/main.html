@@ -141,12 +141,12 @@
                     <div id="lang_select_div" class="position-relative col option_div">
                         <button id="lang_select_btn" class="option_btn" translate>Language</button>
                         <div id="lang_select_io_div" class="option_io_div">
-                                <div id="lang_select_dd_div" class="dropdown position-absolute mt-1">
-                                    <button id="lang_select_dd_btn" type="button" class="position-relative btn btn-outline-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-                                    <div id="lang_select_dd_container_div" class="dropdown-menu dropdown_menu lang_select_dropdown_menu">
-                                        <ul id="lang_list_ul"></ul>
-                                    </div>
+                            <div id="lang_select_dd_div" class="dropdown position-absolute mt-1">
+                                <button id="lang_select_dd_btn" type="button" class="position-relative btn btn-outline-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                                <div id="lang_select_dd_container_div" class="dropdown-menu dropdown_menu lang_select_dropdown_menu">
+                                    <ul id="lang_list_ul"></ul>
                                 </div>
+                            </div>
                         </div>
                     </div>
                     <div id="help_control_div" class="position-relative col option_div">
@@ -156,6 +156,66 @@
                     </div>
                 </div>
                 <div class="position-relative row mt-3">
+                    <div id="live_streaming_div" class="position-relative col option_div">
+                        <button id="live_streaming_btn" class="option_btn" translate>Live Stream</button>
+                        <div id="live_streaming_io_div" class="option_io_div">
+                            <div id="website_creation_div" class="position-absolute">
+                                <div id="web_cre_inputs_div">
+                                    <div class="form-group row">
+                                        <label for="website_name_input" class="col-sm-2 col-form-label" translate>Name</label>
+                                        <div class="col-sm-10">
+                                            <input id="website_name_input" class="form-control" type="password" placeholder="Name">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="website_url_input" class="col-sm-2 col-form-label" translate>URL</label>
+                                        <div class="col-sm-10">
+                                            <input id="website_url_input" class="form-control" type="password" placeholder="URL">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="website_server_input" class="col-sm-2 col-form-label" translate>Server</label>
+                                        <div class="col-sm-10">
+                                            <input id="website_server_input" class="form-control" type="password" placeholder="Server">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="web_cre_confirm_div" class="position-absolute">
+                                    <button id="web_cre_create_btn" class="btn btn-success" translate>Add</button>
+                                    <button id="web_cre_cancel_btn" class="btn btn-danger" translate>Cancel</button>
+                                </div>
+                            </div>
+                            <div id="stream_id_creation_div" class="position-absolute">
+                                <div id="stream_cre_inputs_div">
+                                    <div class="form-group row">
+                                        <label for="stream_acc_name_input" class="col-sm-2 col-form-label">Account Name</label>
+                                        <div class="col-sm-10">
+                                            <input type="password" class="form-control" id="stream_acc_name_input" placeholder="Account Name">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="stream_acc_key_input" class="col-sm-2 col-form-label">Stream Key</label>
+                                        <div class="col-sm-10">
+                                            <input type="password" class="form-control" id="stream_acc_key_input" placeholder="Key">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="stream_cre_confirm_div" class="position-absolute">
+                                    <button id="stream_cre_create_btn" class="btn btn-success" translate>Add</button>
+                                    <button id="stream_cre_cancel_btn" class="btn btn-danger" translate>Cancel</button>
+                                </div>
+                            </div>
+                            <div id="ls_websites_div">
+                                <div id="ls_websites_title_div">
+                                    <span id="ls_websites_title_span" translate>Websites</span>
+                                </div>
+                                <ul id="ls_websites_ul"></ul>
+                                <div id="create_website_div" class="position-absolute">
+                                    <button id="create_website_btn" class="btn btn-warning" translate>Add Website</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div id="advanced_switch_div" class="position-relative col option_div">
                         <button id="advanced_switch_btn" class="option_btn" translate>Advanced</button>
                         <div id="advanced_switch_io_div" class="option_io_div">
@@ -292,8 +352,8 @@
                                     <button id="recognize_select_dd_btn" type="button" class="btn btn-outline-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" translate>Recognize</button>
                                     <div class="dropdown-menu">
                                         <div class="dropdown-item form-check mb-1">
-                                                <input id="recognize-all_select_checkbox" class="form-check-input" type="checkbox" value="">
-                                                <label id="recognize-all_select_cb_label" class="form-check-label" for="recognize-all_select_checkbox" translate>Them all</label>
+                                            <input id="recognize-all_select_checkbox" class="form-check-input" type="checkbox" value="">
+                                            <label id="recognize-all_select_cb_label" class="form-check-label" for="recognize-all_select_checkbox" translate>Them all</label>
                                         </div>
                                         <ul id="recognize_person_list_ul"></ul>
                                     </div>
@@ -329,6 +389,12 @@
                             </div>
                         </div>
                     </div>
+                    <div id="specify_website_div" class="pl-1 specify_div active">
+                        <span id="specify_website_span" class="mb-3 fas fa-chevron-right specify_span" title="Open scenario selection" translate>Specify Live Stream</span>
+                        <div id="available_website_div" class="specify_select_div">
+                            <ul id="available_website_ul" class=""></ul>
+                        </div>
+                    </div>
                 </div>
             </div>
             <!--        ======================================================PREPARE MODAL======================================================        -->
@@ -341,33 +407,56 @@
     <button id="job_btn" class="position-relative btn btn-dark"><i id="job_btn_i" class="fas fa-video"></i></button>
     <div id="job_div" class="position-relative">
         <input id="ss_switch_checkbox" checked type="checkbox" data-toggle="toggle" data-on="Shooting" data-off="Take Shots" data-onstyle="info" data-offstyle="success" data-width="120" data-height="40">
-            <div id="mark_target_dd_div" class="position-absolute btn-group dropright">
-                <button id="mark_target_dd_btn" type="button" class="btn btn-outline-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" translate>Target Sign</button>
-                <div class="dropdown-menu">
-                    <div id="no_mark_div" class="dropdown-item form-check mb-1">
-                        <input id="no_mark_checkbox" class="form-check-input" type="radio" name="mark_select" value="">
-                        <label id="no_mark_cb_label" class="form-check-label" for="no_mark_checkbox" translate>Don't Mark</label>
-                    </div>
-                    <div id="mark_target_list_ul"></div>
+        <div id="mark_target_dd_div" class="position-absolute btn-group dropright">
+            <button id="mark_target_dd_btn" type="button" class="btn btn-outline-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" translate>Target Sign</button>
+            <div class="dropdown-menu">
+                <div id="no_mark_div" class="dropdown-item form-check mb-1">
+                    <input id="no_mark_checkbox" class="form-check-input" type="radio" name="mark_select" value="">
+                    <label id="no_mark_cb_label" class="form-check-label" for="no_mark_checkbox" translate>Don't Mark</label>
                 </div>
+                <div id="mark_target_list_ul"></div>
             </div>
+        </div>
         <div id="monitor_area_div" class="position-relative">
             <span id="monitor_job_span" class="position-absolute" translate>Click to monitoring job</span>
             <img id="monitor_stream_area_img" class="position-relative" src="" alt="">
         </div>
-        <div id="main_selected_div" class="position-absolute d-flex justify-content-center">
-            <div id="selected_sce_div" class="mr-1">
-                <span id="selected_sce_span" class="" translate>Scenarios</span>
-                <div class="mt-2" id="selected_scenarios_div"></div>
+        <div id="main_selected_div" class="position-absolute justify-content-center">
+            <div class="row">
+                <div id="selected_sce_div" class="mr-1 col">
+                    <span id="selected_sce_span" class="" translate>Scenarios</span>
+                    <div class="mt-2" id="selected_scenarios_div"></div>
+                </div>
+                <div id="selected_param_div" class="ml-1 mr-1 col">
+                    <span id="selected_param_span" translate>Parameters</span>
+                    <div class="mt-2" id="selected_params_div"></div>
+                </div>
             </div>
-            <div id="selected_param_div" class="ml-1">
-                <span id="selected_param_span" translate>Parameters</span>
-                <div class="mt-2" id="selected_params_div"></div>
+            <div class="mt-2 row">
+                <div id="selected_website_div" class="ml-1 col">
+                    <span id="selected_website_span" translate>Live-Stream Channels</span>
+                    <div class="mt-2" id="selected_websites_div"></div>
+                </div>
             </div>
         </div>
-        <button id="job_simulate_btn" class="position-absolute btn btn-info" translate>SIMULATE</button>
-        <button id="job_ready_btn" class="position-absolute btn btn-warning" translate>READY</button>
-        <button id="job_cancel_btn" class="position-absolute btn btn-warning" translate>CANCEL</button>
+        <div id="getting_lock_animation_div" class="position-absolute">
+            <div id="getting_lock_animation" class="position-absolute"></div>
+        </div>
+        <div id="job_record_control_div" class="position-absolute justify-content-center job_control_div">
+            <a id="job_record_title" class="row" translate>Recording</a>
+            <button id="job_record_btn" class="row start_stop_transitional_btn"></button>
+        </div>
+        <div id="job_live_stream_control_div" class="position-absolute justify-content-center job_control_div">
+            <a id="job_live_stream_title" class="row" translate>Live Streaming</a>
+            <button id="job_live_stream_btn" class="row start_stop_transitional_btn"></button>
+        </div>
+        <div id="job_mission_control_div" class="position-absolute justify-content-center job_control_div">
+            <a id="job_mission_title" class="row" translate>Scenario</a>
+            <button id="job_mission_btn" class="row start_stop_transitional_btn"></button>
+        </div>
+        <button id="job_take_shots_btn" class="position-absolute btn btn-dark" translate>TAKE PHOTO</button>
+        <button id="job_ready_btn" class="position-absolute btn btn-warning" translate>GET LOCK</button>
+        <button id="job_release_btn" class="position-absolute btn btn-warning" translate>RELEASE</button>
     </div>
 </div>
 <!--        ======================================================JOB MODAL======================================================        -->
@@ -420,7 +509,9 @@
 
 <div id="dark_deep_background_div" class="position-fixed"></div>
 
-<footer id="title_footer" class="position-absolute page-footer font-small blue pull-right text-right" translate>Powered By <a><mark translate>T_System</mark></a></footer>
+<footer id="title_footer" class="position-absolute page-footer font-small blue pull-right text-right" translate>Powered By <a>
+    <mark translate>T_System</mark>
+</a></footer>
 
 <!-- inserting these scripts at the end to be able to use all the elements in the DOM -->
 <script src="static/vendors/swiper/js/swiper.min.js"></script>
