@@ -60,12 +60,19 @@ Host: domain
 ```
 
 # Starting the job
-Returns an error if the TYPE is empty. 
-TYPE can be 'real' or 'simulation'.
+Returns an error if the CAUSE is empty. 
+CAUSE can be 'take_shots', 'track', 'record' or 'mission'.
+
+If CAUSE is;
+'take_shots' : Takes single photo.
+'track': Starts searching and tracking object works.
+'record': Starts video recording works.
+'mission': Starts T_System's Arm mission.
+'live_stream': Starts T_System's Live Streaming.
 
 ## Request
 ```http
-PUT /api/job?type=<TYPE>&admin_id=<ADMIN_ID>
+PUT /api/job?cause=<CAUSE>&admin_id=<ADMIN_ID>
 Host: domain
 Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 
@@ -117,10 +124,17 @@ Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 
 # Stopping/Pausing the job
 If the PAUSE parameter is not None, job will pause.
+CAUSE can be, 'track', 'record' or 'mission'.
+
+If CAUSE is;
+'track': Stops searching and tracking object works.
+'record': stops video recording works.
+'mission': Stops T_System's Arm mission.
+'live_stream': Stops T_System's Live Streaming.
 
 ## Request
 ```http
-DEL /api/job?pause=<PAUSE>&admin_id=<ADMIN_ID>
+DEL /api/job?pause=<PAUSE>&cause=<CAUSE>&admin_id=<ADMIN_ID>
 Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 ```
 
