@@ -58,6 +58,7 @@ function toggle_job_control_btns(activate = false) {
         });
     }
 }
+
 function toggle_ss_switch_checkbox(activate = false) {
     ss_switch_checkbox.disabled = !activate;
 
@@ -331,80 +332,80 @@ $('#ss_switch_checkbox').change(function () {
 });
 
 job_record_btn.addEventListener("click", function () {
-   if (job_record_btn.classList.contains("notRec")) {  // Start Recording
-       job_record_btn.classList.remove("notRec");
-       job_record_btn.classList.add("Rec");
+    if (job_record_btn.classList.contains("notRec")) {  // Start Recording
+        job_record_btn.classList.remove("notRec");
+        job_record_btn.classList.add("Rec");
 
-       request_asynchronous('/api/job?cause=record&admin_id=' + admin_id, 'PUT',
+        request_asynchronous('/api/job?cause=record&admin_id=' + admin_id, 'PUT',
             'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
                 if (err === "success") {
                     let response_data = JSON.parse(response.responseText);
                 }
             });
 
-   } else {  // Stop Recording
-       job_record_btn.classList.remove("Rec");
-       job_record_btn.classList.add("notRec");
+    } else {  // Stop Recording
+        job_record_btn.classList.remove("Rec");
+        job_record_btn.classList.add("notRec");
 
-       request_asynchronous('/api/job?cause=record&admin_id=' + admin_id, 'DELETE',
+        request_asynchronous('/api/job?cause=record&admin_id=' + admin_id, 'DELETE',
             'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
                 if (err === "success") {
                     let response_data = JSON.parse(response.responseText);
                 }
 
             });
-   }
+    }
 });
 
 job_live_stream_btn.addEventListener("click", function () {
-   if (job_live_stream_btn.classList.contains("notRec")) {  // Start Mission
-       job_live_stream_btn.classList.remove("notRec");
-       job_live_stream_btn.classList.add("Rec");
+    if (job_live_stream_btn.classList.contains("notRec")) {  // Start Mission
+        job_live_stream_btn.classList.remove("notRec");
+        job_live_stream_btn.classList.add("Rec");
 
-       request_asynchronous('/api/job?cause=live_stream&admin_id=' + admin_id, 'PUT',
+        request_asynchronous('/api/job?cause=live_stream&admin_id=' + admin_id, 'PUT',
             'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
                 if (err === "success") {
                     let response_data = JSON.parse(response.responseText);
                 }
             });
 
-   } else {  // Stop Mission
-       job_live_stream_btn.classList.remove("Rec");
-       job_live_stream_btn.classList.add("notRec");
+    } else {  // Stop Mission
+        job_live_stream_btn.classList.remove("Rec");
+        job_live_stream_btn.classList.add("notRec");
 
-       request_asynchronous('/api/job?cause=live_stream&admin_id=' + admin_id, 'DELETE',
+        request_asynchronous('/api/job?cause=live_stream&admin_id=' + admin_id, 'DELETE',
             'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
                 if (err === "success") {
                     let response_data = JSON.parse(response.responseText);
                 }
             });
-   }
+    }
 });
 
 job_mission_btn.addEventListener("click", function () {
-   if (job_mission_btn.classList.contains("notRec")) {  // Start Mission
-       job_mission_btn.classList.remove("notRec");
-       job_mission_btn.classList.add("Rec");
+    if (job_mission_btn.classList.contains("notRec")) {  // Start Mission
+        job_mission_btn.classList.remove("notRec");
+        job_mission_btn.classList.add("Rec");
 
-       request_asynchronous('/api/job?cause=mission&admin_id=' + admin_id, 'PUT',
+        request_asynchronous('/api/job?cause=mission&admin_id=' + admin_id, 'PUT',
             'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
                 if (err === "success") {
                     let response_data = JSON.parse(response.responseText);
                 }
             });
 
-   } else {  // Stop Mission
-       job_mission_btn.classList.remove("Rec");
-       job_mission_btn.classList.add("notRec");
+    } else {  // Stop Mission
+        job_mission_btn.classList.remove("Rec");
+        job_mission_btn.classList.add("notRec");
 
-       request_asynchronous('/api/job?cause=mission&admin_id=' + admin_id, 'DELETE',
+        request_asynchronous('/api/job?cause=mission&admin_id=' + admin_id, 'DELETE',
             'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
                 if (err === "success") {
                     let response_data = JSON.parse(response.responseText);
                 }
 
             });
-   }
+    }
 });
 
 job_ready_btn.addEventListener("click", function () {
@@ -477,47 +478,46 @@ job_ready_btn.addEventListener("click", function () {
 job_release_btn.addEventListener("click", function () {
     if (job_release_btn.innerText === translate_text_item("RELEASE")) {
 
-        job_release_btn.classList.remove("active");
-
-        job_ready_btn.innerHTML = translate_text_item("GET LOCK");
-        job_ready_btn.classList.remove("ready");
-        job_ready_btn.classList.remove("btn-danger");
-        job_ready_btn.classList.add("btn-warning");
-
-        getting_lock_animation.classList.remove("lds-hourglass");
-        getting_lock_animation_div.classList.remove("focused");
-
-        job_record_control_div.classList.remove("enable");
-        job_live_stream_control_div.classList.remove("enable");
-        job_mission_control_div.classList.remove("enable");
-
-        terminate_monitoring_stream();
-        monitor_area_div.classList.remove("focused");
-        monitor_area_div.classList.remove("active");
-
-        main_selected_div.classList.remove("locked");
-
-        selected_sce_span.classList.remove("hidden_element");
-        selected_param_span.classList.remove("hidden_element");
-        selected_website_span.classList.remove("hidden_element");
-
-        for (let i = 0; i < selected_spans.length; i++) {
-            selected_spans[i].classList.remove("shine_as_red_in_dark");
-            selected_spans[i].classList.add("shine_in_dark");
-        }
-
-        toggle_ss_switch_checkbox(true);
-        toggle_job_control_btns(false);
-
         request_asynchronous('/api/job?cause=track&admin_id=' + admin_id, 'DELETE',
             'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
                 if (err === "success") {
                     let response_data = JSON.parse(response.responseText);
+                    job_release_btn.classList.remove("active");
+
+                    job_ready_btn.innerHTML = translate_text_item("GET LOCK");
+                    job_ready_btn.classList.remove("ready");
+                    job_ready_btn.classList.remove("btn-danger");
+                    job_ready_btn.classList.add("btn-warning");
+
+                    getting_lock_animation.classList.remove("lds-hourglass");
+                    getting_lock_animation_div.classList.remove("focused");
+
+                    job_record_control_div.classList.remove("enable");
+                    job_live_stream_control_div.classList.remove("enable");
+                    job_mission_control_div.classList.remove("enable");
+
+                    terminate_monitoring_stream();
+                    monitor_area_div.classList.remove("focused");
+                    monitor_area_div.classList.remove("active");
+
+                    main_selected_div.classList.remove("locked");
+
+                    selected_sce_span.classList.remove("hidden_element");
+                    selected_param_span.classList.remove("hidden_element");
+                    selected_website_span.classList.remove("hidden_element");
+
+                    for (let i = 0; i < selected_spans.length; i++) {
+                        selected_spans[i].classList.remove("shine_as_red_in_dark");
+                        selected_spans[i].classList.add("shine_in_dark");
+                    }
+
+                    toggle_ss_switch_checkbox(true);
+                    toggle_job_control_btns(false);
+
+                    job_div.addEventListener("click", toggle_job_modal_by);
+                    dark_deep_background_div.addEventListener("click", toggle_job_modal_by);
                 }
             });
-
-        job_div.addEventListener("click", toggle_job_modal_by);
-        dark_deep_background_div.addEventListener("click", toggle_job_modal_by);
 
     } else if (job_release_btn.innerText === translate_text_item("PAUSE")) {
         job_release_btn.innerHTML = translate_text_item("RESUME");
