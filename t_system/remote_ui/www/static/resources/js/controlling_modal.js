@@ -281,7 +281,6 @@ sidebar_toggle_btn.addEventListener("click", function () {
                 if (requested_data["status"] === "OK") {
 
                     scenarios = requested_data["data"];
-                    console.log(scenarios);
 
                     for (let c = 0; c < scenarios.length; c++) {
 
@@ -301,6 +300,10 @@ sidebar_toggle_btn.addEventListener("click", function () {
 
                         scenario_context_menu.classList.add("position-relative", "dropdown-menu", "dropdown-menu-sm");
                         scenario_context_menu.id = scenarios[c]["id"] + "context-menu";
+
+                        $("#" + scenario_context_menu.id + " a").on("click", function () {
+                            $(this).parent().removeClass("show").hide();
+                        });
 
                         scenario_cm_remove_a.classList.add("dropdown-item");
                         scenario_cm_remove_a.innerHTML = translate_text_item("remove");
@@ -708,10 +711,6 @@ sidebar_toggle_btn.addEventListener("click", function () {
                             });
 
                         sidebar_interacts.push(scenario_interact);
-
-                        $("#" + scenario_context_menu.id + " a").on("click", function () {
-                            $(this).parent().removeClass("show").hide();
-                        });
 
                         scenario_dd_btn.classList.add("btn", "btn-dark", "dropdown-toggle", "dropdown-toggle-split");
                         scenario_dd_btn.type = "button";
