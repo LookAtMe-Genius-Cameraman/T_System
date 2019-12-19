@@ -13,8 +13,9 @@ import RPi.GPIO as GPIO
 import threading
 import time  # Time access and conversions
 
-from t_system.accession.__init__ import NetworkConnector, AccessPoint
-from t_system import mission_manager, emotion_manager
+from t_system.accession.__init__ import AccessPoint
+
+from t_system import network_connector, mission_manager, emotion_manager
 from t_system import log_manager
 
 logger = log_manager.get_logger(__name__, "DEBUG")
@@ -315,11 +316,10 @@ class Stand:
                 args:                       Command-line arguments.
         """
 
-        from t_system.remote_ui import RemoteUI
+        from t_system.remote_ui.__main__ import RemoteUI
 
         self.remote_ui = RemoteUI(args)
 
-        self.network_connector = NetworkConnector(args)
         self.access_point = AccessPoint(args)
 
         self.static_ip = args["static_ip"]
@@ -339,12 +339,12 @@ class Stand:
 
         self.cooler.start()
 
-        is_connected_to_network = self.network_connector.is_connected_to_network()
+        is_connected_to_network = network_connector.is_connected_to_network()
 
         if not is_connected_to_network:
-            is_connected_to_network = self.network_connector.connect()
+            is_connected_to_network = network_connector.connect()
 
-        if not is_connected_to_network:
+        if not is_connected_to_network or not network_connector.is_network_online():
             self.access_point.start()
 
         emotion_manager.revert_the_expand_actor()
