@@ -1,7 +1,8 @@
 # Creating new Website and Stream Identity
 
 This process creates a new Website or Stream Identity for Online Stream ability of T_System Vision.
-For creating websites, Root authentication requires. 
+For creating websites, Root authentication requires.
+For creating stream Identities ID parameter requires.
 
 ## Request
 ```http
