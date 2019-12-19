@@ -44,46 +44,139 @@
 }
 
 #job_div.focused {
-    display: block; !important;
+    display: block !important;
 }
 
-#job_simulate_btn {
-    visibility: visible;
-    opacity: 1;
-    top: 90%;
-    left: 60%;
+#getting_lock_animation_div {
+    display: none;
+
+    width: 80%;
+    height: 40%;
+
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%);
+
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.1);
+    transition: all 300ms;
+
+    z-index: 200;
+}
+
+#getting_lock_animation_div.focused {
+    display: block !important;
+}
+
+#getting_lock_animation {
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+}
+
+.job_control_div {
+    display: none !important;
+}
+
+.job_control_div.enable {
+    display: block !important;
+}
+
+#job_record_control_div {
+    top: 75%;
+    left: 15%;
+}
+
+#job_live_stream_control_div {
+    top: 60%;
+    left: 40%;
+}
+
+#job_mission_control_div {
+    top: 75%;
+    left: 65%;
+}
+
+#job_record_title {
+    color: white;
+    transform: translate(10%) !important;
+}
+
+#job_live_stream_title {
+    color: white;
+}
+
+#job_mission_title {
+    color: white;
+    transform: translate(15%) !important;
+}
+
+.start_stop_transitional_btn {
+	width: 35px;
+	height: 35px;
+	font-size: 0;
+	background-color: red;
+	border: 0;
+	border-radius: 35px;
+	margin: 18px;
+	outline: none;
+}
+
+.start_stop_transitional_btn.inactive{
+	background-color: darkgray;
+}
+
+.start_stop_transitional_btn.notRec{
+	background-color: darkred;
+}
+
+.start_stop_transitional_btn.Rec{
+	animation-name: pulse;
+	animation-duration: 1.5s;
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
+}
+
+@keyframes pulse{
+	0%{
+		box-shadow: 0px 0px 5px 0px rgba(173,0,0,.3);
+	}
+	65%{
+		box-shadow: 0px 0px 5px 13px rgba(173,0,0,.3);
+	}
+	90%{
+		box-shadow: 0px 0px 5px 13px rgba(173,0,0,0);
+	}
+}
+
+#job_take_shots_btn {
+    display: none;
+
+    top: 93%;
+
+    left: 50% !important;
+    transform: translate(-50%) !important;
 
     transition: all 300ms;
 }
 
-#job_simulate_btn.active {
-    left: 50% !important;
-    transform: translate(-50%) !important;
-}
-
-#job_simulate_btn.inactive {
-    visibility: hidden !important;
-    opacity: 0 !important;
-
-    left: 100% !important;
-}
-
-#job_simulate_btn.take_shots_job {
-    left: 50% !important;
-    transform: translate(-50%) !important;
-
-    top: 93% !important;
+#job_take_shots_btn.active {
+    display: block !important;
 }
 
 #job_ready_btn {
     top: 90%;
-    left: 10%;
+    left: 50% !important;
+    transform: translate(-50%) !important;
 
     transition: all 300ms;
 }
 
 #job_ready_btn.ready {
-    top: 5% !important;
+    opacity: 0; !important;
+    visibility: hidden; !important;
+    top: -50% !important;
     left: 50% !important;
     transform: translate(-50%) !important;
 }
@@ -94,7 +187,7 @@
     transform: translate(-50%) !important;
 }
 
-#job_cancel_btn {
+#job_release_btn {
     visibility: hidden;
     opacity: 0;
     top: 5%;
@@ -104,14 +197,14 @@
     transition: all 10ms;
 }
 
-#job_cancel_btn.active {
+#job_release_btn.active {
     visibility: visible !important;
     opacity: 1 !important;
-    top: 90% !important;
+    top: 100% !important;
     transition: all 300ms !important;
 }
 
-#job_cancel_btn.pause_job {
+#job_release_btn.pause_job {
     left: 65% !important;
     transform: translate(0) !important;
     transition: all 300ms !important;
@@ -155,10 +248,10 @@
 #monitor_area_div.focused {
     display: inherit;
 
-    height: 20% !important;
+    height: 15% !important;
     width: 85% !important;
 
-    top: 40% !important;
+    top: 25% !important;
 }
 
 #monitor_area_div.focused_shots_taking {
@@ -248,7 +341,9 @@
 }
 
 #main_selected_div {
+    /*border: #20c997 solid;*/
     max-height: 300px;
+    height: 20%;
     top: 20%;
     left: 50%;
     transform: translate(-50%);
@@ -256,6 +351,10 @@
 
 #main_selected_div span {
     color: white;
+}
+
+#main_selected_div.locked {
+    top: 10%;
 }
 
 #selected_sce_div {
@@ -275,5 +374,16 @@
 }
 
 #selected_param_span {
+    text-decoration: underline;
+}
+
+#selected_website_div {
+    /*border: #20c997 solid;*/
+    width: 170px;
+    text-align: center;
+    top: 80%; !important;
+}
+
+#selected_website_span {
     text-decoration: underline;
 }
