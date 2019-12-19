@@ -12,7 +12,11 @@ Content-Type: application/json; charset=UTF-8
 {
     "name": "position_name",
     "cartesian_coords": [30, 25, 42],
-    "polar_coords": [1.5, 1.02, 0.5],
+    "polar_params": {
+                  "coords": [1.5, 1.85, 0.65], 
+                  "delays": [1, 0.25, 0.4], 
+                  "divide_counts": [3, 7, 1]
+                  }
 }
 ```
 ## Response
