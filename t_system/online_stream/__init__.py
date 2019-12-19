@@ -310,7 +310,7 @@ class OnlineStreamer:
         """
 
         for website in self.websites_table.all():
-                self.websites.append(StreamWebSite(website["name"], website["url"], website["stream_ids"], website["id"]))
+                self.websites.append(StreamWebSite(website["name"], website["url"], website["server"], website["to_be_used"], website["stream_ids"], website["active_stream_id"], website["id"]))
 
     def __check_folders(self):
         """Method to checking the necessary folders created before. If not created creates them.
@@ -367,7 +367,7 @@ class StreamWebSite:
 
         self.__check_folders()
 
-        self.table = DBFetcher(self.folder, "db", "websites").fetch()
+        self.table = DBFetcher(self.streaming_folder, "db", "websites").fetch()
 
         self.__db_upsert()
 
@@ -395,7 +395,7 @@ class StreamWebSite:
 
         for stream_id in self.stream_ids:
             if stream_id["account_name"] == account_name:
-                with open(self.key_file) as key_file:
+                with open(self.key_file, "w+") as key_file:
                     key_file.write(stream_id["key"])
                     key_file.close()
 
@@ -513,7 +513,7 @@ class StreamWebSite:
 
         for stream_id in stream_ids:
             result = True
-            with open(stream_id["key_file"]) as key_file:
+            with open(stream_id["key_file"], "w+") as key_file:
                 key_file.write(stream_id["key"])
                 key_file.close()
 
