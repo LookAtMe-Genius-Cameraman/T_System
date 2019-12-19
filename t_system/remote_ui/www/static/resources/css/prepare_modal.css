@@ -39,11 +39,21 @@
 .specify_div.focused {
     width: 100%;
     height: 100% !important;
+    /*position: relative; !important;*/
+    top: 0; !important;
+    left: auto; !important;
+    transform: none; !important;
+
 }
 
 .specify_div.inactive {
+    display: none;
     width: 0 !important;
     height: 0 !important;
+    /*position: relative; !important;*/
+    top: 0; !important;
+    left: auto; !important;
+    transform: none; !important;
 }
 
 .specify_span {
@@ -73,8 +83,19 @@
 }
 
 #specify_param_div {
-
     margin: 0 auto;
 
     left: 55%;
+}
+
+#specify_website_div {
+}
+
+#specify_website_div.active {
+    margin: 0 auto;
+    position: absolute; !important;
+    top: 15%; !important;
+
+    left: 50%; !important;
+    transform: translate(-50%); !important;
 }
