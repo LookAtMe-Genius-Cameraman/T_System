@@ -113,8 +113,6 @@ class Vision:
         self.mark_object = self.__get_mark_object(args["found_object_mark"])
 
         self.record = args["record"]
-        self.record_path = ""
-        self.record_name = ""
 
         self.augmented = False
         if args["interface"] == "augmented":
@@ -932,7 +930,8 @@ class Vision:
         """Method to stop receiving signals from the camera and stop video recording.
         """
         # self.camera.release()
-        self.camera.close()
+        # self.camera.close()
+        pass
 
     def __release_hearer(self):
         """Method to stop sending signals to servo motors pins and clean up the gpio pins.
