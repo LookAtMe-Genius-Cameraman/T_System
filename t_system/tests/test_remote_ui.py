@@ -15,7 +15,7 @@ import inspect  # Inspect live objects
 from flask import Flask
 from flask_testing import LiveServerTestCase, TestCase
 
-from t_system.remote_ui import RemoteUI
+from t_system.remote_ui.__main__ import RemoteUI
 
 T_SYSTEM_PATH = f'{os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))}/..'
 REMOTE_UI_PATH = f'{T_SYSTEM_PATH}/remote_ui'
@@ -42,7 +42,7 @@ class TestRemoteUILive(LiveServerTestCase):
         template_folder = T_SYSTEM_PATH + "/remote_ui/www"
         static_folder = template_folder + "/static"
 
-        remote_ui = RemoteUI(args={"host": "localhost", "port": "5000", "debug": True, "mode": "testing"}, template_folder=template_folder, static_folder=static_folder)
+        remote_ui = RemoteUI(args={"host": "localhost", "port": "5000", "debug": True, "mode": "testing"})
 
         return remote_ui.app
 
