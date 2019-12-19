@@ -114,11 +114,11 @@ setup(
         'opencv-python',
         'opencv-contrib-python',
         'dlib',
-        'board',
         'adafruit-blinka',
         'adafruit-circuitpython-pca9685',
         'adafruit-circuitpython-servokit',
-        'tabulate'
+        'tabulate',
+        'cloudpickle'
     ],
 
     # List additional groups of dependencies here (e.g. development

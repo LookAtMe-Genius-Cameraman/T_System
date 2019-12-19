@@ -11,6 +11,8 @@ apt-get -y install python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng
 apt-get -y install dnsmasq hostapd
 apt-get -y install figlet boxes lolcat
 
+curl -sS https://bootstrap.pypa.io/get-pip.py | sudo python3
+
 pip3 install -e .
 
 #DEBHELPER#
@@ -23,6 +25,6 @@ if [[ ! -d "$T_SYSTEM_DIR" ]]; then
   mkdir ${T_SYSTEM_DIR}
 fi
 
-pip3 install --upgrade picamera>=1.13 RPi.GPIO>=0.6.5 tinydb==3.9.0.post1 numpy paho-mqtt>=1.4.0 face_recognition dlib multipledispatch wireless netifaces psutil pyaccesspoint wifi flask schema gitpython elevate imutils gpiozero requests pyroute2 pexpect opencv-python opencv-contrib-python board adafruit-blinka adafruit-circuitpython-pca9685 adafruit-circuitpython-servokit tabulate && \
+pip3 install --upgrade picamera>=1.13 RPi.GPIO>=0.6.5 tinydb==3.9.0.post1 numpy paho-mqtt>=1.4.0 face_recognition dlib multipledispatch wireless netifaces psutil pyaccesspoint wifi flask schema gitpython elevate imutils gpiozero requests pyroute2 pexpect opencv-python opencv-contrib-python adafruit-blinka adafruit-circuitpython-pca9685 adafruit-circuitpython-servokit tabulate cloudpickle && \
 pip3 install --upgrade flake8 sphinx sphinx_rtd_theme recommonmark m2r pytest docutils && \
 echo -e "\n\n${GREEN}t_system is successfully installed to your computer.${NC}\n"
