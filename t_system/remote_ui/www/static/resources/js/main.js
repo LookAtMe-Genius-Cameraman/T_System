@@ -61,9 +61,11 @@ function activateAdminAuthorityBy(admin_id) {
     if (admin_id !== false) {
         administration_template_container.classList.add("active");
         toggle_controlling_modal(true);
+        create_website_div.classList.add("active");
     } else {
         administration_template_container.classList.remove("active");
         toggle_controlling_modal(false);
+        create_website_div.classList.remove("active");
     }
 }
 
@@ -201,8 +203,9 @@ $(document).ready(function () {
     no_mark_checkbox.click();
     toggle_controlling_modal(false);
 
+    ss_switch_checkbox.setAttribute("data-on", "Shooting");
+    ss_switch_checkbox.setAttribute("data-off", "Take Shots");
     if (!ss_switch_checkbox.checked) {
-        console.log("something_wrong");
         ss_switch_checkbox.click();
     }
 });
