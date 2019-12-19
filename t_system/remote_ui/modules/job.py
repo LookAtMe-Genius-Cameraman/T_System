@@ -185,6 +185,8 @@ class JobManager:
     def __start_track(self):
         """The top-level method to start seer's tracking work.
         """
+        seer.stop_thread = False
+
         if not self.non_moving_target:
             rgb, detected_boxes = seer.detect_initiate(lambda: self.stop_watch)
 
@@ -206,15 +208,13 @@ class JobManager:
 
         self.__stop_watch_thread()
 
-        time.sleep(0.15)
-        seer.stop_thread = False
-
     def __start_record(self):
         """The top-level method to start seer's recording work.
         """
         self.__stop_track()
         seer.record = True
 
+        seer.stop_thread = False
         seer.watch_and(self.job_type)
 
     def __stop_record(self):
@@ -226,19 +226,28 @@ class JobManager:
         record_manager.refresh_records()
         seer.record = False
 
+        seer.stop_thread = False
         seer.watch_and(self.job_type)
 
     def __start_live_stream(self):
         """The top-level method to start seer's live-streaming work.
         """
+        self.__stop_track()
 
         seer.online_streamer.go_live()
+
+        seer.stop_thread = False
+        seer.watch_and(self.job_type)
 
     def __stop_live_stream(self):
         """The top-level method to stop seer's live-streaming work.
         """
+        self.__stop_track()
 
         seer.online_streamer.stop_live()
+
+        seer.stop_thread = False
+        seer.watch_and(self.job_type)
 
     def __start_mission(self):
         """The top-level method to start T_System's MissionManager mission.
