@@ -13,6 +13,7 @@ import os  # Miscellaneous operating system interfaces
 import uuid  # The random id generator
 import subprocess  # Subprocess managements
 import json
+import signal
 
 from tinydb import Query  # TinyDB is a lightweight document oriented database
 
@@ -63,6 +64,7 @@ class OnlineStreamer:
     def prepare_stream(self):
         """Method to prepare live stream parameters.
         """
+        self.stream_pipes = []
 
         common_stream_cmd = "ffmpeg -f h264 -r 25 -i - -itsoffset 5.5 -fflags nobuffer -f alsa -ac 1 -i hw:1,0 -vcodec copy -acodec aac -ac 1 -ar 8000 -ab 32k -map 0:0 -map 1:0 -strict experimental -f flv"
 
@@ -71,7 +73,7 @@ class OnlineStreamer:
 
                 stream_cmd = f'{common_stream_cmd} {website.server}{website.active_stream_id["key"]}'
 
-                self.stream_pipes.append(subprocess.Popen(stream_cmd, shell=True, stdin=subprocess.PIPE))
+                self.stream_pipes.append(subprocess.Popen(stream_cmd, shell=True, stdin=subprocess.PIPE, preexec_fn=os.setsid))
 
     def go_live(self):
         """Method to start live stream by OnlineStreamer's members.
@@ -90,8 +92,7 @@ class OnlineStreamer:
 
         for stream_pipe in self.stream_pipes:
 
-            stream_pipe.stdin.close()
-            stream_pipe.wait()
+            os.killpg(os.getpgid(stream_pipe.pid), signal.SIGTERM)
 
     @staticmethod
     def is_stream_available():
