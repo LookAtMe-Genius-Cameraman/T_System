@@ -171,7 +171,7 @@ def prepare(args):
     t_system.identifier = Identifier()
     t_system.administrator = Administrator()
     t_system.update_manager = UpdateManager()
-    t_system.arm = Arm(args["arm_name"])
+    t_system.arm = Arm(args["arm_name"], args["ext_servo_driver"])
     t_system.mission_manager = MissionManager()
     t_system.record_manager = RecordManager()
     t_system.face_encode_manager = FaceEncodeManager()

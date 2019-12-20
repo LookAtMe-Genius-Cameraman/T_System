@@ -179,11 +179,12 @@ class Arm:
 
     """
 
-    def __init__(self, arm_name="Junior"):
+    def __init__(self, arm_name="Junior", use_ext_driver=False):
         """Initialization method of :class:`t_system.motion.arm.Arm` class.
 
         Args:
                 arm_name (str):         Name of the arm. From config file or user choice.
+                use_ext_driver (bool):          The flag of external PWM driver activation.
         """
         self.name = arm_name
         self.expansion_name = f'{self.name}-Expansion'
@@ -210,7 +211,9 @@ class Arm:
         with open(self.config_file) as conf_file:
             arm_configs = json.load(conf_file)[self.name]  # config file returns the arms.
 
-        self.use_ext_driver = arm_configs["use_ext_driver"]
+        self.use_ext_driver = use_ext_driver
+        if self.use_ext_driver:
+            self.use_ext_driver = arm_configs["use_ext_driver"]
 
         self.__set_joints(arm_configs["joints"])
         self.__set_dh_params(self.joints)
