@@ -242,6 +242,8 @@
     border: #8d75a3 solid;
 
     transition: all 500ms;
+
+    z-index: 1;
 }
 
 
