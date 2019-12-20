@@ -63,6 +63,9 @@ def set_website_usage_status(admin_id, website_id, in_use):
     """
     in_use = in_use in ["true", "True"]
 
+    if not is_admin(admin_id):
+        return False
+
     return seer.online_streamer.set_website_usage_stat(website_id, in_use)
 
 
