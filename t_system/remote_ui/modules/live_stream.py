@@ -45,8 +45,10 @@ def set_stream_id_u_status(admin_id, website_id, account_name, in_use):
             admin_id (str):                 Admin privileges flag.
             website_id (str):               The id of the position.
             account_name (str):             Name of the website's account.
-            in_use (bool):                  usage status flag.
+            in_use (str):                  usage status flag.
     """
+
+    in_use = in_use in ["true", "True"]
 
     return seer.online_streamer.activate_website_stream(website_id, account_name)
 
@@ -57,8 +59,9 @@ def set_website_usage_status(admin_id, website_id, in_use):
     Args:
             admin_id (str):                 Admin privileges flag.
             website_id (str):               The id of the position.
-            in_use (bool):                  usage status flag.
+            in_use (str):                  usage status flag.
     """
+    in_use = in_use in ["true", "True"]
 
     return seer.online_streamer.set_website_usage_stat(website_id, in_use)
 
