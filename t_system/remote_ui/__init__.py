@@ -9,4 +9,4 @@
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
 
-__version__ = '1.2.1'
+__version__ = '1.2.11'
