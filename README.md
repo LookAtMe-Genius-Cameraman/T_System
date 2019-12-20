@@ -69,15 +69,16 @@ for development mode: `sudo ./install-dev.sh`
 usage: t_system [-h] [--interface {official_stand,augmented,remote_ui,None}]
                 [--stand-gpios RED-LED GREEN-LED FAN] [--host HOST]
                 [--port PORT] [--debug] [-l] [-s]
-                [--detection-model DETECTION_MODEL]
-                [--cascade-file CASCADE_FILE] [-j]
+                [--detection-model DETECTION_MODEL] [--cascades CASCADES] [-j]
                 [--encoding-file ENCODING_FILE] [--use-tracking-api]
                 [--tracker-type {BOOSTING,MIL,KCF,TLD,MEDIANFLOW,GOTURN,MOSSE,CSRT}]
+                [--camera-rotation CAMERA_ROTATION]
                 [--resolution WIDTH HEIGHT] [--framerate FRAMERATE]
                 [--chunk CHUNK] [--rate RATE] [--channels CHANNELS]
                 [--audio_device_index AUDIO_DEVICE_INDEX]
-                [--record-formats VIDEO AUDIO MERGED] [--robotic-arm ARM]
-                [--ls-gpios PAN TILT]
+                [--shoot-formats VIDEO AUDIO MERGED] [--shot-format SHOT] [-x]
+                [--sd-channels SD_CHANNELS] [--arm-name ARM]
+                [--ls-gpios PAN TILT] [--ls-channels PAN TILT]
                 [--AI AI | --non-moving-target | --arm-expansion] [-p]
                 [--ap-wlan AP_WLAN] [--ap-inet AP_INET] [--ap-ip AP_IP]
                 [--ap-netmask AP_NETMASK] [--ssid SSID] [--password PASSWORD]
@@ -87,21 +88,25 @@ usage: t_system [-h] [--interface {official_stand,augmented,remote_ui,None}]
                 [--no-emotion] [-S]
                 [-m {single_rect,rotating_arcs,partial_rect,animation_1,None}]
                 [-r] [-v] [--version]
-                {id,remote-ui-authentication,encode-face,self-update} ...
+                {id,remote-ui-authentication,encode-face,self-update,arm,live-stream}
+                ...
 
 positional arguments:
-  {id,remote-ui-authentication,encode-face,self-update}
+  {id,remote-ui-authentication,encode-face,self-update,arm,live-stream}
                         officiate the sub-jobs
     id                  Make identification jobs of T_System.
     remote-ui-authentication
                         Remote UI administrator authority settings of the
                         secret entry point that is the new network connection
                         panel.
-    encode-face       Generate encoded data from the dataset folder to
+    encode-face         Generate encoded data from the dataset folder to
                         recognize the man T_System is monitoring during
                         operation.
     self-update         Update source code of t_system itself via `git pull`
                         command from the remote git repo.
+    arm                 Management jobs of Denavit-Hartenberg transform matrix
+                        models of robotic arms of T_System.
+    live-stream         Make Online Stream Jobs of T_System.
 
 optional arguments:
   -h, --help            show this help message and exit
