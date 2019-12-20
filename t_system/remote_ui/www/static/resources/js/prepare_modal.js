@@ -43,6 +43,15 @@ const specify_website_span = document.getElementById("specify_website_span");
 const available_website_div = document.getElementById("available_website_div");
 const available_website_ul = document.getElementById("available_website_ul");
 
+function init_prepare_divs() {
+    let prepare_divs = [specify_sce_div, specify_param_div, specify_website_div]
+
+    prepare_divs.forEach(function (div) {
+        div.click();
+        div.click();
+    });
+}
+
 
 // SPECIFY SCENARIO
 let scenario_checkboxes = [];
@@ -444,6 +453,7 @@ specify_live_stream_toggles.forEach(function (element) {
                                 website_select_checkbox.classList.add("form-check-input");
                                 website_select_checkbox.id = websites[c]["id"];
                                 website_select_checkbox.type = "checkbox";
+                                website_select_checkbox.checked = websites[c]["to_be_used"];
 
                                 let sce_exist = false;
 
@@ -464,7 +474,7 @@ specify_live_stream_toggles.forEach(function (element) {
                                 }
 
                                 website_select_checkbox.addEventListener("change", function () {
-                                            request_asynchronous('/api/live_stream?cause=stream_id&in_use=' + website_select_checkbox.checked + '&id=' + websites[c]["id"] + '&admin_id=' + admin_id, 'PATCH',
+                                            request_asynchronous('/api/live_stream?cause=website&in_use=' + website_select_checkbox.checked + '&id=' + websites[c]["id"] + '&admin_id=' + admin_id, 'PATCH',
                                                 'application/x-www-form-urlencoded; charset=UTF-8', {}, function (req, err, response) {
                                                     if (err === "success") {
                                                         let response_data = JSON.parse(response.responseText);

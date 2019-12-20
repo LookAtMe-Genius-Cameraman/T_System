@@ -208,6 +208,8 @@ $(document).ready(function () {
     if (!ss_switch_checkbox.checked) {
         ss_switch_checkbox.click();
     }
+
+    init_prepare_divs();
 });
 
 title_footer.addEventListener("click", function (e) {
