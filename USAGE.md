@@ -7,15 +7,29 @@ T_System has 4 different ways to control. Strong to weak, respectively:
 - Augmented
 - Official Stand
 
-First of all excluding command-line tools, all control ways are the user interfaces at the same time and they can be activate with using each other.
+First of all excluding command-line tools, all control ways are the user
+interfaces at the same time and they can be activate with using each other.
 
 ### Command-line Tools
 
-Selecting the all user interfaces can make with positional `interface` argument. With `-h` or `--help` flag, all abilities of T_System can be shown. 
+Selecting the all user interfaces can make with positional `interface` argument.
+With `-h` or `--help` flag, all abilities of T_System can be shown. 
 But there is few important feature those need the  detailed explanation:
 
 #### Sub-commands
 
+- `id`
+    - Each device that powered by T_System has unique IDs.
+    T_System has private and public IDs and user specified Name.
+    These public/private IDs pair and Name been uses for reaching to 
+    T_System from remote UI.
+      
+      Only Name can be changed by remote UI public and private IDs can be
+    changes via command-line. For more details about usage of `id` 
+    sub-command:
+        
+        `t_system id --help`
+    
 - `remote-ui-authentication`
     - There is a secret administration entry in T_System Remote UI.
     When the user write the correct pattern inside to Wi-Fi ssid and
@@ -24,16 +38,71 @@ But there is few important feature those need the  detailed explanation:
     you want to be admin for Remote UI, you have to change this secret
     ssid and passwords patterns. With this command:
     
-      `t_system remote-ui-authentication --ssid <SSID> --password <PASSWORD>`
+        `t_system remote-ui-authentication --ssid <SSID> --password <PASSWORD>`
     
       You can be create your own secret administration entry.
       
-    - `encode-face`
+- `encode-face`
+    - T_System has face recognition ability via `face_recognition` python
+    module. For recognizing faces, it have to has encoded face data. Via 
+    Remote UI, photos that have faces, can be uploaded to T_System and it
+    creates encoded data automatically. And also for this process command-line
+    is available: For more details about usage:
     
-    - `self-update`
+        `t_system encode-face --help`
+    
+- `self-update`
+    - For Firmware(include Remote UI) update, T_System has `self-update`
+    sub-command. Currently, when any update published via GitHub, T_System
+    can check this information and update itself. Via Remote UI, automatic
+    update task can be handled so if user don't want to realize automatic
+    update, he/she can disable this feature. and the via the `self-update`
+    sub-command, updation check and realize can be executed:
+        
+        `t_system self-update --help`
 
+- `arm`
+    - For the robotic arm of the T_System that uses for Executing of scenarios
+    and making emotions, there is customization field. The developers and
+    the professional users, can be create their own robotic arm and
+    configuration information of this arm in `t_system/motion/arm.config.json`
+    file.
+    
+      Via this configuration information, T_System creates a model of 
+    the arm and this model been uses for forward and inverse kinematics solving.
+    There is example configuration info in file that aforementioned above.
+    For sub-command usage details:
+    
+        `t_system arm --help`
+
+- `live-stream`
+    - T_System has Live Video Streaming ability powered by FFmpeg.
+    Currently, Live-Streaming can be realize on 8 stream permissive websites
+    (include YouTube, facebook, periscope, and twitch). Live-Streaming activation
+    and deactivation process can be handled by Remote UI.
+    
+      And adding new websites, adding new accounts for this websites can be
+    realize by Remote UI and command-line. For the Remote UI only the person who
+    has administration authentication can create new Websites. For more usage
+    detail of `live-stream` sub-command:
+    
+        `t_system live-stream --help`
 
 ### Remote UI
+
+T_System has `flask` powered Javascript codded controlling Interface that called as `remote_ui`.
+Any person who has network connection with T_System can be create a request to `5000` port
+of the T_System IP, and the front-end of the UI will return to him/her. For connecting to the
+T_System safely, [there](https://github.com/LookAtMe-Genius-Cameraman/LookAtMe-app) is an mobile app
+and available on Google's Play Store. If the user has T_System's unique public ID or determined a Name
+by him/her-self, He/She can be connected to T_System and start controlling it.
+
+There is and advanced field, for professional users and it can be activated via `advanced` option of
+Remote UI's options window.
+
+Also for the administration authentication of Remote UI, please read `remote-ui-authentication`
+section under [there](#sub-commands).
+ 
 ### Augmented
 ### Official Stand
 
@@ -43,15 +112,16 @@ But there is few important feature those need the  detailed explanation:
 usage: t_system [-h] [--interface {official_stand,augmented,remote_ui,None}]
                 [--stand-gpios RED-LED GREEN-LED FAN] [--host HOST]
                 [--port PORT] [--debug] [-l] [-s]
-                [--detection-model DETECTION_MODEL]
-                [--cascade-file CASCADE_FILE] [-j]
+                [--detection-model DETECTION_MODEL] [--cascades CASCADES] [-j]
                 [--encoding-file ENCODING_FILE] [--use-tracking-api]
                 [--tracker-type {BOOSTING,MIL,KCF,TLD,MEDIANFLOW,GOTURN,MOSSE,CSRT}]
+                [--camera-rotation CAMERA_ROTATION]
                 [--resolution WIDTH HEIGHT] [--framerate FRAMERATE]
                 [--chunk CHUNK] [--rate RATE] [--channels CHANNELS]
                 [--audio_device_index AUDIO_DEVICE_INDEX]
-                [--record-formats VIDEO AUDIO MERGED] [--robotic-arm ARM]
-                [--ls-gpios PAN TILT]
+                [--shoot-formats VIDEO AUDIO MERGED] [--shot-format SHOT] [-x]
+                [--sd-channels SD_CHANNELS] [--arm-name ARM]
+                [--ls-gpios PAN TILT] [--ls-channels PAN TILT]
                 [--AI AI | --non-moving-target | --arm-expansion] [-p]
                 [--ap-wlan AP_WLAN] [--ap-inet AP_INET] [--ap-ip AP_IP]
                 [--ap-netmask AP_NETMASK] [--ssid SSID] [--password PASSWORD]
@@ -61,21 +131,25 @@ usage: t_system [-h] [--interface {official_stand,augmented,remote_ui,None}]
                 [--no-emotion] [-S]
                 [-m {single_rect,rotating_arcs,partial_rect,animation_1,None}]
                 [-r] [-v] [--version]
-                {id,remote-ui-authentication,encode-face,self-update} ...
+                {id,remote-ui-authentication,encode-face,self-update,arm,live-stream}
+                ...
 
 positional arguments:
-  {id,remote-ui-authentication,encode-face,self-update}
+  {id,remote-ui-authentication,encode-face,self-update,arm,live-stream}
                         officiate the sub-jobs
     id                  Make identification jobs of T_System.
     remote-ui-authentication
                         Remote UI administrator authority settings of the
                         secret entry point that is the new network connection
                         panel.
-    encode-face       Generate encoded data from the dataset folder to
+    encode-face         Generate encoded data from the dataset folder to
                         recognize the man T_System is monitoring during
                         operation.
     self-update         Update source code of t_system itself via `git pull`
                         command from the remote git repo.
+    arm                 Management jobs of Denavit-Hartenberg transform matrix
+                        models of robotic arms of T_System.
+    live-stream         Make Online Stream Jobs of T_System.
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -116,8 +190,7 @@ Running Tools:
                         Object detection model to use: either `haarcascade`,
                         `hog` or `cnn`. `hog` and `cnn` can only use for
                         detecting human faces. `haarcascade` is default.
-  --cascade-file CASCADE_FILE
-                        Specify the trained detection algorithm file for the
+  --cascades CASCADES   Specify the trained detection algorithm file for the
                         object detection ability. Sample:
                         'frontalface_default' for frontalface_default.xml file
                         under the 'haarcascade' folder.
@@ -138,10 +211,15 @@ Running Tools:
                         `MIL`, `KCF`, `TLD`, `MEDIANFLOW`, `GOTURN`, `MOSSE`
                         or `CSRT`. `CSRT` is default.
 
-Video Options:
+Camera Options:
+  --camera-rotation CAMERA_ROTATION
+                        Specify the camera's ratational position. 180 degree
+                        is default.
   --resolution WIDTH HEIGHT
                         Specify the camera's resolution of vision ability.
                         320x240 is default
+
+Shoot Options:
   --framerate FRAMERATE
                         Specify the camera's framerate. of vision ability. 32
                         fps is default.
@@ -151,31 +229,25 @@ Video Options:
   --channels CHANNELS   Number of microphone's channels. Default value is 1.
   --audio_device_index AUDIO_DEVICE_INDEX
                         Index of the using audio device. 2 is default.
-  --record-formats VIDEO AUDIO MERGED
+  --shoot-formats VIDEO AUDIO MERGED
                         Formats for recording the work. `h264` and `wav` for
                         separate video and audio recording and `mp4` for
                         merged file are default.
 
-Motion Mechanism:
-  --robotic-arm ARM     One of the robotic arm names those are defined in
-                        config.json file of arm module. The arm is for relocating the 2
-                        axis target locking system hybrid-synchronously.
+Shot Options:
+  --shot-format SHOT    Format for take shots. `jpg` is default
 
-Target Locking System:
-  --ls-gpios PAN TILT   GPIO pin numbers of the 2 axis target locking system's
-                        servo motors. 23(as pan) and 24(as tilt) GPIO pins are
-                        default.
-  --AI AI               Specify the learning method of how to move to the
-                        target position from the current. When the nothing
-                        chosen, learn mode and decision mechanisms will be
-                        deprecated. to use: either `official_ai`
-  --non-moving-target   Track the non-moving objects. Don't use AI or OpenCv's
-                        object detection methods. Just try to stay focused on
-                        the current focus point with changing axis angles by
-                        own position.
-  --arm-expansion       Use the Target Locking System as the extension of the
-                        Robotic Arm. Don't use AI or OpenCv's object detection
-                        methods. Add 2 more joints to the Robotic Arm
+Motion Mechanism:
+  -x, --ext-servo-driver
+                        Use external servo motor driver board.
+  --sd-channels SD_CHANNELS
+                        Number of external servo driver's channels. Default
+                        value is 16.
+
+Robotic Arm:
+  --arm-name ARM        One of the robotic arm names those are defined in
+                        config.json file. The arm is for relocating the 2 axis
+                        target locking system hybrid-synchronously.
 
 Access Point Options:
   -p, --access-point    Become access point for serving remote UI inside the
@@ -222,4 +294,3 @@ Others:
                         problems
   --version             Display the version number of T_System.
 ```
-
