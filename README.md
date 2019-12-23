@@ -194,6 +194,9 @@ The remotely controlling interface v1.2.11
     - Record Control
         -
             Get preview or download the video records with the date based sorting system.
+    - Live Streaming
+        -
+            Start Live video streaming on available 8 different popular websites include Facebook, YouTube, Periscope and Twitch.
 
 <sup><i>Powered by "flask" as an embedded framework. Available on mobile and desktop.</i></sup> 
 
