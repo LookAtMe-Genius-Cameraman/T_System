@@ -20,6 +20,7 @@ from t_system.remote_ui.api.live_stream import api_bp as live_stream_api_bp
 from t_system.remote_ui.api.move import api_bp as move_api_bp
 from t_system.remote_ui.api.network import api_bp as network_api_bp
 from t_system.remote_ui.api.position import api_bp as position_api_bp
+from t_system.remote_ui.api.r_sync import api_bp as r_sync_api_bp
 from t_system.remote_ui.api.record import api_bp as record_api_bp
 from t_system.remote_ui.api.scenario import api_bp as scenario_api_bp
 from t_system.remote_ui.api.stream import api_bp as stream_api_bp
@@ -74,6 +75,7 @@ class RemoteUI:
         self.app.register_blueprint(move_api_bp)
         self.app.register_blueprint(network_api_bp)
         self.app.register_blueprint(position_api_bp)
+        self.app.register_blueprint(r_sync_api_bp)
         self.app.register_blueprint(record_api_bp)
         self.app.register_blueprint(scenario_api_bp)
         self.app.register_blueprint(stream_api_bp)
