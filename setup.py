@@ -118,7 +118,8 @@ setup(
         'adafruit-circuitpython-pca9685',
         'adafruit-circuitpython-servokit',
         'tabulate',
-        'cloudpickle'
+        'cloudpickle',
+        'dropbox'
     ],
 
     # List additional groups of dependencies here (e.g. development
