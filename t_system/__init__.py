@@ -33,6 +33,7 @@ mission_manager = None
 emotion_manager = None
 record_manager = None
 face_encode_manager = None
+r_synchronizer = None
 
 __author__ = 'Cem Baybars GÜÇLÜ'
 __email__ = 'cem.baybars@gmail.com'
