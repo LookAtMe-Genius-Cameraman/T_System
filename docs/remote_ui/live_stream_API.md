@@ -1,4 +1,4 @@
-# Creating new Website and Stream Identity
+# Creating New Website and Stream Identity
 
 This process creates a new Website or Stream Identity for Online Stream ability of T_System Vision.
 For creating websites, Root authentication requires.
@@ -28,7 +28,7 @@ Content-Type: application/json; charset=UTF-8
 ### On Success
 ```json
 {
-  "status": "OK",
+  "status": "OK"
 }
 ```
 

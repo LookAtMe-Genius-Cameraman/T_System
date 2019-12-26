@@ -198,7 +198,7 @@ The remotely controlling interface v1.2.11
         -
             Start Live video streaming on available 8 different popular websites include Facebook, YouTube, Periscope and Twitch.
 
-<sup><i>Powered by "flask" as an embedded framework. Available on mobile and desktop.</i></sup> 
+<sup><i>Powered by `flask` as an embedded framework. Available on mobile and desktop.</i></sup> 
 
 #### Augmented
 
