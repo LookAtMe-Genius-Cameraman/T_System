@@ -79,7 +79,22 @@ def start_sub(args):
             t_system.identifier.change_keys(args["public_id"], args["private_id"], args["name"])
         elif args["id_sub_jobs"] == "show":
             t_system.identifier.show_keys()
-    
+
+    elif args["sub_jobs"] == "remote-ui-authentication":
+        t_system.administrator.change_keys(args["ssid"], args["password"])
+
+    elif args["sub_jobs"] == "encode-face":
+        from t_system.face_encoding import FaceEncodeManager
+
+        face_encode_manager = FaceEncodeManager(args["detection_method"])
+        face_encode_manager.add_face(args["owner_name"], args["dataset"])
+
+    elif args["sub_jobs"] == "self-update":
+
+        t_system.update_manager.set_editability(args["editable"])
+        t_system.update_manager.set_verbosity(args["verbose"])
+        t_system.update_manager.update()
+
     elif args["sub_jobs"] == "arm":
 
         from t_system.motion.arm.modelisation import ArmModeler
@@ -115,20 +130,25 @@ def start_sub(args):
             elif args["live_st_streaming_sub_jobs"] == "list":
                 online_streamer.show_stream_ids()
 
-    elif args["sub_jobs"] == "remote-ui-authentication":
-        t_system.administrator.change_keys(args["ssid"], args["password"])
+    elif args["sub_jobs"] == "r-sync":
 
-    elif args["sub_jobs"] == "encode-face":
-        from t_system.face_encoding import FaceEncodeManager
+        if args["list-services"]:
+            t_system.r_synchronizer.show_services()
 
-        face_encode_manager = FaceEncodeManager(args["detection_method"])
-        face_encode_manager.add_face(args["owner_name"], args["dataset"])
+        elif args["r_sync_sub_jobs"] == "sync":
+            t_system.r_synchronizer.start_sync(args["service_name"], args["name"])
 
-    elif args["sub_jobs"] == "self-update":
+        elif args["r_sync_sub_jobs"] == "account":
 
-        t_system.update_manager.set_editability(args["editable"])
-        t_system.update_manager.set_verbosity(args["verbose"])
-        t_system.update_manager.update()
+            if args["r_sync_account_sub_jobs"] == "upsert":
+                t_system.r_synchronizer.set_service_account(args["service_name"], {"name": args["name"], "key": args["key"]})
+
+            elif args["r_sync_account_sub_jobs"] == "remove":
+                pass
+                t_system.r_synchronizer.remove_service_account(args["service_name"], args["name"])
+
+            elif args["r_sync_account_sub_jobs"] == "list":
+                t_system.r_synchronizer.show_accounts()
 
 
 def prepare(args):
@@ -166,6 +186,7 @@ def prepare(args):
     from t_system.motion.action import MissionManager
     from t_system.recordation import RecordManager
     from t_system.face_encoding import FaceEncodeManager
+    from t_system.r_synchronization import RSynchronizer
 
     t_system.network_connector = NetworkConnector(args)
     t_system.identifier = Identifier()
@@ -175,6 +196,7 @@ def prepare(args):
     t_system.mission_manager = MissionManager()
     t_system.record_manager = RecordManager()
     t_system.face_encode_manager = FaceEncodeManager()
+    t_system.r_synchronizer = RSynchronizer()
 
     if not args["no_emotion"]:
         from t_system.motion.action import EmotionManager
@@ -240,7 +262,7 @@ def initiate():
 
     camera_gr = ap.add_argument_group('Camera Options')
     camera_gr.add_argument("--camera-rotation", help="Specify the camera's ratational position. 180 degree is default.", action="store", default=180, type=int)
-    camera_gr.add_argument("--resolution", help="Specify the camera's resolution of vision ability. 320x240 is default", nargs=2, default=[480, 360], type=int, metavar=('WIDTH', 'HEIGHT'))
+    camera_gr.add_argument("--resolution", help="Specify the camera's resolution of vision ability. 320x240 is default", nargs=2, default=[80, 60], type=int, metavar=('WIDTH', 'HEIGHT'))
 
     shoot_gr = ap.add_argument_group('Shoot Options')
     shoot_gr.add_argument("--framerate", help="Specify the camera's framerate. of vision ability. 32 fps is default.", action="store", default=32, type=int)
@@ -326,11 +348,11 @@ def initiate():
     ap_arm_list = arm_sub_p.add_parser('list', help='List the robotic arms with their model and features')
     ap_arm_list.add_argument('--name', help='The name of robotic arm in arm module\'s config.json file.', type=str, default=None)
 
-    ap_live_st = sub_p.add_parser('live-stream', help='Make Online Stream Jobs of T_System.')
+    ap_live_st = sub_p.add_parser('live-stream', help='Make Online Stream jobs of T_System.')
     live_st_sub_p = ap_live_st.add_subparsers(dest="live_st_sub_jobs", help='officiate the Online Stream sub-jobs')  # if sub-commands not used their arguments create raise.
 
     ap_live_st_website = live_st_sub_p.add_parser('website', help='Make jobs about Live Streaming available websites.')
-    l_s_website_sub_p = ap_live_st_website.add_subparsers(dest="live_st_website_sub_jobs", help='officiate the Online Stream\' sub-jobs about its websites')  # if sub-commands not used their arguments create raise.
+    l_s_website_sub_p = ap_live_st_website.add_subparsers(dest="live_st_website_sub_jobs", help='officiate the Online Stream\'s sub-jobs about its websites')  # if sub-commands not used their arguments create raise.
 
     ap_l_s_website_upsert = l_s_website_sub_p.add_parser('upsert', help='Insert new website for the live streaming point. If name of given website is exist, update its other parameters.')
     ap_l_s_website_upsert.add_argument('--name', help='Name of the website.', type=str, required=True)
@@ -355,6 +377,29 @@ def initiate():
     ap_l_s_streaming_remove.add_argument('--account-name', help='Name of the personalized account of a website that will be removed.', type=str, required=True)
 
     ap_l_s_streaming_list = l_s_streaming_sub_p.add_parser('list', help='List the existing websites.')
+
+    ap_r_sync = sub_p.add_parser('r-sync', help='Make remote synchronization jobs of T_System.')
+    ap_r_sync.add_argument('--list-services', help='List the remote storage services information.', action="store_true")
+
+    r_sync_sub_p = ap_r_sync.add_subparsers(dest="r_sync_sub_jobs", help='officiate the Remote Synchronization sub-jobs')
+
+    ap_r_sync_sync = r_sync_sub_p.add_parser('sync', help='Make jobs about synchronization recorded videos folder with remote storage service.')
+    ap_r_sync_sync.add_argument('--service-name', help='Name of the remote storage service that has accounts. to use: either, `Dropbox`', type=str, choices=["Dropbox"], required=True)
+    ap_r_sync_sync.add_argument('--name', help='Name of the personalized account of remote storage service.', type=str, required=True)
+
+    ap_r_snc_acc = r_sync_sub_p.add_parser('account', help='Make jobs about remote storage service accounts.')
+    r_sync_acc_sub_p = ap_r_snc_acc.add_subparsers(dest="r_sync_account_sub_jobs", help='officiate the remote storage synchronization\'s sub-jobs about its account specifications')
+
+    ap_r_sync_acc_upsert = r_sync_acc_sub_p.add_parser('upsert', help='Insert new account for specified remote storage service. If name of given account is exist, update its other parameters.')
+    ap_r_sync_acc_upsert.add_argument('--service-name', help='Name of the remote storage service that has accounts. to use: either, `Dropbox`', type=str, choices=["Dropbox"], required=True)
+    ap_r_sync_acc_upsert.add_argument('--name', help='Name of the personalized account of remote storage service.', type=str, required=True)
+    ap_r_sync_acc_upsert.add_argument('--key', help='Stream key of the account', type=str, required=True)
+
+    ap_r_sync_acc_remove = r_sync_acc_sub_p.add_parser('remove', help='Remove existing account about storage services by their name.')
+    ap_r_sync_acc_remove.add_argument('--service-name', help='Name of the remote storage service that has accounts. to use: either, `Dropbox`', type=str, choices=["Dropbox"], required=True)
+    ap_r_sync_acc_remove.add_argument('--name', help='Name of the personalized account of remote storage service.', type=str, required=True)
+
+    ap_r_sync_acc_list = r_sync_acc_sub_p.add_parser('list', help='List the existing remote storage services.')
 
     args = vars(ap.parse_args())
 
