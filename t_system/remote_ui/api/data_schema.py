@@ -66,3 +66,8 @@ L_S_WEBSITE_SCHEMA = Schema({
     'url': Use(str),
     'server': Use(str)
 })
+
+SYNC_ACCOUNT_SCHEMA = Schema({
+    'name': Use(str),
+    'key': Use(str)
+})
