@@ -164,18 +164,17 @@ class RecordManager:
         Args:
                 r_type (str):  record type. "record" or "shot".
         """
-        if r_type in ["shoot", "shot"]:
-            if r_type == "shoot":
-                self.shoots.clear()
+        if r_type == "shoot":
+            self.shoots.clear()
 
-            elif r_type == "shot":
-                self.shots.clear()
+        elif r_type == "shot":
+            self.shots.clear()
 
-            elif r_type is None:
-                self.shoots.clear()
-                self.shots.clear()
-        
-            self.__set_records(r_type=r_type)
+        elif r_type is None:
+            self.shoots.clear()
+            self.shots.clear()
+
+        self.__set_records(r_type=r_type)
 
     def get_records(self, r_type=None, date=None):
         """Method to get existing records in given date. If date is None it returns all records.
