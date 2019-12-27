@@ -132,7 +132,7 @@ def start_sub(args):
 
     elif args["sub_jobs"] == "r-sync":
 
-        if args["list-services"]:
+        if args["list_services"]:
             t_system.r_synchronizer.show_services()
 
         elif args["r_sync_sub_jobs"] == "sync":
@@ -144,7 +144,6 @@ def start_sub(args):
                 t_system.r_synchronizer.set_service_account(args["service_name"], {"name": args["name"], "key": args["key"]})
 
             elif args["r_sync_account_sub_jobs"] == "remove":
-                pass
                 t_system.r_synchronizer.remove_service_account(args["service_name"], args["name"])
 
             elif args["r_sync_account_sub_jobs"] == "list":
