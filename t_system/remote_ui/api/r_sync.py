@@ -13,7 +13,7 @@ from flask import Blueprint, request
 from flask_restful import Api, Resource
 from schema import SchemaError
 
-from t_system.remote_ui.modules.r_sync import sync, set_service_usage_status, set_account_u_status, get_service, get_services, create_account, update_account, delete_account
+from t_system.remote_ui.modules.r_sync import sync, is_sync_available, set_service_usage_status, set_account_u_status, get_service, get_services, create_account, update_account, delete_account
 from t_system.remote_ui.api.data_schema import SYNC_ACCOUNT_SCHEMA
 
 from t_system import log_manager
@@ -42,9 +42,13 @@ class RSyncApi(Resource):
         """The API method to GET request for flask.
         """
 
+        cause = request.args.get('cause', None)
         service_name = request.args.get('name', None)
         admin_id = request.args.get('admin_id', None)
         root = request.args.get('root', None)
+
+        if cause == "availability":
+            return {'status': 'OK', 'data': is_sync_available(admin_id)}
 
         if service_name:
             website = get_service(admin_id, root, service_name)

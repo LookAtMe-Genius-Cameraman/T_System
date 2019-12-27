@@ -38,6 +38,16 @@ def sync(admin_id, in_use):
         return False
 
 
+def is_sync_available(admin_id):
+    """Method to check the synchronization's availability about networks connection.
+
+    Args:
+            admin_id (str):                 Admin privileges flag.
+    """
+
+    return r_synchronizer.is_sync_available()
+
+
 def set_account_u_status(admin_id, service_name, account_name, in_use):
     """Method to set usage status of remote storage service's account.
 
@@ -78,10 +88,10 @@ def create_account(admin_id, root, service_name, data):
     """
 
     try:
-
         result = r_synchronizer.set_service_account(service_name, data)
 
-    except Exception:
+    except Exception as e:
+        logger.error(e)
         result = False
 
     return result
