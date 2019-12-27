@@ -58,6 +58,7 @@ class MissionManager:
     def refresh_members(self):
         """Method to refreshing the members
         """
+
         self.predicted_scenarios = []
         self.predicted_positions = []
         self.scenarios = []
@@ -95,7 +96,7 @@ class MissionManager:
             if stop():
                 break
 
-    def execute(self, mission, m_type, root):
+    def execute(self, mission, m_type, root=False):
         """The top-level method to fulfill mission with using position or scenarios their names specified with given parameter.
 
         Args:
@@ -103,6 +104,7 @@ class MissionManager:
             m_type (str):                   Type of the mission. Either `position` or `scenario`.
             root (bool):                    Root privileges flag.
         """
+
         result = False
 
         if root:
@@ -131,6 +133,7 @@ class MissionManager:
     def expand_actor(self):
         """Method to expand actor with using axes and motors of target_locker of t_system's vision.
         """
+
         from t_system import seer
         expansion_angles = seer.reload_target_locker(arm_expansion=True)
         self.actor.expand(current_angles=expansion_angles)
@@ -172,6 +175,7 @@ class EmotionManager:
     def refresh_members(self):
         """Method to refreshing the members
         """
+
         self.scenarios = []
         self.positions = []
 
@@ -190,6 +194,7 @@ class EmotionManager:
             emotion (str):                  Name of the position or scenario that is created for emotion.
             e_type (str):                   Type of the emotion. Either `position` or `scenario`.
         """
+
         self.expand()
 
         if e_type == "position":
@@ -207,6 +212,7 @@ class EmotionManager:
     def expand(self):
         """Method to expand actor with using axes and motors of target_locker of t_system's vision.
         """
+
         from t_system import seer
         expansion_angles = seer.reload_target_locker(arm_expansion=True)
 
@@ -215,6 +221,7 @@ class EmotionManager:
     def revert_the_expand_actor(self):
         """Method to revert back the expansion.
         """
+
         from t_system import seer
 
         locker_angles = self.actor.revert_the_expand()  # locker angles respectively are pan and tilt
@@ -233,6 +240,7 @@ class Actor:
     def __init__(self):
         """Initialization method of :class:`t_system.motion.action.Actor` class.
         """
+
         from t_system import arm
 
         self.arm = arm
@@ -322,6 +330,7 @@ class Scenario:
         Args:
             positions (list):               Position object list.
         """
+
         self.positions.clear()
         self.positions.extend(positions)
         self.db_upsert(force_insert=True)
@@ -351,6 +360,7 @@ class Scenario:
     def delete_self(self):
         """Method to delete scenario itself.
         """
+
         self.table.remove((Query().name == self.name))
 
     def db_upsert(self, force_insert=False):
