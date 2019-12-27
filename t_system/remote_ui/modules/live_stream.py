@@ -38,6 +38,16 @@ def switch_live_stream(admin_id, in_use):
         return False
 
 
+def is_stream_available(admin_id):
+    """Method to check the live-streaming availability about networks connection.
+
+    Args:
+            admin_id (str):                 Admin privileges flag.
+    """
+
+    return seer.online_streamer.is_stream_available()
+
+
 def set_stream_id_u_status(admin_id, website_id, account_name, in_use):
     """Method to set usage status of live stream's a stream ID of a website.
 
@@ -62,9 +72,6 @@ def set_website_usage_status(admin_id, website_id, in_use):
             in_use (str):                  usage status flag.
     """
     in_use = in_use in ["true", "True"]
-
-    if not is_admin(admin_id):
-        return False
 
     return seer.online_streamer.set_website_usage_stat(website_id, in_use)
 
@@ -103,7 +110,7 @@ def update_stream_id(admin_id, root, website_id, data):
 
 
 def delete_stream_id(admin_id, root, website_id, account_name):
-    """Method to remove existing website with given id.
+    """Method to remove existing stream ID of given website.
 
     Args:
             admin_id (str):                 Root privileges flag.

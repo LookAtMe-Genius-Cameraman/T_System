@@ -13,7 +13,7 @@ from flask import Blueprint, request
 from flask_restful import Api, Resource
 from schema import SchemaError
 
-from t_system.remote_ui.modules.live_stream import switch_live_stream, set_website_usage_status, set_stream_id_u_status, upsert_website, get_website, get_websites, delete_website, create_stream_id, update_stream_id, delete_stream_id
+from t_system.remote_ui.modules.live_stream import switch_live_stream, is_stream_available, set_website_usage_status, set_stream_id_u_status, upsert_website, get_website, get_websites, delete_website, create_stream_id, update_stream_id, delete_stream_id
 from t_system.remote_ui.api.data_schema import L_STREAM_SCHEMA, L_S_WEBSITE_SCHEMA
 
 from t_system import log_manager
@@ -42,9 +42,13 @@ class LiveStreamApi(Resource):
         """The API method to GET request for flask.
         """
 
+        cause = request.args.get('cause', None)
         website_id = request.args.get('id', None)
         admin_id = request.args.get('admin_id', None)
         root = request.args.get('root', None)
+
+        if cause == "availability":
+            return {'status': 'OK', 'data': is_stream_available(admin_id)}
 
         if website_id:
             website = get_website(admin_id, root, website_id)
