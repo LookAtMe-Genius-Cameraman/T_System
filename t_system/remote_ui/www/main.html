@@ -198,9 +198,48 @@
                             </div>
                         </div>
                     </div>
-                    <div id="r_sync_control_div" class="position-relative col option_div">
-                        <button id="r_sync_control_btn" class="option_btn" translate>Cloud Storage</button>
-                        <div id="r_sync_control_io_div" class="option_io_div">
+                    <div id="r_sync_div" class="position-relative col option_div">
+                        <button id="r_sync_btn" class="option_btn" translate>Cloud Storage</button>
+                        <div id="r_sync_io_div" class="option_io_div">
+                            <div id="r_sync_animation_div" class="position-absolute">
+                                <div id="r_sync_animation" class="position-absolute"></div>
+                            </div>
+                            <div id="service_select_dd_div" class="form-check-label btn-group dropright">
+                                <button id="service_select_dd_btn" type="button" class="btn btn-outline-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i id="service_select_dd_btn_i" class="fas fa-bars"></i></button>
+                                <div class="dropdown-menu">
+                                    <span id="r_sync_ava_services_title_span" translate>Available Services</span>
+                                    <ul id="service_list_ul"></ul>
+                                </div>
+                            </div>
+                            <div id="r_sync_account_creation_div" class="position-absolute">
+                                <div id="r_sync_account_cre_inputs_div">
+                                    <div class="form-group row">
+                                        <label for="r_sync_acc_name_input" class="col-sm-2 col-form-label" translate>Account Name</label>
+                                        <div class="col-sm-10">
+                                            <input id="r_sync_acc_name_input" class="form-control" type="text" placeholder="Account Name">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="r_sync_acc_key_input" class="col-sm-2 col-form-label" translate>Access Key</label>
+                                        <div class="col-sm-10">
+                                            <input id="r_sync_acc_key_input" class="form-control" type="text" placeholder="Key">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="r_sync_account_cre_confirm_div" class="position-absolute">
+                                    <button id="r_sync_account_cre_create_btn" class="btn btn-success" translate>Add</button>
+                                    <button id="r_sync_account_cre_cancel_btn" class="btn btn-danger" translate>Cancel</button>
+                                </div>
+                            </div>
+                            <div id="r_sync_services_div">
+                                <div id="r_sync_services_title_div">
+                                    <span id="r_sync_services_title_span" translate>Selected Services</span>
+                                </div>
+                                <ul id="r_sync_services_ul" class="option_list_ul mt-2 mb-1"></ul>
+                                <div id="r_sync_sync_div" class="position-absolute">
+                                    <button id="r_sync_sync_btn" class="btn btn-outline-warning"><i class="fas fa-cloud-upload-alt"></i></button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
