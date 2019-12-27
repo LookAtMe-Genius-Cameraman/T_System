@@ -455,19 +455,31 @@ job_ready_btn.addEventListener("click", function () {
                     getting_lock_animation.classList.remove("lds-hourglass");
                     getting_lock_animation_div.classList.remove("focused");
 
+                    request_asynchronous('/api/live_stream?cause=availability&admin_id=' + admin_id, 'GET',
+                        'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
+                            if (err === "success") {
+                                if (requested_data["status"] === "OK") {
+                                    if (requested_data["data"]) {
+                                        job_live_stream_btn.classList.add("notRec");
+                                        job_live_stream_btn.classList.remove("inactive");
+                                        job_live_stream_btn.disabled = false;
+                                    } else {
+                                        swal(translate_text_item("The Live Broadcast feature is not available because there is no internet access."), "", "warning");
+                                    }
+                                }
+                            }
+                        });
+
                     job_record_btn.classList.add("notRec");
                     job_record_btn.classList.remove("inactive");
                     job_record_btn.disabled = false;
-
-                    job_live_stream_btn.classList.add("notRec");
-                    job_live_stream_btn.classList.remove("inactive");
-                    job_live_stream_btn.disabled = false;
 
                     job_mission_btn.classList.add("notRec");
                     job_mission_btn.classList.remove("inactive");
                     job_mission_btn.disabled = false;
                 }
             });
+
 
         job_div.removeEventListener("click", toggle_job_modal_by);
         dark_deep_background_div.removeEventListener("click", toggle_job_modal_by);
