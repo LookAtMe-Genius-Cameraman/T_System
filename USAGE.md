@@ -88,6 +88,17 @@ But there is few important feature those need the  detailed explanation:
     
         `t_system live-stream --help`
 
+- `r-sync`
+    - For reaching recorded videos of photos from your cloud storage account
+    when and where-ever you want, T_System has Remote Storage Synchronization
+    ability. For now, it is available with Dropbox. 
+    
+      Remote Sync activation and deactivation process, adding new accounts
+    for available services can be realize by Remote UI and command-line.
+    For more usage detail of `r-sync` sub-command:
+    
+        `t_system live-stream --help`
+
 ### Remote UI
 
 T_System has `flask` powered Javascript codded controlling Interface that called as `remote_ui`.
@@ -131,11 +142,11 @@ usage: t_system [-h] [--interface {official_stand,augmented,remote_ui,None}]
                 [--no-emotion] [-S]
                 [-m {single_rect,rotating_arcs,partial_rect,animation_1,None}]
                 [-r] [-v] [--version]
-                {id,remote-ui-authentication,encode-face,self-update,arm,live-stream}
+                {id,remote-ui-authentication,encode-face,self-update,arm,live-stream,r-sync}
                 ...
 
 positional arguments:
-  {id,remote-ui-authentication,encode-face,self-update,arm,live-stream}
+  {id,remote-ui-authentication,encode-face,self-update,arm,live-stream,r-sync}
                         officiate the sub-jobs
     id                  Make identification jobs of T_System.
     remote-ui-authentication
@@ -149,7 +160,8 @@ positional arguments:
                         command from the remote git repo.
     arm                 Management jobs of Denavit-Hartenberg transform matrix
                         models of robotic arms of T_System.
-    live-stream         Make Online Stream Jobs of T_System.
+    live-stream         Make Online Stream jobs of T_System.
+    r-sync              Make remote synchronization jobs of T_System.
 
 optional arguments:
   -h, --help            show this help message and exit
