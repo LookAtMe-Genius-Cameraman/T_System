@@ -88,11 +88,11 @@ usage: t_system [-h] [--interface {official_stand,augmented,remote_ui,None}]
                 [--no-emotion] [-S]
                 [-m {single_rect,rotating_arcs,partial_rect,animation_1,None}]
                 [-r] [-v] [--version]
-                {id,remote-ui-authentication,encode-face,self-update,arm,live-stream}
+                {id,remote-ui-authentication,encode-face,self-update,arm,live-stream,r-sync}
                 ...
 
 positional arguments:
-  {id,remote-ui-authentication,encode-face,self-update,arm,live-stream}
+  {id,remote-ui-authentication,encode-face,self-update,arm,live-stream,r-sync}
                         officiate the sub-jobs
     id                  Make identification jobs of T_System.
     remote-ui-authentication
@@ -106,10 +106,12 @@ positional arguments:
                         command from the remote git repo.
     arm                 Management jobs of Denavit-Hartenberg transform matrix
                         models of robotic arms of T_System.
-    live-stream         Make Online Stream Jobs of T_System.
+    live-stream         Make Online Stream jobs of T_System.
+    r-sync              Make remote synchronization jobs of T_System.
 
 optional arguments:
   -h, --help            show this help message and exit
+
 ```
 <sup>For detailed output, look at [Help](https://github.com/LookAtMe-Genius-Cameraman/T_System/blob/master/USAGE.md#help-output)</sup>
 
@@ -169,7 +171,7 @@ Portable usage interface v0.6
 
 #### Remote UI
 
-The remotely controlling interface v1.2.11
+The remotely controlling interface v1.2.3
 
 - Properties
     -             
