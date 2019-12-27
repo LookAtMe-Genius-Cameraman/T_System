@@ -19,8 +19,6 @@ from tinydb import Query  # TinyDB is a lightweight document oriented database
 
 from t_system.db_fetching import DBFetcher
 
-from t_system import network_connector
-
 from t_system import T_SYSTEM_PATH, dot_t_system_dir
 from t_system import log_manager
 
@@ -100,6 +98,8 @@ class OnlineStreamer:
     def is_stream_available():
         """Method to check the stream's availability about networks connection.
         """
+
+        from t_system import network_connector
 
         return network_connector.is_network_online()
 
