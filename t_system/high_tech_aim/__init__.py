@@ -136,7 +136,7 @@ class Aimer:
 
             frame = cv2.resize(frame, (radius,  radius), interpolation=cv2.INTER_AREA)
 
-            self.__overlay_image_alpha(image, frame[:, :, 0:3], (center[0], center[1]), frame[:, :, 3] / 255.0)
+            self.__overlay_image_alpha(image, frame[:, :, 0:3], (center[0], center[1]), frame[:, :, 2] / 255.0)
 
     def set_vendor_animation(self, animation_name):
         """The top-level method to set previously prepared HUD animation.

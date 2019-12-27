@@ -404,53 +404,6 @@
 #identity_list_ul {
 }
 
-/**********************************LANGUAGE OPTION**********************************/
-#lang_select_div.higher {
-    top: -480% !important;
-}
-
-#lang_select_io_div {
-    overflow: hidden;
-}
-
-#lang_select_dd_div {
-    left: 50% !important;
-    transform: translate(-50%) !important;
-}
-
-#lang_select_dd_btn {
-    left: 50% !important;
-    transform: translate(-50%) !important;
-}
-
-#lang_select_dd_container_div {
-    background-color: #f7f7f7;
-}
-
-#lang_list_ul {
-    padding: 0 !important;
-}
-
-.lang_select_dropdown_menu {
-    left: 50% !important;
-}
-
-.lang_row {
-    width: 210px !important;
-    margin: 0 !important;
-}
-
-.lang_col {}
-
-.lang_btn {
-    max-width: 90px;
-}
-
-/**********************************HELP OPTION**********************************/
-#help_control_div.higher {
-    top: -480% !important;
-}
-
 /**********************************LIVE STREAM OPTION**********************************/
 #live_streaming_div.higher {
     top: -480% !important;
@@ -492,7 +445,6 @@
 
 #create_website_div {
     display: none;
-    /*border: red solid;*/
 
     left: 50% !important;
     transform: translate(-50%) !important;
@@ -552,6 +504,15 @@
     width: 80px;
 }
 
+.no_stream_id_span {
+    position: absolute;
+    opacity: 0.8;
+    left: 50% !important;
+    transform: translate(-50%) !important;
+    top: 0;
+    font-size: 13px;
+}
+
 #stream_id_creation_div {
     display: none;
 
@@ -583,6 +544,122 @@
     width: 80px;
 }
 
+/**********************************CLOUD STORAGE OPTION**********************************/
+#r_sync_div.higher {
+    top: -480% !important;
+}
+
+#r_sync_animation_div {
+    display: none;
+
+    width: 95%;
+    height: 95%;
+
+    left: 50%;
+    transform: translate(-50%);
+
+    border-radius: 10px;
+    transition: all 300ms;
+
+    z-index: 200;
+}
+
+#r_sync_animation_div.focused {
+    display: block !important;
+}
+
+#r_sync_animation {
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+}
+
+#service_list_ul {
+    overflow: auto;
+    overflow: no-display;
+
+    max-height: 340px;
+    height: 300px;
+}
+
+#r_sync_services_ul {
+    padding-top: 3px;
+    overflow: auto;
+    overflow: no-display;
+
+    max-height: 230px;
+    height: 220px;
+}
+
+.service_div {}
+
+.service_btn {
+    width: 100px;
+}
+
+.service_dropdown_menu {
+    left: 37% !important;
+}
+
+.service_context_menu {
+    left: -5% !important;
+}
+
+.no_account_span {
+    position: absolute;
+    opacity: 0.8;
+    left: 50% !important;
+    transform: translate(-50%) !important;
+    top: 0;
+    font-size: 13px;
+}
+
+.account_dropdown_menu {
+    left: 47% !important;
+}
+
+.stream_key_div {
+    width: 160px;
+}
+#r_sync_account_creation_div {
+    display: none;
+
+    width: 0;
+    height: 0;
+
+    transition: 300ms all;
+
+    background-color: #f7f7f7;
+
+    z-index: 220;
+}
+
+#r_sync_account_creation_div.focused {
+    display: block;
+
+    width: 100% !important;
+    height: 100% !important;
+}
+
+#r_sync_account_cre_confirm_div {
+    width: 170px;
+
+    left: 50% !important;
+    transform: translate(-50%) !important;
+}
+
+#r_sync_account_cre_confirm_div button {
+    width: 80px;
+}
+
+#r_sync_sync_div {
+    left: 50% !important;
+    transform: translate(-50%) !important;
+
+    margin-top: 0 !important;
+}
+
 /**********************************ADVANCED OPTION**********************************/
 #advanced_switch_div.higher {
     top: -480% !important;
@@ -595,6 +672,53 @@
 .advanced_checkbox {
     left: 50% !important;
     transform: translate(-50%) !important;
+}
+
+/**********************************LANGUAGE OPTION**********************************/
+#lang_select_div.higher {
+    top: -480% !important;
+}
+
+#lang_select_io_div {
+    overflow: hidden;
+}
+
+#lang_select_dd_div {
+    left: 50% !important;
+    transform: translate(-50%) !important;
+}
+
+#lang_select_dd_btn {
+    left: 50% !important;
+    transform: translate(-50%) !important;
+}
+
+#lang_select_dd_container_div {
+    background-color: #f7f7f7;
+}
+
+#lang_list_ul {
+    padding: 0 !important;
+}
+
+.lang_select_dropdown_menu {
+    left: 50% !important;
+}
+
+.lang_row {
+    width: 210px !important;
+    margin: 0 !important;
+}
+
+.lang_col {}
+
+.lang_btn {
+    max-width: 90px;
+}
+
+/**********************************HELP OPTION**********************************/
+#help_control_div.higher {
+    top: -480% !important;
 }
 
 /**********************************SWITCHING OPTION**********************************/

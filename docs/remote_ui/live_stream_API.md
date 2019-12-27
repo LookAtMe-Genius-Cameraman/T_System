@@ -1,4 +1,4 @@
-# Creating new Website and Stream Identity
+# Creating New Website and Stream Identity
 
 This process creates a new Website or Stream Identity for Online Stream ability of T_System Vision.
 For creating websites, Root authentication requires.
@@ -28,7 +28,7 @@ Content-Type: application/json; charset=UTF-8
 ### On Success
 ```json
 {
-  "status": "OK",
+  "status": "OK"
 }
 ```
 
@@ -42,15 +42,24 @@ Content-Type: application/json; charset=UTF-8
 
 # Getting Websites
 - If a specific parameter ID is given, its website are listed.
+- CAUSE parameter can be either `availability`. If `availability` is given, returns the network connection caused availability status of live broadcast streaming.
 
 ## Request
 ```http
-GET /api/live_stream?id=<ID>&admin_id=<ADMIN_ID>&root=<ROOT>
+GET /api/live_stream?cause?<CAUSE>&id=<ID>&admin_id=<ADMIN_ID>&root=<ROOT>
 Host: domain
 ```
 
 ## Response
 ### On Success
+- If CAUSE is given as `availability`
+```json
+{
+    "status": "OK",
+    "data": true
+}
+```
+- Otherwise
 ```json
 {
     "status": "OK",

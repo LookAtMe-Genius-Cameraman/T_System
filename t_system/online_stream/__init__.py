@@ -19,8 +19,6 @@ from tinydb import Query  # TinyDB is a lightweight document oriented database
 
 from t_system.db_fetching import DBFetcher
 
-from t_system import network_connector
-
 from t_system import T_SYSTEM_PATH, dot_t_system_dir
 from t_system import log_manager
 
@@ -30,8 +28,9 @@ logger = log_manager.get_logger(__name__, "DEBUG")
 class OnlineStreamer:
     """Class to define an online stream ability to famous platforms of T_System.
 
-    This class provides necessary initiations and functions named :func:`t_system.online_stream.OnlineStream.set_set_parameters`
-    as the external setting point of the access point utilities.
+    This class provides necessary initiations and functions named :func:`t_system.online_stream.OnlineStream.go_live`
+    for provide starting the live broadcast streaming on specified websites, named :func: `t_system.online_stream.OnlineStream.stop_live`
+    for provide stopping continuing live broadcast.
     """
 
     def __init__(self, camera, hearer):
@@ -61,9 +60,10 @@ class OnlineStreamer:
         self.camera = camera
         self.hearer = hearer
 
-    def prepare_stream(self):
+    def __prepare_stream(self):
         """Method to prepare live stream parameters.
         """
+
         self.stream_pipes = []
 
         common_stream_cmd = "ffmpeg -f h264 -r 25 -i - -itsoffset 5.5 -fflags nobuffer -f alsa -ac 1 -i hw:1,0 -vcodec copy -acodec aac -ac 1 -ar 8000 -ab 32k -map 0:0 -map 1:0 -strict experimental -f flv"
@@ -79,7 +79,7 @@ class OnlineStreamer:
         """Method to start live stream by OnlineStreamer's members.
         """
 
-        self.prepare_stream()
+        self.__prepare_stream()
 
         for stream_pipe in self.stream_pipes:
             self.camera.start_recording(stream_pipe.stdin, format='h264', bitrate=2000000)
@@ -99,6 +99,8 @@ class OnlineStreamer:
         """Method to check the stream's availability about networks connection.
         """
 
+        from t_system import network_connector
+
         return network_connector.is_network_online()
 
     def get_websites(self, w_ids=None):
@@ -107,6 +109,7 @@ class OnlineStreamer:
          Args:
                 w_ids (list):           ID list of the websites.
         """
+
         websites = []
 
         if w_ids:
@@ -130,7 +133,6 @@ class OnlineStreamer:
             if w_id == website.id:
                 website.set_usage_stat(to_be_used)
                 return True
-
         return False
 
     def activate_website_stream(self, w_id, stream_acc_name):
@@ -145,7 +147,6 @@ class OnlineStreamer:
             if w_id == website.id:
                 website.activate_stream_key(stream_acc_name)
                 return True
-
         return False
 
     def set_website_stream(self, w_id, stream_id):
@@ -160,7 +161,6 @@ class OnlineStreamer:
             if w_id == website.id:
                 website.upsert_stream_key(stream_id["account_name"], stream_id["key"])
                 return True
-
         return False
 
     def remove_website_stream(self, w_id, stream_acc_name):
@@ -175,7 +175,6 @@ class OnlineStreamer:
             if w_id == website.id:
                 website.remove_stream_key(stream_acc_name)
                 return True
-
         return False
 
     def refresh_websites(self):
@@ -324,8 +323,8 @@ class OnlineStreamer:
 class StreamWebSite:
     """Class to define website that will used as live stream platform.
 
-    This class provides necessary initiations and functions named :func:`t_system.online_stream.StreamWebSite.set_set_parameters`
-    as the external setting point of the access point utilities.
+    This class provides necessary initiations and functions named :func:`t_system.online_stream.StreamWebSite.upsert_stream_key`
+    as the new account adding point and existing account updating point.
     """
 
     def __init__(self, name, url, server, to_be_used=False, stream_ids=None, active_stream_id=None, id=None):
@@ -446,7 +445,6 @@ class StreamWebSite:
                 os.remove(stream_id["key_file"])
 
                 return True
-
         return False
 
     def update_self(self, url, server):
