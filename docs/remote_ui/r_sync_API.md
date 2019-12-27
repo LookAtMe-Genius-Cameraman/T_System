@@ -33,15 +33,23 @@ Content-Type: application/json; charset=UTF-8
 
 # Getting Services
 - If a specific parameter NAME is given, its service are listed.
+- CAUSE parameter can be either `availability`. If `availability` is given, returns the network connection caused availability status of remote folder synchronization.
 
 ## Request
 ```http
-GET /api/r_sync?name=<NAME>&admin_id=<ADMIN_ID>&root=<ROOT>
+GET /api/r_sync?cause=<CAUSE>name=<NAME>&admin_id=<ADMIN_ID>&root=<ROOT>
 Host: domain
 ```
 
 ## Response
 ### On Success
+- If CAUSE is given as `availability`
+```json
+{
+    "status": "OK",
+    "data": true
+}
+```
 - If NAME is given as `Dropbox` so if service is `Dropbox`
 ```json
 {
