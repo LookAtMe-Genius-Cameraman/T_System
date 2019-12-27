@@ -75,6 +75,24 @@ const stream_acc_key_input = document.getElementById("stream_acc_key_input");
 const stream_cre_create_btn = document.getElementById("stream_cre_create_btn");
 const stream_cre_cancel_btn = document.getElementById("stream_cre_cancel_btn");
 
+const r_sync_div = document.getElementById("r_sync_div");
+const r_sync_btn = document.getElementById("r_sync_btn");
+const r_sync_io_div = document.getElementById("r_sync_io_div");
+const r_sync_animation_div = document.getElementById("r_sync_animation_div");
+const r_sync_animation = document.getElementById("r_sync_animation");
+const r_sync_services_ul = document.getElementById("r_sync_services_ul");
+const service_select_dd_div = document.getElementById("service_select_dd_div");
+const service_select_dd_btn = document.getElementById("service_select_dd_btn");
+const service_list_ul = document.getElementById("service_list_ul");
+
+const r_sync_account_creation_div = document.getElementById("r_sync_account_creation_div");
+const r_sync_acc_name_input = document.getElementById("r_sync_acc_name_input");
+const r_sync_acc_key_input = document.getElementById("r_sync_acc_key_input");
+const r_sync_account_cre_create_btn = document.getElementById("r_sync_account_cre_create_btn");
+const r_sync_account_cre_cancel_btn = document.getElementById("r_sync_account_cre_cancel_btn");
+
+const r_sync_sync_btn = document.getElementById("r_sync_sync_btn");
+
 const advanced_switch_div = document.getElementById("advanced_switch_div");
 const advanced_switch_btn = document.getElementById("advanced_switch_btn");
 const advanced_switch_io_div = document.getElementById("advanced_switch_io_div");
@@ -155,7 +173,7 @@ update_control_btn.addEventListener("click", function () {
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
 
-    toggle_elements([wifi_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, live_streaming_div, advanced_switch_div, lang_select_div, help_control_div, switching_control_div]);
+    toggle_elements([wifi_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, live_streaming_div, r_sync_div, advanced_switch_div, lang_select_div, help_control_div, switching_control_div]);
     update_control_div.classList.toggle("col");
     update_control_div.classList.toggle("focused");
     update_control_div.classList.toggle("higher");
@@ -229,7 +247,7 @@ wifi_connections_btn.addEventListener("click", function () {
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
 
-    toggle_elements([update_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, live_streaming_div, advanced_switch_div, lang_select_div, help_control_div, switching_control_div]);
+    toggle_elements([update_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, live_streaming_div, r_sync_div, advanced_switch_div, lang_select_div, help_control_div, switching_control_div]);
     wifi_control_div.classList.toggle("col");
     wifi_control_div.classList.toggle("focused");
     wifi_control_div.classList.toggle("higher");
@@ -444,7 +462,7 @@ audio_control_btn.addEventListener("click", function () {
 
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
-    toggle_elements([update_control_div, wifi_control_div, face_encoding_div, record_control_div, identity_control_div, live_streaming_div, advanced_switch_div, lang_select_div, help_control_div, switching_control_div]);
+    toggle_elements([update_control_div, wifi_control_div, face_encoding_div, record_control_div, identity_control_div, live_streaming_div, r_sync_div, advanced_switch_div, lang_select_div, help_control_div, switching_control_div]);
     audio_control_div.classList.toggle("col");
     audio_control_div.classList.toggle("focused");
     audio_control_div.classList.toggle("higher");
@@ -474,7 +492,7 @@ face_encoding_btn.addEventListener("click", function () {
 
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
-    toggle_elements([update_control_div, wifi_control_div, audio_control_div, record_control_div, identity_control_div, live_streaming_div, advanced_switch_div, lang_select_div, help_control_div, switching_control_div]);
+    toggle_elements([update_control_div, wifi_control_div, audio_control_div, record_control_div, identity_control_div, live_streaming_div, r_sync_div, advanced_switch_div, lang_select_div, help_control_div, switching_control_div]);
     face_encoding_div.classList.toggle("col");
     face_encoding_div.classList.toggle("focused");
     face_encoding_div.classList.toggle("higher");
@@ -652,7 +670,7 @@ record_control_btn.addEventListener("click", function () {
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
 
-    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, identity_control_div, live_streaming_div, advanced_switch_div, lang_select_div, help_control_div, switching_control_div]);
+    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, identity_control_div, live_streaming_div, r_sync_div, advanced_switch_div, lang_select_div, help_control_div, switching_control_div]);
     record_control_div.classList.toggle("col");
     record_control_div.classList.toggle("focused");
     record_control_div.classList.toggle("higher");
@@ -1058,7 +1076,7 @@ identity_control_btn.addEventListener("click", function () {
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
 
-    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, live_streaming_div, advanced_switch_div, lang_select_div, help_control_div, switching_control_div]);
+    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, live_streaming_div, r_sync_div, advanced_switch_div, lang_select_div, help_control_div, switching_control_div]);
     identity_control_div.classList.toggle("col");
     identity_control_div.classList.toggle("focused");
     identity_control_div.classList.toggle("higher");
@@ -1227,7 +1245,7 @@ live_streaming_btn.addEventListener("click", function () {
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
 
-    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, advanced_switch_div, lang_select_div, help_control_div, switching_control_div]);
+    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, r_sync_div, advanced_switch_div, lang_select_div, help_control_div, switching_control_div]);
     live_streaming_div.classList.toggle("col");
     live_streaming_div.classList.toggle("focused");
     live_streaming_div.classList.toggle("higher");
@@ -1388,6 +1406,14 @@ live_streaming_btn.addEventListener("click", function () {
 
                                     clearElement(website_dropdown_container_div);
 
+                                    if (websites[c]["stream_ids"].length === 0) {
+                                        let no_stream_id_span = document.createElement('span');
+
+                                        no_stream_id_span.classList.add("no_stream_id_span");
+                                        no_stream_id_span.innerHTML = translate_text_item("No Stream ID");
+                                        website_dropdown_container_div.appendChild(no_stream_id_span);
+                                    }
+
                                     for (let i = 0; i < websites[c]["stream_ids"].length; i++) {
                                         let stream_id_dropdown_div = document.createElement('div');
                                         let stream_id_btn = document.createElement('button');
@@ -1404,7 +1430,7 @@ live_streaming_btn.addEventListener("click", function () {
                                         let stream_cm_change_key_a = document.createElement('a');
 
                                         stream_id_dropdown_div.classList.add("position-relative", "dropdown-item", "form-check-label", "dropdown");
-                                        stream_id_dropdown_div.id = websites[c]["stream_ids"][i]["id"];
+                                        stream_id_dropdown_div.id = "live_stream_id_dd_div_" + c + "_" + i;
 
                                         stream_context_menu.classList.add("position-relative", "dropdown-menu", "dropdown-menu-sm", "stream_context_menu");
                                         stream_context_menu.id = websites[c]["name"] + websites[c]["stream_ids"][i]["account_name"] + "_context_menu";
@@ -1509,13 +1535,13 @@ live_streaming_btn.addEventListener("click", function () {
 
 
                                         stream_id_btn.addEventListener("click", function () {
-                                            if (!stream_id_btn.classList.contains("btn-outline-dark")){
+                                            if (!stream_id_btn.classList.contains("btn-outline-dark")) {
                                                 request_asynchronous('/api/live_stream?cause=stream_id&in_use=' + stream_id_btn.getAttribute("is_active") + '&id=' + websites[c]["id"] + '&account_name=' + websites[c]["stream_ids"][i]["account_name"] + '&admin_id=' + admin_id, 'PATCH',
-                                                'application/x-www-form-urlencoded; charset=UTF-8', {}, function (req, err, response) {
-                                                    if (err === "success") {
-                                                        let response_data = JSON.parse(response.responseText);
-                                                    }
-                                                });
+                                                    'application/x-www-form-urlencoded; charset=UTF-8', {}, function (req, err, response) {
+                                                        if (err === "success") {
+                                                            let response_data = JSON.parse(response.responseText);
+                                                        }
+                                                    });
 
                                                 live_streaming_btn.click();
                                                 live_streaming_btn.click();
@@ -1742,6 +1768,528 @@ stream_cre_cancel_btn.addEventListener("click", function () {
 
 });
 
+let r_sync_interacts = [];
+let r_sync_btn_click_count = 0;
+let r_sync_btn_lis_bind = close_opened_option.bind(null, r_sync_btn);
+
+r_sync_btn.addEventListener("click", function () {
+
+    dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
+    dark_deep_background_div.classList.toggle("focused");
+
+    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, live_streaming_div, advanced_switch_div, lang_select_div, help_control_div, switching_control_div]);
+    r_sync_div.classList.toggle("col");
+    r_sync_div.classList.toggle("focused");
+    r_sync_div.classList.toggle("higher");
+    r_sync_io_div.classList.toggle("focused");
+
+    r_sync_btn_click_count++;
+    if (r_sync_btn_click_count <= 1) {
+        dark_deep_background_div.addEventListener("click", r_sync_btn_lis_bind);
+        options_template_container.addEventListener("click", r_sync_btn_lis_bind);
+
+        setSwiperSwiping(false);
+
+        request_asynchronous('/api/r_sync?admin_id=' + admin_id, 'GET',
+            'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
+                // err = "success";
+                // requested_data = {"status": "OK", "data": true};
+                if (err === "success") {
+                    if (requested_data["status"] === "OK") {
+                        let services = requested_data["data"];
+
+                        for (let c = 0; c < services.length; c++) {
+
+                            // Service Selection Window Creation.
+                            let service_select_div = document.createElement('div');
+                            let service_select_checkbox = document.createElement('input');
+                            let service_select_label = document.createElement('label');
+
+                            service_select_div.classList.add("form-check", "mb-1");
+
+                            service_select_checkbox.classList.add("form-check-input");
+                            service_select_checkbox.id = services[c]["name"] + "_checkbox" + c;
+                            service_select_checkbox.type = "checkbox";
+                            service_select_checkbox.name = "service_select";
+                            service_select_checkbox.checked = services[c]["to_be_used"];
+
+
+                            service_select_checkbox.addEventListener("change", function () {
+                                request_asynchronous('/api/r_sync?cause=service&in_use=' + service_select_checkbox.checked + '&name=' + services[c]["name"] + '&admin_id=' + admin_id, 'PATCH',
+                                    'application/x-www-form-urlencoded; charset=UTF-8', {}, function (req, err, response) {
+                                        if (err === "success") {
+                                            let response_data = JSON.parse(response.responseText);
+
+                                            r_sync_btn.click();
+                                            r_sync_btn.click();
+                                        }
+                                    });
+                            });
+
+                            service_select_label.classList.add("form-check-label", "btn", "btn-outline-dark");
+                            service_select_label.setAttribute("for", service_select_checkbox.id);
+                            service_select_label.innerHTML = services[c]["name"].replace(/_/gi, " ");
+
+                            service_select_div.appendChild(service_select_checkbox);
+                            service_select_div.appendChild(service_select_label);
+
+                            service_list_ul.appendChild(service_select_div);
+
+                            // Service Editing Window Creation.
+                            if (services[c]["to_be_used"]) {
+
+                                let service_dropdown_div = document.createElement('div');
+                                let service_btn = document.createElement('button');
+                                let service_dd_btn = document.createElement('button');
+                                let service_dd_span = document.createElement('span');
+                                let service_dropdown_container_div = document.createElement('div');
+
+                                let service_context_menu = document.createElement('div');
+                                let service_cm_add_account_a = document.createElement('a');
+
+                                service_dropdown_div.classList.add("dropdown", "mb-1", "service_div");
+                                service_dropdown_div.id = "website_div_" + c;
+
+                                service_context_menu.classList.add("position-relative", "dropdown-menu", "dropdown-menu-sm", "service_context_menu");
+                                service_context_menu.id = services[c]["name"] + "_context_menu";
+
+                                $("#" + service_context_menu.id + " a").on("click", function () {
+                                    $(this).parent().removeClass("show").hide();
+                                });
+
+                                service_cm_add_account_a.classList.add("dropdown-item");
+                                service_cm_add_account_a.innerHTML = translate_text_item("add account");
+
+                                service_cm_add_account_a.addEventListener("click", function () {
+                                    r_sync_account_creation_div.classList.add("focused");
+                                    r_sync_account_creation_div.setAttribute("service_name", services[c]["name"]);
+                                    r_sync_account_cre_create_btn.disabled = true;
+                                });
+
+                                service_btn.classList.add("btn", "btn-secondary", "service_btn");
+                                service_btn.type = "button";
+                                service_btn.id = services[c]["name"] + c + "_btn";
+                                service_btn.innerHTML = services[c]["name"];
+
+                                function hide_service_context_menu() {
+                                    $("#" + service_context_menu.id).removeClass("show").hide();
+                                    document.removeEventListener("click", hide_service_context_menu);
+                                }
+
+                                let service_interact = interact('#' + service_btn.id)
+                                    .on('tap', function (event) {
+
+                                        if (!service_context_menu.classList.contains("show")) {
+                                        }
+                                    })
+                                    .on('doubletap', function (event) {
+                                    })
+                                    .on('hold', function (event) {
+                                        service_btn.classList.add("disable_pointer");
+                                        let target = event.target;
+                                        let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+                                        let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+                                        service_context_menu.setAttribute('data-x', x);
+                                        service_context_menu.setAttribute('data-y', y);
+
+                                        $("#" + service_context_menu.id).css({
+                                            display: "block",
+                                            transform: 'translate(' + x + 'px, ' + y - 50 + 'px)',
+                                        }).addClass("show");
+
+                                        document.addEventListener("click", hide_service_context_menu);
+
+                                        setTimeout(function () {
+                                            service_btn.classList.remove("disable_pointer");
+                                        }, 500);
+
+                                        return false; //blocks default WebBrowser right click menu
+                                    })
+                                    .on('down', function (event) {
+                                    })
+                                    .on('up', function (event) {
+                                    });
+
+                                r_sync_interacts.push(service_interact);
+
+                                service_dd_btn.classList.add("btn", "btn-secondary", "dropdown-toggle", "dropdown-toggle-split");
+                                service_dd_btn.type = "button";
+                                service_dd_btn.setAttribute("data-toggle", "dropdown");
+                                service_dd_btn.setAttribute("aria-haspopup", "true");
+                                service_dd_btn.setAttribute("aria-expanded", "false");
+
+                                let service_dd_btn_click_count = 0;
+                                service_dd_btn.addEventListener("click", function () {
+                                    service_dd_btn_click_count++;
+                                    if (service_dd_btn_click_count <= 1) {
+                                        service_dropdown_container_div.classList.add("show");
+
+                                        clearElement(service_dropdown_container_div);
+
+                                        if (services[c]["accounts"].length === 0) {
+                                            let no_account_span = document.createElement('span');
+
+                                            no_account_span.classList.add("no_account_span");
+                                            no_account_span.innerHTML = translate_text_item("No Account");
+                                            service_dropdown_container_div.appendChild(no_account_span);
+                                        }
+
+                                        for (let i = 0; i < services[c]["accounts"].length; i++) {
+                                            let account_dropdown_div = document.createElement('div');
+                                            let account_btn = document.createElement('button');
+                                            let account_dd_btn = document.createElement('button');
+                                            let account_dd_span = document.createElement('span');
+                                            let account_dropdown_container_div = document.createElement('div');
+                                            let access_key_div = document.createElement('div');
+                                            let access_key_title_a = document.createElement('a');
+                                            let access_key_span = document.createElement('span');
+
+                                            let account_context_menu = document.createElement('div');
+                                            let account_cm_remove_a = document.createElement('a');
+                                            let account_cm_rename_a = document.createElement('a');
+                                            let account_cm_change_key_a = document.createElement('a');
+
+                                            account_dropdown_div.classList.add("position-relative", "dropdown-item", "form-check-label", "dropdown");
+                                            account_dropdown_div.id = "r_sync_account_dd_div_" + c + "_" + i;
+
+                                            account_context_menu.classList.add("position-relative", "dropdown-menu", "dropdown-menu-sm", "stream_context_menu");
+                                            account_context_menu.id = "r_sync_account_context_menu_" + c + "_" + i;
+
+                                            $("#" + account_context_menu.id + " a").on("click", function () {
+                                                $(this).parent().removeClass("show").hide();
+                                            });
+
+                                            account_cm_remove_a.classList.add("dropdown-item");
+                                            account_cm_remove_a.innerHTML = translate_text_item("remove");
+
+                                            account_cm_remove_a.addEventListener("click", function () {
+
+                                                request_asynchronous('/api/r_sync?name=' + services[c]["name"] + '&account_name=' + services[c]["accounts"][i]["name"] + '&admin_id=' + admin_id, 'DELETE',
+                                                    'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
+                                                        if (err === "success") {
+                                                            let response_data = JSON.parse(response.responseText);
+                                                        }
+                                                    });
+                                            });
+
+                                            account_cm_rename_a.classList.add("dropdown-item");
+                                            account_cm_rename_a.innerHTML = translate_text_item("rename");
+
+                                            account_cm_rename_a.addEventListener("click", function () {
+
+                                                account_dropdown_div.removeChild(account_btn);
+                                                account_dropdown_div.removeChild(account_dd_btn);
+                                                account_dropdown_div.removeChild(account_dropdown_container_div);
+                                                account_dropdown_div.removeChild(account_context_menu);
+
+                                                let stream_id_name_input = document.createElement('input');
+
+                                                stream_id_name_input.type = "text";
+                                                stream_id_name_input.placeholder = account_btn.innerHTML;
+                                                stream_id_name_input.classList.add("action_name_input");
+
+                                                stream_id_name_input.addEventListener("focusout", function () {
+                                                    if (stream_id_name_input.value !== account_btn.innerHTML && stream_id_name_input.value !== "") {
+                                                        let data = {"account_name": stream_id_name_input.value, "key": services[c]["accounts"][i]["key"]};
+
+                                                        request_asynchronous('/api/r_sync?name=' + services[c]["name"] + '&account_name=' + services[c]["accounts"][i]["name"] + '&admin_id=' + admin_id, 'PUT',
+                                                            'application/x-www-form-urlencoded; charset=UTF-8', data, function (req, err, response) {
+                                                                if (err === "success") {
+                                                                    let response_data = JSON.parse(response.responseText);
+                                                                }
+                                                            });
+                                                        account_btn.innerHTML = stream_id_name_input.value
+                                                    }
+                                                    account_dropdown_div.removeChild(stream_id_name_input);
+                                                    account_dropdown_div.appendChild(account_btn);
+                                                    account_dropdown_div.appendChild(account_dd_btn);
+                                                    account_dropdown_div.appendChild(account_dropdown_container_div);
+                                                    account_dropdown_div.appendChild(account_context_menu);
+                                                });
+                                                account_dropdown_div.appendChild(stream_id_name_input);
+                                                stream_id_name_input.focus();
+                                            });
+
+                                            account_cm_change_key_a.classList.add("dropdown-item");
+                                            account_cm_change_key_a.innerHTML = translate_text_item("change key");
+
+                                            account_cm_change_key_a.addEventListener("click", function () {
+                                                account_dropdown_container_div.classList.add("show");
+
+                                                access_key_div.removeChild(access_key_title_a);
+                                                access_key_div.removeChild(access_key_span);
+
+                                                let account_key_input = document.createElement('input');
+
+                                                account_key_input.type = "text";
+                                                account_key_input.placeholder = access_key_span.innerHTML;
+                                                account_key_input.classList.add("action_name_input");
+
+                                                account_key_input.addEventListener("focusout", function () {
+                                                    if (account_key_input.value !== access_key_span.innerHTML && account_key_input.value !== "") {
+                                                        let data = {"account_name": account_key_input.value, "key": services[c]["accounts"][i]["key"]};
+
+                                                        request_asynchronous('/api/r_sync?name=' + services[c]["name"] + '&account_name=' + services[c]["accounts"][i]["name"] + '&admin_id=' + admin_id, 'PUT',
+                                                            'application/x-www-form-urlencoded; charset=UTF-8', data, function (req, err, response) {
+                                                                if (err === "success") {
+                                                                    let response_data = JSON.parse(response.responseText);
+                                                                }
+                                                            });
+                                                        access_key_span.innerHTML = account_key_input.value
+                                                    }
+                                                    access_key_div.removeChild(account_key_input);
+                                                    access_key_div.appendChild(access_key_title_a);
+                                                    access_key_div.appendChild(access_key_span);
+
+                                                    account_dropdown_container_div.classList.remove("show");
+                                                });
+                                                access_key_div.appendChild(account_key_input);
+                                                account_key_input.focus();
+                                            });
+
+                                            account_btn.classList.add("btn", "btn-dark");
+                                            account_btn.type = "button";
+                                            account_btn.id = services[c]["name"] + services[c]["accounts"][i]["name"] + "_btn";
+                                            account_btn.innerHTML = services[c]["accounts"][i]["name"].replace(/_/gi, " ");
+                                            account_btn.setAttribute("is_active", services[c]["accounts"][i]["is_active"]);
+
+                                            account_btn.addEventListener("click", function () {
+                                                if (!account_btn.classList.contains("btn-outline-dark")) {
+                                                    request_asynchronous('/api/r_sync?cause=account&in_use=' + account_btn.getAttribute("is_active") + '&name=' + services[c]["name"] + '&account_name=' + services[c]["accounts"][i]["name"] + '&admin_id=' + admin_id, 'PATCH',
+                                                        'application/x-www-form-urlencoded; charset=UTF-8', {}, function (req, err, response) {
+                                                            if (err === "success") {
+                                                                let response_data = JSON.parse(response.responseText);
+                                                            }
+                                                        });
+                                                    r_sync_btn.click();
+                                                    r_sync_btn.click();
+                                                    service_dd_btn.click();
+                                                }
+                                            });
+
+                                            if (account_btn.getAttribute("is_active")) {
+                                                r_sync_sync_btn.disabled = false;
+                                            }
+
+                                            function hide_account_context_menu() {
+                                                $("#" + account_context_menu.id).removeClass("show").hide();
+                                                document.removeEventListener("click", hide_account_context_menu);
+                                            }
+
+                                            let account_interact = interact('#' + account_btn.id)
+                                                .on('tap', function (event) {
+
+                                                    if (!account_context_menu.classList.contains("show")) {
+                                                    }
+                                                })
+                                                .on('doubletap', function (event) {
+                                                })
+                                                .on('hold', function (event) {
+                                                    account_btn.classList.add("disable_pointer");
+
+                                                    let target = event.target;
+                                                    let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+                                                    let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+                                                    account_context_menu.setAttribute('data-x', x);
+                                                    account_context_menu.setAttribute('data-y', y);
+
+                                                    $("#" + account_context_menu.id).css({
+                                                        display: "block",
+                                                        transform: 'translate(' + x + 'px, ' + y + 'px)',
+                                                    }).addClass("show");
+
+                                                    setTimeout(function () {
+                                                        account_btn.classList.remove("disable_pointer");
+                                                        document.addEventListener("click", hide_account_context_menu);
+                                                    }, 500);
+
+                                                    return false; //blocks default WebBrowser right click menu
+                                                })
+                                                .on('down', function (event) {
+                                                })
+                                                .on('up', function (event) {
+                                                });
+
+                                            r_sync_interacts.push(account_interact);
+
+                                            account_dd_btn.classList.add("btn", "btn-dark", "dropdown-toggle", "dropdown-toggle-split");
+                                            account_dd_btn.type = "button";
+                                            account_dd_btn.setAttribute("data-toggle", "dropdown");
+                                            account_dd_btn.setAttribute("aria-haspopup", "true");
+                                            account_dd_btn.setAttribute("aria-expanded", "false");
+
+                                            let stream_id_dd_btn_click_count = 0;
+                                            account_dd_btn.addEventListener("click", function () {
+
+                                                account_dropdown_container_div.classList.toggle("show");
+
+                                                stream_id_dd_btn_click_count++;
+                                                if (stream_id_dd_btn_click_count <= 1) {
+                                                    account_dropdown_container_div.classList.add("show");
+                                                } else {
+                                                    // stream_id_dropdown_container_div.classList.remove("show");
+                                                    stream_id_dd_btn_click_count = 0;
+                                                }
+                                            });
+
+                                            if (services[c]["accounts"][i]["is_active"]) {
+                                                account_btn.classList.remove("btn-dark");
+                                                account_btn.classList.add("btn-outline-dark");
+                                                account_dd_btn.classList.remove("btn-dark");
+                                                account_dd_btn.classList.add("btn-outline-dark");
+                                            }
+
+                                            account_dd_span.classList.add("sr-only");
+
+                                            account_dropdown_container_div.classList.add("dropdown-menu", "dropdown-menu-right", "container", "dropdown_menu", "account_dropdown_menu", "keep-open");
+                                            account_dropdown_container_div.id = services[c]["name"] + services[c]["accounts"][i]["name"] + "_container_div";
+
+                                            access_key_div.classList.add("stream_key_div");
+                                            access_key_div.classList.add("cut-text");
+
+                                            access_key_title_a.innerHTML = translate_text_item("stream key: ");
+
+                                            access_key_span.innerHTML = services[c]["accounts"][i]["key"];
+
+                                            account_context_menu.appendChild(account_cm_remove_a);
+                                            account_context_menu.appendChild(account_cm_rename_a);
+                                            account_context_menu.appendChild(account_cm_change_key_a);
+
+                                            account_dd_btn.appendChild(account_dd_span);
+
+                                            access_key_div.appendChild(access_key_title_a);
+                                            access_key_div.appendChild(access_key_span);
+
+                                            account_dropdown_container_div.appendChild(access_key_div);
+
+                                            account_dropdown_div.appendChild(account_btn);
+                                            account_dropdown_div.appendChild(account_dd_btn);
+                                            account_dropdown_div.appendChild(account_dropdown_container_div);
+                                            account_dropdown_div.appendChild(account_context_menu);
+
+                                            service_dropdown_container_div.appendChild(account_dropdown_div);
+                                        }
+                                    } else {
+                                        service_dd_btn_click_count = 0;
+                                        for (let i = 0; i < r_sync_interacts.length; i++) {
+                                            r_sync_interacts[i].unset();
+                                        }
+                                        r_sync_interacts = [];
+                                        service_dropdown_container_div.classList.remove("show");
+                                    }
+                                });
+
+                                service_dd_span.classList.add("sr-only");
+
+                                service_dropdown_container_div.classList.add("dropdown-menu", "dropdown-menu-right", "dropdown_menu", "service_dropdown_menu");
+                                service_dropdown_container_div.setAttribute("aria-labelledby", service_btn.id);
+
+                                service_context_menu.appendChild(service_cm_add_account_a);
+
+                                service_dd_btn.appendChild(service_dd_span);
+
+                                service_dropdown_div.appendChild(service_btn);
+                                service_dropdown_div.appendChild(service_dd_btn);
+                                service_dropdown_div.appendChild(service_dropdown_container_div);
+                                service_dropdown_div.appendChild(service_context_menu);
+
+                                r_sync_services_ul.appendChild(service_dropdown_div);
+                            }
+                        }
+                        if (r_sync_services_ul.childElementCount === 0) {
+                            r_sync_sync_btn.disabled = true;
+                        }
+
+                        request_asynchronous('/api/r_sync?cause=availability&admin_id=' + admin_id, 'GET',
+                            'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
+                                if (err === "success") {
+                                    if (requested_data["status"] === "OK") {
+                                        if (requested_data["data"]) {
+                                            r_sync_sync_btn.disabled = false;
+                                        } else {
+                                            r_sync_sync_btn.disabled = true;
+                                            swal(translate_text_item("The Cloud Storage Synchronization feature is not available because there is no internet access."), "", "warning");
+                                        }
+                                    }
+                                }
+                            });
+                    }
+                }
+            });
+    } else {
+        dark_deep_background_div.removeEventListener("click", r_sync_btn_lis_bind);
+        options_template_container.removeEventListener("click", r_sync_btn_lis_bind);
+
+        clearElement(r_sync_services_ul);
+        clearElement(service_list_ul);
+
+        setSwiperSwiping(true);
+
+        r_sync_btn_click_count = 0;
+    }
+});
+
+r_sync_account_creation_div.addEventListener("click", function () {
+    r_sync_account_cre_create_btn.disabled = r_sync_acc_name_input.value === "" || r_sync_acc_key_input.value === "";
+});
+
+r_sync_account_cre_create_btn.addEventListener("click", function (event) {
+    if (r_sync_acc_name_input.value !== "" && r_sync_acc_key_input.value !== "") {
+
+        let data = {"name": r_sync_acc_name_input.value.replace(/ /gi, "_"), "key": r_sync_acc_key_input.value};
+
+        request_asynchronous('/api/r_sync?name=' + r_sync_account_creation_div.getAttribute("service_name") + '&admin_id=' + admin_id + '&root=true', 'POST',
+            'application/json; charset=UTF-8', data, function (req, err, response) {
+                if (err === "success") {
+                    let response_data = JSON.parse(response.responseText);
+
+                    r_sync_acc_name_input.value = r_sync_acc_key_input.value = "";
+
+                    swal(translate_text_item("Account Added!"), "", "success");
+
+                    r_sync_account_creation_div.classList.remove("focused");
+                    r_sync_btn.click();
+                    r_sync_btn.click();
+                }
+            });
+    }
+});
+
+r_sync_account_cre_cancel_btn.addEventListener("click", function () {
+    r_sync_acc_name_input.value = "";
+    r_sync_acc_key_input.value = "";
+
+    r_sync_account_creation_div.classList.remove("focused");
+});
+
+r_sync_sync_btn.addEventListener("click", function () {
+
+    dark_deep_background_div.removeEventListener("click", r_sync_btn_lis_bind);
+    options_template_container.removeEventListener("click", r_sync_btn_lis_bind);
+
+    r_sync_div.classList.add("disable_pointer");
+
+    r_sync_animation.classList.add("lds-hourglass");
+    r_sync_animation_div.classList.add("focused");
+
+    request_asynchronous('/api/r_sync?cause=sync&in_use=true' + '&admin_id=' + admin_id, 'PATCH',
+        'application/x-www-form-urlencoded; charset=UTF-8', {}, function (req, err, response) {
+            if (err === "success") {
+                let response_data = JSON.parse(response.responseText);
+
+                dark_deep_background_div.addEventListener("click", r_sync_btn_lis_bind);
+                options_template_container.addEventListener("click", r_sync_btn_lis_bind);
+
+                r_sync_div.classList.remove("disable_pointer");
+
+                r_sync_animation.classList.remove("lds-hourglass");
+                r_sync_animation_div.classList.remove("focused");
+            }
+        });
+});
+
 let advanced_switch_btn_click_count = 0;
 let advanced_switch_btn_lis_bind = close_opened_option.bind(null, advanced_switch_btn);
 
@@ -1750,7 +2298,7 @@ advanced_switch_btn.addEventListener("click", function () {
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
 
-    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, live_streaming_div, lang_select_div, help_control_div, switching_control_div]);
+    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, live_streaming_div, r_sync_div, lang_select_div, help_control_div, switching_control_div]);
     advanced_switch_div.classList.toggle("col");
     advanced_switch_div.classList.toggle("focused");
     advanced_switch_div.classList.toggle("higher");
@@ -1788,7 +2336,7 @@ lang_select_btn.addEventListener("click", function () {
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
 
-    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, live_streaming_div, advanced_switch_div, help_control_div, switching_control_div]);
+    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, live_streaming_div, r_sync_div, advanced_switch_div, help_control_div, switching_control_div]);
     lang_select_div.classList.toggle("col");
     lang_select_div.classList.toggle("focused");
     lang_select_div.classList.toggle("higher");
@@ -1819,7 +2367,7 @@ help_control_btn.addEventListener("click", function () {
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
 
-    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, live_streaming_div, advanced_switch_div, lang_select_div, switching_control_div]);
+    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, live_streaming_div, r_sync_div, advanced_switch_div, lang_select_div, switching_control_div]);
     help_control_div.classList.toggle("col");
     help_control_div.classList.toggle("focused");
     help_control_div.classList.toggle("higher");
@@ -1849,7 +2397,7 @@ switching_control_btn.addEventListener("click", function () {
     dark_overlay_active = !dark_deep_background_div.classList.contains("focused");
     dark_deep_background_div.classList.toggle("focused");
 
-    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, live_streaming_div, advanced_switch_div, lang_select_div, help_control_div]);
+    toggle_elements([update_control_div, wifi_control_div, audio_control_div, face_encoding_div, record_control_div, identity_control_div, live_streaming_div, r_sync_div, advanced_switch_div, lang_select_div, help_control_div]);
     switching_control_div.classList.toggle("col");
     switching_control_div.classList.toggle("focused");
     switching_control_div.classList.toggle("higher");
@@ -1896,7 +2444,6 @@ switching_disconnect_btn.addEventListener("click", function () {
         }, translate_text_item("disconnecting..."));
 
 });
-
 
 switching_reboot_btn.addEventListener("click", function () {
 
