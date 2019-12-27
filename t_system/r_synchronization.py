@@ -20,8 +20,6 @@ from tinydb import Query  # TinyDB is a lightweight document oriented database
 
 from t_system.db_fetching import DBFetcher
 
-from t_system import network_connector
-
 from t_system import dot_t_system_dir
 from t_system import log_manager
 
@@ -85,6 +83,8 @@ class RSynchronizer:
         """Method to check the synchronization's availability about networks connection.
         """
 
+        from t_system import network_connector
+
         return network_connector.is_network_online()
 
     def get_services(self, service_names=None):
@@ -142,7 +142,7 @@ class RSynchronizer:
 
         for service in self.services:
             if service_name == service.name:
-                service.upsert_account(account["account_name"], account["key"])
+                service.upsert_account(account["name"], account["key"])
                 return True
         return False
 
@@ -196,14 +196,14 @@ class RSynchronizer:
 
         for service in self.get_services(service_names):
 
-            website_name = service.name
+            service_name = service.name
 
             for account in service.accounts:
-                accounts.append([website_name, account["name"], account["key"]])
+                accounts.append([service_name, account["name"], account["key"]])
 
-                website_name = ""
+                service_name = ""
 
-        print(tabulate(accounts, headers=["Website Name", "Account Name", "Key"]))
+        print(tabulate(accounts, headers=["Service Name", "Account Name", "Key"]))
 
     def __create_services(self):
         """Method to create remote synchronizer services if there is no services created yet.
@@ -217,7 +217,6 @@ class RSynchronizer:
 
         for service in self.services_table.all():
             if service["name"] == "Dropbox":
-
                 self.services.append(DropBox(service["info"]["to_be_used"], service["info"]["accounts"], service["info"]["active_account"]))
 
 
@@ -266,7 +265,7 @@ class DropBox:
             for dn, dirs, files in os.walk(self.sync_sou_dir):
                 sub_folder = dn[len(self.sync_sou_dir):].strip(os.path.sep)
                 listing = self.list_folder(self.sync_tar_dir, sub_folder)
-                logger.info('Descending into', sub_folder, '...')
+                logger.info(f'Descending into {sub_folder}...')
 
                 # First do all the files.
                 for file in files:
@@ -278,16 +277,16 @@ class DropBox:
                     n_name = unicodedata.normalize('NFC', file)
 
                     if file.startswith('.'):
-                        logger.info('Skipping dot file:', file)
+                        logger.info(f'Skipping dot file: {file}')
 
                     elif file.startswith('@') or file.endswith('~'):
-                        logger.info('Skipping temporary file:', file)
+                        logger.info(f'Skipping temporary file: {file}')
 
                     elif file.endswith('.pyc') or file.endswith('.pyo'):
-                        logger.info('Skipping generated file:', file)
+                        logger.info(f'Skipping generated file: {file}')
 
                     elif file.endswith('.json'):
-                        logger.info('Skipping database file:', file)
+                        logger.info(f'Skipping database file: {file}')
 
                     elif n_name in listing:
 
@@ -355,7 +354,7 @@ class DropBox:
         try:
             res = self.dbx.files_list_folder(path)
         except dropbox.exceptions.ApiError as err:
-            logger.error('Folder listing failed for', path, '-- assumed empty:', err)
+            logger.error(f'Folder listing failed for {path} -- assumed empty: {err}')
             return {}
         else:
             rv = {}
@@ -450,7 +449,7 @@ class DropBox:
                 break
 
         for account in self.accounts:
-            if account["account_name"] == account_name:
+            if account["name"] == account_name:
 
                 account["is_active"] = True
 
@@ -501,7 +500,7 @@ class DropBox:
     def delete_self(self):
         """Method to delete website itself.
         """
-        self.table.remove((Query().service == self.name))
+        self.table.remove((Query().name == self.name))
 
     def __db_upsert(self, force_insert=False):
         """Function to insert(or update) the record to the database.
@@ -513,9 +512,9 @@ class DropBox:
             str:  Response.
         """
 
-        if self.table.search((Query().service == self.name)):
+        if self.table.search((Query().name == self.name)):
             if force_insert:
-                self.table.update({'info': {'to_be_used': self.to_be_used, 'accounts': self.accounts, 'active_account': self.active_account}}, Query().service == self.name)
+                self.table.update({'info': {'to_be_used': self.to_be_used, 'accounts': self.accounts, 'active_account': self.active_account}}, Query().name == self.name)
 
             else:
                 return "Already Exist"
