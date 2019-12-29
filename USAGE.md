@@ -99,6 +99,13 @@ But there is few important feature those need the  detailed explanation:
     
         `t_system live-stream --help`
 
+- `log`
+    - Viewing and deleting the logs of T_System are available with command-line
+    and Remote UI. Realizing this jobs by Remote UI, administration privileges
+    required. For more usage detail of `log` sub-command:
+        
+        `t_system log --help`
+
 ### Remote UI
 
 T_System has `flask` powered Javascript codded controlling Interface that called as `remote_ui`.
@@ -142,11 +149,11 @@ usage: t_system [-h] [--interface {official_stand,augmented,remote_ui,None}]
                 [--no-emotion] [-S]
                 [-m {single_rect,rotating_arcs,partial_rect,animation_1,None}]
                 [-r] [-v] [--version]
-                {id,remote-ui-authentication,encode-face,self-update,arm,live-stream,r-sync}
+                {id,remote-ui-authentication,encode-face,self-update,arm,live-stream,r-sync,log}
                 ...
 
 positional arguments:
-  {id,remote-ui-authentication,encode-face,self-update,arm,live-stream,r-sync}
+  {id,remote-ui-authentication,encode-face,self-update,arm,live-stream,r-sync,log}
                         officiate the sub-jobs
     id                  Make identification jobs of T_System.
     remote-ui-authentication
@@ -162,6 +169,7 @@ positional arguments:
                         models of robotic arms of T_System.
     live-stream         Make Online Stream jobs of T_System.
     r-sync              Make remote synchronization jobs of T_System.
+    log                 Make logging jobs of T_System.
 
 optional arguments:
   -h, --help            show this help message and exit
