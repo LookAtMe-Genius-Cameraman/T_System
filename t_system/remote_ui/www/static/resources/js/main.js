@@ -60,11 +60,17 @@ function hide_element(element) {
 function activateAdminAuthorityBy(admin_id) {
     if (admin_id !== false) {
         administration_template_container.classList.add("active");
-        toggle_controlling_modal(true);
+        if (!advanced_activate_checkbox.checked) {
+            toggle_controlling_modal(true);
+            advanced_activate_checkbox.checked = true;
+        }
         create_website_div.classList.add("active");
     } else {
         administration_template_container.classList.remove("active");
-        toggle_controlling_modal(false);
+        if (advanced_activate_checkbox.checked) {
+            toggle_controlling_modal(false);
+            advanced_activate_checkbox.checked = false;
+        }
         create_website_div.classList.remove("active");
     }
 }
@@ -183,7 +189,6 @@ function toggle_controlling_modal(activate = false) {
 
     init_swiper();
 }
-
 
 
 $(document).ready(function () {
