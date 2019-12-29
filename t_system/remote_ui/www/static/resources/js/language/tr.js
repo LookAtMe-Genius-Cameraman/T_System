@@ -154,7 +154,12 @@ const turkishtrans = {
     "Target Sign": "Hedefi işaretle",
     "Don't Mark": "İşaretleme",
     " administration": " özel yetki",
-    " Exit": " Çık",
+    "View Logs": "Günlükleri Görüntüle",
+    " Clean": " Temizle",
+    "Logs Deleting!": "Günlükler Siliniyor!",
+    "You are about to delete all stored logs..": "Kayıtlı tüm günlükleri silmek üzeresiniz...",
     "Create Emotion": "Duygu Yarat",
-    "Predict Mission": "Görev öngör"
+    "Predict Mission": "Görev öngör",
+    "Set N.M.T. Action": "H.E.H. Hareketi Ayarla",
+    " Exit": " Çık"
 };
