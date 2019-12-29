@@ -148,6 +148,17 @@ def start_sub(args):
 
             elif args["r_sync_account_sub_jobs"] == "list":
                 t_system.r_synchronizer.show_accounts()
+    
+    elif args["sub_jobs"] == "log":
+
+        if args["show"]:
+            import subprocess
+
+            path, name = t_system.log_manager.get_logfile()
+            subprocess.call(f'sudo nano {path}', shell=True)
+
+        if args["clear"]:
+            t_system.log_manager.clear_logs()
 
 
 def prepare(args):
@@ -399,6 +410,11 @@ def initiate():
     ap_r_sync_acc_remove.add_argument('--name', help='Name of the personalized account of remote storage service.', type=str, required=True)
 
     ap_r_sync_acc_list = r_sync_acc_sub_p.add_parser('list', help='List the existing remote storage services.')
+
+    ap_log = sub_p.add_parser('log', help='Make logging jobs of T_System.')
+    app_log_gr = ap_log.add_mutually_exclusive_group()
+    app_log_gr.add_argument('--show', help='Show the contents of the `logfile.log` file of T_System', action="store_true")
+    app_log_gr.add_argument('--clear', help='Clear the contents of the `logfile.log` file of T_System', action="store_true")
 
     args = vars(ap.parse_args())
 
