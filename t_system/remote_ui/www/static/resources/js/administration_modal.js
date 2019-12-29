@@ -14,6 +14,12 @@ const predict_mission_cb_label = document.getElementById("predict_mission_cb_lab
 const nmt_action_checkbox = document.getElementById("nmt_action_checkbox");
 const nmt_action_cb_label = document.getElementById("nmt_action_cb_label");
 
+const log_viewer_div = document.getElementById("log_viewer_div");
+const close_log_viewer_btn = document.getElementById("close_log_viewer_btn");
+const log_viewer_pre = document.getElementById("log_viewer_pre");
+const clean_log_btn = document.getElementById("clean_log_btn");
+const view_log_btn = document.getElementById("view_log_btn");
+
 const administration_exit_btn = document.getElementById("administration_exit_btn");
 
 
@@ -99,25 +105,25 @@ administration_div.addEventListener("click", function (event) {
 
 create_emotion_checkbox.addEventListener("change", function () {
     predict_mission_cb_label.disabled = predict_mission_checkbox.disabled = nmt_action_cb_label.disabled = nmt_action_checkbox.disabled = create_emotion_checkbox.checked;
-    predict_mission_checkbox.checked = nmt_action_checkbox.checked= false;
+    predict_mission_checkbox.checked = nmt_action_checkbox.checked = false;
 
     if (create_emotion_checkbox.checked) {
         request_asynchronous('/api/move?expand=true' + '&admin_id=' + admin_id, 'PATCH',
-        'application/x-www-form-urlencoded; charset=UTF-8', {}, function (req, err, response) {
-            if (err === "success") {
-                let response_data = JSON.parse(response.responseText);
-            }
-        });
+            'application/x-www-form-urlencoded; charset=UTF-8', {}, function (req, err, response) {
+                if (err === "success") {
+                    let response_data = JSON.parse(response.responseText);
+                }
+            });
 
         action_db_name = "emotions";
         allow_root = true;
     } else {
         request_asynchronous('/api/move?expand=false' + '&admin_id=' + admin_id, 'PATCH',
-        'application/x-www-form-urlencoded; charset=UTF-8', {}, function (req, err, response) {
-            if (err === "success") {
-                let response_data = JSON.parse(response.responseText);
-            }
-        });
+            'application/x-www-form-urlencoded; charset=UTF-8', {}, function (req, err, response) {
+                if (err === "success") {
+                    let response_data = JSON.parse(response.responseText);
+                }
+            });
 
         action_db_name = "missions";
         allow_root = false;
@@ -144,19 +150,50 @@ nmt_action_checkbox.addEventListener("change", function () {
 
     if (nmt_action_checkbox.checked) {
         request_asynchronous('/api/move?expand=true' + '&admin_id=' + admin_id, 'PATCH',
-        'application/x-www-form-urlencoded; charset=UTF-8', {}, function (req, err, response) {
-            if (err === "success") {
-                let response_data = JSON.parse(response.responseText);
-            }
-        });
+            'application/x-www-form-urlencoded; charset=UTF-8', {}, function (req, err, response) {
+                if (err === "success") {
+                    let response_data = JSON.parse(response.responseText);
+                }
+            });
     } else {
         request_asynchronous('/api/move?expand=false' + '&admin_id=' + admin_id, 'PATCH',
-        'application/x-www-form-urlencoded; charset=UTF-8', {}, function (req, err, response) {
+            'application/x-www-form-urlencoded; charset=UTF-8', {}, function (req, err, response) {
+                if (err === "success") {
+                    let response_data = JSON.parse(response.responseText);
+                }
+            });
+    }
+});
+
+close_log_viewer_btn.addEventListener("click", function () {
+    log_viewer_div.classList.remove("focused");
+    log_viewer_pre.textContent = "";
+});
+
+clean_log_btn.addEventListener("click", function () {
+    JSalert(translate_text_item("Logs Deleting!"),
+        translate_text_item("You are about to delete all stored logs.."),
+        translate_text_item("OK"), translate_text_item("CANCEL"), function () {
+            request_asynchronous('/api/logging?admin_id=' + admin_id, 'DELETE',
+                'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
+                    if (err === "success") {
+                        let response_data = JSON.parse(response.responseText);
+                        if (response_data["status"] === "OK") {
+                            close_log_viewer_btn.click()
+                        }
+                    }
+                });
+        });
+});
+
+view_log_btn.addEventListener("click", function () {
+    request_asynchronous('/api/logging?admin_id=' + admin_id, 'GET',
+        'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
             if (err === "success") {
-                let response_data = JSON.parse(response.responseText);
+                log_viewer_div.classList.add("focused");
+                log_viewer_pre.textContent = requested_data;
             }
         });
-    }
 });
 
 administration_exit_btn.addEventListener("click", function () {

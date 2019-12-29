@@ -189,7 +189,7 @@
                             </div>
                             <div id="ls_websites_div">
                                 <div id="ls_websites_title_div">
-                                    <span id="ls_websites_title_span" translate>Websites</span>
+                                    <span id="ls_websites_title_span" class="position-absolute" translate>Websites</span>
                                 </div>
                                 <ul id="ls_websites_ul"></ul>
                                 <div id="create_website_div" class="position-absolute">
@@ -204,9 +204,9 @@
                             <div id="r_sync_animation_div" class="position-absolute">
                                 <div id="r_sync_animation" class="position-absolute"></div>
                             </div>
-                            <div id="service_select_dd_div" class="form-check-label btn-group dropright">
-                                <button id="service_select_dd_btn" type="button" class="btn btn-outline-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i id="service_select_dd_btn_i" class="fas fa-bars"></i></button>
-                                <div class="dropdown-menu">
+                            <div id="service_select_dd_div" class="form-check-label btn-group dropright ml-1">
+                                <button id="service_select_dd_btn" type="button" class="btn btn-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i id="service_select_dd_btn_i" class="fas fa-bars"></i></button>
+                                <div id="service_select_dd_menu_div" class="dropdown-menu">
                                     <span id="r_sync_ava_services_title_span" translate>Available Services</span>
                                     <ul id="service_list_ul"></ul>
                                 </div>
@@ -233,7 +233,7 @@
                             </div>
                             <div id="r_sync_services_div">
                                 <div id="r_sync_services_title_div">
-                                    <span id="r_sync_services_title_span" translate>Selected Services</span>
+                                    <span id="r_sync_services_title_span" class="position-absolute" translate>Selected Services</span>
                                 </div>
                                 <ul id="r_sync_services_ul" class="option_list_ul mt-2 mb-1"></ul>
                                 <div id="r_sync_sync_div" class="position-absolute">
@@ -512,21 +512,29 @@
         <button id="administration_btn" class="position-relative btn btn-dark ml-2"><i id="administration_btn_i" class="fas fa-mask"></i></button>
     </div>
     <div id="administration_div" class="position-relative mt-4">
+        <div id="log_viewer_div" class="position-absolute">
+            <a id="close_log_viewer_btn" class="close" title="Close">X</a>
+            <pre id="log_viewer_pre"></pre>
+            <button id="clean_log_btn" class="btn btn-danger position-absolute"><i class="fas fa-trash-alt" translate> Clean</i></button>
+        </div>
         <div id="administration_selections_div" class="position-absolute mt-2">
             <div class="form-check mb-1 specify_checkbox_div">
                 <input id="create_emotion_checkbox" class="form-check-input" type="checkbox" value="">
-                <label id="create_emotion_cb_label" class="form-check-label btn btn-outline-warning" for="create_emotion_checkbox" translate>Create Emotion</label>
+                <label id="create_emotion_cb_label" class="form-check-label btn btn-outline-warning administration_selection_label" for="create_emotion_checkbox" translate>Create Emotion</label>
             </div>
             <div id="predict_mission_check_div" class="form-check mb-1 specify_checkbox_div">
                 <input id="predict_mission_checkbox" class="form-check-input" type="checkbox" value="">
-                <label id="predict_mission_cb_label" class="form-check-label btn btn-outline-warning" for="predict_mission_checkbox" translate>Predict Mission</label>
+                <label id="predict_mission_cb_label" class="form-check-label btn btn-outline-warning administration_selection_label" for="predict_mission_checkbox" translate>Predict Mission</label>
             </div>
             <div id="nmt_action_check_div" class="form-check mb-1 specify_checkbox_div">
                 <input id="nmt_action_checkbox" class="form-check-input" type="checkbox" value="">
-                <label id="nmt_action_cb_label" class="form-check-label btn btn-outline-warning" for="nmt_action_checkbox" translate>Set NMT Action</label>
+                <label id="nmt_action_cb_label" class="form-check-label btn btn-outline-warning administration_selection_label" for="nmt_action_checkbox" translate>Set N.M.T. Action</label>
             </div>
         </div>
-        <button id="administration_exit_btn" class="position-absolute btn btn-outline-danger"><i id="administration_exit_btn_i" class="fas fa-door-open"> Exit</i></button>
+        <div id="view_log_div" class="position-absolute">
+            <button id="view_log_btn" class="btn btn-outline-light">View Logs</button>
+        </div>
+        <button id="administration_exit_btn" class="position-absolute btn btn-outline-danger"><i id="administration_exit_btn_i" class="fas fa-door-open" translate> Exit</i></button>
     </div>
 </div>
 <!--        ======================================================ADMINISTRATION MODAL======================================================        -->
