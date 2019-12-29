@@ -409,6 +409,17 @@
     top: -480% !important;
 }
 
+#ls_websites_title_div {
+    height: 30px;
+}
+
+#ls_websites_title_span {
+    left: 50% !important;
+    transform: translate(-50%) !important;
+
+    font-size: 15px;
+}
+
 #ls_websites_ul {
     overflow: auto;
     overflow: no-display;
@@ -417,11 +428,7 @@
     height: 300px;
 }
 
-.website_div {
-    /*left: 50% !important;*/
-    /*transform: translate(-50%) !important;*/
-    /*margin-bottom: 10px !important;*/
-}
+.website_div {}
 
 .website_btn {
     width: 100px;
@@ -579,8 +586,18 @@
     overflow: auto;
     overflow: no-display;
 
-    max-height: 340px;
-    height: 300px;
+    height: 265px;
+}
+
+#r_sync_services_title_div {
+    height: 30px;
+}
+
+#r_sync_services_title_span {
+    left: 50% !important;
+    transform: translate(-50%) !important;
+
+    font-size: 15px;
 }
 
 #r_sync_services_ul {
