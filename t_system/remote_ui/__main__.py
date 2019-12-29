@@ -17,6 +17,7 @@ from t_system.remote_ui.api.face_encoding import api_bp as face_encoding_api_bp
 from t_system.remote_ui.api.identity import api_bp as identity_api_bp
 from t_system.remote_ui.api.job import api_bp as job_api_bp
 from t_system.remote_ui.api.live_stream import api_bp as live_stream_api_bp
+from t_system.remote_ui.api.log import api_bp as log_api_bp
 from t_system.remote_ui.api.move import api_bp as move_api_bp
 from t_system.remote_ui.api.network import api_bp as network_api_bp
 from t_system.remote_ui.api.position import api_bp as position_api_bp
@@ -72,6 +73,7 @@ class RemoteUI:
         self.app.register_blueprint(identity_api_bp)
         self.app.register_blueprint(job_api_bp)
         self.app.register_blueprint(live_stream_api_bp)
+        self.app.register_blueprint(log_api_bp)
         self.app.register_blueprint(move_api_bp)
         self.app.register_blueprint(network_api_bp)
         self.app.register_blueprint(position_api_bp)
