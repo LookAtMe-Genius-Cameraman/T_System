@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 
 """
-.. module:: accession
+.. module:: logging
     :platform: Unix
-    :synopsis: the top-level submodule of T_System that contains the functions and classes related to T_System's accessing external network and creating internal network(becoming access point) ability.
+    :synopsis: the top-level submodule of T_System that contains the functions and classes related to T_System's log management ability.
 
 .. moduleauthor:: Cem Baybars GÜÇLÜ <cem.baybars@gmail.com>
 """
@@ -34,10 +34,10 @@ class LogManager:
 
         self.log_folder = f'{dot_t_system_dir}/logs'
 
-        if not os.path.exists(self.log_folder):
-            os.mkdir(self.log_folder)
+        self.__check_folders()
 
-        self.log_file = f'{self.log_folder}/logfile.log'
+        self.log_filename = "logfile.log"
+        self.log_file = f'{self.log_folder}/{self.log_filename}'
 
     class Logger:
         """Class to define a logger for handling python's logging module to the LogManager of t_system.
@@ -148,3 +148,24 @@ class LogManager:
         """
 
         return self.Logger(self, caller_name, level)
+
+    def clear_logs(self):
+        """Method to remove log file.
+        """
+
+        open(self.log_file, "w").close()
+
+        return True
+
+    def get_logfile(self):
+        """Method to get path and name of logfile.
+        """
+
+        return self.log_file, self.log_filename
+
+    def __check_folders(self):
+        """Method to checking the necessary folders created before. If not created creates them.
+        """
+
+        if not os.path.exists(self.log_folder):
+            os.mkdir(self.log_folder)
