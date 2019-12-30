@@ -372,6 +372,7 @@ class NetworkConnector:
             self.activity = status[0]["activity"]
         else:
             self.activity = True
+            self.status_upsert(self.activity)
 
     def change_status(self, activity):
         """high-level method to change status of NetworkConnector via given parameters.
