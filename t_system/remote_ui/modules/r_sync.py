@@ -77,6 +77,29 @@ def set_service_usage_status(admin_id, service_name, in_use):
     return r_synchronizer.set_service_usage_stat(service_name, in_use)
 
 
+def set_auto_sync_status(admin_id, in_use):
+    """Method to set automatically synchronization status of remote storage service.
+
+    Args:
+            admin_id (str):                 Admin privileges flag.
+            in_use (str):                   usage status flag.
+    """
+
+    in_use = in_use in ["true", "True"]
+
+    return r_synchronizer.change_status(in_use)
+
+
+def get_auto_sync(admin_id):
+    """Method to return status of the auto synchronization statement.
+
+    Args:
+        admin_id (str):                 Root privileges flag.
+    """
+
+    return r_synchronizer.is_sync_auto()
+
+
 def create_account(admin_id, root, service_name, data):
     """Method to create new account for given storage service.
 

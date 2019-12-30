@@ -13,7 +13,7 @@ from flask import Blueprint, request
 from flask_restful import Api, Resource
 from schema import SchemaError
 
-from t_system.remote_ui.modules.r_sync import sync, is_sync_available, set_service_usage_status, set_account_u_status, get_service, get_services, create_account, update_account, delete_account
+from t_system.remote_ui.modules.r_sync import sync, is_sync_available, get_auto_sync, set_service_usage_status, set_account_u_status, set_auto_sync_status, get_service, get_services, create_account, update_account, delete_account
 from t_system.remote_ui.api.data_schema import SYNC_ACCOUNT_SCHEMA
 
 from t_system import log_manager
@@ -47,6 +47,8 @@ class RSyncApi(Resource):
         admin_id = request.args.get('admin_id', None)
         root = request.args.get('root', None)
 
+        if cause == "auto_sync":
+            return {'status': 'OK', 'data': get_auto_sync(admin_id)}
         if cause == "availability":
             return {'status': 'OK', 'data': is_sync_available(admin_id)}
 
@@ -121,6 +123,8 @@ class RSyncApi(Resource):
             result = set_service_usage_status(admin_id, service_name, in_use)
         elif cause == "account":
             result = set_account_u_status(admin_id, service_name, account_name, in_use)
+        elif cause == "auto_sync":
+            result = set_auto_sync_status(admin_id, in_use)
         elif cause == "sync":
             result = sync(admin_id, in_use)
 
