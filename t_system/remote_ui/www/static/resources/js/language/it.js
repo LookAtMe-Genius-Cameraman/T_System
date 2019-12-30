@@ -1,7 +1,7 @@
 //italian
 const italiantrans = {
     "Look.At.Me.": "Look.At.Me.",
-    "Powered By <a><mark translate=\"\">T_System</mark></a>": "Alimentato da <a><mark translate=\"\">T_System</mark></a>",
+    "Powered By <a><mark>T_System</mark></a>": "Alimentato da <a><mark>T_System</mark></a>",
     "T_System": "T_System",
     "Settings": "İmpostazioni",
     "Options": "Opzioni",

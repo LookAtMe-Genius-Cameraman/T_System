@@ -1,7 +1,7 @@
 //korean
 const koreantrans = {
     "Look.At.Me.": "Look.At.Me.",
-    "Powered By <a><mark translate=\"\">T_System</mark></a>": "에 의해 구동 <a><mark translate=\"\">T_System</mark></a>",
+    "Powered By <a><mark>T_System</mark></a>": "에 의해 구동 <a><mark>T_System</mark></a>",
     "T_System": "T_System",
     "Settings": "설정",
     "Options": "옵션",

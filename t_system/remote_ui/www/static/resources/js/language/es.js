@@ -1,7 +1,7 @@
 //Spanish
 const spanishtrans = {
     "Look.At.Me.": "Look.At.Me.",
-    "Powered By <a><mark translate=\"\">T_System</mark></a>": "Motorized by<a><mark translate=\"\">T_System</mark></a>'e dayanır",
+    "Powered By <a><mark>T_System</mark></a>": "Motorized by<a><mark>T_System</mark></a>",
     "T_System": "T_System",
     "Settings": "Ajustes",
     "Options": "Opciones",
