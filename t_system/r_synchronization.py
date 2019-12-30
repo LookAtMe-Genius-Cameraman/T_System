@@ -37,11 +37,18 @@ class RSynchronizer:
         """Initialization method of :class:`t_system.r_sync.RSynchronizer` class.
         """
 
-        self.services_table = DBFetcher(dot_t_system_dir, "db", "r_sync").fetch()
+        self.folder = f'{dot_t_system_dir}/r_sync'
+
+        self.__check_folders()
+
+        self.services_table = DBFetcher(self.folder, "db", "services").fetch()
+        self.status_table = DBFetcher(self.folder, "db", "status").fetch()
 
         self.services = []
+        self.auto_sync = None
 
         self.__set_services()
+        self.__refresh_status()
 
         if not self.services:
             self.__create_services()
@@ -77,6 +84,12 @@ class RSynchronizer:
         """
 
         pass
+
+    def is_sync_auto(self):
+        """Method to getting auto-sync status from the database.
+        """
+
+        return self.auto_sync
 
     @staticmethod
     def is_sync_available():
@@ -205,6 +218,19 @@ class RSynchronizer:
 
         print(tabulate(accounts, headers=["Service Name", "Account Name", "Key"]))
 
+    def change_status(self, auto_sync):
+        """high-level method to change status of NetworkConnector via given parameters.
+
+        Args:
+                auto_sync (bool):              Auto synchronization flag of the RSynchronizer. If True, RSynchronizer try synchronizing the records with active storage services.
+
+        Returns:
+                str:  Response.
+        """
+
+        self.__status_upsert(auto_sync)
+        self.__refresh_status()
+
     def __create_services(self):
         """Method to create remote synchronizer services if there is no services created yet.
         """
@@ -218,6 +244,46 @@ class RSynchronizer:
         for service in self.services_table.all():
             if service["name"] == "Dropbox":
                 self.services.append(DropBox(service["info"]["to_be_used"], service["info"]["accounts"], service["info"]["active_account"]))
+
+    def __status_upsert(self, auto_sync, force_insert=False):
+        """Function to insert(or update) the status of NetworkConnector to the database.
+
+        Args:
+                auto_sync (bool):       Auto synchronization flag of the RSynchronizer. If True, RSynchronizer try synchronizing the records with active storage services.
+                force_insert (bool):    Force insert flag.
+
+        Returns:
+                str:  Response.
+        """
+
+        status = self.status_table.all()
+
+        if status:
+            self.status_table.update({'auto_sync': auto_sync})
+        else:
+            self.status_table.insert({
+                'auto_sync': auto_sync,
+            })  # insert the given data
+
+        return ""
+
+    def __refresh_status(self):
+        """Method to refresh status from the database.
+        """
+        status = self.status_table.all()
+
+        if status:
+            self.auto_sync = status[0]["auto_sync"]
+        else:
+            self.auto_sync = True
+            self.__status_upsert(self.auto_sync)
+
+    def __check_folders(self):
+        """Method to checking the necessary folders created before. If not created creates them.
+        """
+
+        if not os.path.exists(self.folder):
+            os.mkdir(self.folder)
 
 
 class DropBox:
@@ -249,10 +315,12 @@ class DropBox:
 
         self.dbx = None
 
+        self.folder = f'{dot_t_system_dir}/r_sync'
+
         self.sync_sou_dir = f'{dot_t_system_dir}/records'
         self.sync_tar_dir = "Media-from-T_System"
 
-        self.table = DBFetcher(dot_t_system_dir, "db", "r_sync").fetch()
+        self.table = DBFetcher(self.folder, "db", "services").fetch()
 
         self.__db_upsert()
 
