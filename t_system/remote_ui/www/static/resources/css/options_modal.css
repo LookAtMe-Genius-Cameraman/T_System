@@ -201,6 +201,10 @@
     transform: translate(-50%);
 }
 
+#create_wifi_cb_label {
+    font-size: 14px;
+}
+
 .new_network_input_transition {
     width: 70% !important;
 }
@@ -580,6 +584,11 @@
     left: 50%;
 
     transform: translate(-50%, -50%);
+}
+
+#auto_r_sync_div {
+    left: 40% !important;
+    top: 5px !important;
 }
 
 #service_list_ul {

@@ -7,7 +7,7 @@
     <link rel="apple-touch-icon image_src" href="static/resources/images/favicon.png">
 
     <link rel="stylesheet" href="static/vendors/bootstrap/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="static/vendors/bootstrap/css/bootstrap2-toggle.min.css">
+    <link rel="stylesheet" href="static/vendors/bootstrap/css/bootstrap4-toggle.min.css">
     <link rel="stylesheet" href="static/vendors/chart.js/css/Chart.min.css">
     <link rel="stylesheet" href="static/vendors/swiper/css/swiper.min.css">
     <link rel="stylesheet" href="static/vendors/fontawesome/css/all.min.css">
@@ -50,19 +50,17 @@
                         <button id="update_control_btn" class="option_btn" translate>Updates</button>
                         <div id="update_control_io_div" class="option_io_div">
                             <div id="update_from_check_div" class="form-check position-relative mt-5">
-                                <input id="auto_update_checkbox" class="form-check-input" type="checkbox" value="">
-                                <label class="form-check-label" for="auto_update_checkbox" translate>Auto Update</label>
+                                <input id="auto_update_checkbox" type="checkbox" data-toggle="toggle" data-style="smooth small" data-on="<a translate>Auto Update</a>" data-off="<a translate>Auto Update</a>" data-onstyle="info" data-width="150" data-height="15">
                             </div>
-                            <button id="update_btn" class="position-relative btn btn-info mt-1" translate>Up To Date</button>
+                            <button id="update_btn" class="position-relative btn btn-outline-info mt-3" translate>Up To Date</button>
                         </div>
                     </div>
-
                     <div id="wifi_control_div" class="position-relative col option_div">
                         <button id="wifi_connections_btn" class="option_btn" translate>Wi-Fi Connections</button>
                         <div id="wifi_control_io_div" class="option_io_div">
-                            <div id="create_wifi_input_form" class="form-check mb-2 specify_checkbox_div">
+                            <div id="create_wifi_input_form" class="form-check mb-2">
                                 <label id="create_wifi_cb_label" class="form-check-label mr-2" for="create_wifi_checkbox" translate>Create Own Wi-Fi</label>
-                                <input id="create_wifi_checkbox" class="form-check-input" type="checkbox" value="" data-toggle="toggle" data-width="39" data-height="23" data-onstyle="info" data-offstyle="danger">
+                                <input id="create_wifi_checkbox" class="" type="checkbox" value="" data-toggle="toggle" data-style="smooth" data-width="20" data-height="13" data-onstyle="info" data-offstyle="danger">
                             </div>
                             <div id="create_new_network">
                                 <div class="form-group">
@@ -76,7 +74,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="position-relative row mt-3">
                     <div id="audio_control_div" class="col option_div">
                         <button id="audio_control_btn" class="option_btn" translate>Audio Inputs</button>
@@ -85,7 +82,6 @@
                             <ul id="available_audio_inputs" class="option_list_ul"></ul>
                         </div>
                     </div>
-
                     <div id="face_encoding_div" class="position-relative col option_div">
                         <button id="face_encoding_btn" class="option_btn" translate>Facial Recognitions</button>
                         <div id="face_encoding_io_div" class="option_io_div">
@@ -110,7 +106,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="position-relative row mt-3">
                     <div id="record_control_div" class="position-relative col option_div">
                         <button id="record_control_btn" class="option_btn" translate>Recorded On</button>
@@ -210,6 +205,9 @@
                                     <span id="r_sync_ava_services_title_span" translate>Available Services</span>
                                     <ul id="service_list_ul"></ul>
                                 </div>
+                            </div>
+                            <div id="auto_r_sync_div" class="position-absolute">
+                                <input id="auto_r_sync_switch_checkbox" type="checkbox" data-toggle="toggle" data-style="smooth small" data-on="<a translate>Auto Sync</a>" data-off="<a translate>Auto Sync</a>" data-onstyle="info" data-width="100" data-height="15">
                             </div>
                             <div id="r_sync_account_creation_div" class="position-absolute">
                                 <div id="r_sync_account_cre_inputs_div">
@@ -335,7 +333,6 @@
                         <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
                             <defs>
                                 <filter id="shadowed-goo">
-
                                     <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation="10"></feGaussianBlur>
                                     <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="goo"></feColorMatrix>
                                     <feGaussianBlur in="goo" stdDeviation="3" result="shadow"></feGaussianBlur>
@@ -450,7 +447,7 @@
 <div id="job_template_container" class="position-absolute template_container">
     <button id="job_btn" class="position-relative btn btn-dark"><i id="job_btn_i" class="fas fa-video"></i></button>
     <div id="job_div" class="position-relative">
-        <input id="ss_switch_checkbox" checked type="checkbox" data-toggle="toggle" data-on="Shooting" data-off="Take Shots" data-onstyle="info" data-offstyle="success" data-width="120" data-height="40">
+        <input id="ss_switch_checkbox" checked type="checkbox" data-toggle="toggle" data-style="smooth" data-on="<a translate>Shooting</a>" data-off="<a translate>Take Shots</a>" data-onstyle="info" data-offstyle="success" data-width="150" data-height="30">
         <div id="mark_target_dd_div" class="position-absolute btn-group dropright">
             <button id="mark_target_dd_btn" type="button" class="btn btn-outline-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" translate>Target Sign</button>
             <div class="dropdown-menu">
@@ -572,7 +569,7 @@
 <script src="static/vendors/jquery/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <script type="text/javascript" src="static/vendors/popper.min.js"></script>
 <script type="text/javascript" src="static/vendors/bootstrap/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="static/vendors/bootstrap/js/bootstrap2-toggle.min.js"></script>
+<script type="text/javascript" src="static/vendors/bootstrap/js/bootstrap4-toggle.min.js"></script>
 <script type="text/javascript" src="static/vendors/interact/interact.min.js"></script>
 
 <script type="text/javascript" charset="UTF-8" src="static/resources/js/__init__.js"></script>

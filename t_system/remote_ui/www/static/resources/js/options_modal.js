@@ -84,6 +84,7 @@ const r_sync_services_ul = document.getElementById("r_sync_services_ul");
 const service_select_dd_div = document.getElementById("service_select_dd_div");
 const service_select_dd_btn = document.getElementById("service_select_dd_btn");
 const service_list_ul = document.getElementById("service_list_ul");
+const auto_r_sync_switch_checkbox = document.getElementById("auto_r_sync_switch_checkbox");
 
 const r_sync_account_creation_div = document.getElementById("r_sync_account_creation_div");
 const r_sync_acc_name_input = document.getElementById("r_sync_acc_name_input");
@@ -187,11 +188,16 @@ update_control_btn.addEventListener("click", function () {
 
         setSwiperSwiping(false);
 
-        request_asynchronous('/api/network?key=auto_update&admin_id=' + admin_id, 'GET',
+        request_asynchronous('/api/update?key=auto_update&admin_id=' + admin_id, 'GET',
             'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
                 if (err === "success") {
                     if (requested_data["status"] === "OK") {
-                        auto_update_checkbox.checked = requested_data["data"] === true;
+                        console.log(requested_data["data"]);
+                        if (requested_data["data"] && !auto_update_checkbox.checked) {
+                            $("#auto_update_checkbox").bootstrapToggle("toggle");
+                        } else if (!requested_data["data"] && auto_update_checkbox.checked) {
+                            $("#auto_update_checkbox").bootstrapToggle("toggle");
+                        }
                     }
                 }
             });
@@ -206,12 +212,12 @@ update_control_btn.addEventListener("click", function () {
     }
 });
 
-auto_update_checkbox.addEventListener("change", function () {
+$('#auto_update_checkbox').change(function () {
     if (auto_update_checkbox.checked) {
         let data = {"auto_update": true};
 
         request_asynchronous('/api/update?admin_id=' + admin_id, 'PUT',
-            'application/x-www-form-urlencoded; charset=UTF-8', data, function (req, err, response) {
+            'application/json; charset=UTF-8', data, function (req, err, response) {
                 if (err === "success") {
                     let response_data = JSON.parse(response.responseText);
                 }
@@ -220,7 +226,7 @@ auto_update_checkbox.addEventListener("change", function () {
         let data = {"auto_update": false};
 
         request_asynchronous('/api/update?admin_id=' + admin_id, 'PUT',
-            'application/x-www-form-urlencoded; charset=UTF-8', data, function (req, err, response) {
+            'application/json; charset=UTF-8', data, function (req, err, response) {
                 if (err === "success") {
                     let response_data = JSON.parse(response.responseText);
                 }
@@ -1790,6 +1796,19 @@ r_sync_btn.addEventListener("click", function () {
 
         setSwiperSwiping(false);
 
+        request_asynchronous('/api/r_sync?cause=auto_sync&admin_id=' + admin_id, 'GET',
+            'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
+                if (err === "success") {
+                    if (requested_data["status"] === "OK") {
+                        if (requested_data["data"] && !auto_r_sync_switch_checkbox.checked) {
+                            $("#auto_r_sync_switch_checkbox").bootstrapToggle("toggle");
+                        } else if (!requested_data["data"] && auto_r_sync_switch_checkbox.checked) {
+                            $("#auto_r_sync_switch_checkbox").bootstrapToggle("toggle");
+                        }
+                    }
+                }
+            });
+
         request_asynchronous('/api/r_sync?admin_id=' + admin_id, 'GET',
             'application/x-www-form-urlencoded; charset=UTF-8', null, function (requested_data, err) {
                 // err = "success";
@@ -2262,6 +2281,19 @@ r_sync_account_cre_cancel_btn.addEventListener("click", function () {
     r_sync_acc_key_input.value = "";
 
     r_sync_account_creation_div.classList.remove("focused");
+});
+
+$('#auto_r_sync_switch_checkbox').change(function () {
+    if (auto_r_sync_switch_checkbox.checked) { /* Active */
+    } else {/* Inactive */
+    }
+
+    request_asynchronous('/api/r_sync?cause=auto_sync&in_use=' + auto_r_sync_switch_checkbox.checked + '&admin_id=' + admin_id, 'PATCH',
+        'application/x-www-form-urlencoded; charset=UTF-8', {}, function (req, err, response) {
+            if (err === "success") {
+                let response_data = JSON.parse(response.responseText);
+            }
+        });
 });
 
 r_sync_sync_btn.addEventListener("click", function () {
