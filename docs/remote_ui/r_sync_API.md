@@ -33,7 +33,9 @@ Content-Type: application/json; charset=UTF-8
 
 # Getting Services
 - If a specific parameter NAME is given, its service are listed.
-- CAUSE parameter can be either `availability`. If `availability` is given, returns the network connection caused availability status of remote folder synchronization.
+- CAUSE parameter can be either `availability` or `auto_sync`. 
+  If `availability` is given, returns the network connection caused availability status of remote folder synchronization.
+  Else if `auto_sync` given, returns automatic folder synchronization flag.
 
 ## Request
 ```http
@@ -105,7 +107,7 @@ Content-Type: application/json; charset=UTF-8
 
 # Setting the Usage Status of Remote Storage Services and Accounts of These Services.
 Returns an error if the CAUSE or IN_USE is empty.
-CAUSE parameter can be either `service`, `account` or `sync`. If `sync` is given, folder synchronization process will be started or stopped by IN_USE. Otherwise, parameters will be set.
+CAUSE parameter can be either `service`, `account`, `auto_sync` or `sync`. If `sync` is given, folder synchronization process will be started or stopped by IN_USE. Otherwise, parameters will be set.
 
 ## Request
 ```http

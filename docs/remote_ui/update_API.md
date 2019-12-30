@@ -4,7 +4,7 @@
 ```http
 PUT /api/update?admin_id=<ADMIN_ID>
 Host: domain
-Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+Content-Type: application/json; charset=UTF-8
 
 {
     "auto_update": False,
