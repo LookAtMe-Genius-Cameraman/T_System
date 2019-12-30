@@ -16,6 +16,10 @@ from schema import SchemaError
 from t_system.remote_ui.modules.update import get_status, update_status, up_to_date
 from t_system.remote_ui.api.data_schema import UPDATE_SCHEMA
 
+from t_system import log_manager
+
+logger = log_manager.get_logger(__name__, "DEBUG")
+
 api_bp = Blueprint('update_api', __name__)
 api = Api(api_bp)
 
@@ -67,8 +71,7 @@ class UpdateApi(Resource):
         admin_id = request.args.get('admin_id', None)
 
         try:
-            form = request.form.to_dict(flat=True)
-            data = UPDATE_SCHEMA.validate(form)
+            data = UPDATE_SCHEMA.validate(request.json)
         except SchemaError as e:
             return {'status': 'ERROR', 'message': e.code}
 

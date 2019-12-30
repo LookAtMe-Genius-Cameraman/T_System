@@ -11,6 +11,10 @@
 
 from t_system import update_manager
 
+from t_system import log_manager
+
+logger = log_manager.get_logger(__name__, "DEBUG")
+
 
 def get_status(admin_id, update_key):
     """Method to return status of the self-update statement.
