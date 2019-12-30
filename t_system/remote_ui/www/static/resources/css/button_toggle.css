@@ -1,0 +1,11 @@
+.toggle.smooth, .toggle-on.smooth, .toggle-off.smooth {
+    border-radius: 20rem;
+}
+
+.toggle.smooth .toggle-handle {
+    border-radius: 20rem;
+}
+
+.toggle.small a {
+    font-size: 13px;
+}
