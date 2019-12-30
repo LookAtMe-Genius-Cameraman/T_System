@@ -35,8 +35,8 @@ class UpdateManager:
         """Initialization method of :class:`t_system.updation.UpdateManager` class.
 
         Args:
-            editable:   	        Editable updation mode flag. For making updates as development.
-            verbose:   	            Verbosity flag about printing debug messages.
+                editable:   	        Editable updation mode flag. For making updates as development.
+                verbose:   	            Verbosity flag about printing debug messages.
         """
         self.editable = editable
         self.verbose = verbose  # this argument will be added.
@@ -74,10 +74,10 @@ class UpdateManager:
         """Function to insert(or update) the update status to the database.
 
         Args:
-            auto_update (str):            Email address of the admin to posting taken photos to owners.
+                auto_update (bool):     Auto update flag of the UpdateManager
 
         Returns:
-            str:  Response.
+                str:  Response.
         """
 
         update = self.table.all()
@@ -98,15 +98,18 @@ class UpdateManager:
         update = self.table.all()
         if update:
             self.auto_update = update[0]["auto_update"]
+        else:
+            self.auto_update = False
+            self.db_upsert(self.auto_update)
 
     def change_members(self, auto_update):
         """high-level method to changing members via given parameters.
 
         Args:
-            auto_update (str):            Email address of the admin to posting taken photos to owners.
+                auto_update (bool):     Auto update flag of the UpdateManager
 
         Returns:
-            str:  Response.
+                str:  Response.
         """
 
         self.db_upsert(auto_update)
@@ -116,7 +119,7 @@ class UpdateManager:
         """Method to set editable member externally.
 
         Args:
-            editable:   	        Editable updation mode flag. For making updates as development.
+                editable:   	        Editable updation mode flag. For making updates as development.
         """
 
         self.editable = editable
@@ -125,7 +128,7 @@ class UpdateManager:
         """Method to set verbose member externally.
 
         Args:
-            verbose:   	            Verbosity flag about printing debug messages.
+                verbose:   	            Verbosity flag about printing debug messages.
         """
 
         self.verbose = verbose
@@ -152,7 +155,7 @@ class Updater:
         """Initialization method of :class:`t_system.updation.Updater` class.
 
         Args:
-            verbose:   	            Verbosity flag about printing debug messages.
+                verbose:   	            Verbosity flag about printing debug messages.
         """
         self.verbose = verbose  # this argument will be added.
 
