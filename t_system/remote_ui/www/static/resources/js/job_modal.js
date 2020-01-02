@@ -250,7 +250,6 @@ function toggle_job_modal() {
         job_div.addEventListener("click", toggle_job_modal_by);
         dark_deep_background_div.addEventListener("click", toggle_job_modal_by);
 
-
     } else {  // 2. click
         if (dark_overlay_active === false) {
             dark_overlay_active = true
@@ -734,6 +733,10 @@ monitor_area_div.addEventListener("click", function () {
 
         if (ss_switch_checkbox.checked) {
             mark_target_dd_div.classList.add("focused");
+
+            job_record_control_div.classList.add("on_monitoring");
+            job_live_stream_control_div.classList.add("on_monitoring");
+            job_mission_control_div.classList.add("on_monitoring");
         }
 
         monitor_area_div.classList.add("active");
@@ -756,6 +759,10 @@ monitor_area_div.addEventListener("click", function () {
 
         if (ss_switch_checkbox.checked) {
             mark_target_dd_div.classList.remove("focused");
+
+            job_record_control_div.classList.remove("on_monitoring");
+            job_live_stream_control_div.classList.remove("on_monitoring");
+            job_mission_control_div.classList.remove("on_monitoring");
         }
 
         monitor_area_div.classList.remove("active");

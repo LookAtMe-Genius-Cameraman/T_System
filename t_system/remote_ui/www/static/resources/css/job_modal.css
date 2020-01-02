@@ -85,31 +85,49 @@
 
 #job_record_control_div {
     top: 75%;
-    left: 15%;
+    left: 20%;
+
+    transition: all 300ms;
+}
+
+#job_record_control_div.on_monitoring {
+    top: 95% !important;
 }
 
 #job_live_stream_control_div {
     top: 60%;
-    left: 40%;
+    left: 45%;
+
+    transition: all 300ms;
+}
+
+#job_live_stream_control_div.on_monitoring {
+    top: 87% !important;
 }
 
 #job_mission_control_div {
     top: 75%;
-    left: 65%;
+    left: 70%;
+
+    transition: all 300ms;
+}
+
+#job_mission_control_div.on_monitoring {
+    top: 95% !important;
 }
 
 #job_record_title {
     color: white;
-    transform: translate(10%) !important;
 }
 
 #job_live_stream_title {
     color: white;
+    transform: translate(-15%) !important;
 }
 
 #job_mission_title {
     color: white;
-    transform: translate(15%) !important;
+    transform: translate(5%) !important;
 }
 
 .start_stop_transitional_btn {
@@ -119,7 +137,7 @@
 	background-color: red;
 	border: 0;
 	border-radius: 35px;
-	margin: 18px;
+	margin: 2px;
 	outline: none;
 }
 
