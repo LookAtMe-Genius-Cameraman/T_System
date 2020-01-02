@@ -40,7 +40,35 @@ const no_mark_checkbox = document.getElementById("no_mark_checkbox");
 const mark_target_list_ul = document.getElementById("mark_target_list_ul");
 
 const monitor_area_div = document.getElementById("monitor_area_div");
+
+const monitor_area_counter_div = document.getElementById("monitor_area_counter_div");
+const monitor_minutes_label = document.getElementById("monitor_minutes_label");
+const monitor_seconds_label = document.getElementById("monitor_seconds_label");
+
 const monitor_stream_area_img = document.getElementById("monitor_stream_area_img");
+
+let monitor_total_seconds = 0;
+let monitor_counter_interval;
+
+function set_monitoring_time() {
+    ++monitor_total_seconds;
+    monitor_seconds_label.innerHTML = pad(monitor_total_seconds % 60);
+    monitor_minutes_label.innerHTML = pad(parseInt(monitor_total_seconds / 60));
+}
+
+function reset_monitoring_time() {
+    monitor_seconds_label.innerHTML = "00";
+    monitor_minutes_label.innerHTML = "00";
+}
+
+function pad(val) {
+    let valString = val + "";
+    if (valString.length < 2) {
+        return "0" + valString;
+    } else {
+        return valString;
+    }
+}
 
 function toggle_job_control_btns(activate = false) {
     let job_control_btns = [job_record_btn, job_live_stream_btn, job_mission_btn];
@@ -213,6 +241,12 @@ function toggle_job_modal() {
         show_checked_boxes([].concat(scenario_checkboxes), selected_scenarios_div);
         show_checked_boxes([].concat(website_checkboxes), selected_websites_div);
 
+        if (ss_switch_checkbox.checked) {
+            monitor_area_counter_div.classList.add("focused");
+        } else {
+            monitor_area_div.click();
+        }
+
         job_div.addEventListener("click", toggle_job_modal_by);
         dark_deep_background_div.addEventListener("click", toggle_job_modal_by);
 
@@ -309,6 +343,8 @@ $('#ss_switch_checkbox').change(function () {
             job_ready_btn.classList.remove("hidden_element");
 
             job_take_shots_btn.classList.remove("active");
+
+            monitor_area_counter_div.classList.add("focused");
         }
 
     } else {  // take shots
@@ -327,6 +363,8 @@ $('#ss_switch_checkbox').change(function () {
             job_ready_btn.classList.add("hidden_element");
 
             job_take_shots_btn.classList.add("active");
+
+            monitor_area_counter_div.classList.remove("focused");
         }
     }
 });
@@ -340,6 +378,9 @@ job_record_btn.addEventListener("click", function () {
             'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
                 if (err === "success") {
                     let response_data = JSON.parse(response.responseText);
+                    monitor_minutes_label.classList.add("active");
+                    monitor_seconds_label.classList.add("active");
+                    monitor_counter_interval = setInterval(set_monitoring_time, 1000);
                 }
             });
 
@@ -347,15 +388,21 @@ job_record_btn.addEventListener("click", function () {
         job_record_btn.classList.remove("Rec");
         job_record_btn.classList.add("notRec");
 
+        clearInterval(monitor_counter_interval);
+
         request_asynchronous('/api/job?cause=record&admin_id=' + admin_id, 'DELETE',
             'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
                 if (err === "success") {
                     let response_data = JSON.parse(response.responseText);
+                    reset_monitoring_time();
+                    monitor_minutes_label.classList.remove("active");
+                    monitor_seconds_label.classList.remove("active");
                 }
 
             });
     }
 });
+
 
 job_live_stream_btn.addEventListener("click", function () {
     if (job_live_stream_btn.classList.contains("notRec")) {  // Start Mission
@@ -366,6 +413,9 @@ job_live_stream_btn.addEventListener("click", function () {
             'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
                 if (err === "success") {
                     let response_data = JSON.parse(response.responseText);
+                    monitor_minutes_label.classList.add("active");
+                    monitor_seconds_label.classList.add("active");
+                    monitor_counter_interval = setInterval(set_monitoring_time, 1000);
                 }
             });
 
@@ -373,10 +423,15 @@ job_live_stream_btn.addEventListener("click", function () {
         job_live_stream_btn.classList.remove("Rec");
         job_live_stream_btn.classList.add("notRec");
 
+        clearInterval(monitor_counter_interval);
+
         request_asynchronous('/api/job?cause=live_stream&admin_id=' + admin_id, 'DELETE',
             'application/x-www-form-urlencoded; charset=UTF-8', null, function (req, err, response) {
                 if (err === "success") {
                     let response_data = JSON.parse(response.responseText);
+                    reset_monitoring_time();
+                    monitor_minutes_label.classList.remove("active");
+                    monitor_seconds_label.classList.remove("active");
                 }
             });
     }

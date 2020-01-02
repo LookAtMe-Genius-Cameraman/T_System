@@ -293,6 +293,32 @@
 	100% { opacity: 1; }
 }
 
+#monitor_area_counter_div {
+    display: none;
+}
+
+#monitor_area_counter_div.focused {
+    display: block !important;
+
+    top: 0;
+    left: 50%;
+    transform: translate(-50%);
+
+
+    z-index: 201;
+}
+
+.monitor_time_label {
+    font-size: 16px;
+
+    transition: all 100ms;
+}
+
+.monitor_time_label.active {
+    font-size: 24px;
+    color: red;
+}
+
 #monitor_job_span {
     visibility: visible;
     max-width: 100%;
