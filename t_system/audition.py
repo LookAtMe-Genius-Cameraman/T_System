@@ -70,6 +70,8 @@ class Hearer:
         self.__set_record_path()  # this is dysfunctional
         self.record_name = record_name
 
+        self.__reset_listen_thread()
+
         self.listen_thread.start()
 
     def stop_recording(self):
