@@ -33,4 +33,4 @@ adafruit-circuitpython-pca9685
 adafruit-circuitpython-servokit==1.2.1
 tabulate==0.8.7
 cloudpickle==1.4.1
-dropbox==9.4.0
+dropbox==10.2.0
