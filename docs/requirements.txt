@@ -25,7 +25,7 @@ pyaudio==0.2.11
 requests==2.24.0
 pyroute2==0.5.14
 pexpect==4.8.0
-opencv-python==4.2.0.32
+opencv-python==4.4.0.44
 opencv-contrib-python==4.2.0.32
 dlib==19.18.0
 adafruit-blinka==3.9.0
