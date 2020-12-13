@@ -3,7 +3,7 @@ picamera>=1.13
 RPi.GPIO>=0.6.5
 tinydb==4.3.0
 numpy==1.19.4
-sympy==1.5.1
+sympy==1.7.1
 paho-mqtt>=1.4.0
 face_recognition==1.2.3
 multipledispatch==0.6.0
