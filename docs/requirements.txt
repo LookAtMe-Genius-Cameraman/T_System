@@ -12,7 +12,7 @@ netifaces==0.10.9
 psutil==5.8.0
 pyaccesspoint==0.2.5
 wifi==0.3.8
-flask==1.1.2
+flask==2.0.0
 flask-session==0.3.2
 flask-restful==0.3.8
 Flask-Testing==0.8.0
