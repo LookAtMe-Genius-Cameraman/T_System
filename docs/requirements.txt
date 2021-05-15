@@ -15,7 +15,7 @@ wifi==0.3.8
 flask==2.0.0
 flask-session==0.3.2
 flask-restful==0.3.8
-Flask-Testing==0.8.0
+Flask-Testing==0.8.1
 schema==0.7.3
 gitpython==3.1.11
 elevate==0.1.3
