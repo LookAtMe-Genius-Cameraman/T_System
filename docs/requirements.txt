@@ -14,7 +14,7 @@ pyaccesspoint==0.2.5
 wifi==0.3.8
 flask==2.0.1
 flask-session==0.3.2
-flask-restful==0.3.8
+flask-restful==0.3.9
 Flask-Testing==0.8.0
 schema==0.7.3
 gitpython==3.1.11
