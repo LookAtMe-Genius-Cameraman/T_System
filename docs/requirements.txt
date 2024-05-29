@@ -23,7 +23,7 @@ imutils==0.5.4
 gpiozero==2.0.1
 pyaudio==0.2.14
 requests==2.32.2
-pyroute2==0.5.14
+pyroute2==0.7.12
 pexpect==4.8.0
 opencv-python==4.4.0.46
 opencv-contrib-python==4.4.0.46
