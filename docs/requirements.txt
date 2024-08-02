@@ -27,7 +27,7 @@ pyroute2==0.7.12
 pexpect==4.9.0
 opencv-python==4.10.0.84
 opencv-contrib-python==4.10.0.84
-dlib==19.21.1
+dlib==19.24.5
 adafruit-blinka==5.9.1
 adafruit-circuitpython-pca9685
 adafruit-circuitpython-servokit==1.3.0
